@@ -52,24 +52,6 @@ class html_conf{
 		$this->data->footer = $footer_file_name;
 	}
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 	public function create_html_base($info){
 		$this->info_data = $info;
 
@@ -86,7 +68,6 @@ class html_conf{
 				'footer' => $this->convert_html($footer_base),
 				'other' => $this->other,
 		);
-
 	}
 
 	private function convert_html($html_base){

@@ -1,0 +1,15 @@
+{
+  "name": "vendor_name/library",
+  "description": "description",
+  "minimum-stability": "stable",
+  "license": "proprietary",
+  "authors": [
+    {
+      "name": "Datphan",
+      "email": "Datphan@2floor.jp"
+    }
+  ],
+  "require": {
+    "illuminate/database": "^8.0"
+  }
+}

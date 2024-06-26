@@ -123,7 +123,7 @@ class page_init{
 
 		$path_base = "./";
 		$DirCounter = 0;
-		if(strpos($domain, "localhost") !== false || strpos($domain, "2floor.xyz") !== false) {
+		if(strpos($domain, "localhost") !== false || strpos($domain, "2floor.space") !== false) {
 			//ローカル、2ｆテスト環境時
 			$DirCounter -= 1;
 		}

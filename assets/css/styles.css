@@ -3021,6 +3021,7 @@ select#about-select {
 
 .page-title--red {
     background-color: #00479d;
+    max-height: 200px;
 }
 
 .page-titles {
@@ -4668,4 +4669,10 @@ a.anchor {
 .item-detail-img {
     margin-bottom: 20px;
     padding: 10px;
+}
+
+.errorMsg {
+    color: #D06250;
+    font-size: 16px;
+    margin-top: 1rem;
 }

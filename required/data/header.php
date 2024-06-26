@@ -6,7 +6,7 @@ $nowDirAr = explode("/", $nowDir);
 // 同一階層では"./"を使用し、下層の階層では"../"を追加
 $path_base = "./";
 $DirCounter = 0;
-if (strpos($domain, "localhost") !== false || strpos($domain, "2floor.xyz") !== false) {
+if (strpos($domain, "localhost") !== false || strpos($domain, "2floor.space") !== false) {
   // ローカル、2fテスト環境時
   $DirCounter -= 0;  // ここは変更なし
 }
