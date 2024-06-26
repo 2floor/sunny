@@ -1,0 +1,181 @@
+@CHARSET "UTF-8";
+.is-hide{
+	display:none;
+}
+.loading{
+  position:fixed;
+  top:0;
+  right:0;
+  bottom:0;
+  left:0;
+  background:rgba(0,0,0,.5);
+  z-index:999999;
+}
+.loading::before{
+  content:"";
+  display:block;
+  position:fixed;
+  left:50%;
+  top:50%;
+  width:32px;
+  height:32px;
+  border-radius:5px;
+  margin-top:-15px;
+  margin-left:-15px;
+  background-image:url("../images/preloader.gif");
+  background-repeat: no-repeat;
+
+}
+
+
+
+.searchLoading{
+  position:absolute;
+  top:42px;
+  right:0;
+  bottom:0;
+  left:0;
+  background:rgba(255,255,255);
+  z-index:999999;
+}
+.searchLoading::before{
+  content:"";
+  display:block;
+  position:fixed;
+  left:50%;
+  top:50%;
+  width:32px;
+  height:32px;
+  border-radius:5px;
+  margin-top:-15px;
+  margin-left:-15px;
+  background-image:url("../images/preloader.gif");
+  background-repeat: no-repeat;
+
+}
+
+.error-form{
+	border-color: #ff5b5b!important;
+	background: #fdb8b8!important;
+}
+
+
+input:disabled, select:disabled, textarea:disabled {
+	border-color: #fff;
+    background: #fff;
+}
+
+.recovery i{
+	color: #00BCD4;
+}
+
+.recovery i:hover{
+	color: #23527c;
+}
+
+.conf_color{
+	border-color: #fff !important;
+	background-color: #fff !important;
+}
+
+
+.imgSortRow{
+	border:1px solid #e5e5e5;
+	padding: 10px;
+	margin-bottom: 10px;
+	background-color: #fff;
+}
+.imgSortPrevImg{
+	float: left;
+	width: 20%;
+}
+
+.imgSortPrevInfo{
+	float: left;
+	width: 80%;
+	text-align: left;
+}
+.imgSortPrevInfo p{
+
+}
+
+.imgSortPrevInfo .label{
+	font-weight: bold;
+	display: inline-block;
+	width: 80px;
+	color: #000;
+}
+
+.clearfix::after{
+  content: "";
+  display: block;
+  clear: both;
+}
+
+.checkbox-row{
+	padding: 3px 5px;
+}
+
+.changeOrder{
+	cursor: pointer;
+}
+
+.searchTable{
+	width: 100%;
+}
+
+.searchTable thead th{
+	padding: 2px 10px;
+	border-bottom: 2px solid #e5e5e5;
+}
+
+.searchTable tbody tr{
+	padding: 15px 0;
+    height: 50px;
+	cursor: pointer;
+	border-bottom: 1px solid #e5e5e5;
+}
+
+.modal-demo .searchTable tbody tr:hover{
+	background-color: #dadada;
+}
+
+.searchTable tbody td{
+	padding: 2px 10px;
+	text-align: left;
+}
+
+
+.detailInDl{
+	font-size: 1.2em;
+	float: left;
+	width: 30%;
+}
+
+.detailInDl dd{
+	text-indent: 1em;
+	margin-bottom: 10px;
+}
+
+.openCustombox{
+	cursor: pointer;
+}
+
+
+
+@media screen and (max-width: 1199px) {
+
+}
+@media screen and (max-width: 991px) {
+	.detailInDl{
+		clear: both;
+		width: 100%;
+	}
+}
+@media screen and (max-width: 767px) {
+
+	.detailInDl{
+		width: 100%;
+	}
+
+}

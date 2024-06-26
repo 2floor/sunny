@@ -1,0 +1,44 @@
+ ニュースID
+ ニュース種別
+ 日付
+ タイトル
+ 詳細
+ 画像
+ 公開フラグ
+ 削除フラグ
+ 作成日時
+ 更新日時
+'news_id',
+'type',
+'disp_date',
+'title',
+'detail',
+'img',
+'public_flg',
+'del_flg',
+'create_at',
+'update_at',
+
+
+$post['news_id'],
+$post['type'],
+$post['disp_date'],
+$post['title'],
+$post['detail'],
+$post['img'],
+$post['public_flg'],
+$post['del_flg'],
+$post['create_at'],
+$post['update_at'],
+
+'news_id' => $reult_detail['news_id'],
+'type' => $reult_detail['type'],
+'disp_date' => $reult_detail['disp_date'],
+'title' => $reult_detail['title'],
+'detail' => $reult_detail['detail'],
+'img' => $reult_detail['img'],
+'public_flg' => $reult_detail['public_flg'],
+'del_flg' => $reult_detail['del_flg'],
+'create_at' => $reult_detail['create_at'],
+'update_at' => $reult_detail['update_at'],
+

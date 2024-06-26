@@ -1,0 +1,36 @@
+ 技術情報ID
+ サムネイル
+ タイトル
+ PDF
+ 公開フラグ
+ 削除フラグ
+ 登録日
+ Nothing
+'technical_id',
+'img',
+'title',
+'pdf',
+'public_flg',
+'del_flg',
+'create_at',
+'update_at',
+
+
+$post['technical_id'],
+$post['img'],
+$post['title'],
+$post['pdf'],
+$post['public_flg'],
+$post['del_flg'],
+$post['create_at'],
+$post['update_at'],
+
+'technical_id' => $reult_detail['technical_id'],
+'img' => $reult_detail['img'],
+'title' => $reult_detail['title'],
+'pdf' => $reult_detail['pdf'],
+'public_flg' => $reult_detail['public_flg'],
+'del_flg' => $reult_detail['del_flg'],
+'create_at' => $reult_detail['create_at'],
+'update_at' => $reult_detail['update_at'],
+
