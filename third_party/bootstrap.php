@@ -17,7 +17,7 @@ $capsule->addConnection([
     'database'  => $dbname,
     'username'  => $user,
     'password'  => $pass,
-    'charset'   => 'utf8',
+    'charset'   => 'utf8mb4',
     'collation' => 'utf8mb4_general_ci',
     'prefix'    => '',
 ]);
@@ -27,8 +27,9 @@ $capsule->bootEloquent();
 
 spl_autoload_register(function ($class) {
     if (strpos($class, 'App\\Models\\') === 0) {
-        $class = str_replace('App\\EloquentModel\\', '', $class);
-        $file = __DIR__ . '/app/Models' . $class . '.php';
+
+        $class = str_replace('App\\Models\\', '', $class);
+        $file = __DIR__ . '/app/Models/' . $class . '.php';
         if (file_exists($file)) {
             require_once $file;
         }

@@ -20,19 +20,11 @@
  *
  */
 
-require_once __DIR__ . "/./required/data/meta.php";
-require_once __DIR__ . "/./required/html_conf.php";
+require_once __DIR__ . "/data/meta.php";
+require_once __DIR__ . "/html_conf.php";
 class page_init{
 
-	const PROJECT_DIR = "nippo";//テストディレクトリ（ドメインから階層が下がるとき）　ないときはnull
-
-	//メディア使用テーブルカラム名
-	const MEDIA_USE_TABLE = array(
-// 			"t_article" => array(
-// 					"thumbnail",
-// 					"detail",
-// 			),
-	);
+	const PROJECT_DIR = null;//テストディレクトリ（ドメインから階層が下がるとき）　ないときはnull
 
 
 	private $meta;
@@ -47,6 +39,7 @@ class page_init{
 	private $description;
 	private $html_head;
 	private $header;
+    private $html_foot;
 	private $footer;
 	private $other;
 
@@ -66,6 +59,7 @@ class page_init{
 		$this->description;
 		$this->html_head;
 		$this->header;
+        $this->html_foot;
 		$this->footer;
 		$this->other;
 
@@ -93,6 +87,7 @@ class page_init{
 		$return->description = $this->description;
 		$return->html_head = $this->html_head;
 		$return->header = $this->header;
+        $return->html_foot = $this->html_foot;
 		$return->footer = $this->footer;
 		$return->other = $this->other;
 		return $return;
@@ -171,7 +166,7 @@ class page_init{
 
 		$this->html_head = $html_base['html_head'];
 		$this->header = $html_base['header'];
-		$this->footer = $html_base['footer'];
+		$this->html_foot = $html_base['html_foot'];
 		$this->other = $html_base['other'];
 	}
 

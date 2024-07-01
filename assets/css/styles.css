@@ -1865,8 +1865,8 @@ select#about-select {
 }
 
 .drop__list {
-    width: calc(33.3333% - 13.33333px);
-            transition: ease .3s;
+    /*width: calc(33.3333% - 13.33333px);*/
+    /*        transition: ease .3s;*/
 
     -webkit-transition: ease .3s;
 }
@@ -1932,7 +1932,7 @@ select#about-select {
     color: #ffffff;
     font-weight: 600;
     font-size: 14px;
-    font-size: .875rem;
+    /*font-size: .875rem;*/
     line-height: 1.4;
 }
 
@@ -2144,7 +2144,6 @@ select#about-select {
     padding: 0 20px;
     font-weight: 300;
     font-size: 14px;
-    font-size: .875rem;
     cursor: pointer;
 }
 
@@ -2321,7 +2320,7 @@ select#about-select {
 }
 
 .header__logo--top.open {
-    opacity: 0;
+    /*opacity: 0;*/
             transition: ease .3s;
 
     -webkit-transition: ease .3s;

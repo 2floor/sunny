@@ -26,6 +26,13 @@ define ( "MEDICALNET_ADMIN_PATH", HTTP_TYPE . "/delphi/admin/" );
 define ( "INI_PATH", __DIR__ . '/../common/config.ini' );
 
 /**
+ * BaseUrl
+ */
+$ini_array = parse_ini_file (INI_PATH, true );
+$base_url = $ini_array['url']['base_url'];
+define('BASE_URL', $base_url);
+
+/**
  * ページタイトル、パンくず定義
  *
  * @var unknown

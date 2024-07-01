@@ -1,11 +1,20 @@
 <?php
-    // エラーメッージ取得
-    $msg = isset($_GET['msg']) ? $_GET['msg'] : false;
+if (!isset($_SESSION)) {
+    session_start();
+}
 
-    // ID・PWが一致しない場合
-    if ($msg) {
-    $no_msg = 'ログインID、もしくは、パスワードが違います。再度、ログインID、PWが正しいかご確認をお願いします';
-    }
+require_once __DIR__ . '/common/security_common_logic.php';
+
+$security = new security_common_logic();
+$csrf_token = $security->generateCsrfToken();
+
+// エラーメッージ取得
+$msg = isset($_GET['msg']) ? $_GET['msg'] : false;
+
+// ID・PWが一致しない場合
+if ($msg) {
+$no_msg = 'ログインID、もしくは、パスワードが違います。再度、ログインID、PWが正しいかご確認をお願いします';
+}
 ?>
 
 <!DOCTYPE html>
@@ -74,6 +83,7 @@
                 <p>Your Social Campaigns</p>
             </div>
             <form method="POST" action="logon.php">
+                <input type="hidden" name="csrf_token" value="<?php echo htmlspecialchars($csrf_token); ?>">
                 <div class="form-group">
                     <div class="label-info">
                         <label for="username" class="bold">ログインID </label>
@@ -89,54 +99,16 @@
                     <input type="password" name="password" id="password" placeholder="半角英数8～12桁" required>
                 </div>
                 <div class="form-footer">
-                    <a href="">Forgot Password ?</a>
+                    <a href="">パスワードをお忘れですか？</a>
                 </div>
                 <?php
-                    if ($msg) echo '<div class="errorMsg"><span>' .$msg. '</span></div>';
+                    if ($msg) echo '<div class="errorMsg"><span>' .$no_msg. '</span></div>';
                 ?>
-                <button type="submit" class="btn-submit">Sign In</button>
+                <button type="submit" class="btn-submit">ログインする</button>
             </form>
         </div>
     </div>
 </section>
-
-<section class="contact">
-    <div class="contact__inner">
-        <div class="contact__red"></div>
-        <div class="contact__contents">
-            <p class="contact__lead">お電話またはフォームから<br class="u-mobile">お問い合わせください。</p>
-            <p class="contact__lead" style="margin-top:10px;">株式会社C.A.ピカード ジャパン</p>
-            <div class="contact__company">
-                <div class="contact-company__ca">
-                    <p class="contact-company__name">川口本社オフィス</p>
-                    <p class="contact-company__tel"><a href="tel:048-263-5017">048-263-5017</a></p>
-                    <p class="contact-company__time">平日 9:00～17:00</p>
-                    <p class="contact-company__address">〒333-0844 埼玉県川口市
-                        <br>上青木2-42-6
-                    </p>
-                    <a href="https://goo.gl/maps/N3QXM1oqBS9qJAvSA" class="contact-company__map" target="_blank">Google map</a>
-                </div><!-- ./contact-company__ca -->
-                <div class="contact-company__kobe">
-                    <p class="contact-company__name">神戸オフィス</p>
-                    <p class="contact-company__tel"><a href="tel:078-862-3736">078-862-3736</a></p>
-                    <p class="contact-company__time">平日 9:00～17:00</p>
-                    <p class="contact-company__address">〒657-0028 兵庫県神戸市<br class="u-mobile">灘区森後町1-3-19
-                        <br>リトルブラザーズ六甲ビル5F-D
-                    </p>
-                    <a href="https://goo.gl/maps/VGY9cSXtUMHwHnAA7" class="contact-company__map" target="_blank">Google map</a>
-                </div><!-- ./contact-company__kobe -->
-            </div><!-- ./contact__company -->
-
-            <div class="contact__btn u-desktop">
-                <a href="contact.php" class="btn btn--contact">お問い合わせはこちら</a>
-            </div>
-        </div><!-- ./contact__contents -->
-
-        <div class="contact__btn u-mobile">
-            <a href="contact.php" class="btn btn--contact">お問い合わせはこちら</a>
-        </div>
-    </div><!-- /.contact__inner -->
-</section><!-- /.contact -->
 </body>
 
 </html>

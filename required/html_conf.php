@@ -37,8 +37,8 @@ class html_conf{
 
 		$analytics = "analytics.php"; //google analyticsタグファイル名
 		$head_file_name = "html_head.php"; //ヘッドファイル名
-		$header_file_name = "header.php"; //ヘッダーファイル名
-		$footer_file_name = "footer.php"; //フッターファイル名
+		$header_file_name = "header2.php"; //ヘッダーファイル名
+		$foot_file_name = "html_foot.php"; //フッターファイル名
 
 		//そのファイル処理　コンバートなどは別途かけること
 		//$this->otherの中にHTMLを格納すること
@@ -49,7 +49,7 @@ class html_conf{
 		$this->data->head = $head_file_name;
 		$this->data->analytics = $analytics;
 		$this->data->header = $header_file_name;
-		$this->data->footer = $footer_file_name;
+		$this->data->foot = $foot_file_name;
 	}
 
 	public function create_html_base($info){
@@ -60,12 +60,12 @@ class html_conf{
 		$html_head_base = file_get_contents($this->data_path . $this->data->head);
 		$analytics_base = file_get_contents($this->data_path . $this->data->analytics);
 		$header_base = file_get_contents($this->data_path . $this->data->header);
-		$footer_base = file_get_contents($this->data_path . $this->data->footer);
+		$foot_base = file_get_contents($this->data_path . $this->data->foot);
 
 		return array(
 				'html_head' => $this->convert_html($analytics_base) . $this->convert_html($this->info_data->metatag.$html_head_base),
 				'header' => $this->convert_html($header_base),
-				'footer' => $this->convert_html($footer_base),
+				'html_foot' => $this->convert_html($foot_base),
 				'other' => $this->other,
 		);
 	}

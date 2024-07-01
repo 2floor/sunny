@@ -1,0 +1,86 @@
+body, html {
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+}
+section {
+    flex: 1;
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+.card-container {
+    background-color: white;
+    width: 80%;
+    max-width: 700px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    border-radius: 10px;
+    padding: 20px 30px;
+    text-align: center;
+    opacity: 0;
+    animation: fadeIn 2s forwards;
+    position: relative;
+}
+@keyframes fadeIn {
+    to {
+        opacity: 1; /* Kết thúc với độ mờ bằng 1 */
+    }
+}
+
+.close-btn {
+    position: absolute;
+    top: -5px;
+    right: -5px;
+    font-weight: bold;
+    text-decoration: none;
+    color: #000;
+    cursor: pointer;
+}
+
+.close-btn i {
+    font-size: 30px;
+    color: #f44131;
+}
+
+.card-container h2 {
+    margin-top: 0;
+}
+
+.card-container p {
+    margin-bottom: 70px;
+}
+
+.option {
+    background-color: #f0f0f0;
+    border-radius: 10px;
+    margin: 10px 0;
+    padding: 15px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+.option.red {
+    background-color: #ffc8c8;
+    border-right: 5px solid #ff0000;
+    margin-bottom: 40px;
+    text-decoration: none;
+    color: #333;
+    font-weight: bold;
+}
+.option.green {
+    background-color: #c8ffc8;
+    border-right: 5px solid #00ff00;
+    text-decoration: none;
+    color: #333;
+    font-weight: bold;
+}
+@media (max-width: 600px) {
+    .card-container {
+        width: 90%;
+    }
+    .option {
+        flex-direction: column;
+    }
+}
