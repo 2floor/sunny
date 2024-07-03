@@ -11,10 +11,10 @@
 <script src="[path]assets/admin/js/common/detect.js"></script>
 <script src="[path]assets/admin/js/common/fastclick.js"></script>
 <script src="[path]assets/admin/js/common/jquery.slimscroll.js"></script>
-<script src="[path]assets/admin/js/common/jquery.blockUI.js"></script>
-<script src="[path]assets/admin/js/common/waves.js"></script>
-<script src="[path]assets/admin/js/common/jquery.nicescroll.js"></script>
-<script src="[path]assets/admin/js/common/jquery.scrollTo.min.js"></script>
+
+<!-- Plugins Js -->
+<script src="[path]assets/admin/plugins/select2/new-version/select2.min.js" type="text/javascript"></script>
+<script src="[path]assets/admin/plugins/bootstrap-sweetalert/sweet-alert.min.js"></script>
 
 <!-- App js -->
 <script src="[path]assets/admin/js/common/jquery.core.js"></script>

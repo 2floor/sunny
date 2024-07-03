@@ -90,9 +90,6 @@ a:focus {
   outline: 0;
   text-decoration: none;
 }
-.container {
-  width: auto;
-}
 .container-alt {
   margin-left: auto;
   margin-right: auto;

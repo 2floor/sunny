@@ -54,7 +54,7 @@ $no_msg = 'ログインID、もしくは、パスワードが違います。再�
         </div>
         <div class="header__contents pt20">
             <a href="index.php" class="header__logo header__logo--top js-drawer-open">
-                <img src="./assets/images/common/logo-bk.png" alt="株式会社C.A.ピカード ジャパン">
+                <img src="./assets/images/common/logo.png" alt="株式会社C.A.ピカード ジャパン">
             </a>
             <div class="header__menu">
                 <div class="heder-pc u-desktop"></div><!-- ./heder-pc u-desktop -->
