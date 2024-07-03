@@ -27,7 +27,7 @@
                                         <div class="drop--red"></div>
                                         <ul class="drop__lists">
                                             <li class="drop__list">
-                                                <a href="[path]company/reasons.php" class="drop__link">
+                                                <a href="[path]hospital/first-search.php" class="drop__link">
                                                     <p class="drop-card__title">初めて知る</p>
                                                 </a>
                                             </li>

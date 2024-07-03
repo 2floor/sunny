@@ -323,6 +323,7 @@ $pageinfo = $page_init->get_info();
             .search-filter {
                 max-height: 90px;
                 overflow: hidden;
+                padding: 20px;
             }
 
             .search-filter.expanded {
@@ -346,6 +347,10 @@ $pageinfo = $page_init->get_info();
                 padding: 10px;
             }
 
+            .popup-container {
+                top: 10%
+            }
+            
             .popup-checkbox-content {
                 grid-template-columns: 1fr;
                 gap: 30px;
@@ -717,7 +722,7 @@ $pageinfo = $page_init->get_info();
             if ($(this).hasClass('end-popup')) {
                 handlePopupClick('#hospitalDetail', '#hospitalDetailPopup');
             }
-            
+
             handleSearchHospital()
         });
 
