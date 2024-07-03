@@ -578,7 +578,7 @@ $pageinfo = $page_init->get_info();
                             </div>
                             <div>
                                 <button class="clear-data bg-warning">クリア</button>
-                                <button class="search-hospital open-next-popup">検索</button>
+                                <button class="search-hospital end-popup">検索</button>
                             </div>
                         </div>
                     </div>
@@ -714,6 +714,10 @@ $pageinfo = $page_init->get_info();
         });
 
         $('.search-hospital').on('click', function () {
+            if ($(this).hasClass('end-popup')) {
+                handlePopupClick('#hospitalDetail', '#hospitalDetailPopup');
+            }
+            
             handleSearchHospital()
         });
 
