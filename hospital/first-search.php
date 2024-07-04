@@ -116,7 +116,7 @@ $pageinfo = $page_init->get_info();
             display: inline-block;
             padding: 5px 10px;
             border-radius: 15px;
-            margin: 5px 0.2rem;
+            margin: 5px 1.5px;
         }
 
         .filter-content .keyword {
