@@ -43,6 +43,8 @@ $pageinfo = $page_init->get_info();
             padding: 50px 30px;
             box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
             border-radius: 10px;
+            max-height: 1100px;
+            overflow-y: auto;
         }
 
         .search-filter {
@@ -191,6 +193,7 @@ $pageinfo = $page_init->get_info();
             width: 90%;
             height: 100%;
             display: none;
+            z-index: 10;
         }
 
         .popup {
@@ -314,6 +317,200 @@ $pageinfo = $page_init->get_info();
             background-color: #0984dc;
         }
 
+        .search-result-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 40px;
+            width: 100%;
+            padding: 0 20px;
+            margin-top: 5px;
+        }
+
+        .search-result-header label{
+            font-weight: bolder;
+            font-size: 16px;
+        }
+
+        .search-result-header-right {
+            display: flex;
+            align-items: center;
+        }
+
+        .search-result-header-right span {
+            margin-right: 14px;
+            font-weight: bolder;
+            font-size: 16px;
+        }
+
+        .confirm-button {
+            background-color: #0D99FF;
+            color: #fff;
+            border: none;
+            padding: 5px 30px;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+
+        .confirm-button:hover {
+            background-color: #0984dc;
+        }
+
+        .hospital-card {
+            display: grid;
+            grid-template-columns: 8% 52% 40%;
+            background-color: #fff;
+            border: 1px solid #ddd;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+            border-radius: 10px;
+            margin-bottom: 20px;
+            width: 100%;
+        }
+
+        .hospital-card .card-checkbox {
+            display: flex;
+            align-items: start;
+            justify-content: center;
+            padding: 20px;
+        }
+
+        .hospital-card .card-info {
+            padding: 20px;
+        }
+
+        .hospital-card .card-info .tag {
+            color: #0b0b0b;
+            background-color: #e0e0e0;
+            padding: 7px 15px;
+            border-radius: 10px;
+            display: inline-block;
+            margin-bottom: 10px;
+            font-weight: 700;
+        }
+
+        .hospital-info h2 {
+            margin-bottom: 0;
+        }
+
+        .hospital-info span{
+            font-size: 12px;
+        }
+
+        .hospital-card i {
+            margin-bottom: 15px;
+        }
+
+        .hospital-info p {
+            width: 80%;
+            font-size: 14px;
+            color: #555;
+            font-weight: 600;
+        }
+
+        .card-info .categories {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-top: 20px;
+        }
+
+        .card-info .categories span {
+            background-color: #e0e0e0;
+            padding: 5px 10px;
+            border-radius: 5px;
+            font-size: 14px;
+            color: #0b0b0b;
+            font-weight: 700;
+            max-width: 70px;
+            text-align: center;
+            max-height: 48px;
+            overflow: hidden;
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
+        }
+
+        .card-stats {
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            gap: 30px;
+        }
+
+        .hospital-rank {
+            display: grid;
+            gap: 15px;
+            font-weight: 700;
+            grid-template-columns: 20% 20% 20% 40%;
+            grid-template-areas:
+        "header1 header2 header3 header4"
+        "stat1 stat2 stat3 stat4"
+        "stat5 stat6 stat7 stat8"
+        "stat9 stat10 stat11 stat12";
+        }
+
+        .header1, .header2, .header3, .header4,
+        .stat1, .stat2, .stat3, .stat4,
+        .stat5, .stat6, .stat7, .stat8,
+        .stat9, .stat10, .stat11, .stat12 {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .header1, .header2, .header3, .header4 {
+            font-weight: bolder;
+        }
+
+        .rank-icon {
+            border-radius: 50%;
+            color: #fff;
+            font-weight: bold;
+            padding: 5px 10px;
+        }
+
+        .rank-row-1 {
+            background-color: #f39c12;
+        }
+
+        .rank-row-2 {
+            background-color: #27ae60;
+        }
+
+        .rank-row-3 {
+            background-color: #2980b9;
+        }
+
+        .stat {
+            position: relative;
+        }
+
+        .stat-info-extended {
+            position: absolute;
+            transform: translateX(-5%);
+            padding: 5px 10px;
+            border-radius: 5px;
+            color: #fff;
+            font-weight: bold;
+            text-align: center;
+        }
+
+        .dpc-info {
+            text-align: center;
+        }
+
+        .dpc-info p {
+            font-size: 18px;
+            margin-bottom: 10px;
+            font-weight: 700;
+        }
+
+        .dpc-info p span {
+            font-size: 30px;
+        }
+
         @media (max-width: 1200px) {
             .main-search {
                 grid-template-columns: 1fr;
@@ -367,6 +564,37 @@ $pageinfo = $page_init->get_info();
 
             .popup-selection-content .form-group label {
                 width: 100%;
+            }
+
+            .hospital-card {
+                grid-template-columns: 1fr;
+            }
+
+            .hospital-card .card-checkbox {
+                justify-content: left;
+                padding: 10px 20px;
+            }
+
+            .search-result-header {
+                flex-direction: column;
+            }
+
+            .search-result-header-right {
+                flex-direction: column;
+                margin-top: 10px;
+                gap: 10px;
+            }
+
+            .confirm-button {
+                padding: 5px 25px;
+            }
+
+            .stat-info-extended {
+                padding: 5px 0;
+            }
+
+            .header1, .header2, .header3, .header4 {
+                align-items: start;
             }
         }
     </style>
@@ -588,6 +816,276 @@ $pageinfo = $page_init->get_info();
                         </div>
                     </div>
                 </div>
+                <div class="search-result-header">
+                    <label><input type="checkbox" class="m-r-10 checkbox-print-all"> 全チェック</label>
+                    <div class="search-result-header-right">
+                        <span>チェックした対象を</span>
+                        <button class="confirm-button">印刷</button>
+                    </div>
+                </div>
+
+                <div class="hospital-card">
+                    <div class="card-checkbox">
+                        <label><input type="checkbox" class="checkbox-print"></label>
+                    </div>
+                    <div class="card-info">
+                        <div class="tag">神奈川県</div>
+                        <div class="tag">神奈川県神奈川県</div>
+                        <div class="tag">神奈川県</div>
+                        <div class="tag">神奈川県神奈川県神奈川県</div>
+                        <div class="tag">神奈川県</div>
+                        <div class="tag">神奈川県神奈川県</div>
+                        <div class="hospital-info">
+                            <h2>昭和大学横浜市北部病院</h2>
+                            <span class="info-icon"><i class="fa fa-arrow-circle-right" aria-hidden="true"></i> (ホームページが開設されます)</span>
+                            <p>神奈川県横浜市都筑区茅ヶ崎中央35-1 045-949-7000 (代表)</p>
+                        </div>
+                        <div class="categories">
+                            <span>陽子線治療陽子線治療</span>
+                            <span>光免疫療法</span>
+                            <span>光線力学療法</span>
+                            <span>温熱療法</span>
+                        </div>
+                    </div>
+                    <div class="card-stats">
+                        <div class="hospital-rank">
+                            <div class="header1">全国順位</div>
+                            <div class="header2">地方順位</div>
+                            <div class="header3">全国</div>
+                            <div class="header4"></div>
+
+                            <div class="stat1 rank-icon"><div class="rank-icon rank-row-1">1</div></div>
+                            <div class="stat2">5位</div>
+                            <div class="stat3">5位</div>
+                            <div class="stat4 stat"><div class="stat-info stat-info-extended rank-row-1">入院患者数: 3,000人</div></div>
+
+                            <div class="stat5 rank-icon"><div class="rank-icon rank-row-2">3</div></div>
+                            <div class="stat6">7位</div>
+                            <div class="stat7">7位</div>
+                            <div class="stat8 stat"><div class="stat-info stat-info-extended rank-row-2">新規がん患者数: 2,000人</div></div>
+
+                            <div class="stat9 rank-icon"><div class="rank-icon rank-row-3">2</div></div>
+                            <div class="stat10">15位</div>
+                            <div class="stat11">15位</div>
+                            <div class="stat12 stat"><div class="stat-info stat-info-extended rank-row-3">生存率係数: 80.5%</div></div>
+                        </div>
+
+                        <div class="dpc-info">
+                            <p>DPC治療指数: <span>600</span></p>
+                            <button class="confirm-button">この医療機関の詳細を見る</button>
+                        </div>
+                    </div>
+                </div>
+                <div class="hospital-card">
+                    <div class="card-checkbox">
+                        <label><input type="checkbox" class="checkbox-print"></label>
+                    </div>
+                    <div class="card-info">
+                        <div class="tag">神奈川県神奈川県神奈川県</div>
+                        <div class="tag">神奈川県</div>
+                        <div class="tag">神奈川県神奈川県</div>
+                        <div class="tag">神奈川県</div>
+                        <div class="tag">神奈川県神奈川県神奈川県</div>
+                        <div class="hospital-info">
+                            <h2>北里大学病院</h2>
+                            <span class="info-icon"><i class="fa fa-arrow-circle-right" aria-hidden="true"></i> (ホームページが開設されます)</span>
+                            <p>神奈川県相模原市南区北里1-15-1 042-778-8111 (代表) 神奈川県相模原市南区北里1-15-1 042-778-8111 (代表)</p>
+                        </div>
+                        <div class="categories">
+                            <span>陽子線治療</span>
+                            <span>光免疫療法</span>
+                            <span>光線力学療法陽子線治療</span>
+                            <span>温熱療法</span>
+                            <span>光線力学療法</span>
+                            <span>温熱療法</span>
+                        </div>
+                    </div>
+                    <div class="card-stats">
+                        <div class="hospital-rank">
+                            <div class="header1">全国順位</div>
+                            <div class="header2">地方順位</div>
+                            <div class="header3">全国</div>
+                            <div class="header4"></div>
+
+                            <div class="stat1 rank-icon"><div class="rank-icon rank-row-1">1</div></div>
+                            <div class="stat2">5位</div>
+                            <div class="stat3">5位</div>
+                            <div class="stat4 stat"><div class="stat-info stat-info-extended rank-row-1">入院患者数: 3,000人</div></div>
+
+                            <div class="stat5 rank-icon"><div class="rank-icon rank-row-2">3</div></div>
+                            <div class="stat6">7位</div>
+                            <div class="stat7">7位</div>
+                            <div class="stat8 stat"><div class="stat-info stat-info-extended rank-row-2">新規がん患者数: 2,000人</div></div>
+
+                            <div class="stat9 rank-icon"><div class="rank-icon rank-row-3">2</div></div>
+                            <div class="stat10">15位</div>
+                            <div class="stat11">15位</div>
+                            <div class="stat12 stat"><div class="stat-info stat-info-extended rank-row-3">生存率係数: 80.5%</div></div>
+                        </div>
+
+                        <div class="dpc-info">
+                            <p>DPC治療指数: <span>600</span></p>
+                            <button class="confirm-button">この医療機関の詳細を見る</button>
+                        </div>
+                    </div>
+                </div>
+                <div class="hospital-card">
+                    <div class="card-checkbox">
+                        <label><input type="checkbox" class="checkbox-print"></label>
+                    </div>
+                    <div class="card-info">
+                        <div class="tag">神奈川県</div>
+                        <div class="tag">神奈川県神奈川県</div>
+                        <div class="tag">神奈川県</div>
+                        <div class="tag">神奈川県神奈川県神奈川県</div>
+                        <div class="tag">神奈川県</div>
+                        <div class="tag">神奈川県神奈川県</div>
+                        <div class="hospital-info">
+                            <h2>昭和大学横浜市北部病院</h2>
+                            <span class="info-icon"><i class="fa fa-arrow-circle-right" aria-hidden="true"></i> (ホームページが開設されます)</span>
+                            <p>神奈川県横浜市都筑区茅ヶ崎中央35-1 045-949-7000 (代表)</p>
+                        </div>
+                        <div class="categories">
+                            <span>陽子線治療陽子線治療</span>
+                            <span>光免疫療法</span>
+                            <span>光線力学療法</span>
+                            <span>温熱療法</span>
+                        </div>
+                    </div>
+                    <div class="card-stats">
+                        <div class="hospital-rank">
+                            <div class="header1">全国順位</div>
+                            <div class="header2">地方順位</div>
+                            <div class="header3">全国</div>
+                            <div class="header4"></div>
+
+                            <div class="stat1 rank-icon"><div class="rank-icon rank-row-1">1</div></div>
+                            <div class="stat2">5位</div>
+                            <div class="stat3">5位</div>
+                            <div class="stat4 stat"><div class="stat-info stat-info-extended rank-row-1">入院患者数: 3,000人</div></div>
+
+                            <div class="stat5 rank-icon"><div class="rank-icon rank-row-2">3</div></div>
+                            <div class="stat6">7位</div>
+                            <div class="stat7">7位</div>
+                            <div class="stat8 stat"><div class="stat-info stat-info-extended rank-row-2">新規がん患者数: 2,000人</div></div>
+
+                            <div class="stat9 rank-icon"><div class="rank-icon rank-row-3">2</div></div>
+                            <div class="stat10">15位</div>
+                            <div class="stat11">15位</div>
+                            <div class="stat12 stat"><div class="stat-info stat-info-extended rank-row-3">生存率係数: 80.5%</div></div>
+                        </div>
+
+                        <div class="dpc-info">
+                            <p>DPC治療指数: <span>600</span></p>
+                            <button class="confirm-button">この医療機関の詳細を見る</button>
+                        </div>
+                    </div>
+                </div>
+                <div class="hospital-card">
+                    <div class="card-checkbox">
+                        <label><input type="checkbox" class="checkbox-print"></label>
+                    </div>
+                    <div class="card-info">
+                        <div class="tag">神奈川県神奈川県神奈川県</div>
+                        <div class="tag">神奈川県</div>
+                        <div class="tag">神奈川県神奈川県</div>
+                        <div class="tag">神奈川県</div>
+                        <div class="tag">神奈川県神奈川県神奈川県</div>
+                        <div class="hospital-info">
+                            <h2>北里大学病院</h2>
+                            <span class="info-icon"><i class="fa fa-arrow-circle-right" aria-hidden="true"></i> (ホームページが開設されます)</span>
+                            <p>神奈川県相模原市南区北里1-15-1 042-778-8111 (代表) 神奈川県相模原市南区北里1-15-1 042-778-8111 (代表)</p>
+                        </div>
+                        <div class="categories">
+                            <span>陽子線治療</span>
+                            <span>光免疫療法</span>
+                            <span>光線力学療法陽子線治療</span>
+                            <span>温熱療法</span>
+                            <span>光線力学療法</span>
+                            <span>温熱療法</span>
+                        </div>
+                    </div>
+                    <div class="card-stats">
+                        <div class="hospital-rank">
+                            <div class="header1">全国順位</div>
+                            <div class="header2">地方順位</div>
+                            <div class="header3">全国</div>
+                            <div class="header4"></div>
+
+                            <div class="stat1 rank-icon"><div class="rank-icon rank-row-1">1</div></div>
+                            <div class="stat2">5位</div>
+                            <div class="stat3">5位</div>
+                            <div class="stat4 stat"><div class="stat-info stat-info-extended rank-row-1">入院患者数: 3,000人</div></div>
+
+                            <div class="stat5 rank-icon"><div class="rank-icon rank-row-2">3</div></div>
+                            <div class="stat6">7位</div>
+                            <div class="stat7">7位</div>
+                            <div class="stat8 stat"><div class="stat-info stat-info-extended rank-row-2">新規がん患者数: 2,000人</div></div>
+
+                            <div class="stat9 rank-icon"><div class="rank-icon rank-row-3">2</div></div>
+                            <div class="stat10">15位</div>
+                            <div class="stat11">15位</div>
+                            <div class="stat12 stat"><div class="stat-info stat-info-extended rank-row-3">生存率係数: 80.5%</div></div>
+                        </div>
+
+                        <div class="dpc-info">
+                            <p>DPC治療指数: <span>600</span></p>
+                            <button class="confirm-button">この医療機関の詳細を見る</button>
+                        </div>
+                    </div>
+                </div>
+                <div class="hospital-card">
+                    <div class="card-checkbox">
+                        <label><input type="checkbox" class="checkbox-print"></label>
+                    </div>
+                    <div class="card-info">
+                        <div class="tag">神奈川県</div>
+                        <div class="tag">神奈川県神奈川県</div>
+                        <div class="tag">神奈川県</div>
+                        <div class="tag">神奈川県神奈川県神奈川県</div>
+                        <div class="tag">神奈川県</div>
+                        <div class="tag">神奈川県神奈川県</div>
+                        <div class="hospital-info">
+                            <h2>昭和大学横浜市北部病院</h2>
+                            <span class="info-icon"><i class="fa fa-arrow-circle-right" aria-hidden="true"></i> (ホームページが開設されます)</span>
+                            <p>神奈川県横浜市都筑区茅ヶ崎中央35-1 045-949-7000 (代表)</p>
+                        </div>
+                        <div class="categories">
+                            <span>陽子線治療陽子線治療</span>
+                            <span>光免疫療法</span>
+                            <span>光線力学療法</span>
+                            <span>温熱療法</span>
+                        </div>
+                    </div>
+                    <div class="card-stats">
+                        <div class="hospital-rank">
+                            <div class="header1">全国順位</div>
+                            <div class="header2">地方順位</div>
+                            <div class="header3">全国</div>
+                            <div class="header4"></div>
+
+                            <div class="stat1 rank-icon"><div class="rank-icon rank-row-1">1</div></div>
+                            <div class="stat2">5位</div>
+                            <div class="stat3">5位</div>
+                            <div class="stat4 stat"><div class="stat-info stat-info-extended rank-row-1">入院患者数: 3,000人</div></div>
+
+                            <div class="stat5 rank-icon"><div class="rank-icon rank-row-2">3</div></div>
+                            <div class="stat6">7位</div>
+                            <div class="stat7">7位</div>
+                            <div class="stat8 stat"><div class="stat-info stat-info-extended rank-row-2">新規がん患者数: 2,000人</div></div>
+
+                            <div class="stat9 rank-icon"><div class="rank-icon rank-row-3">2</div></div>
+                            <div class="stat10">15位</div>
+                            <div class="stat11">15位</div>
+                            <div class="stat12 stat"><div class="stat-info stat-info-extended rank-row-3">生存率係数: 80.5%</div></div>
+                        </div>
+
+                        <div class="dpc-info">
+                            <p>DPC治療指数: <span>600</span></p>
+                            <button class="confirm-button">この医療機関の詳細を見る</button>
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
@@ -724,6 +1222,14 @@ $pageinfo = $page_init->get_info();
             }
 
             handleSearchHospital()
+        });
+
+        $('.checkbox-print-all').change(function() {
+            if($(this).is(':checked')) {
+                $('.checkbox-print').prop('checked', true);
+            } else {
+                $('.checkbox-print').prop('checked', false);
+            }
         });
 
         $(document).on('popupClosed', function (e, data) {
