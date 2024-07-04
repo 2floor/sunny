@@ -42,7 +42,7 @@
                             </li>
                             <li class="pc-nav__list">
                                 <div class="global">
-                                    <a href="[path]logout.php" target="_blank" class="global__header js-accordion">ログアウト</a>
+                                    <a href="[path]logout.php" class="global__header js-accordion">ログアウト</a>
                                 </div>
                             </li>
                         </ul><!-- ./drawer-nav__lists -->
@@ -64,7 +64,8 @@
                     <li class="drawer-nav__list"><a href="[path]" class="drawer-nav__link">ホーム</a></li>
                     <li class="drawer-nav__list"><a href="#" class="drawer-nav__link">医者を探す</a></li>
                     <li class="drawer-nav__list"><a href="[path]hospital" class="drawer-nav__link">病院を探す</a></li>
-
+                    <li class="drawer-nav__list"><a href="[path]logout.php" class="drawer-nav__link">ログアウト</a>
+       </li>
                 </ul><!-- ./drawer-nav__lists -->
             </nav>
         </div><!-- ./drawer__inner -->

@@ -5,11 +5,7 @@
 }
 
 section.login {
-    margin-top: 4rem;
-}
-
-section.contact {
-    margin-top: 4rem;
+    margin-top: 2rem;
 }
 
 .login-container {
@@ -45,8 +41,8 @@ section.contact {
 }
 
 .login-header {
-    margin-top: 2rem;
-    margin-bottom: 2.5rem;
+    margin-top: 1rem;
+    margin-bottom: 1.5rem;
 }
 
 .login-header h1 {
@@ -99,7 +95,6 @@ section.contact {
     font-size: 1em;
     cursor: pointer;
     transition: background-color 0.3s;
-    margin-bottom: 2rem;
 }
 
 .btn-submit:hover {
@@ -111,9 +106,27 @@ section.contact {
     max-width: none;
 }
 
+.page-title--red {
+    max-height: 140px;
+}
+
 @media (max-width: 768px) {
     .login-card {
         padding: 1em;
         max-width: 90%;
+    }
+
+    .header__contents {
+        padding-bottom: 5px;
+    }
+}
+
+@media (min-width: 1024px) {
+    .page-titles__inner {
+        padding: 3rem 12.5rem 3.5625rem;
+    }
+
+    .page-title--en {
+        font-size: 3.5rem;
     }
 }
