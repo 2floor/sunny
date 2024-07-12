@@ -54,7 +54,7 @@ class Hospital extends BaseModel
 
     public function dpcs(): HasMany
     {
-        return $this->hasMany(Dpc::class, 'hospital_id');
+        return $this->hasMany(DPC::class, 'hospital_id');
     }
 
     public function stages(): HasMany

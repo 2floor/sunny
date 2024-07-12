@@ -94,7 +94,7 @@ class f_hospital_ct
                         ];
                     });
                 })->sortBy(function ($subItems, $key) {
-                    return $subItems->first()->order_num;
+                    return $subItems->first()['order_num'];
                 });
             });
 
