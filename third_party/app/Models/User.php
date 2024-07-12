@@ -2,15 +2,8 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Model;
-
-class User extends Model
+class User extends BaseModel
 {
-    const DELETED = 1;
-    const NOT_DELETED = 0;
-    const PUBLISHED = 0;
-    const UNPUBLISHED = 1;
-
     protected $table = 't_user';
     protected $fillable = [
         'type',

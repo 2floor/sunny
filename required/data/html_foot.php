@@ -14,7 +14,8 @@
 
 <!-- Plugins Js -->
 <script src="[path]assets/admin/plugins/select2/new-version/select2.min.js" type="text/javascript"></script>
-<script src="[path]assets/admin/plugins/bootstrap-sweetalert/sweet-alert.min.js"></script>
+<script src="[path]assets/admin/plugins/bootstrap-sweetalert/sweet-alert.min.js" type="text/javascript"></script>
+<script src="[path]assets/admin/plugins/pagination-js/pagination.min.js" type="text/javascript"></script>
 
 <!-- App js -->
 <script src="[path]assets/admin/js/common/jquery.core.js"></script>

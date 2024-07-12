@@ -1,4 +1,7 @@
 <?php
+
+use App\Models\User;
+
 if (!isset($_SESSION)) {
     session_start();
 }
@@ -17,10 +20,10 @@ class auth_logic
             exit();
         }
 
-        $existedUser = \App\Models\User::where([
+        $existedUser = User::where([
             'id' => $user['id'] ?? 0,
-            'del_flg' => \App\Models\User::NOT_DELETED,
-            'public_flg' => \App\Models\User::PUBLISHED
+            'del_flg' => User::NOT_DELETED,
+            'public_flg' => User::PUBLISHED
         ])->exists();
 
         if (!$existedUser) {

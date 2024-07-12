@@ -1,0 +1,626 @@
+main {
+    padding-top: 100px;
+}
+
+.h-27 {
+    height: 27px;
+}
+
+.container {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    width: 90vw;
+}
+
+.main-search {
+    flex: 1;
+    box-sizing: border-box;
+    display: grid;
+    grid-template-columns: 30% 70%;
+    grid-template-areas: "search-filter search-result";
+    gap: 20px;
+}
+
+.search-filter,
+.search-result {
+    background-color: #ffffff;
+    padding: 50px 30px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    border-radius: 10px;
+}
+
+.search-filter {
+    grid-area: search-filter;
+    transition: max-height 0.3s ease;
+    max-height: 1100px;
+    overflow-y: auto;
+}
+
+.search-result {
+    grid-area: search-result;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    align-items: flex-start;
+    position: relative;
+}
+
+.search-filter h2 {
+    text-align: center;
+    font-weight: bolder;
+    margin-bottom: 50px;
+}
+
+.filter-group {
+    margin-bottom: 40px;
+}
+
+.filter-header {
+    position: relative;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background-color: #f1f1f1;
+    padding: 10px;
+    border-radius: 5px;
+}
+
+.show-popup {
+    cursor: pointer;
+}
+
+.show-popup:hover {
+    background-color: #bfbfbf;;
+}
+
+.filter-header h3 {
+    margin: 0;
+    font-size: 18px;
+    font-weight: bolder;
+}
+
+.filter-header .badge {
+    position: absolute;
+    top: -7px;
+    right: -7px;
+    background-color: #ff5733;
+    color: #ffffff;
+    border-radius: 10px;
+    padding: 2px 6px;
+    font-size: 12px;
+}
+
+.filter-content {
+    background-color: #f9f9f9;
+    padding: 10px;
+    border-radius: 5px;
+}
+
+.filter-content span {
+    display: inline-block;
+    padding: 5px 10px;
+    border-radius: 15px;
+    margin: 5px 1.5px;
+}
+
+.filter-content .keyword {
+    width: 100%;
+    padding: 10px;
+    border-radius: 5px;
+    border: 1px solid #ccc;
+}
+
+.content-required span {
+    background-color: #FFA629;
+    color: #2E2E2E;
+}
+
+.content-option span {
+    background-color: #9747FF;
+    color: #ffffff;
+}
+
+.filter-group .toggle {
+    font-size: 20px;
+    cursor: pointer;
+    font-weight: bolder;
+}
+
+.filter-group-spaced {
+    margin-top: 200px;
+}
+
+.radio-group {
+    display: flex;
+    flex-direction: column;
+}
+
+.radio-group label {
+    margin-bottom: 10px;
+}
+
+.radio-group input[type="radio"] {
+    margin-right: 10px;
+}
+
+input[type="radio"], input[type="checkbox"] {
+    appearance: auto;
+    display: inline-block;
+}
+
+.search-button {
+    width: 100%;
+    padding: 10px;
+    background-color: #0D99FF;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 16px;
+    font-weight: bolder;
+}
+
+.search-button:hover {
+    background-color: #0984dc;
+}
+
+.toggle-button {
+    display: none;
+}
+
+/* Popup styles */
+.popup-container {
+    position: absolute;
+    top: 5%;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 90%;
+    height: 100%;
+    display: none;
+    z-index: 10;
+}
+
+.popup {
+    display: none;
+    background-color: #ffffff;
+    padding: 20px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    border-radius: 10px;
+    z-index: 1000;
+}
+
+.popup label {
+    font-weight: unset;
+}
+
+.popup-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 50px;
+}
+
+.category-popup-header {
+    margin-bottom: 0;
+}
+
+.popup-header h2 {
+    margin: 0;
+    font-size: 30px;
+    font-weight: bolder;
+}
+
+.popup-header h3 {
+    margin: 0;
+    font-size: 20px;
+    font-weight: bolder;
+}
+
+.popup-close {
+    cursor: pointer;
+    font-size: 24px;
+    font-weight: bolder;
+}
+
+.popup-checkbox-content {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 30px;
+    padding: 15px;
+}
+
+.category-content {
+    margin-bottom: 10px;
+}
+
+.popup-checkbox-content label {
+    display: flex;
+    align-items: center;
+    font-size: 16px;
+}
+
+.popup-checkbox-content input[type="checkbox"] {
+    margin-right: 10px;
+}
+
+.popup-selection-content h2 {
+    font-weight: bolder;
+}
+
+.popup-selection-content label {
+    font-size: 16px;
+}
+
+.popup-selection-content .form-group {
+    margin-bottom: 30px;
+    display: flex;
+    flex-direction: row;
+}
+
+.popup-selection-content .form-group label {
+    display: block;
+    margin-bottom: 5px;
+    width: 30%;
+}
+
+.popup-selection-content .form-group input[type="checkbox"] {
+    margin-right: 10px;
+}
+
+.popup-selection-content .form-group .select2-container {
+    width: 100% !important;
+    font-size: 16px;
+}
+
+.popup-selection-content .select2-selection--single {
+    height: 35px;
+    align-content: center;
+}
+
+.popup-footer {
+    padding: 15px;
+    text-align: right;
+}
+
+.next-footer {
+    display: flex;
+    justify-content: end;
+}
+
+.previous-footer {
+    display: flex;
+    justify-content: space-between;
+}
+
+.popup-footer button {
+    background-color: #0D99FF;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 10px;
+    cursor: pointer;
+}
+
+.popup-footer button:hover {
+    background-color: #0984dc;
+}
+
+.search-result-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 40px;
+    width: 100%;
+    padding: 0 20px;
+    margin-top: 5px;
+}
+
+.search-result-header label{
+    font-weight: bolder;
+    font-size: 16px;
+}
+
+.search-result-header-right {
+    display: flex;
+    align-items: center;
+}
+
+.search-result-header-right span {
+    margin-right: 14px;
+    font-weight: bolder;
+    font-size: 16px;
+}
+
+.confirm-button {
+    background-color: #0D99FF;
+    color: #fff;
+    border: none;
+    padding: 5px 30px;
+    border-radius: 10px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+.confirm-button:hover {
+    background-color: #0984dc;
+}
+
+.hospital-card {
+    display: grid;
+    grid-template-columns: 8% 47% 45%;
+    background-color: #fff;
+    border: 1px solid #ddd;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    border-radius: 10px;
+    margin-bottom: 20px;
+    width: 100%;
+}
+
+.hospital-card .card-checkbox {
+    display: flex;
+    align-items: start;
+    justify-content: center;
+    padding: 20px;
+}
+
+.hospital-card .card-info {
+    padding: 20px;
+}
+
+.hospital-card .card-info .tag {
+    color: #0b0b0b;
+    background-color: #e0e0e0;
+    padding: 7px 15px;
+    border-radius: 10px;
+    display: inline-block;
+    margin-bottom: 10px;
+    font-weight: 700;
+}
+
+.hospital-info h2 {
+    margin-bottom: 0;
+    font-weight: 700;
+}
+
+.hospital-info span{
+    font-size: 12px;
+}
+
+.hospital-card i {
+    margin-bottom: 15px;
+}
+
+.hospital-info p {
+    width: 80%;
+    font-size: 14px;
+    color: #555;
+    font-weight: 600;
+}
+
+.card-info .categories {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin-top: 20px;
+}
+
+.card-info .categories span {
+    background-color: #e0e0e0;
+    padding: 5px 10px;
+    border-radius: 5px;
+    font-size: 14px;
+    color: #0b0b0b;
+    font-weight: 700;
+    text-align: center;
+    width: 30%;
+}
+
+.card-stats {
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    gap: 30px;
+}
+
+.hospital-rank {
+    display: grid;
+    gap: 15px;
+    font-weight: 700;
+    grid-template-columns: 20% 20% 20% 40%;
+    grid-template-areas:
+        "header1 header2 header3 header4"
+        "stat1 stat2 stat3 stat4"
+        "stat5 stat6 stat7 stat8"
+        "stat9 stat10 stat11 stat12";
+}
+
+.header1, .header2, .header3, .header4,
+.stat1, .stat2, .stat3, .stat4,
+.stat5, .stat6, .stat7, .stat8,
+.stat9, .stat10, .stat11, .stat12 {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.header1, .header2, .header3, .header4 {
+    font-weight: bolder;
+}
+
+.rank-icon {
+    border-radius: 50%;
+    color: #fff;
+    font-weight: bold;
+    text-align: center;
+}
+
+.rank-icon img {
+    width: 27px;
+    height: 27px;
+}
+
+.rank-row-1 {
+    background-color: #f39c12;
+}
+
+.rank-row-2 {
+    background-color: #27ae60;
+}
+
+.rank-row-3 {
+    background-color: #2980b9;
+}
+
+.stat {
+    position: relative;
+}
+
+.stat-info-extended {
+    position: absolute;
+    transform: translateX(-5%);
+    padding: 5px 10px;
+    border-radius: 5px;
+    color: #fff;
+    font-weight: bold;
+    text-align: center;
+    width: 140px;
+}
+
+.stat-info-extended p{
+    margin: 0;
+}
+
+.dpc-info {
+    text-align: center;
+}
+
+.dpc-info p {
+    font-size: 18px;
+    margin-bottom: 10px;
+    font-weight: 700;
+}
+
+.dpc-info p span {
+    font-size: 30px;
+}
+
+.paginationjs {
+    display: flex;
+    width: 100%;
+    justify-content: flex-end;
+}
+
+.paginationjs .paginationjs-pages li {
+    padding: 0 1px;
+}
+
+.hospital-list {
+    width: 100%;
+}
+
+.hospital-no-data {
+    display: flex;
+    justify-content: center;
+    width: 100%;
+}
+
+.no-data-message {
+    background-color: #fff;
+    border: 1px solid #ddd;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    border-radius: 10px;
+    margin-bottom: 20px;
+    padding: 20% 35%;
+    font-weight: bolder;
+
+}
+@media (max-width: 1200px) {
+    .main-search {
+        grid-template-columns: 1fr;
+        grid-template-areas: "search-filter" "search-result";
+    }
+
+    .search-filter {
+        max-height: 90px;
+        overflow: hidden;
+        padding: 20px;
+    }
+
+    .search-filter.expanded {
+        max-height: none;
+    }
+
+    .search-title {
+        display: flex;
+        flex-direction: row;
+    }
+
+    .search-title h2 {
+        flex-grow: 3
+    }
+
+    .toggle-button {
+        display: block;
+        text-align: right;
+        cursor: pointer;
+        font-size: 24px;
+        padding: 10px;
+    }
+
+    .popup-checkbox-content {
+        grid-template-columns: 1fr;
+        gap: 30px;
+        padding: 15px;
+    }
+
+    .search-result {
+        position: unset;
+    }
+
+    .popup-selection-content .form-group {
+        flex-direction: column;
+    }
+
+    .popup-selection-content .form-group label {
+        width: 100%;
+    }
+
+    .hospital-card {
+        grid-template-columns: 1fr;
+    }
+
+    .hospital-card .card-checkbox {
+        justify-content: left;
+        padding: 10px 20px;
+    }
+
+    .search-result-header {
+        flex-direction: column;
+    }
+
+    .search-result-header-right {
+        flex-direction: column;
+        margin-top: 10px;
+        gap: 10px;
+    }
+
+    .confirm-button {
+        padding: 5px 25px;
+    }
+
+    .stat-info-extended {
+        padding: 5px 0;
+        transform: translateX(8%);
+        width: 130px;
+    }
+
+    .header1, .header2, .header3, .header4 {
+        align-items: start;
+    }
+
+    .card-info .categories span {
+        width: 100%;
+    }
+}

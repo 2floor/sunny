@@ -24,7 +24,7 @@ class meta
         $page_keywords_ini = 'keywords';
         $page_description_ini = 'description';
 
-        $site_name = "｜ラインファーマ株式会社"; // タイトルの末尾に追加される不要であれば「""」のみにする
+        $site_name = "｜サニーヘルス株式会社"; // タイトルの末尾に追加される不要であれば「""」のみにする
 
         if ($page_name == "" || $page_name == "/" || strpos($page_name, "index.php") !== false) {
             $index_flg = true;

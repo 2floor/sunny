@@ -1,4 +1,7 @@
 <?php
+
+use App\Models\User;
+
 if (!isset($_SESSION)) {
     session_start();
 }
@@ -20,11 +23,11 @@ if (!$security->validateCsrfToken($token)) {
     exit();
 }
 
-$user = \App\Models\User::where([
+$user = User::where([
     'username' => $m_login,
     'password' => $common_logic->convert_password_encode($m_pass),
-    'del_flg' => \App\Models\User::NOT_DELETED,
-    'public_flg' => \App\Models\User::PUBLISHED
+    'del_flg' => User::NOT_DELETED,
+    'public_flg' => User::PUBLISHED
 ])->first();
 
 if ($user) {
