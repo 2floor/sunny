@@ -506,7 +506,7 @@ input[type="radio"], input[type="checkbox"] {
     font-size: 30px;
 }
 
-.paginationjs {
+.search-hospital-footer {
     display: flex;
     width: 100%;
     justify-content: flex-end;

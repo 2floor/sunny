@@ -89,8 +89,11 @@ $(document).ready(function () {
                     'limit': 5
                 }
             };
+            $('.loading-overlay').show();
 
             ajax.get(postData).done(function(result) {
+                $('.loading-overlay').hide();
+
                 if (result.status && result.data.html) {
                     $('.hospital-list').html('').append(result.data.html);
 
@@ -98,17 +101,21 @@ $(document).ready(function () {
                         totalPages = result.data.totalPages;
                         initPagination(totalPages);
                     }
-
+                    $('.search-hospital-footer').show()
                 } else if (!result.data.html) {
                     $('.hospital-list').html('').append('<div class="hospital-no-data"><div class="no-data-message text-danger">一致するデータが見つかりません</div></div>');
-                    $('#pagination-container').html('');
+                    totalPages = 0
+                    $('.search-hospital-footer').hide()
                 } else {
                     $('.hospital-list').html('').append('<div class="hospital-no-data"><div class="no-data-message text-danger">エラーが発生しました</div></div>');
-                    $('#pagination-container').html('');
+                    totalPages = 0
+                    $('.search-hospital-footer').hide()
                 }
             }).fail(function() {
+                $('.loading-overlay').hide();
                 $('.hospital-list').html('').append('<div class="hospital-no-data"><div class="no-data-message text-danger">エラーが発生しました</div></div>');
-                $('#pagination-container').html('');
+                totalPages = 0
+                $('.search-hospital-footer').hide()
             });
         }
     }
@@ -117,6 +124,8 @@ $(document).ready(function () {
         $('#pagination-container').pagination({
             dataSource: new Array(totalPages).fill(1),
             pageSize: 1,
+            autoHidePrevious: true,
+            autoHideNext:true,
             callback: function(data, pagination) {
                 handleSearchHospital(pagination.pageNumber);
             }

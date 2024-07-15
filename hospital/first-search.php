@@ -103,7 +103,12 @@ $category = $initData['category'] ?? [];
                         <div class="no-data-message">検索条件を選択してください。</div>
                     </div>
                 </div>
-                <div id="pagination-container" class="paginationjs paginationjs-theme-blue paginationjs-big"></div>
+                <div class="search-hospital-footer">
+                    <div id="pagination-container" class="paginationjs paginationjs-theme-blue paginationjs-big"></div>
+                </div>
+                <div class="loading-overlay">
+                    <div class="loading-spinner"></div>
+                </div>
             </div>
         </div>
     </div>
