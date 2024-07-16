@@ -1,16 +1,6 @@
-main {
-    padding-top: 100px;
-}
 
 .h-27 {
     height: 27px;
-}
-
-.container {
-    display: flex;
-    flex-direction: column;
-    height: 100%;
-    width: 90vw;
 }
 
 .main-search {
@@ -172,7 +162,6 @@ input[type="radio"], input[type="checkbox"] {
 /* Popup styles */
 .popup-container {
     position: absolute;
-    top: 5%;
     left: 50%;
     transform: translateX(-50%);
     width: 90%;
@@ -310,7 +299,7 @@ input[type="radio"], input[type="checkbox"] {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    margin-bottom: 40px;
+    margin-bottom: 25px;
     width: 100%;
     padding: 0 20px;
     margin-top: 5px;
@@ -411,9 +400,7 @@ input[type="radio"], input[type="checkbox"] {
     border-radius: 5px;
     font-size: 14px;
     color: #0b0b0b;
-    font-weight: 700;
     text-align: center;
-    width: 30%;
 }
 
 .card-stats {
@@ -535,6 +522,15 @@ input[type="radio"], input[type="checkbox"] {
     padding: 20% 35%;
     font-weight: bolder;
 
+}
+
+.total-result {
+    display: none;
+    margin-bottom: 10px;
+}
+
+.total-result span {
+   font-size: 20px;
 }
 @media (max-width: 1200px) {
     .main-search {

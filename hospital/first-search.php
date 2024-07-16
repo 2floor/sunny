@@ -4,11 +4,8 @@ if (!isset($_SESSION)) {
 }
 
 require_once __DIR__ . "/../required/page_init.php";
-require_once __DIR__ . "/../logic/front/auth_logic.php";
 require_once __DIR__ . "/../controller/front/f_hospital_ct.php";
 
-$auth_logic = new auth_logic();
-$auth_logic->check_authentication();
 $page_init = new page_init();
 $pageinfo = $page_init->get_info();
 
@@ -95,8 +92,11 @@ $category = $initData['category'] ?? [];
                     <label><input type="checkbox" class="m-r-10 checkbox-print-all"> 全チェック</label>
                     <div class="search-result-header-right">
                         <span>チェックした対象を</span>
-                        <button class="confirm-button">印刷</button>
+                        <button class="confirm-button" id="printButton">印刷</button>
                     </div>
+                </div>
+                <div class="total-result">
+                    <span class="badge bg-secondary"></span> 見つかりました
                 </div>
                 <div class="hospital-list">
                     <div class="hospital-no-data">

@@ -18,18 +18,13 @@ $pageinfo = $page_init->get_info();
     <?php print $pageinfo->html_head; ?>
     <link rel="stylesheet" href="./assets/css/index.css">
 </head>
-<style>
-    .card-container {
-        max-width: 700px;
-    }
-</style>
 <body>
 <?php print $pageinfo->header; ?>
 
 
 <section>
     <div class="card-container">
-        <h2>検索オプションを選択してください</h2>
+        <h2>がん治療実績データベース</h2>
         <p></p>
         <a href="./hospital" class="option red">
             病院を検索する

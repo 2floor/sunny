@@ -6,12 +6,12 @@
 
 <!-- Plugins css-->
 <link href="[path]assets/admin/plugins/select2/new-version/select2.min.css" rel="stylesheet"/>
-<link href="[path]/assets/admin/plugins/bootstrap-sweetalert/sweet-alert.css" rel="stylesheet" type="text/css" />
+<link href="[path]/assets/admin/plugins/sweetalter2/sweetalert2.min.css" rel="stylesheet" type="text/css" />
 <link href="[path]/assets/admin/plugins/pagination-js/pagination.css" rel="stylesheet" type="text/css" />
 
 <!-- App css -->
-<link rel="stylesheet" href="[path]assets/css/styles.css">
-<link href="[path]assets/admin/css/jquery-ui.min.css" rel="stylesheet" type="text/css" />
 <link href="[path]assets/admin/css/bootstrap.min.css" rel="stylesheet" type="text/css" />
+<link href="[path]assets/admin/css/jquery-ui.min.css" rel="stylesheet" type="text/css" />
+<link rel="stylesheet" href="[path]assets/css/styles.css">
 <link href="[path]assets/admin/css/core.css" rel="stylesheet" type="text/css" />
 <link href="[path]assets/admin/css/font-awesome.css" rel="stylesheet" type="text/css" />

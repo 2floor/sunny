@@ -34,10 +34,17 @@ class meta
             $page_keywords = '';
             $page_description = '';
 
-        } elseif (strpos($page_name, "message.php") !== false) {
+        } elseif (strpos($page_name, "hospital/first-search.php") !== false) {
 
             // 代表挨拶
-            $page_ttl = 'メッセージ' . $site_name;
+            $page_ttl = '病院検索 | 新規医療機関検索' . $site_name;
+            $page_keywords = '';
+            $page_description = '';
+
+        } elseif (strpos($page_name, "hospital/second-search.php") !== false) {
+
+            // 代表挨拶
+            $page_ttl = '病院検索 | セカンドオピニオン検索' . $site_name;
             $page_keywords = '';
             $page_description = '';
 

@@ -6,7 +6,7 @@
               <img class="u-desktop" src="[path]assets/images/common/header_parts-pc.png" alt="">
             </div> -->
             <div class="header__contents header__contents--top">
-                <a href="[path]" class="header__logo--top js-drawer-open m-b-10">
+                <a href="[path]" target="_blank" class="header__logo--top js-drawer-open m-b-10">
                     <img src="[path]assets/images/common/logo.png" alt="株式会社デルファイレーザージャパン">
                 </a>
 

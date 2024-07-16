@@ -1,27 +1,13 @@
 $(document).ready(function () {
     handlePopupClick('#cancerType', '#cancerPopup');
-    
+    $('.search-hospital-footer').hide()
+
     let cancerTypeChecked = []
     let areaChecked = {}
     let categoryChecked = []
-    let totalPages = 0;
-    let ajax = {
-        get: function(post_data) {
-            let defer = $.Deferred();
-            $.ajax({
-                type: 'GET',
-                url: '../controller/front/f_hospital_ct.php',
-                data: post_data,
-                dataType: 'json',
-                success: defer.resolve,
-                error: defer.reject,
-            });
-            return defer.promise();
-        }
-    };
 
     $('.area-selection').select2({
-        placeholder: '州を選択',
+        placeholder: '都道府県を選択',
         allowClear: true
     });
 
@@ -69,14 +55,12 @@ $(document).ready(function () {
         }
     }
 
-    function handleSearchHospital(pageNumber = 1) {
+    function initPagination() {
         if (cancerTypeChecked.length === 0) {
-            swal({
+            Swal.fire({
+                icon: "error",
                 title: 'エラー!',
                 text: '少なくとも1種類のがんを選択する必要があります',
-                type: "error",
-                confirmButtonClass: 'btn-primary',
-                confirmButtonText: "OK",
             });
         } else {
             let keyword = $('input#keyword').val();
@@ -85,54 +69,90 @@ $(document).ready(function () {
                 data: {
                     'cancer': cancerTypeChecked,
                     'area': areaChecked,
-                    'category': categoryChecked,
-                    'keyword': keyword,
-                    'page': pageNumber,
-                    'limit': 5
+                    'category': flattenArray(categoryChecked),
+                    'keyword': keyword
                 }
             };
-            $('.loading-overlay').show();
 
-            ajax.get(postData).done(function(result) {
-                $('.loading-overlay').hide();
-
-                if (result.status && result.data.html) {
-                    $('.hospital-list').html('').append(result.data.html);
-
-                    if (totalPages !== result.data.totalPages) {
-                        totalPages = result.data.totalPages;
-                        initPagination(totalPages);
+            let uri = toURI(postData);
+            $('#pagination-container').pagination({
+                dataSource: '../controller/front/f_hospital_ct.php?' + uri,
+                locator: 'data.html',
+                totalNumberLocator: function(response) {
+                    return response.data.html[1];
+                },
+                pageSize: 5,
+                autoHidePrevious: true,
+                autoHideNext:true,
+                showSizeChanger: true,
+                sizeChangerOptions: [5, 10, 20],
+                ajax: {
+                    beforeSend: function() {
+                        $('.loading-overlay').show();
                     }
-                    $('.search-hospital-footer').show()
-                } else if (!result.data.html) {
-                    $('.hospital-list').html('').append('<div class="hospital-no-data"><div class="no-data-message text-danger">一致するデータが見つかりません</div></div>');
-                    totalPages = 0
-                    $('.search-hospital-footer').hide()
-                } else {
-                    $('.hospital-list').html('').append('<div class="hospital-no-data"><div class="no-data-message text-danger">エラーが発生しました</div></div>');
-                    totalPages = 0
-                    $('.search-hospital-footer').hide()
+                },
+                callback: function(data) {
+                    $('.loading-overlay').hide();
+
+                    if (data[0]) {
+                        $('.total-result').show()
+                        $('.total-result span').text(data[1] + '件')
+                        $('.hospital-list').html('').append(data[0]);
+                        $('.search-hospital-footer').show()
+                    } else {
+                        $('.hospital-list').html('').append('<div class="hospital-no-data"><div class="no-data-message text-danger">一致するデータが見つかりません</div></div>');
+                        $('.search-hospital-footer').hide()
+                        $('.total-result').hide()
+                    }
                 }
-            }).fail(function() {
-                $('.loading-overlay').hide();
-                $('.hospital-list').html('').append('<div class="hospital-no-data"><div class="no-data-message text-danger">エラーが発生しました</div></div>');
-                totalPages = 0
-                $('.search-hospital-footer').hide()
             });
         }
     }
 
-    function initPagination(totalPages) {
-        $('#pagination-container').pagination({
-            dataSource: new Array(totalPages).fill(1),
-            pageSize: 1,
-            autoHidePrevious: true,
-            autoHideNext:true,
-            callback: function(data, pagination) {
-                handleSearchHospital(pagination.pageNumber);
+    function flattenArray(nestedArray) {
+        let flatArray = [];
+        for (let key in nestedArray) {
+            if (nestedArray.hasOwnProperty(key)) {
+                flatArray = flatArray.concat(nestedArray[key]);
             }
-        });
+        }
+        return flatArray;
     }
+
+    function toURI(postData) {
+        let method = postData.method;
+        let data = postData.data;
+        let uri = `method=${encodeURIComponent(method)}`;
+
+        function encodeArray(key, array) {
+            return array.map(item => `${encodeURIComponent(key)}[]=${encodeURIComponent(item)}`).join('&');
+        }
+
+        function encodeObject(key, obj) {
+            let parts = [];
+            for (let subKey in obj) {
+                if (obj.hasOwnProperty(subKey) && Array.isArray(obj[subKey])) {
+                    parts.push(obj[subKey].map(item => `${encodeURIComponent(key)}[${encodeURIComponent(subKey)}][]=${encodeURIComponent(item)}`).join('&'));
+                }
+            }
+            return parts.join('&');
+        }
+
+        for (let key in data) {
+            if (data.hasOwnProperty(key)) {
+                if (Array.isArray(data[key])) {
+                    uri += `&${encodeArray(key, data[key])}`;
+                } else if (typeof data[key] === 'object' && data[key] !== null) {
+                    uri += `&${encodeObject(key, data[key])}`;
+                } else {
+                    uri += `&${encodeURIComponent(key)}=${encodeURIComponent(data[key])}`;
+                }
+            }
+        }
+
+        return uri;
+    }
+
 
     $('.popup-close').on('click', function () {
         let popup = $(this).closest('.popup')
@@ -225,7 +245,7 @@ $(document).ready(function () {
             $('.popup-container').hide();
         }
 
-        handleSearchHospital()
+        initPagination()
     });
 
     $('.checkbox-print-all').change(function() {
@@ -266,6 +286,31 @@ $(document).ready(function () {
         });
 
         checkbox.prop('checked', allSelected);
+    });
+
+    $('#printButton').on('click', function () {
+        if ($('.checkbox-print:checked').length == 0) {
+            Swal.fire({
+                icon: "error",
+                title: 'エラー!',
+                text: "印刷する病院が選択されていません",
+            });
+        } else {
+            let html = '';
+            $('.checkbox-print:checked').each(function () {
+                html += $(this).closest('.hospital-card').find('.hospital-info h2').text();
+                html += '<br>'
+            })
+
+            Swal.fire({
+                title: "下記のページを印刷しますか？",
+                icon: "question",
+                html: html,
+                showDenyButton: true,
+                confirmButtonText: "Ok",
+                denyButtonText: `キャンセル`
+            });
+        }
     });
 
     $(document).on('popupClosed', function (e, data) {

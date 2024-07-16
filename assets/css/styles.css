@@ -4707,3 +4707,14 @@ a.anchor {
     0% { transform: rotate(0deg); }
     100% { transform: rotate(360deg); }
 }
+
+main {
+    padding-top: 100px;
+}
+
+.container {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    width: 90vw;
+}
