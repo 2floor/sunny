@@ -93,6 +93,7 @@ $(document).ready(function () {
                 },
                 callback: function(data) {
                     $('.loading-overlay').hide();
+                    $('.checkbox-print-all').prop('checked', false);
 
                     if (data[0]) {
                         $('.total-result').show()
