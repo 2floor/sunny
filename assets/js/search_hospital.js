@@ -1,4 +1,6 @@
 $(document).ready(function () {
+    handlePopupClick('#cancerType', '#cancerPopup');
+    
     let cancerTypeChecked = []
     let areaChecked = {}
     let categoryChecked = []

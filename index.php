@@ -18,7 +18,11 @@ $pageinfo = $page_init->get_info();
     <?php print $pageinfo->html_head; ?>
     <link rel="stylesheet" href="./assets/css/index.css">
 </head>
-
+<style>
+    .card-container {
+        max-width: 700px;
+    }
+</style>
 <body>
 <?php print $pageinfo->header; ?>
 
@@ -28,10 +32,10 @@ $pageinfo = $page_init->get_info();
         <h2>検索オプションを選択してください</h2>
         <p></p>
         <a href="./hospital" class="option red">
-            病院やクリニックを探します
+            病院を検索する
         </a>
         <a href="#" class="option green">
-           優れた医師を見つけます
+            名医を検索する
         </a>
     </div>
 </section>
