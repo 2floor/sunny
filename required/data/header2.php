@@ -57,7 +57,7 @@
     <div class="drawer js-drawer-open">
         <div class="drawer__inner">
             <div class="drawer__logo">
-                <img src="../assets/images/common/logo.png">
+                <img src="[path]assets/images/common/logo.png">
             </div>
             <nav class="drawer-nav">
                 <ul class="drawer-nav__lists">

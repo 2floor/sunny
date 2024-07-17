@@ -5,7 +5,7 @@ use App\Models\HospitalCategory;
 
 class f_hospital_logic
 {
-    public function getHospitalsFromFilter($keyword, $cancers, $areas, $categories, $page, $limit)
+    public function getHospitalsFromFilter($keyword, $cancers, $areas, $categories, $sort, $page, $limit)
     {
         $query = Hospital::query();
 
@@ -27,15 +27,35 @@ class f_hospital_logic
             });
         }
 
-        $query->orderByDesc(function ($query) use ($cancers) {
-            $query->selectRaw('AVG(n_dpc) as average_n_dpc')
-                ->from('t_dpc')
-                ->whereColumn('t_dpc.hospital_id', 't_hospital.id')
-                ->whereIn('t_dpc.cancer_id', $cancers)
-                ->orderByDesc('year')
-                ->limit(3);
+        if (!$sort || $sort == 'dpcSort') {
+            $query->orderByDesc(function ($query) use ($cancers) {
+                $query->selectRaw('AVG(n_dpc) as average_n_dpc')
+                    ->from('t_dpc')
+                    ->whereColumn('t_dpc.hospital_id', 't_hospital.id')
+                    ->whereIn('t_dpc.cancer_id', $cancers)
+                    ->orderByDesc('year')
+                    ->limit(3);
 
-        });
+            });
+        } else if ($sort == 'newNumSort') {
+            $query->orderByDesc(function ($query) use ($cancers) {
+                $query->selectRaw('AVG(total_num_new) as average_num_new')
+                    ->from('t_stage')
+                    ->whereColumn('t_stage.hospital_id', 't_hospital.id')
+                    ->whereIn('t_stage.cancer_id', $cancers)
+                    ->orderByDesc('year')
+                    ->limit(3);
+            });
+        } else if ($sort == 'survRateSort') {
+            $query->orderByDesc(function ($query) use ($cancers) {
+                $query->selectRaw('AVG(survival_rate) as average_survival_rate')
+                    ->from('t_surv_hospital')
+                    ->whereColumn('t_surv_hospital.hospital_id', 't_hospital.id')
+                    ->whereIn('t_surv_hospital.cancer_id', $cancers)
+                    ->orderByDesc('year')
+                    ->limit(3);
+            });
+        }
 
         return [
            'total' => $query->count(),

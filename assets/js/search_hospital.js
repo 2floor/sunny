@@ -64,13 +64,15 @@ $(document).ready(function () {
             });
         } else {
             let keyword = $('input#keyword').val();
+            let sort = $('input[name="sort"]:checked').val()
             let postData = {
                 method: 'searchHospitalList',
                 data: {
                     'cancer': cancerTypeChecked,
                     'area': areaChecked,
                     'category': flattenArray(categoryChecked),
-                    'keyword': keyword
+                    'keyword': keyword,
+                    'sort': sort
                 }
             };
 

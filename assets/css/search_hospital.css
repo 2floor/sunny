@@ -333,7 +333,17 @@ input[type="radio"], input[type="checkbox"] {
     transition: background-color 0.3s;
 }
 
-.confirm-button:hover {
+.detail-button {
+    background-color: #0D99FF;
+    color: #fff;
+    border: none;
+    padding: 8px 30px;
+    border-radius: 10px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+.confirm-button:hover, .detail-button:hover {
     background-color: #0984dc;
 }
 
@@ -534,6 +544,7 @@ input[type="radio"], input[type="checkbox"] {
 .total-result span {
    font-size: 20px;
 }
+
 @media (max-width: 1200px) {
     .main-search {
         grid-template-columns: 1fr;
@@ -604,7 +615,7 @@ input[type="radio"], input[type="checkbox"] {
         gap: 10px;
     }
 
-    .confirm-button {
+    .confirm-button, .detail-button {
         padding: 5px 25px;
     }
 

@@ -3,6 +3,7 @@
 use App\Models\Area;
 use App\Models\Cancer;
 use App\Models\Category;
+use App\Models\Hospital;
 
 if (!isset($_SESSION)) {
     session_start();
@@ -99,12 +100,67 @@ class f_hospital_ct
         ];
     }
 
+    public function getDetailById($id, $cancerId)
+    {
+        $hospital = Hospital::where('id', $id)->whereHas('cancers', function ($query) use ($cancerId) {
+            $query->where('m_cancer.id', $cancerId);
+        })->first();
+
+        if (!$hospital) {
+            header("Location: " . BASE_URL . "error/404_page.php");
+            exit();
+        }
+
+        $cancer = Cancer::select('cancer_type')->where('id', $cancerId)->first();
+
+        $categories = $hospital->categories()
+            ->where('data_type', Category::HOSPITAL_DETAIL_TYPE)
+            ->orWhere('data_type', Category::HOSPITAL_TREATMENT_TYPE)
+            ->get();
+
+        $hospitalType = $categories->firstWhere('hard_name2', 'hospital_type');
+        $hospitalGen = $categories->firstWhere('hard_name2', 'hospital_gen');
+        $specialClinic = $categories->firstWhere('hard_name3', 'special_clinic');
+        $advancedMedical = $categories->firstWhere('hard_name3', 'advanced_medical');
+
+        $treatment = $hospital->categories()->where('data_type', Category::HOSPITAL_TREATMENT_TYPE)
+            ->pluck('level3')
+            ->implode(' ');
+
+        $avgData = $hospital->calculateAvgCommonData($cancerId);
+
+        $infoHospital = [
+            'name' => $hospital->hospital_name,
+            'tel' => $hospital->tel,
+            'address' => $hospital->addr,
+            'hpUrl' => $hospital->hp_url,
+            'supportUrl' => $hospital->support_url,
+            'specialClinicUrl' => $specialClinic?->pivot->content1
+        ];
+
+        $infoTreatment = [
+            'hospitalType' => $hospitalType?->level3,
+            'hospitalGen' => $hospitalGen?->level3,
+            'hasAdvancedMedical' => $advancedMedical ? 1 : 0,
+            'advancedMedical' => $advancedMedical?->pivot->content1,
+            'treatment' => $treatment
+        ];
+
+        return [
+            'cancerName' => $cancer->cancer_type,
+            'avgData' => $avgData,
+            'infoHospital' => $infoHospital,
+            'infoTreatment' => $infoTreatment,
+        ];
+    }
+
     public function searchHospitalList($get)
     {
         $cancers = $get['cancer'] ?? [];
         $areaRaw = $get['area'] ?? [];
         $categories = $get['category'] ?? [];
         $keyword = $get['keyword'] ?? '';
+        $sort = $get['sort'] ?? '';
         $page = $get['pageNumber'] ?? 1;
         $limit = $get['pageSize'] ?? 5;
 
@@ -127,7 +183,7 @@ class f_hospital_ct
         }
 
         $hospitalLogic = new f_hospital_logic();
-        $data = $hospitalLogic->getHospitalsFromFilter($keyword, $cancers, $areas, $categories, $page, $limit);
+        $data = $hospitalLogic->getHospitalsFromFilter($keyword, $cancers, $areas, $categories, $sort, $page, $limit);
         $totalNumber = $data['total'];
         $hospitals = $data['hospitals'];
 
@@ -136,50 +192,11 @@ class f_hospital_ct
             $areaName = $hospital->area->pref_name;
             $categories = $hospital->categories()->select('level3')
                 ->where('data_type', Category::HOSPITAL_DETAIL_TYPE)
-                ->whereIn('level2', ['病院区分', 'ゲノム拠点病院区分'])
+                ->whereIn('hard_name2', ['hospital_type', 'hospital_gen'])
                 ->get()
                 ->pluck('level3');
 
-            $dpcs = $hospital->dpcs()
-                ->select(['n_dpc', 'rank_nation_dpc', 'rank_area_dpc', 'rank_pref_dpc'])
-                ->where('cancer_id', $cancers[0])
-                ->orderBy('year', 'desc')
-                ->take(3)
-                ->get();
-
-            $avgDpc = $dpcs->avg('n_dpc');
-            $avgGlobalDpcRank = $dpcs->avg('rank_nation_dpc');
-            $avgAreaDpcRank = $dpcs->avg('rank_area_dpc');
-            $avgPrefDpcRank = $dpcs->avg('rank_pref_dpc');
-
-            $stages = $hospital->stages()
-                ->select(['total_num_new', 'total_num_rank', 'local_num_rank', 'pref_num_rank'])
-                ->where('cancer_id', $cancers[0])
-                ->orderBy('year', 'desc')
-                ->take(3)
-                ->get();
-
-            $avgNewNum = $stages->avg('total_num_new');
-            $avgGlobalNewNumRank = $stages->avg('total_num_rank');
-            $avgLocalNewNumRank = $stages->avg('local_num_rank');
-            $avgPrefNewNumRank = $stages->avg('pref_num_rank');
-
-            $survivals = $hospital->survivals()
-                ->select([
-                    'survival_rate',
-                    'total_survival_rate',
-                    'local_survival_rate',
-                    'pref_survival_rate'
-                ])
-                ->where('cancer_id', $cancers[0])
-                ->orderBy('year', 'desc')
-                ->take(3)
-                ->get();
-
-            $avgSurvivalRate = $survivals->avg('survival_rate');
-            $avgGlobalRate = $survivals->avg('total_survival_rate');
-            $avgLocalRate = $survivals->avg('local_survival_rate');
-            $avgPrefRate = $survivals->avg('pref_survival_rate');
+            $avgData = $hospital->calculateAvgCommonData($cancers[0]);
 
             $html .= '<div class="hospital-card">';
             $html .= '<div class="card-checkbox">';
@@ -207,22 +224,22 @@ class f_hospital_ct
             $html .= '<div class="header2 m-b-15">地方</div>';
             $html .= '<div class="header3 m-b-15">全国</div>';
             $html .= '<div class="header4 m-b-15"></div>';
-            $html .= $this->renderRankStat('stat1', $avgPrefDpcRank, "../img/icons/");
-            $html .= $this->renderRankStat('stat2', $avgAreaDpcRank, "../img/icons/");
-            $html .= $this->renderRankStat('stat3', $avgGlobalDpcRank, "../img/icons/");
-            $html .= '<div class="stat4 stat m-b-25"><div class="stat-info stat-info-extended rank-row-1"><p>年間入院患者数:</p><p>'.($avgDpc ? number_format(round($avgDpc)) . '人' : "-").'</p></div></div>';
-            $html .= $this->renderRankStat('stat5', $avgPrefNewNumRank, "../img/icons/");
-            $html .= $this->renderRankStat('stat6', $avgLocalNewNumRank, "../img/icons/");
-            $html .= $this->renderRankStat('stat7', $avgGlobalNewNumRank, "../img/icons/");
-            $html .= '<div class="stat8 stat m-b-25"><div class="stat-info stat-info-extended rank-row-2"><p>年閒新現患者数:</p><p>'.($avgNewNum ? number_format(round($avgNewNum)) . '人' : "-").'</p></div></div>';
-            $html .= $this->renderRankStat('stat9', $avgPrefRate, "../img/icons/");
-            $html .= $this->renderRankStat('stat10', $avgLocalRate, "../img/icons/");
-            $html .= $this->renderRankStat('stat11', $avgGlobalRate, "../img/icons/");
-            $html .= '<div class="stat12 stat m-b-25"><div class="stat-info stat-info-extended rank-row-3"><p>5年後生存率係数:</p><p>'.($avgSurvivalRate ? round($avgSurvivalRate, 2) : "-").'</p></div></div>';
+            $html .= $this->renderRankStat('stat1', $avgData['avgPrefDpcRank'], "../img/icons/");
+            $html .= $this->renderRankStat('stat2',  $avgData['avgAreaDpcRank'], "../img/icons/");
+            $html .= $this->renderRankStat('stat3', $avgData['avgGlobalDpcRank'], "../img/icons/");
+            $html .= '<div class="stat4 stat m-b-25"><div class="stat-info stat-info-extended rank-row-1"><p>年間入院患者数:</p><p>'.($avgData['avgDpc'] ? number_format($avgData['avgDpc']) . '人' : "-").'</p></div></div>';
+            $html .= $this->renderRankStat('stat5', $avgData['avgPrefNewNumRank'], "../img/icons/");
+            $html .= $this->renderRankStat('stat6', $avgData['avgLocalNewNumRank'], "../img/icons/");
+            $html .= $this->renderRankStat('stat7', $avgData['avgGlobalNewNumRank'], "../img/icons/");
+            $html .= '<div class="stat8 stat m-b-25"><div class="stat-info stat-info-extended rank-row-2"><p>年閒新現患者数:</p><p>'.($avgData['avgNewNum'] ? number_format($avgData['avgNewNum']) . '人' : "-").'</p></div></div>';
+            $html .= $this->renderRankStat('stat9', $avgData['avgPrefRate'], "../img/icons/");
+            $html .= $this->renderRankStat('stat10', $avgData['avgLocalRate'], "../img/icons/");
+            $html .= $this->renderRankStat('stat11', $avgData['avgGlobalRate'], "../img/icons/");
+            $html .= '<div class="stat12 stat m-b-25"><div class="stat-info stat-info-extended rank-row-3"><p>5年後生存率係数:</p><p>'.($avgData['avgSurvivalRate'] ?? "-").'</p></div></div>';
             $html .= '</div>';
             $html .= '<div class="dpc-info">';
-            $html .= '<p>DPC治療指数: <span>'.($avgDpc ?? "-").'</span></p>';
-            $html .= '<button class="confirm-button">この医療機関の詳細を見る</button>';
+            $html .= '<p>DPC治療指数: <span>'.($avgData['avgDpc'] ? number_format($avgData['avgDpc']) : "-").'</span></p>';
+            $html .= '<a target="_bank" href="detail/index.php?id='.$hospital->id.'&cancerId='.$cancers[0].'" class="detail-button">この医療機関の詳細を見る</a>';
             $html .= '</div>';
             $html .= '</div>';
             $html .= '</div>';
@@ -237,7 +254,7 @@ class f_hospital_ct
     }
 
     private function renderRankStat($class, $rank, $imgPath) {
-        $roundedRank = $rank ? round($rank) : '-';
+        $roundedRank = $rank ?? '-';
         if (in_array($roundedRank, [1, 2, 3])) {
             $html = '<div class="'.$class.' rank-icon m-b-25 h-27">';
             $html .= '<div class="rank-icon"><img src="' . $imgPath . 'rank' . $roundedRank . '.png" alt="rank-img"></div>';

@@ -102,7 +102,7 @@ ob_start(); // 出力バッファリングを開始
 <div class="drawer js-drawer-open">
   <div class="drawer__inner">
     <div class="drawer__logo">
-      <img src="../assets/images/common/logo.png" alt="株式会社デルファイレーザージャパン">
+      <img src="[path]assets/images/common/logo.png" alt="株式会社デルファイレーザージャパン">
     </div>
     <nav class="drawer-nav">
       <ul class="drawer-nav__lists">
