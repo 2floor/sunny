@@ -177,6 +177,8 @@ input[type="radio"], input[type="checkbox"] {
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
     border-radius: 10px;
     z-index: 1000;
+    max-height: 1000px;
+    overflow: auto;
 }
 
 .popup label {
