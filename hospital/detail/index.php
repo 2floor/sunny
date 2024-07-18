@@ -97,11 +97,11 @@ $dpcs = $initData['dpcs'] ?? [];
                                             <table class="table num-new-tb overflow-auto">
                                                 <thead>
                                                 <tr class="border-top border-bottom">
-                                                    <th>年度</th>
-                                                    <th>統計價</th>
-                                                    <th>都道府</th>
-                                                    <th>地方</th>
-                                                    <th>全国</th>
+                                                    <th class="table-title col-xs-4">年度</th>
+                                                    <th class="table-title col-xs-2">統計價</th>
+                                                    <th class="table-title col-xs-2">都道府</th>
+                                                    <th class="table-title col-xs-2">地方</th>
+                                                    <th class="table-title col-xs-2">全国</th>
                                                 </tr>
                                                 </thead>
                                                 <tbody>
@@ -191,11 +191,11 @@ $dpcs = $initData['dpcs'] ?? [];
                                             <table class="table num-in-year-tb">
                                                 <thead>
                                                 <tr class="border-top border-bottom">
-                                                    <th class="table-title">年度</th>
-                                                    <th class="table-title">統計値</th>
-                                                    <th class="table-title">都道府県</th>
-                                                    <th class="table-title">地方</th>
-                                                    <th class="table-title">全国</th>
+                                                    <th class="table-title col-xs-4">年度</th>
+                                                    <th class="table-title col-xs-2">統計値</th>
+                                                    <th class="table-title col-xs-2">都道府県</th>
+                                                    <th class="table-title col-xs-2">地方</th>
+                                                    <th class="table-title col-xs-2">全国</th>
                                                 </tr>
                                                 </thead>
                                                 <tbody>
