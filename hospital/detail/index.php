@@ -78,7 +78,7 @@ $dpcs = $initData['dpcs'] ?? [];
                 </div>
                 <div class="tab-pane fade" id="treatment" role="tabpanel" aria-labelledby="treatment-tab">
                     <div class="treatment-content-tab">
-                        <?php include 'component/treatment-content-tab.php'; ?>
+                        <?php include 'component/treatment-content-table.php'; ?>
                     </div>
                 </div>
                 <div class="tab-pane fade" id="results" role="tabpanel" aria-labelledby="results-tab">
