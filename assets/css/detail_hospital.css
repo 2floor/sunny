@@ -44,7 +44,7 @@
     background-color: #DAE9F5;
 }
 
-.summary-content-tab img {
+.summary-content-tab img, .result-content-tab img {
     width: 25px;
     height: 25px;
 }
@@ -102,6 +102,44 @@
 .badge {
     padding: 5px 8px;
     border-radius: 5px;
+}
+
+.panel-heading {
+    cursor: pointer;
+}
+.panel-heading.active {
+    background-color: #337ab7;
+    color: white;
+}
+.panel-heading:not(.active) {
+    color: #4C3333;
+}
+.panel-collapse {
+    transition: height 0.5s ease;
+}
+.arrow {
+    float: right;
+    font-size: 14px;
+}
+
+.panel-body {
+    padding: 20px;
+}
+
+.result-content-tab .num-new-tb th {
+    background-color: #DAE9F5;
+}
+
+.result-content-tab .num-new-tb {
+    margin-bottom: 0
+}
+
+.result-content-tab .num-in-year-tb th {
+    background-color: #DAE9F5;
+}
+
+.result-content-tab .num-in-year-detail-tb th {
+    background-color: #DAE9F5;
 }
 
 @media (max-width: 1200px) {

@@ -67,7 +67,646 @@ $infoTreatment = $initData['infoTreatment'] ?? [];
                     <?php include 'component/treatment-content-tab.php'; ?>
                 </div>
                 <div class="tab-pane fade" id="results" role="tabpanel" aria-labelledby="results-tab">
-                    <p>治療実績の詳細がここに表示されます。</p>
+                    <div class="result-content-tab">
+                        <div class="panel-group" id="accordion">
+                            <div class="panel panel-default">
+                                <div class="panel-heading" data-toggle="collapse" data-parent="#accordion" href="#collapseOne">
+                                    <h4 class="panel-title">
+                                        年間入院患者数
+                                        <span class="glyphicon glyphicon-chevron-down arrow"></span>
+                                    </h4>
+                                </div>
+                                <div id="collapseOne" class="panel-collapse collapse in">
+                                    <div class="panel-body">
+                                        <div class="table-responsive">
+                                            <table class="table num-new-tb overflow-auto">
+                                                <thead>
+                                                <tr class="border-top border-bottom">
+                                                    <th>年度</th>
+                                                    <th>統計價</th>
+                                                    <th>都道府</th>
+                                                    <th>地方</th>
+                                                    <th>全国</th>
+                                                </tr>
+                                                </thead>
+                                                <tbody>
+                                                <tr class="border-top border-bottom">
+                                                    <td class="criteria">令和元年度</td>
+                                                    <td><?php echo ($avgData['avgDpc'] ? $avgData['avgDpc'] . '人' : '-') ?></td>
+                                                    <td>
+                                                        <?php
+                                                        if (in_array($avgData['avgPrefDpcRank'] ?? null, [1, 2, 3])) {
+                                                            echo '<img src="../../img/icons/rank' . $avgData['avgPrefDpcRank'] . '.png" alt="rank-img">';
+                                                        } else {
+                                                            echo ($avgData['avgPrefDpcRank']) ? $avgData['avgPrefDpcRank'] . '位' : '-';
+                                                        }
+                                                        ?>
+                                                    </td>
+                                                    <td>
+                                                        <?php
+                                                        if (in_array($avgData['avgAreaDpcRank'] ?? null, [1, 2, 3])) {
+                                                            echo '<img src="../../img/icons/rank' . $avgData['avgAreaDpcRank'] . '.png" alt="rank-img">';
+                                                        } else {
+                                                            echo ($avgData['avgAreaDpcRank']) ? $avgData['avgAreaDpcRank'] . '位' : '-';
+                                                        }
+                                                        ?>
+                                                    </td>
+                                                    <td>
+                                                        <?php
+                                                        if (in_array($avgData['avgGlobalDpcRank'] ?? null, [1, 2, 3])) {
+                                                            echo '<img src="../../img/icons/rank' . $avgData['avgGlobalDpcRank'] . '.png" alt="rank-img">';
+                                                        } else {
+                                                            echo ($avgData['avgGlobalDpcRank']) ? $avgData['avgGlobalDpcRank'] . '位' : '-';
+                                                        }
+                                                        ?>
+                                                    </td>
+                                                </tr>
+                                                <tr class="border-top border-bottom">
+                                                    <td class="criteria">令和2年度</td>
+                                                    <td><?php echo ($avgData['avgNewNum'] ? $avgData['avgNewNum'] . '人' : '-') ?></td>
+                                                    <td>
+                                                        <?php
+                                                        if (in_array($avgData['avgPrefNewNumRank'] ?? null, [1, 2, 3])) {
+                                                            echo '<img src="../../img/icons/rank' . $avgData['avgPrefNewNumRank'] . '.png" alt="rank-img">';
+                                                        } else {
+                                                            echo ($avgData['avgPrefNewNumRank']) ? $avgData['avgPrefNewNumRank'] . '位' : '-';
+                                                        }
+                                                        ?>
+                                                    </td>
+                                                    <td>
+                                                        <?php
+                                                        if (in_array($avgData['avgLocalNewNumRank'] ?? null, [1, 2, 3])) {
+                                                            echo '<img src="../../img/icons/rank' . $avgData['avgLocalNewNumRank'] . '.png" alt="rank-img">';
+                                                        } else {
+                                                            echo ($avgData['avgLocalNewNumRank']) ? $avgData['avgLocalNewNumRank'] . '位' : '-';
+                                                        }
+                                                        ?>
+                                                    </td>
+                                                    <td>
+                                                        <?php
+                                                        if (in_array($avgData['avgGlobalNewNumRank'] ?? null, [1, 2, 3])) {
+                                                            echo '<img src="../../img/icons/rank' . $avgData['avgGlobalNewNumRank'] . '.png" alt="rank-img">';
+                                                        } else {
+                                                            echo ($avgData['avgGlobalNewNumRank']) ? $avgData['avgGlobalNewNumRank'] . '位' : '-';
+                                                        }
+                                                        ?>
+                                                    </td>
+                                                </tr>
+                                                <tr class="border-top border-bottom">
+                                                    <td class="criteria">令和3年度</td>
+                                                    <td><?php echo ($avgData['avgSurvivalRate'] ?? '-') ?></td>
+                                                    <td>
+                                                        <?php
+                                                        if (in_array($avgData['avgPrefRate'] ?? null, [1, 2, 3])) {
+                                                            echo '<img src="../../img/icons/rank' . $avgData['avgPrefRate'] . '.png" alt="rank-img">';
+                                                        } else {
+                                                            echo ($avgData['avgPrefRate']) ? $avgData['avgPrefRate'] . '位' : '-';
+                                                        }
+                                                        ?>
+                                                    </td>
+                                                    <td>
+                                                        <?php
+                                                        if (in_array($avgData['avgLocalRate'] ?? null, [1, 2, 3])) {
+                                                            echo '<img src="../../img/icons/rank' . $avgData['avgLocalRate'] . '.png" alt="rank-img">';
+                                                        } else {
+                                                            echo ($avgData['avgLocalRate']) ? $avgData['avgLocalRate'] . '位' : '-';
+                                                        }
+                                                        ?>
+                                                    </td>
+                                                    <td>
+                                                        <?php
+                                                        if (in_array($avgData['avgGlobalRate'] ?? null, [1, 2, 3])) {
+                                                            echo '<img src="../../img/icons/rank' . $avgData['avgGlobalRate'] . '.png" alt="rank-img">';
+                                                        } else {
+                                                            echo ($avgData['avgGlobalRate']) ? $avgData['avgGlobalRate'] . '位' : '-';
+                                                        }
+                                                        ?>
+                                                    </td>
+                                                </tr>
+                                                <tr class="border-top border-bottom">
+                                                    <td class="criteria">直近3年平均</td>
+                                                    <td><?php echo ($avgData['avgSurvivalRate'] ?? '-') ?></td>
+                                                    <td>
+                                                        <?php
+                                                        if (in_array($avgData['avgPrefRate'] ?? null, [1, 2, 3])) {
+                                                            echo '<img src="../../img/icons/rank' . $avgData['avgPrefRate'] . '.png" alt="rank-img">';
+                                                        } else {
+                                                            echo ($avgData['avgPrefRate']) ? $avgData['avgPrefRate'] . '位' : '-';
+                                                        }
+                                                        ?>
+                                                    </td>
+                                                    <td>
+                                                        <?php
+                                                        if (in_array($avgData['avgLocalRate'] ?? null, [1, 2, 3])) {
+                                                            echo '<img src="../../img/icons/rank' . $avgData['avgLocalRate'] . '.png" alt="rank-img">';
+                                                        } else {
+                                                            echo ($avgData['avgLocalRate']) ? $avgData['avgLocalRate'] . '位' : '-';
+                                                        }
+                                                        ?>
+                                                    </td>
+                                                    <td>
+                                                        <?php
+                                                        if (in_array($avgData['avgGlobalRate'] ?? null, [1, 2, 3])) {
+                                                            echo '<img src="../../img/icons/rank' . $avgData['avgGlobalRate'] . '.png" alt="rank-img">';
+                                                        } else {
+                                                            echo ($avgData['avgGlobalRate']) ? $avgData['avgGlobalRate'] . '位' : '-';
+                                                        }
+                                                        ?>
+                                                    </td>
+                                                </tr>
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="panel panel-default">
+                                <div class="panel-heading" data-toggle="collapse" data-parent="#accordion" href="#collapseTwo">
+                                    <h4 class="panel-title">
+                                        年間新規入院患者数
+                                        <span class="glyphicon glyphicon-chevron-down arrow"></span>
+                                    </h4>
+                                </div>
+                                <div id="collapseTwo" class="panel-collapse collapse">
+                                    <div class="panel-body">
+                                        <div class="table-responsive">
+                                            <table class="table num-in-year-tb">
+                                                <thead>
+                                                <tr class="border-top border-bottom">
+                                                    <th class="table-title">年度</th>
+                                                    <th class="table-title">統計値</th>
+                                                    <th class="table-title">都道府県</th>
+                                                    <th class="table-title">地方</th>
+                                                    <th class="table-title">全国</th>
+                                                </tr>
+                                                </thead>
+                                                <tbody>
+                                                <tr class="border-top border-bottom">
+                                                    <td>2019</td>
+                                                    <td>142人</td>
+                                                    <td class="icon icon-person"></td>
+                                                    <td class="icon icon-person"></td>
+                                                    <td class="icon icon-person"></td>
+                                                </tr>
+                                                <tr class="border-top border-bottom">
+                                                    <td>2020</td>
+                                                    <td>145人</td>
+                                                    <td class="icon icon-person"></td>
+                                                    <td class="icon icon-person"></td>
+                                                    <td class="icon icon-person"></td>
+                                                </tr>
+                                                <tr class="border-top border-bottom">
+                                                    <td>2021</td>
+                                                    <td>111人</td>
+                                                    <td class="icon icon-person"></td>
+                                                    <td class="icon icon-person"></td>
+                                                    <td class="icon icon-person"></td>
+                                                </tr>
+                                                <tr class="border-top border-bottom">
+                                                    <td>直近3年平均</td>
+                                                    <td>133.0人</td>
+                                                    <td class="icon icon-person"></td>
+                                                    <td class="icon icon-person"></td>
+                                                    <td class="icon icon-person"></td>
+                                                </tr>
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                        <div><h3><b>ステージ別</b></h3></div>
+                                        <div class="table-responsive">
+                                            <table class="table num-in-year-detail-tb">
+                                                <thead>
+                                                <tr class="border-top border-bottom">
+                                                    <th class="table-title">年度</th>
+                                                    <th class="table-title" style="border-left:none"></th>
+                                                    <th class="table-title">ステージI</th>
+                                                    <th class="table-title">ステージII</th>
+                                                    <th class="table-title">ステージIII</th>
+                                                    <th class="table-title">ステージIV</th>
+                                                </tr>
+                                                </thead>
+                                                <tbody>
+                                                <tr class="border-top border-bottom">
+                                                    <td rowspan="4">2019</td>
+                                                    <td>産患者数</td>
+                                                    <td>85人</td>
+                                                    <td>32人</td>
+                                                    <td>22人</td>
+                                                    <td>2人</td>
+                                                </tr>
+                                                <tr class="border-top border-bottom">
+                                                    <td>都道府県</td>
+                                                    <td class="icon icon-person">7位</td>
+                                                    <td class="icon icon-person">2位</td>
+                                                    <td class="icon icon-person">3位</td>
+                                                    <td class="icon icon-person">4位</td>
+                                                </tr>
+                                                <tr class="border-top border-bottom">
+                                                    <td>地方</td>
+                                                    <td class="icon icon-person">7位</td>
+                                                    <td class="icon icon-person">2位</td>
+                                                    <td class="icon icon-person">3位</td>
+                                                    <td class="icon icon-person">4位</td>
+                                                </tr>
+                                                <tr class="border-top border-bottom">
+                                                    <td>全国</td>
+                                                    <td class="icon icon-person">7位</td>
+                                                    <td class="icon icon-person">2位</td>
+                                                    <td class="icon icon-person">3位</td>
+                                                    <td class="icon icon-person">4位</td>
+                                                </tr>
+                                                <tr class="border-top border-bottom">
+                                                    <td rowspan="4">2020</td>
+                                                    <td>産患者数</td>
+                                                    <td>76人</td>
+                                                    <td>41人</td>
+                                                    <td>21人</td>
+                                                    <td>5人</td>
+                                                </tr>
+                                                <tr class="border-top border-bottom">
+                                                    <td>都道府県</td>
+                                                    <td class="icon icon-person">7位</td>
+                                                    <td class="icon icon-person">2位</td>
+                                                    <td class="icon icon-person">3位</td>
+                                                    <td class="icon icon-person">4位</td>
+                                                </tr>
+                                                <tr class="border-top border-bottom">
+                                                    <td>地方</td>
+                                                    <td class="icon icon-person">7位</td>
+                                                    <td class="icon icon-person">2位</td>
+                                                    <td class="icon icon-person">3位</td>
+                                                    <td class="icon icon-person">4位</td>
+                                                </tr>
+                                                <tr class="border-top border-bottom">
+                                                    <td>全国</td>
+                                                    <td class="icon icon-person">7位</td>
+                                                    <td class="icon icon-person">2位</td>
+                                                    <td class="icon icon-person">3位</td>
+                                                    <td class="icon icon-person">4位</td>
+                                                </tr>
+                                                <tr class="border-top border-bottom">
+                                                    <td rowspan="4">2021</td>
+                                                    <td>産患者数</td>
+                                                    <td>72人</td>
+                                                    <td>22人</td>
+                                                    <td>13人</td>
+                                                    <td>5人</td>
+                                                </tr>
+                                                <tr class="border-top border-bottom">
+                                                    <td>都道府県</td>
+                                                    <td class="icon icon-person">7位</td>
+                                                    <td class="icon icon-person">2位</td>
+                                                    <td class="icon icon-person">3位</td>
+                                                    <td class="icon icon-person">4位</td>
+                                                </tr>
+                                                <tr class="border-top border-bottom">
+                                                    <td>地方</td>
+                                                    <td class="icon icon-person">7位</td>
+                                                    <td class="icon icon-person">2位</td>
+                                                    <td class="icon icon-person">3位</td>
+                                                    <td class="icon icon-person">4位</td>
+                                                </tr>
+                                                <tr class="border-top border-bottom">
+                                                    <td>全国</td>
+                                                    <td class="icon icon-person">7位</td>
+                                                    <td class="icon icon-person">2位</td>
+                                                    <td class="icon icon-person">3位</td>
+                                                    <td class="icon icon-person">4位</td>
+                                                </tr>
+                                                <tr class="border-top border-bottom">
+                                                    <td rowspan="4">直近3年平均</td>
+                                                    <td>産患者数</td>
+                                                    <td>78.0人</td>
+                                                    <td>32.0人</td>
+                                                    <td>19.0人</td>
+                                                    <td>4.0人</td>
+                                                </tr>
+                                                <tr class="border-top border-bottom">
+                                                    <td>都道府県</td>
+                                                    <td class="icon icon-person">7位</td>
+                                                    <td class="icon icon-person">2位</td>
+                                                    <td class="icon icon-person">3位</td>
+                                                    <td class="icon icon-person">4位</td>
+                                                </tr>
+                                                <tr class="border-top border-bottom">
+                                                    <td>地方</td>
+                                                    <td class="icon icon-person">7位</td>
+                                                    <td class="icon icon-person">2位</td>
+                                                    <td class="icon icon-person">3位</td>
+                                                    <td class="icon icon-person">4位</td>
+                                                </tr>
+                                                <tr class="border-top border-bottom">
+                                                    <td>全国</td>
+                                                    <td class="icon icon-person">7位</td>
+                                                    <td class="icon icon-person">2位</td>
+                                                    <td class="icon icon-person">3位</td>
+                                                    <td class="icon icon-person">4位</td>
+                                                </tr>
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="panel panel-default">
+                                <div class="panel-heading" data-toggle="collapse" data-parent="#accordion" href="#collapseThree">
+                                    <h4 class="panel-title">
+                                        5年後生在率・生存幸係数
+                                        <span class="glyphicon glyphicon-chevron-down arrow"></span>
+                                    </h4>
+                                </div>
+                                <div id="collapseThree" class="panel-collapse collapse">
+                                    <div class="panel-body">
+                                        <div class="table-responsive">
+                                            <table class="table num-in-year-tb">
+                                                <thead>
+                                                <tr class="border-top border-bottom">
+                                                    <th class="table-title">年度</th>
+                                                    <th class="table-title"></th>
+                                                    <th class="table-title">集計対象者数</th>
+                                                    <th class="table-title"></th>
+                                                    <th class="table-title"></th>
+                                                    <th class="table-title"></th>
+                                                    <th class="table-title">生在率係数</th>
+                                                    <th class="table-title"></th>
+                                                    <th class="table-title"></th>
+                                                    <th class="table-title"></th>
+                                                </tr>
+                                                </thead>
+                                                <thead>
+                                                <tr class="border-top border-bottom">
+                                                    <th class="table-title"></th>
+                                                    <th class="table-title"></th>
+                                                    <th class="table-title"></th>
+                                                    <th class="table-title">都道府県</th>
+                                                    <th class="table-title">地方</th>
+                                                    <th class="table-title">全国</th>
+                                                    <th class="table-title"></th>
+                                                    <th class="table-title">都道府県</th>
+                                                    <th class="table-title">地方</th>
+                                                    <th class="table-title">全国</th>
+                                                </tr>
+                                                </thead>
+                                                <tbody>
+                                                <tr class="border-top border-bottom">
+                                                    <td>2012-2013</td>
+                                                    <td></td>
+                                                    <td>200人</td>
+                                                    <td class="icon icon-person">4位</td>
+                                                    <td class="icon icon-person">4位</td>
+                                                    <td class="icon icon-person">4位</td>
+                                                    <td>127.97</td>
+                                                    <td class="icon icon-person">2位</td>
+                                                    <td class="icon icon-person">2位</td>
+                                                    <td class="icon icon-person">2位</td>
+                                                </tr>
+                                                <tr class="border-top border-bottom">
+                                                    <td>2013-2014</td>
+                                                    <td></td>
+                                                    <td>200人</td>
+                                                    <td class="icon icon-person">4位</td>
+                                                    <td class="icon icon-person">4位</td>
+                                                    <td class="icon icon-person">4位</td>
+                                                    <td>127.97</td>
+                                                    <td class="icon icon-person">2位</td>
+                                                    <td class="icon icon-person">2位</td>
+                                                    <td class="icon icon-person">2位</td>
+                                                </tr>
+                                                <tr class="border-top border-bottom">
+                                                    <td>2014-2015</td>
+                                                    <td></td>
+                                                    <td>200人</td>
+                                                    <td class="icon icon-person">4位</td>
+                                                    <td class="icon icon-person">4位</td>
+                                                    <td class="icon icon-person">4位</td>
+                                                    <td>127.97</td>
+                                                    <td class="icon icon-person">2位</td>
+                                                    <td class="icon icon-person">2位</td>
+                                                    <td class="icon icon-person">2位</td>
+                                                </tr>
+                                                <tr class="border-top border-bottom">
+                                                    <td>直近3年平均</td>
+                                                    <td></td>
+                                                    <td>200人</td>
+                                                    <td class="icon icon-person">4位</td>
+                                                    <td class="icon icon-person">4位</td>
+                                                    <td class="icon icon-person">4位</td>
+                                                    <td>127.97</td>
+                                                    <td class="icon icon-person">2位</td>
+                                                    <td class="icon icon-person">2位</td>
+                                                    <td class="icon icon-person">2位</td>
+                                                </tr>
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                        <div><h3><b>ステージ別</b></h3></div>
+                                        <div class="table-responsive">
+                                            <table class="table num-in-year-detail-tb">
+                                                <thead>
+                                                    <tr class="border-top border-bottom">
+                                                        <th class="table-title">年度</th>
+                                                        <th class="table-title"></th>
+                                                        <th class="table-title">集計対象者数</th>
+                                                        <th class="table-title"></th>
+                                                        <th class="table-title"></th>
+                                                        <th class="table-title"></th>
+                                                        <th class="table-title">生在率係数</th>
+                                                        <th class="table-title"></th>
+                                                        <th class="table-title"></th>
+                                                        <th class="table-title"></th>
+                                                    </tr>
+                                                </thead>
+                                                <thead>
+                                                    <tr class="border-top border-bottom">
+                                                        <th class="table-title"></th>
+                                                        <th class="table-title"></th>
+                                                        <th class="table-title">ステージI</th>
+                                                        <th class="table-title">ステージII</th>
+                                                        <th class="table-title">ステージIII</th>
+                                                        <th class="table-title">ステージIV</th>
+                                                        <th class="table-title">ステージI</th>
+                                                        <th class="table-title">ステージII</th>
+                                                        <th class="table-title">ステージIII</th>
+                                                        <th class="table-title">ステージIV</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                <tr class="border-top border-bottom">
+                                                    <td rowspan="5">2012-2013</td>
+                                                    <td>参考:全国平均</td>
+                                                    <td></td>
+                                                    <td></td>
+                                                    <td></td>
+                                                    <td></td>
+                                                    <td>54.40%</td>
+                                                    <td>39.4%</td>
+                                                    <td>13.5%</td>
+                                                    <td>3.90%</td>
+                                                </tr>
+                                                <tr class="border-top border-bottom">
+                                                    <td>実績価</td>
+                                                    <td>97人</td>
+                                                    <td>97人</td>
+                                                    <td>97人</td>
+                                                    <td>97人</td>
+                                                    <td>67.00%</td>
+                                                    <td>54.10%</td>
+                                                    <td>-</td>
+                                                    <td>-</td>
+                                                </tr>
+                                                <tr class="border-top border-bottom">
+                                                    <td>都道府県順位</td>
+                                                    <td class="icon icon-person">7位</td>
+                                                    <td class="icon icon-person">2位</td>
+                                                    <td class="icon icon-person">3位</td>
+                                                    <td class="icon icon-person">4位</td>
+                                                    <td class="icon icon-person">7位</td>
+                                                    <td class="icon icon-person">2位</td>
+                                                    <td class="icon icon-person">-</td>
+                                                    <td class="icon icon-person">-</td>
+                                                </tr>
+                                                <tr class="border-top border-bottom">
+                                                    <td>地方順位</td>
+                                                    <td class="icon icon-person">7位</td>
+                                                    <td class="icon icon-person">2位</td>
+                                                    <td class="icon icon-person">3位</td>
+                                                    <td class="icon icon-person">4位</td>
+                                                    <td class="icon icon-person">7位</td>
+                                                    <td class="icon icon-person">2位</td>
+                                                    <td class="icon icon-person">-</td>
+                                                    <td class="icon icon-person">-</td>
+                                                </tr>
+                                                <tr class="border-top border-bottom">
+                                                    <td>全国順位</td>
+                                                    <td class="icon icon-person">7位</td>
+                                                    <td class="icon icon-person">2位</td>
+                                                    <td class="icon icon-person">3位</td>
+                                                    <td class="icon icon-person">4位</td>
+                                                    <td class="icon icon-person">7位</td>
+                                                    <td class="icon icon-person">2位</td>
+                                                    <td class="icon icon-person">-</td>
+                                                    <td class="icon icon-person">-</td>
+                                                </tr>
+                                                <tr class="border-top border-bottom">
+                                                    <td rowspan="5">2013-2014</td>
+                                                    <td>参考:全国平均</td>
+                                                    <td></td>
+                                                    <td></td>
+                                                    <td></td>
+                                                    <td></td>
+                                                    <td>54.40%</td>
+                                                    <td>39.4%</td>
+                                                    <td>13.5%</td>
+                                                    <td>3.90%</td>
+                                                </tr>
+                                                <tr class="border-top border-bottom">
+                                                    <td>実績価</td>
+                                                    <td>97人</td>
+                                                    <td>97人</td>
+                                                    <td>97人</td>
+                                                    <td>97人</td>
+                                                    <td>67.00%</td>
+                                                    <td>54.10%</td>
+                                                    <td>-</td>
+                                                    <td>-</td>
+                                                </tr>
+                                                <tr class="border-top border-bottom">
+                                                    <td>都道府県順位</td>
+                                                    <td class="icon icon-person">7位</td>
+                                                    <td class="icon icon-person">2位</td>
+                                                    <td class="icon icon-person">3位</td>
+                                                    <td class="icon icon-person">4位</td>
+                                                    <td class="icon icon-person">7位</td>
+                                                    <td class="icon icon-person">2位</td>
+                                                    <td class="icon icon-person">-</td>
+                                                    <td class="icon icon-person">-</td>
+                                                </tr>
+                                                <tr class="border-top border-bottom">
+                                                    <td>地方順位</td>
+                                                    <td class="icon icon-person">7位</td>
+                                                    <td class="icon icon-person">2位</td>
+                                                    <td class="icon icon-person">3位</td>
+                                                    <td class="icon icon-person">4位</td>
+                                                    <td class="icon icon-person">7位</td>
+                                                    <td class="icon icon-person">2位</td>
+                                                    <td class="icon icon-person">-</td>
+                                                    <td class="icon icon-person">-</td>
+                                                </tr>
+                                                <tr class="border-top border-bottom">
+                                                    <td>全国順位</td>
+                                                    <td class="icon icon-person">7位</td>
+                                                    <td class="icon icon-person">2位</td>
+                                                    <td class="icon icon-person">3位</td>
+                                                    <td class="icon icon-person">4位</td>
+                                                    <td class="icon icon-person">7位</td>
+                                                    <td class="icon icon-person">2位</td>
+                                                    <td class="icon icon-person">-</td>
+                                                    <td class="icon icon-person">-</td>
+                                                </tr>
+                                                <tr class="border-top border-bottom">
+                                                    <td rowspan="5">2014-2015</td>
+                                                    <td>参考:全国平均</td>
+                                                    <td></td>
+                                                    <td></td>
+                                                    <td></td>
+                                                    <td></td>
+                                                    <td>54.40%</td>
+                                                    <td>39.4%</td>
+                                                    <td>13.5%</td>
+                                                    <td>3.90%</td>
+                                                </tr>
+                                                <tr class="border-top border-bottom">
+                                                    <td>実績価</td>
+                                                    <td>97人</td>
+                                                    <td>97人</td>
+                                                    <td>97人</td>
+                                                    <td>97人</td>
+                                                    <td>67.00%</td>
+                                                    <td>54.10%</td>
+                                                    <td>-</td>
+                                                    <td>-</td>
+                                                </tr>
+                                                <tr class="border-top border-bottom">
+                                                    <td>都道府県順位</td>
+                                                    <td class="icon icon-person">7位</td>
+                                                    <td class="icon icon-person">2位</td>
+                                                    <td class="icon icon-person">3位</td>
+                                                    <td class="icon icon-person">4位</td>
+                                                    <td class="icon icon-person">7位</td>
+                                                    <td class="icon icon-person">2位</td>
+                                                    <td class="icon icon-person">-</td>
+                                                    <td class="icon icon-person">-</td>
+                                                </tr>
+                                                <tr class="border-top border-bottom">
+                                                    <td>地方順位</td>
+                                                    <td class="icon icon-person">7位</td>
+                                                    <td class="icon icon-person">2位</td>
+                                                    <td class="icon icon-person">3位</td>
+                                                    <td class="icon icon-person">4位</td>
+                                                    <td class="icon icon-person">7位</td>
+                                                    <td class="icon icon-person">2位</td>
+                                                    <td class="icon icon-person">-</td>
+                                                    <td class="icon icon-person">-</td>
+                                                </tr>
+                                                <tr class="border-top border-bottom">
+                                                    <td>全国順位</td>
+                                                    <td class="icon icon-person">7位</td>
+                                                    <td class="icon icon-person">2位</td>
+                                                    <td class="icon icon-person">3位</td>
+                                                    <td class="icon icon-person">4位</td>
+                                                    <td class="icon icon-person">7位</td>
+                                                    <td class="icon icon-person">2位</td>
+                                                    <td class="icon icon-person">-</td>
+                                                    <td class="icon icon-person">-</td>
+                                                </tr>
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
@@ -75,4 +714,20 @@ $infoTreatment = $initData['infoTreatment'] ?? [];
 </main>
 </body>
 <?php print $pageinfo->html_foot; ?>
+<script>
+    $(document).ready(function() {
+        $('#collapseOne').prev('.panel-heading').find('.arrow').toggleClass('glyphicon-chevron-down glyphicon-chevron-up');
+        $('#collapseOne').prev('.panel-heading').addClass('active');
+
+        $('#accordion').on('show.bs.collapse', function(e) {
+            $(e.target).prev('.panel-heading').addClass('active');
+            $(e.target).prev('.panel-heading').find('.arrow').removeClass('glyphicon-chevron-down').addClass('glyphicon-chevron-up');
+        });
+
+        $('#accordion').on('hide.bs.collapse', function(e) {
+            $(e.target).prev('.panel-heading').removeClass('active');
+            $(e.target).prev('.panel-heading').find('.arrow').removeClass('glyphicon-chevron-up').addClass('glyphicon-chevron-down');
+        });
+    });
+</script>
 </html>

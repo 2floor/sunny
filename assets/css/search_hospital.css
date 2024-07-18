@@ -147,7 +147,7 @@ input[type="radio"], input[type="checkbox"] {
     border: none;
     border-radius: 5px;
     cursor: pointer;
-    font-size: 16px;
+    font-size: 14px;
     font-weight: bolder;
 }
 
@@ -228,7 +228,7 @@ input[type="radio"], input[type="checkbox"] {
 .popup-checkbox-content label {
     display: flex;
     align-items: center;
-    font-size: 16px;
+    font-size: 14px;
 }
 
 .popup-checkbox-content input[type="checkbox"] {
@@ -240,7 +240,7 @@ input[type="radio"], input[type="checkbox"] {
 }
 
 .popup-selection-content label {
-    font-size: 16px;
+    font-size: 14px;
 }
 
 .popup-selection-content .form-group {
@@ -261,7 +261,7 @@ input[type="radio"], input[type="checkbox"] {
 
 .popup-selection-content .form-group .select2-container {
     width: 100% !important;
-    font-size: 16px;
+    font-size: 14px;
 }
 
 .popup-selection-content .select2-selection--single {
@@ -309,7 +309,7 @@ input[type="radio"], input[type="checkbox"] {
 
 .search-result-header label{
     font-weight: bolder;
-    font-size: 16px;
+    font-size: 14px;
 }
 
 .search-result-header-right {
@@ -320,7 +320,7 @@ input[type="radio"], input[type="checkbox"] {
 .search-result-header-right span {
     margin-right: 14px;
     font-weight: bolder;
-    font-size: 16px;
+    font-size: 14px;
 }
 
 .confirm-button {
