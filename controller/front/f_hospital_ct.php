@@ -206,7 +206,7 @@ class f_hospital_ct
             $html .= '<div class="tag">'.$areaName.'</div>';
             $html .= '<div class="hospital-info">';
             $html .= '<h2>'.$hospital->hospital_name.'</h2>';
-            $html .= '<a href="'.$hospital->hp_url.'"><span class="info-icon"><i class="fa fa-arrow-circle-right" aria-hidden="true"></i> ホームページはこちら（外部リンク)</span></a>';
+            $html .= '<a target="_blank" href="'.$hospital->hp_url.'"><span class="info-icon"><i class="fa fa-arrow-circle-right" aria-hidden="true"></i> ホームページはこちら（外部リンク)</span></a>';
             $html .= '<p class="m-b-0">'.$hospital->addr.'</p>';
             $html .= '<p>'.($hospital->tel ? $hospital->tel . ' (代表)': '').'</p>';
             $html .= '</div>';
