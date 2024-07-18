@@ -18,7 +18,8 @@ $cancerName = $initData['cancerName'] ?? '';
 $avgData = $initData['avgData'] ?? [];
 $infoHospital = $initData['infoHospital'] ?? [];
 $infoTreatment = $initData['infoTreatment'] ?? [];
-
+$stages = $initData['stages'] ?? [];
+$dpcs = $initData['dpcs'] ?? [];
 ?>
 
 <!DOCTYPE html>
@@ -58,13 +59,27 @@ $infoTreatment = $initData['infoTreatment'] ?? [];
 
             <div class="tab-content mt-3" id="tabContent">
                 <div class="tab-pane fade active in" id="summary" role="tabpanel" aria-labelledby="summary-tab">
-                    <?php include 'component/summary-content-tab.php'; ?>
+                    <div class="summary-content-tab">
+                        <div class="treatment-results">
+                            <h3>治療実績 (直近3年平均)</h3>
+                            <?php include 'component/summary-content-table.php'; ?>
+                        </div>
+
+                        <div class="overall-rating text-left">
+                            <label for="overall"><h3>総評</h3></label>
+                            <input type="text" id="overall" name="overall" class="form-control w-50 mx-auto" disabled>
+                        </div>
+                    </div>
                 </div>
                 <div class="tab-pane fade" id="info" role="tabpanel" aria-labelledby="info-tab">
-                    <?php include 'component/info-content-tab.php'; ?>
+                    <div class="info-content-tab">
+                        <?php include 'component/info-content-table.php';?>
+                    </div>
                 </div>
                 <div class="tab-pane fade" id="treatment" role="tabpanel" aria-labelledby="treatment-tab">
-                    <?php include 'component/treatment-content-tab.php'; ?>
+                    <div class="treatment-content-tab">
+                        <?php include 'component/treatment-content-tab.php'; ?>
+                    </div>
                 </div>
                 <div class="tab-pane fade" id="results" role="tabpanel" aria-labelledby="results-tab">
                     <div class="result-content-tab">
@@ -90,8 +105,44 @@ $infoTreatment = $initData['infoTreatment'] ?? [];
                                                 </tr>
                                                 </thead>
                                                 <tbody>
+                                                <?php
+                                                    $html = '';
+                                                    for ($i = 0; $i < 3; $i++) {
+                                                        $criteria = ($i == 0) ? '令和3年度' : (($i == 1) ? '令和2年度' : '令和元年度');
+
+                                                        if (in_array($dpcs[$i]['rank_pref_dpc'] ?? null, [1, 2, 3])) {
+                                                            $prefRank = '<img src="../../img/icons/rank' . $dpcs[$i]['rank_pref_dpc'] . '.png" alt="rank-img">';
+                                                        } else {
+                                                            $prefRank = ($dpcs[$i]['rank_pref_dpc']) ? $dpcs[$i]['rank_pref_dpc'] . '位' : '-';
+                                                        }
+
+                                                        if (in_array($dpcs[$i]['rank_area_dpc'] ?? null, [1, 2, 3])) {
+                                                            $localRank = '<img src="../../img/icons/rank' . $dpcs[$i]['rank_area_dpc'] . '.png" alt="rank-img">';
+                                                        } else {
+                                                            $localRank = ($dpcs[$i]['rank_area_dpc']) ? $dpcs[$i]['rank_area_dpc'] . '位' : '-';
+                                                        }
+
+                                                        if (in_array($dpcs[$i]['rank_nation_dpc'] ?? null, [1, 2, 3])) {
+                                                            $totalRank = '<img src="../../img/icons/rank' . $dpcs[$i]['rank_nation_dpc'] . '.png" alt="rank-img">';
+                                                        } else {
+                                                            $totalRank = ($dpcs[$i]['rank_nation_dpc']) ? $dpcs[$i]['rank_nation_dpc'] . '位' : '-';
+                                                        }
+
+                                                        $tr = '<tr class="border-top border-bottom">';
+                                                        $tr .= '<td class="criteria">'.$criteria.'</td>';
+                                                        $tr .= '<td>' . ($dpcs[$i]['n_dpc'] ? $dpcs[$i]['n_dpc'] . '人' : '-') . '</td>';
+                                                        $tr .= '<td>'.$prefRank.'</td>';
+                                                        $tr .= '<td>'.$localRank.'</td>';
+                                                        $tr .= '<td>'.$totalRank.'</td>';
+                                                        $tr .= '<tr>';
+
+                                                        $html = $tr . $html;
+                                                    }
+
+                                                    echo $html;
+                                                ?>
                                                 <tr class="border-top border-bottom">
-                                                    <td class="criteria">令和元年度</td>
+                                                    <td class="criteria">直近3年平均</td>
                                                     <td><?php echo ($avgData['avgDpc'] ? $avgData['avgDpc'] . '人' : '-') ?></td>
                                                     <td>
                                                         <?php
@@ -117,99 +168,6 @@ $infoTreatment = $initData['infoTreatment'] ?? [];
                                                             echo '<img src="../../img/icons/rank' . $avgData['avgGlobalDpcRank'] . '.png" alt="rank-img">';
                                                         } else {
                                                             echo ($avgData['avgGlobalDpcRank']) ? $avgData['avgGlobalDpcRank'] . '位' : '-';
-                                                        }
-                                                        ?>
-                                                    </td>
-                                                </tr>
-                                                <tr class="border-top border-bottom">
-                                                    <td class="criteria">令和2年度</td>
-                                                    <td><?php echo ($avgData['avgNewNum'] ? $avgData['avgNewNum'] . '人' : '-') ?></td>
-                                                    <td>
-                                                        <?php
-                                                        if (in_array($avgData['avgPrefNewNumRank'] ?? null, [1, 2, 3])) {
-                                                            echo '<img src="../../img/icons/rank' . $avgData['avgPrefNewNumRank'] . '.png" alt="rank-img">';
-                                                        } else {
-                                                            echo ($avgData['avgPrefNewNumRank']) ? $avgData['avgPrefNewNumRank'] . '位' : '-';
-                                                        }
-                                                        ?>
-                                                    </td>
-                                                    <td>
-                                                        <?php
-                                                        if (in_array($avgData['avgLocalNewNumRank'] ?? null, [1, 2, 3])) {
-                                                            echo '<img src="../../img/icons/rank' . $avgData['avgLocalNewNumRank'] . '.png" alt="rank-img">';
-                                                        } else {
-                                                            echo ($avgData['avgLocalNewNumRank']) ? $avgData['avgLocalNewNumRank'] . '位' : '-';
-                                                        }
-                                                        ?>
-                                                    </td>
-                                                    <td>
-                                                        <?php
-                                                        if (in_array($avgData['avgGlobalNewNumRank'] ?? null, [1, 2, 3])) {
-                                                            echo '<img src="../../img/icons/rank' . $avgData['avgGlobalNewNumRank'] . '.png" alt="rank-img">';
-                                                        } else {
-                                                            echo ($avgData['avgGlobalNewNumRank']) ? $avgData['avgGlobalNewNumRank'] . '位' : '-';
-                                                        }
-                                                        ?>
-                                                    </td>
-                                                </tr>
-                                                <tr class="border-top border-bottom">
-                                                    <td class="criteria">令和3年度</td>
-                                                    <td><?php echo ($avgData['avgSurvivalRate'] ?? '-') ?></td>
-                                                    <td>
-                                                        <?php
-                                                        if (in_array($avgData['avgPrefRate'] ?? null, [1, 2, 3])) {
-                                                            echo '<img src="../../img/icons/rank' . $avgData['avgPrefRate'] . '.png" alt="rank-img">';
-                                                        } else {
-                                                            echo ($avgData['avgPrefRate']) ? $avgData['avgPrefRate'] . '位' : '-';
-                                                        }
-                                                        ?>
-                                                    </td>
-                                                    <td>
-                                                        <?php
-                                                        if (in_array($avgData['avgLocalRate'] ?? null, [1, 2, 3])) {
-                                                            echo '<img src="../../img/icons/rank' . $avgData['avgLocalRate'] . '.png" alt="rank-img">';
-                                                        } else {
-                                                            echo ($avgData['avgLocalRate']) ? $avgData['avgLocalRate'] . '位' : '-';
-                                                        }
-                                                        ?>
-                                                    </td>
-                                                    <td>
-                                                        <?php
-                                                        if (in_array($avgData['avgGlobalRate'] ?? null, [1, 2, 3])) {
-                                                            echo '<img src="../../img/icons/rank' . $avgData['avgGlobalRate'] . '.png" alt="rank-img">';
-                                                        } else {
-                                                            echo ($avgData['avgGlobalRate']) ? $avgData['avgGlobalRate'] . '位' : '-';
-                                                        }
-                                                        ?>
-                                                    </td>
-                                                </tr>
-                                                <tr class="border-top border-bottom">
-                                                    <td class="criteria">直近3年平均</td>
-                                                    <td><?php echo ($avgData['avgSurvivalRate'] ?? '-') ?></td>
-                                                    <td>
-                                                        <?php
-                                                        if (in_array($avgData['avgPrefRate'] ?? null, [1, 2, 3])) {
-                                                            echo '<img src="../../img/icons/rank' . $avgData['avgPrefRate'] . '.png" alt="rank-img">';
-                                                        } else {
-                                                            echo ($avgData['avgPrefRate']) ? $avgData['avgPrefRate'] . '位' : '-';
-                                                        }
-                                                        ?>
-                                                    </td>
-                                                    <td>
-                                                        <?php
-                                                        if (in_array($avgData['avgLocalRate'] ?? null, [1, 2, 3])) {
-                                                            echo '<img src="../../img/icons/rank' . $avgData['avgLocalRate'] . '.png" alt="rank-img">';
-                                                        } else {
-                                                            echo ($avgData['avgLocalRate']) ? $avgData['avgLocalRate'] . '位' : '-';
-                                                        }
-                                                        ?>
-                                                    </td>
-                                                    <td>
-                                                        <?php
-                                                        if (in_array($avgData['avgGlobalRate'] ?? null, [1, 2, 3])) {
-                                                            echo '<img src="../../img/icons/rank' . $avgData['avgGlobalRate'] . '.png" alt="rank-img">';
-                                                        } else {
-                                                            echo ($avgData['avgGlobalRate']) ? $avgData['avgGlobalRate'] . '位' : '-';
                                                         }
                                                         ?>
                                                     </td>
@@ -241,33 +199,70 @@ $infoTreatment = $initData['infoTreatment'] ?? [];
                                                 </tr>
                                                 </thead>
                                                 <tbody>
+                                                <?php
+                                                $html = '';
+                                                for ($i = 0; $i < 3; $i++) {
+                                                    if (in_array($stages[$i]['pref_num_rank'] ?? null, [1, 2, 3])) {
+                                                        $prefRank = '<img src="../../img/icons/rank' . $stages[$i]['pref_num_rank'] . '.png" alt="rank-img">';
+                                                    } else {
+                                                        $prefRank = ($stages[$i]['pref_num_rank']) ? $stages[$i]['pref_num_rank'] . '位' : '-';
+                                                    }
+
+                                                    if (in_array($stages[$i]['local_num_rank'] ?? null, [1, 2, 3])) {
+                                                        $localRank = '<img src="../../img/icons/rank' . $stages[$i]['local_num_rank'] . '.png" alt="rank-img">';
+                                                    } else {
+                                                        $localRank = ($stages[$i]['local_num_rank']) ? $stages[$i]['local_num_rank'] . '位' : '-';
+                                                    }
+
+                                                    if (in_array($stages[$i]['total_num_rank'] ?? null, [1, 2, 3])) {
+                                                        $totalRank = '<img src="../../img/icons/rank' . $stages[$i]['total_num_rank'] . '.png" alt="rank-img">';
+                                                    } else {
+                                                        $totalRank = ($stages[$i]['total_num_rank']) ? $stages[$i]['total_num_rank'] . '位' : '-';
+                                                    }
+
+                                                    $tr = '<tr class="border-top border-bottom">';
+                                                    $tr .= '<td class="criteria">'.($stages[$i]['year'] ?? '-').'</td>';
+                                                    $tr .= '<td>' . ($stages[$i]['total_num_new'] ? $stages[$i]['total_num_new'] . '人' : '-') . '</td>';
+                                                    $tr .= '<td>'.$prefRank.'</td>';
+                                                    $tr .= '<td>'.$localRank.'</td>';
+                                                    $tr .= '<td>'.$totalRank.'</td>';
+                                                    $tr .= '<tr>';
+
+                                                    $html = $tr . $html;
+                                                }
+
+                                                echo $html;
+                                                ?>
                                                 <tr class="border-top border-bottom">
-                                                    <td>2019</td>
-                                                    <td>142人</td>
-                                                    <td class="icon icon-person"></td>
-                                                    <td class="icon icon-person"></td>
-                                                    <td class="icon icon-person"></td>
-                                                </tr>
-                                                <tr class="border-top border-bottom">
-                                                    <td>2020</td>
-                                                    <td>145人</td>
-                                                    <td class="icon icon-person"></td>
-                                                    <td class="icon icon-person"></td>
-                                                    <td class="icon icon-person"></td>
-                                                </tr>
-                                                <tr class="border-top border-bottom">
-                                                    <td>2021</td>
-                                                    <td>111人</td>
-                                                    <td class="icon icon-person"></td>
-                                                    <td class="icon icon-person"></td>
-                                                    <td class="icon icon-person"></td>
-                                                </tr>
-                                                <tr class="border-top border-bottom">
-                                                    <td>直近3年平均</td>
-                                                    <td>133.0人</td>
-                                                    <td class="icon icon-person"></td>
-                                                    <td class="icon icon-person"></td>
-                                                    <td class="icon icon-person"></td>
+                                                    <td class="criteria">直近3年平均</td>
+                                                    <td><?php echo ($avgData['avgNewNum'] ? $avgData['avgNewNum'] . '人' : '-') ?></td>
+                                                    <td>
+                                                        <?php
+                                                        if (in_array($avgData['avgPrefNewNumRank'] ?? null, [1, 2, 3])) {
+                                                            echo '<img src="../../img/icons/rank' . $avgData['avgPrefNewNumRank'] . '.png" alt="rank-img">';
+                                                        } else {
+                                                            echo ($avgData['avgPrefNewNumRank']) ? $avgData['avgPrefNewNumRank'] . '位' : '-';
+                                                        }
+                                                        ?>
+                                                    </td>
+                                                    <td>
+                                                        <?php
+                                                        if (in_array($avgData['avgLocalNewNumRank'] ?? null, [1, 2, 3])) {
+                                                            echo '<img src="../../img/icons/rank' . $avgData['avgLocalNewNumRank'] . '.png" alt="rank-img">';
+                                                        } else {
+                                                            echo ($avgData['avgLocalNewNumRank']) ? $avgData['avgLocalNewNumRank'] . '位' : '-';
+                                                        }
+                                                        ?>
+                                                    </td>
+                                                    <td>
+                                                        <?php
+                                                        if (in_array($avgData['avgGlobalNewNumRank'] ?? null, [1, 2, 3])) {
+                                                            echo '<img src="../../img/icons/rank' . $avgData['avgGlobalNewNumRank'] . '.png" alt="rank-img">';
+                                                        } else {
+                                                            echo ($avgData['avgGlobalNewNumRank']) ? $avgData['avgGlobalNewNumRank'] . '位' : '-';
+                                                        }
+                                                        ?>
+                                                    </td>
                                                 </tr>
                                                 </tbody>
                                             </table>
@@ -278,7 +273,7 @@ $infoTreatment = $initData['infoTreatment'] ?? [];
                                                 <thead>
                                                 <tr class="border-top border-bottom">
                                                     <th class="table-title">年度</th>
-                                                    <th class="table-title" style="border-left:none"></th>
+                                                    <th class="table-title"></th>
                                                     <th class="table-title">ステージI</th>
                                                     <th class="table-title">ステージII</th>
                                                     <th class="table-title">ステージIII</th>

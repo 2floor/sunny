@@ -112,6 +112,7 @@ class f_hospital_ct
         }
 
         $cancer = Cancer::select('cancer_type')->where('id', $cancerId)->first();
+        $avgData = $hospital->calculateAvgCommonData($cancerId);
 
         $categories = $hospital->categories()
             ->where('data_type', Category::HOSPITAL_DETAIL_TYPE)
@@ -127,7 +128,18 @@ class f_hospital_ct
             ->pluck('level3')
             ->implode(' ');
 
-        $avgData = $hospital->calculateAvgCommonData($cancerId);
+        $stages = $hospital->stages()
+            ->where('cancer_id', $cancerId)
+            ->orderBy('year', 'desc')
+            ->take(3)
+            ->get()->toArray();
+
+        $dpcs = $hospital->dpcs()
+            ->select(['year', 'n_dpc', 'rank_nation_dpc', 'rank_area_dpc', 'rank_pref_dpc'])
+            ->where('cancer_id', $cancerId)
+            ->orderBy('year', 'desc')
+            ->take(3)
+            ->get()->toArray();
 
         $infoHospital = [
             'name' => $hospital->hospital_name,
@@ -151,6 +163,8 @@ class f_hospital_ct
             'avgData' => $avgData,
             'infoHospital' => $infoHospital,
             'infoTreatment' => $infoTreatment,
+            'dpcs' => $dpcs,
+            'stages' => $stages,
         ];
     }
 
