@@ -23,14 +23,6 @@ if (!isset($infoHospital)) {
             <th>公式HP</th>
             <td><a target="_blank" href="<?php echo $infoHospital['hpUrl'] ?? '#' ?>"><?php echo $infoHospital['hpUrl'] ?? '' ?></a></td>
         </tr>
-<!--        <tr>-->
-<!--            <th>外科URL <i style="color: red" class="fa fa-question-circle"></i></th>-->
-<!--            <td><a target="_blank" href="https://www.juntendo.ac.jp/hospital/clinic/cancer/patient/method/comedicall.html">https://www.juntendo.ac.jp/hospital/clinic/cancer/patient/method/comedicall.html</a></td>-->
-<!--        </tr>-->
-<!--        <tr>-->
-<!--            <th>内科URL <i style="color: red" class="fa fa-question-circle"></i></th>-->
-<!--            <td><a target="_blank" href="https://www.juntendo.ac.jp/hospital/common/pdf/patient/hospitalization/roomguide/shitsuryou sp.pdf">https://www.juntendo.ac.jp/hospital/common/pdf/patient/hospitalization/roomguide/shitsuryou sp.pdf</a></td>-->
-<!--        </tr>-->
         <tr>
             <th>がん相談支援センターURL</th>
             <td><a target="_blank" href="<?php echo $infoHospital['supportUrl'] ?? '#' ?>"><?php echo $infoHospital['supportUrl'] ?? '' ?></a></td>

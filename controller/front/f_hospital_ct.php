@@ -4,6 +4,7 @@ use App\Models\Area;
 use App\Models\Cancer;
 use App\Models\Category;
 use App\Models\Hospital;
+use App\Models\SurvAverage;
 
 if (!isset($_SESSION)) {
     session_start();
@@ -114,6 +115,30 @@ class f_hospital_ct
         $cancer = Cancer::select('cancer_type')->where('id', $cancerId)->first();
         $avgData = $hospital->calculateAvgCommonData($cancerId);
 
+        $yearDpc = $hospital->dpcs()
+            ->select('year')
+            ->where('cancer_id', $cancerId)
+            ->orderBy('year', 'desc')
+            ->take(3)
+            ->pluck('year')
+            ->implode('、');
+
+        $yearStage = $hospital->stages()
+            ->select('year')
+            ->where('cancer_id', $cancerId)
+            ->orderBy('year', 'desc')
+            ->take(3)
+            ->pluck('year')
+            ->implode('、');
+
+        $yearSurvival = $hospital->survivals()
+            ->select('year')
+            ->where('cancer_id', $cancerId)
+            ->orderBy('year', 'desc')
+            ->take(3)
+            ->pluck('year')
+            ->implode('、');
+
         $categories = $hospital->categories()
             ->where('data_type', Category::HOSPITAL_DETAIL_TYPE)
             ->orWhere('data_type', Category::HOSPITAL_TREATMENT_TYPE)
@@ -132,14 +157,25 @@ class f_hospital_ct
             ->where('cancer_id', $cancerId)
             ->orderBy('year', 'desc')
             ->take(3)
-            ->get()->toArray();
+            ->get();
 
         $dpcs = $hospital->dpcs()
             ->select(['year', 'n_dpc', 'rank_nation_dpc', 'rank_area_dpc', 'rank_pref_dpc'])
             ->where('cancer_id', $cancerId)
             ->orderBy('year', 'desc')
             ->take(3)
-            ->get()->toArray();
+            ->get();
+
+        $survivals = $hospital->survivals()
+            ->where('cancer_id', $cancerId)
+            ->orderBy('year', 'desc')
+            ->take(3)
+            ->get();
+
+        $averageSurv = SurvAverage::where('cancer_id', $cancerId)
+            ->whereIn('year', $survivals->pluck('year'))
+            ->orderBy('year', 'desc')
+            ->get();
 
         $infoHospital = [
             'name' => $hospital->hospital_name,
@@ -161,10 +197,17 @@ class f_hospital_ct
         return [
             'cancerName' => $cancer->cancer_type,
             'avgData' => $avgData,
+            'yearSummary' => [
+                'dpc' => $yearDpc,
+                'stage' => $yearStage,
+                'survival' => $yearSurvival,
+            ],
             'infoHospital' => $infoHospital,
             'infoTreatment' => $infoTreatment,
             'dpcs' => $dpcs,
             'stages' => $stages,
+            'survivals' => $survivals,
+            'averageSurv' => $averageSurv,
         ];
     }
 
@@ -220,7 +263,7 @@ class f_hospital_ct
             $html .= '<div class="tag">'.$areaName.'</div>';
             $html .= '<div class="hospital-info">';
             $html .= '<h2>'.$hospital->hospital_name.'</h2>';
-            $html .= '<a target="_blank" href="'.$hospital->hp_url.'"><span class="info-icon"><i class="fa fa-arrow-circle-right" aria-hidden="true"></i> ホームページはこちら（外部リンク)</span></a>';
+            $html .= '<a target="_blank" href="'.$hospital->hp_url.'"><span class="info-icon"><img src="../img/icons/icon-go-home.png" alt="icon-home"> ホームページはこちら（外部リンク)</span></a>';
             $html .= '<p class="m-b-0">'.$hospital->addr.'</p>';
             $html .= '<p>'.($hospital->tel ? $hospital->tel . ' (代表)': '').'</p>';
             $html .= '</div>';

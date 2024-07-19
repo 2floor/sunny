@@ -26,13 +26,12 @@
 .summary-content-tab {
     display: flex;
     flex-direction: row;
-    justify-content: space-between;
-    gap: 30px;
+    justify-content: center;
 }
 
 .treatment-results {
     margin-bottom: 20px;
-    width: 55%;
+    width: 80%;
 }
 
 .treatment-results h3 {
@@ -115,7 +114,7 @@
     color: #4C3333;
 }
 .panel-collapse {
-    transition: height 0.5s ease;
+    transition: height 1s ease;
 }
 .arrow {
     float: right;
@@ -126,19 +125,27 @@
     padding: 20px;
 }
 
-.result-content-tab .num-new-tb th {
+.result-content-tab .dpc-tb th {
     background-color: #DAE9F5;
 }
 
-.result-content-tab .num-new-tb {
+.result-content-tab .dpc-tb {
     margin-bottom: 0
 }
 
-.result-content-tab .num-in-year-tb th {
+.result-content-tab .stage-tb th {
     background-color: #DAE9F5;
 }
 
-.result-content-tab .num-in-year-detail-tb th {
+.result-content-tab .surv-tb th {
+    background-color: #DAE9F5;
+}
+
+.result-content-tab .stage-detail-tb th {
+    background-color: #DAE9F5;
+}
+
+.result-content-tab .surv-detail-tb th {
     background-color: #DAE9F5;
 }
 

@@ -3,109 +3,85 @@
 if (!isset($avgData)) {
     $avgData = [];
 }
+if (!isset($yearSummary)) {
+    $yearSummary = [];
+}
 ?>
 <div class="table-responsive">
     <table class="table table-bordered">
         <thead>
         <tr>
-            <th></th>
-            <th>実績値</th>
-            <th>都道府県</th>
-            <th>地方</th>
-            <th>全国</th>
+            <th class="table-title col-xs-4"></th>
+            <th class="table-title col-xs-2">実績値</th>
+            <th class="table-title col-xs-2">都道府県</th>
+            <th class="table-title col-xs-2">地方</th>
+            <th class="table-title col-xs-2">全国</th>
         </tr>
         </thead>
         <tbody>
         <tr>
-            <td class="criteria">年間入院患者数</td>
+            <td class="criteria">年間入院患者数 <?php echo $yearSummary['dpc'] ? '(' .$yearSummary['dpc'] .'年)' : ''?></td>
             <td class="center-icon"><?php echo ($avgData['avgDpc'] ? $avgData['avgDpc'] . '人' : '-') ?></td>
             <td class="center-icon">
                 <?php
-                if (in_array($avgData['avgPrefDpcRank'] ?? null, [1, 2, 3])) {
-                    echo '<img src="../../img/icons/rank' . $avgData['avgPrefDpcRank'] . '.png" alt="rank-img">';
-                } else {
-                    echo ($avgData['avgPrefDpcRank']) ? $avgData['avgPrefDpcRank'] . '位' : '-';
-                }
+                    $avgPrefDpcRank = render_html_helper::renderRank($avgData['avgPrefDpcRank'], '../../img/icons');
+                    echo $avgPrefDpcRank;
                 ?>
             </td>
             <td class="center-icon">
                 <?php
-                if (in_array($avgData['avgAreaDpcRank'] ?? null, [1, 2, 3])) {
-                    echo '<img src="../../img/icons/rank' . $avgData['avgAreaDpcRank'] . '.png" alt="rank-img">';
-                } else {
-                    echo ($avgData['avgAreaDpcRank']) ? $avgData['avgAreaDpcRank'] . '位' : '-';
-                }
+                    $avgAreaDpcRank = render_html_helper::renderRank($avgData['avgAreaDpcRank'], '../../img/icons');
+                    echo $avgAreaDpcRank;
                 ?>
             </td>
             <td class="center-icon">
                 <?php
-                if (in_array($avgData['avgGlobalDpcRank'] ?? null, [1, 2, 3])) {
-                    echo '<img src="../../img/icons/rank' . $avgData['avgGlobalDpcRank'] . '.png" alt="rank-img">';
-                } else {
-                    echo ($avgData['avgGlobalDpcRank']) ? $avgData['avgGlobalDpcRank'] . '位' : '-';
-                }
+                    $avgGlobalDpcRank = render_html_helper::renderRank($avgData['avgGlobalDpcRank'], '../../img/icons');
+                    echo $avgGlobalDpcRank;
                 ?>
             </td>
         </tr>
         <tr>
-            <td class="criteria">年間新規患者数</td>
+            <td class="criteria">年間新規患者数 <?php echo $yearSummary['dpc'] ? '(' .$yearSummary['stage'] .'年)' : ''?></td>
             <td class="center-icon"><?php echo ($avgData['avgNewNum'] ? $avgData['avgNewNum'] . '人' : '-') ?></td>
             <td class="center-icon">
                 <?php
-                if (in_array($avgData['avgPrefNewNumRank'] ?? null, [1, 2, 3])) {
-                    echo '<img src="../../img/icons/rank' . $avgData['avgPrefNewNumRank'] . '.png" alt="rank-img">';
-                } else {
-                    echo ($avgData['avgPrefNewNumRank']) ? $avgData['avgPrefNewNumRank'] . '位' : '-';
-                }
+                    $avgPrefNewNumRank = render_html_helper::renderRank($avgData['avgPrefNewNumRank'], '../../img/icons');
+                    echo $avgPrefNewNumRank;
                 ?>
             </td>
             <td class="center-icon">
                 <?php
-                if (in_array($avgData['avgLocalNewNumRank'] ?? null, [1, 2, 3])) {
-                    echo '<img src="../../img/icons/rank' . $avgData['avgLocalNewNumRank'] . '.png" alt="rank-img">';
-                } else {
-                    echo ($avgData['avgLocalNewNumRank']) ? $avgData['avgLocalNewNumRank'] . '位' : '-';
-                }
+                    $avgLocalNewNumRank = render_html_helper::renderRank($avgData['avgLocalNewNumRank'], '../../img/icons');
+                    echo $avgLocalNewNumRank;
                 ?>
             </td>
             <td class="center-icon">
                 <?php
-                if (in_array($avgData['avgGlobalNewNumRank'] ?? null, [1, 2, 3])) {
-                    echo '<img src="../../img/icons/rank' . $avgData['avgGlobalNewNumRank'] . '.png" alt="rank-img">';
-                } else {
-                    echo ($avgData['avgGlobalNewNumRank']) ? $avgData['avgGlobalNewNumRank'] . '位' : '-';
-                }
+                    $avgGlobalNewNumRank = render_html_helper::renderRank($avgData['avgGlobalNewNumRank'], '../../img/icons');
+                    echo $avgGlobalNewNumRank;
                 ?>
             </td>
         </tr>
         <tr>
-            <td class="criteria">5年後生存率数</td>
+            <td class="criteria">5年後生存率数 <?php echo $yearSummary['dpc'] ? '(' .$yearSummary['survival'] .'年)' : ''?></td>
             <td class="center-icon"><?php echo ($avgData['avgSurvivalRate'] ?? '-') ?></td>
             <td class="center-icon">
                 <?php
-                if (in_array($avgData['avgPrefRate'] ?? null, [1, 2, 3])) {
-                    echo '<img src="../../img/icons/rank' . $avgData['avgPrefRate'] . '.png" alt="rank-img">';
-                } else {
-                    echo ($avgData['avgPrefRate']) ? $avgData['avgPrefRate'] . '位' : '-';
-                }
+                    $avgPrefRate = render_html_helper::renderRank($avgData['avgPrefRate'], '../../img/icons');
+                    echo $avgPrefRate;
                 ?>
             </td>
             <td class="center-icon">
                 <?php
-                if (in_array($avgData['avgLocalRate'] ?? null, [1, 2, 3])) {
-                    echo '<img src="../../img/icons/rank' . $avgData['avgLocalRate'] . '.png" alt="rank-img">';
-                } else {
-                    echo ($avgData['avgLocalRate']) ? $avgData['avgLocalRate'] . '位' : '-';
-                }
+                    $avgLocalRate = render_html_helper::renderRank($avgData['avgLocalRate'], '../../img/icons');
+                    echo $avgLocalRate;
                 ?>
             </td>
             <td class="center-icon">
                 <?php
-                if (in_array($avgData['avgGlobalRate'] ?? null, [1, 2, 3])) {
-                    echo '<img src="../../img/icons/rank' . $avgData['avgGlobalRate'] . '.png" alt="rank-img">';
-                } else {
-                    echo ($avgData['avgGlobalRate']) ? $avgData['avgGlobalRate'] . '位' : '-';
-                }
+                    $avgGlobalRate = render_html_helper::renderRank($avgData['avgGlobalRate'], '../../img/icons');
+                    echo $avgGlobalRate;
                 ?>
             </td>
         </tr>
