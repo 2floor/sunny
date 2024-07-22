@@ -26,30 +26,27 @@ class meta
 
         $site_name = "｜サニーヘルス株式会社"; // タイトルの末尾に追加される不要であれば「""」のみにする
 
-        if ($page_name == "" || $page_name == "/" || strpos($page_name, "index.php") !== false) {
-            $index_flg = true;
-
-            // TOPページ
-            $page_ttl = '';
-            $page_keywords = '';
-            $page_description = '';
-
-        } elseif (strpos($page_name, "hospital/first-search.php") !== false) {
-
-            // 代表挨拶
+        if (strpos($page_name, "hospital/first-search.php") !== false) {
             $page_ttl = '病院検索 | 新規医療機関検索' . $site_name;
             $page_keywords = '';
             $page_description = '';
 
         } elseif (strpos($page_name, "hospital/second-search.php") !== false) {
-
-            // 代表挨拶
             $page_ttl = '病院検索 | セカンドオピニオン検索' . $site_name;
             $page_keywords = '';
             $page_description = '';
 
-        }
+        } elseif (strpos($page_name, "hospital/detail/index.php") !== false) {
+            $page_ttl = '病院検索 |詳細' . $site_name;
+            $page_keywords = '';
+            $page_description = '';
+        } elseif ($page_name == "" || $page_name == "/" || strpos($page_name, "index.php") !== false) {
+            $index_flg = true;
+            $page_ttl = '';
+            $page_keywords = '';
+            $page_description = '';
 
+        }
 
         /**
          * 設定ここまで

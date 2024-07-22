@@ -1,8 +1,33 @@
+function renderPDF(url, canvasContainer) {
+    const loadingTask = pdfjsLib.getDocument(url);
+    loadingTask.promise.then(pdf => {
+        for (let pageNum = 1; pageNum <= pdf.numPages; pageNum++) {
+            pdf.getPage(pageNum).then(page => {
+                const viewport = page.getViewport({ scale: 1.5 });
+                const canvas = document.createElement('canvas');
+                const context = canvas.getContext('2d');
+                canvas.height = viewport.height;
+                canvas.width = viewport.width;
+
+                canvasContainer.appendChild(canvas);
+
+                const renderContext = {
+                    canvasContext: context,
+                    viewport: viewport
+                };
+                page.render(renderContext);
+            });
+        }
+    }, function(reason) {
+        console.error(reason);
+    });
+}
 $(document).ready(function () {
     handlePopupClick('#cancerType', '#cancerPopup');
     $('.search-hospital-footer').hide()
 
     let cancerTypeChecked = []
+    let cancerStageChecked = []
     let areaChecked = {}
     let categoryChecked = []
 
@@ -62,6 +87,12 @@ $(document).ready(function () {
                 title: 'エラー!',
                 text: '少なくとも1種類のがんを選択する必要があります',
             });
+        } else if (pageType == 'second-search' && cancerStageChecked.length === 0) {
+            Swal.fire({
+                icon: "error",
+                title: 'エラー!',
+                text: 'がんのステージを少なくとも 1 つ選択する必要があります',
+            });
         } else {
             let keyword = $('input#keyword').val();
             let sort = $('input[name="sort"]:checked').val()
@@ -69,6 +100,7 @@ $(document).ready(function () {
                 method: 'searchHospitalList',
                 data: {
                     'cancer': cancerTypeChecked,
+                    'stage': cancerStageChecked,
                     'area': areaChecked,
                     'category': flattenArray(categoryChecked),
                     'keyword': keyword,
@@ -177,17 +209,41 @@ $(document).ready(function () {
         handlePopupClick('#cancerType', '#cancerPopup');
     });
 
+    $('#cancerStage').on('click', function () {
+        handlePopupClick('#cancerStage', '#cancerStagePopup');
+    });
+
     $('.show-popup-dynamic').on('click', function () {
         order = $(this).data('order');
         handlePopupClick('#' + $(this).attr('id'), '#categoryPopup-' + order);
     });
 
     $('#cancerPopup .open-next-popup').on('click', function () {
-        handlePopupClick('#area', '#areaPopup', '#cancerPopup');
+        if (pageType == 'first-search') {
+            handlePopupClick('#area', '#areaPopup', '#cancerPopup');
+        }
+
+        if (pageType == 'second-search') {
+            handlePopupClick('#cancerStage', '#cancerStagePopup', '#cancerPopup');
+        }
+    });
+
+    $('#cancerStagePopup .open-previous-popup').on('click', function () {
+        handlePopupClick('#cancerType', '#cancerPopup', '#cancerStagePopup');
+    });
+
+    $('#cancerStagePopup .open-next-popup').on('click', function () {
+        handlePopupClick('#area', '#areaPopup', '#cancerStagePopup');
     });
 
     $('#areaPopup .open-previous-popup').on('click', function () {
-        handlePopupClick('#cancerType', '#cancerPopup', '#areaPopup');
+        if (pageType == 'first-search') {
+            handlePopupClick('#cancerType', '#cancerPopup', '#areaPopup');
+        }
+
+        if (pageType == 'second-search') {
+            handlePopupClick('#cancerStage', '#cancerStagePopup', '#areaPopup');
+        }
     });
 
     $('#areaPopup .open-next-popup').on('click', function () {
@@ -212,6 +268,10 @@ $(document).ready(function () {
 
     $('#cancerPopup .clear-data').on('click', function () {
         $('#cancerPopup input[type="checkbox"]').prop('checked', false);
+    });
+
+    $('#cancerStagePopup .clear-data').on('click', function () {
+        $('#cancerStagePopup input[type="checkbox"]').prop('checked', false);
     });
 
     $('#areaPopup .clear-data').on('click', function () {
@@ -263,6 +323,10 @@ $(document).ready(function () {
         $('#cancerPopup input[type=checkbox]').not($(this)).prop('checked', false)
     })
 
+    $('#cancerStagePopup input[type=checkbox]').on('click', function () {
+        $('#cancerStagePopup input[type=checkbox]').not($(this)).prop('checked', false)
+    })
+
     $('#areaPopup input[type=checkbox]').on('change', function () {
         let select = $(this).closest('.form-group').find('select')
 
@@ -305,13 +369,34 @@ $(document).ready(function () {
                 html += '<br>'
             })
 
-            Swal.fire({
-                title: "下記のページを印刷しますか？",
-                icon: "question",
-                html: html,
-                showDenyButton: true,
-                confirmButtonText: "Ok",
-                denyButtonText: `キャンセル`
+            // Swal.fire({
+            //     title: "下記のページを印刷しますか？",
+            //     icon: "question",
+            //     html: html,
+            //     showDenyButton: true,
+            //     confirmButtonText: "Ok",
+            //     denyButtonText: `キャンセル`
+            // });
+
+            $.ajax({
+                url: '../controller/front/f_hospital_ct.php',
+                type: 'POST',
+                data: {method: 'printHospitalList', selectedItems: [{hospitalId : 1}, {hospitalId : 2}]},
+                success: function(response) {
+                    let res = JSON.parse(response);
+                    if (res.status === 'success') {
+
+                        $('#pdfViewer').empty();
+                        res.pdfFiles.forEach(function(pdfFile) {
+                            const container = $('<div>', {
+                                class: 'pdf-container'
+                            });
+                            $('#pdfViewer').append(container);
+                            renderPDF(pdfFile, container[0]);
+                        });
+                        $('#pdfViewer').show();
+                    }
+                }
             });
         }
     });
@@ -329,6 +414,21 @@ $(document).ready(function () {
             filterContent.html('')
             $(idPopup + ' .popup-checkbox-content input:checked').each(function () {
                 cancerTypeChecked.push($(this).data('key'))
+                span += '<span>' + $(this).data('value') + '</span>'
+            });
+
+            filterContent.append(span)
+        }
+
+        if (idPopup === '#cancerStagePopup') {
+            let span = ''
+            idFilter = '#cancerStage'
+            cancerStageChecked  = []
+
+            let filterContent = $(idFilter).parent().find('.filter-content')
+            filterContent.html('')
+            $(idPopup + ' .popup-checkbox-content input:checked').each(function () {
+                cancerStageChecked.push($(this).data('key'))
                 span += '<span>' + $(this).data('value') + '</span>'
             });
 

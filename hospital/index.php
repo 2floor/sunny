@@ -31,7 +31,7 @@ $pageinfo = $page_init->get_info();
         <a href="./first-search.php" class="option red">
             新規医療機関検索<br>がんの疑いがあり、治療を受ける病院を検索する<br>（確定診断を受けていない方向け）
         </a>
-        <a href="#" class="option green">
+        <a href="./second-search.php" class="option green">
             セカンドオピニオン検索<br>セカンドオピニオンを受ける病院や特殊な治療方法などから病院を検索する<br>（確定診断を受けている方向け）
         </a>
     </div>

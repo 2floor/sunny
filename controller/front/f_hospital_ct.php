@@ -5,6 +5,8 @@ use App\Models\Cancer;
 use App\Models\Category;
 use App\Models\Hospital;
 use App\Models\SurvAverage;
+use Dompdf\Dompdf;
+use Dompdf\Options;
 
 if (!isset($_SESSION)) {
     session_start();
@@ -31,9 +33,9 @@ $_POST = $security_result[0];
 $_REQUEST = $security_result[1];
 $_COOKIE = $security_result[2];
 
-if (isset($_REQUEST['method'])) {
+if (isset($_GET['method'])) {
     $ct = new f_hospital_ct();
-    $data = $ct->mainAjaxGet($_REQUEST);
+    $data = $ct->mainAjaxGet($_GET);
     echo json_encode($data);
 } elseif (isset($_POST['method'])) {
     $ct = new f_hospital_ct();
@@ -58,9 +60,20 @@ class f_hospital_ct
     }
 
     public function mainAjaxPost($post)
-    {}
+    {
+        $data = [
+            'status' => false,
+            'data' => []
+        ];
 
-    public function searchPageIndex() {
+        if ($post['method'] == 'printHospitalList') {
+            $data = $this->printHospitalList($post);
+        }
+
+        return $data;
+    }
+
+    public function searchPageIndex($categoryType) {
         $cancer = Cancer::select('id', 'cancer_type')
             ->where(['public_flg' => Cancer::PUBLISHED, 'del_flg' => Cancer::NOT_DELETED])
             ->orderBy('order_num', 'asc')
@@ -75,10 +88,12 @@ class f_hospital_ct
         $category = Category::select('id', 'level1', 'level2', 'level3', 'order_num')
             ->where([
                 'category_group' => Category::HOSPITAL_GROUP,
-                'data_type' => Category::HOSPITAL_DETAIL_TYPE,
                 'public_flg' => Category::PUBLISHED,
                 'del_flg' => Category::NOT_DELETED
             ])
+            ->when($categoryType == 'detail', function ($query) {
+                $query->where('data_type', Category::HOSPITAL_DETAIL_TYPE);
+            })
             ->get()
             ->groupBy('level1')->map(function ($items) {
                 return $items->groupBy('level2')->map(function ($subItems) {
@@ -306,6 +321,47 @@ class f_hospital_ct
             'status' => true,
             'data' => [
                 'html' => [$html, $totalNumber]
+            ]
+        ];
+    }
+
+    public function printHospitalList($post)
+    {
+        $selectedItems = $_POST['selectedItems'] ?? [];
+        $pdfFiles = [];
+
+        foreach ($selectedItems as $item) {
+            $hospitalId = $item['hospitalId'] ?? null;
+            $cancerId = $item['cancerId'] ?? null;
+
+            $param = [
+                'baseUrl' => BASE_URL
+            ];
+
+            extract($param);
+            ob_start();
+            include '../../hospital/pdf/hospital-sample-pdf.php';
+            $html = ob_get_clean();
+
+            $options = new Options();
+            $options->set('isHtml5ParserEnabled', true);
+            $options->set('isRemoteEnabled', true);
+
+            $dompdf = new Dompdf($options);
+            $dompdf->loadHtml($html);
+            $dompdf->setPaper('A4', 'portrait');
+            $dompdf->render();
+
+
+            $pdfFilePath = "../../download_files/hospital/detail-{$hospitalId}.pdf";
+            file_put_contents($pdfFilePath, $dompdf->output());
+            $pdfFiles[] = $pdfFilePath;
+        }
+
+        return [
+            'status' => true,
+            'data' => [
+                'pdfFiles' => $pdfFiles
             ]
         ];
     }

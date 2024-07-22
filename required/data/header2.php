@@ -20,7 +20,6 @@
                     <nav class="heder-pc__nav">
                         <ul class="pc-nav__lists">
                             <li class="pc-nav__list"><a href="[path]" class="pc-nav__link">ホーム</a></li>
-                            <li class="pc-nav__list"><a href="#" class="pc-nav__link">医者を探す</a></li>
                             <li class="pc-nav__list js-drop"><a href="[path]hospital" class="pc-nav__link pc-nav-drop">病院を探す</a>
                                 <div class="drop js-drop-open">
                                     <div class="drop__inner">
@@ -32,7 +31,7 @@
                                                 </a>
                                             </li>
                                             <li class="drop__list">
-                                                <a href="[path]company/" class="drop__link">
+                                                <a href="[path]hospital/second-search.php" class="drop__link">
                                                     <p class="drop-card__title">セカンドオピニオンを得る</p>
                                                 </a>
                                             </li>
@@ -40,6 +39,7 @@
                                     </div>
                                 </div><!-- /.drop -->
                             </li>
+                            <li class="pc-nav__list"><a href="#" class="pc-nav__link">医者を探す</a></li>
                             <li class="pc-nav__list">
                                 <div class="global">
                                     <a href="[path]logout.php" class="global__header js-accordion">ログアウト</a>
@@ -62,8 +62,8 @@
             <nav class="drawer-nav">
                 <ul class="drawer-nav__lists">
                     <li class="drawer-nav__list"><a href="[path]" class="drawer-nav__link">ホーム</a></li>
-                    <li class="drawer-nav__list"><a href="#" class="drawer-nav__link">医者を探す</a></li>
                     <li class="drawer-nav__list"><a href="[path]hospital" class="drawer-nav__link">病院を探す</a></li>
+                    <li class="drawer-nav__list"><a href="#" class="drawer-nav__link">医者を探す</a></li>
                     <li class="drawer-nav__list"><a href="[path]logout.php" class="drawer-nav__link">ログアウト</a>
        </li>
                 </ul><!-- ./drawer-nav__lists -->

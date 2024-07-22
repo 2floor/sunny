@@ -16,11 +16,11 @@ if (!isset($infoTreatment)) {
             <td><?php echo $infoTreatment['hospitalGen'] ?? '' ?></td>
         </tr>
         <tr>
-            <th>集学的治療体制の状況 <i style="color: red" class="fa fa-question-circle"></i></th>
+            <th>集学的治療体制の状況</th>
             <td><span class="badge bg-secondary">あり</span></td>
         </tr>
         <tr>
-            <th>名医の在籍状況 <i style="color: red" class="fa fa-question-circle"></i></th>
+            <th>名医の在籍状況</th>
             <td>
                 <p><span class="badge bg-secondary">あり</span></p>
                 <p>外科：坂本 直人</p>

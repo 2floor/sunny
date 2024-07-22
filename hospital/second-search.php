@@ -10,7 +10,7 @@ $page_init = new page_init();
 $pageinfo = $page_init->get_info();
 
 $f_hospital_ct = new f_hospital_ct();
-$initData = $f_hospital_ct->searchPageIndex('detail');
+$initData = $f_hospital_ct->searchPageIndex('all');
 $cancerData = $initData['cancer'] ?? [];
 $areaData = $initData['area'] ?? [];
 $category = $initData['category'] ?? [];
@@ -37,6 +37,16 @@ $category = $initData['category'] ?? [];
                 <div class="filter-group">
                     <div class="filter-header show-popup" id="cancerType">
                         <h3>ガン種類</h3>
+                        <span class="badge bg-danger">必須</span>
+                        <span class="toggle">+</span>
+                    </div>
+                    <div class="filter-content content-required">
+                    </div>
+                </div>
+
+                <div class="filter-group">
+                    <div class="filter-header show-popup" id="cancerStage">
+                        <h3>がんの段階</h3>
                         <span class="badge bg-danger">必須</span>
                         <span class="toggle">+</span>
                     </div>
@@ -85,13 +95,14 @@ $category = $initData['category'] ?? [];
             <div class="search-result">
                 <div class="popup-container">
                     <?php include 'component/popup-cancer.php'; ?>
+                    <?php include 'component/popup-cancer-stage.php'; ?>
                     <?php include 'component/popup-area.php'; ?>
                     <?php include 'component/popup-category.php';?>
                 </div>
                 <div class="search-result-header">
                     <label><input type="checkbox" class="m-r-10 checkbox-print-all"> 全チェック</label>
                     <div class="search-result-header-right">
-                        <span>チェックした対象を<br><span style="font-size: 10px">（1回につき最大5件）</span></span>
+                        <span>チェックした対象を</span>
                         <button class="confirm-button" id="printButton">印刷</button>
                     </div>
                 </div>
@@ -111,15 +122,12 @@ $category = $initData['category'] ?? [];
                 </div>
             </div>
         </div>
-        <div id="pdfViewer" style="display: none;">
-        </div>
     </div>
 </main>
 </body>
 <?php print $pageinfo->html_foot; ?>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.7.570/pdf.min.js"></script>
 <script>
-    const pageType = 'first-search';
+    const pageType = 'second-search';
 </script>
 <script type="text/javascript" src="./../assets/js/search_hospital.js"></script>
 </html>
