@@ -102,7 +102,7 @@ $category = $initData['category'] ?? [];
                 <div class="search-result-header">
                     <label><input type="checkbox" class="m-r-10 checkbox-print-all"> 全チェック</label>
                     <div class="search-result-header-right">
-                        <span>チェックした対象を</span>
+                        <span>チェックした対象を<br><span style="font-size: 10px">（1回につき最大5件）</span></span>
                         <button class="confirm-button" id="printButton">印刷</button>
                     </div>
                 </div>
