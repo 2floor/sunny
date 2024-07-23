@@ -121,11 +121,11 @@ $(document).ready(function () {
         }
     }
 
-    function printHospitalDetail() {
+    function printHospitalDetail(data) {
         $.ajax({
             url: '../controller/front/f_hospital_ct.php',
             type: 'POST',
-            data: {method: 'printHospitalList', selectedItems: printHospitalList},
+            data: {method: 'printHospitalList', selectedItems: data},
             beforeSend: function() {
                 $('.loading-overlay').show();
             },
@@ -134,7 +134,7 @@ $(document).ready(function () {
                 $('.loading-overlay').hide();
                 let res = JSON.parse(response);
                 if (res.status === true) {
-                    handlePrintPDF(res.data.pdfFiles ?? [])
+                    handlePrintPDF(res.data.pdfFiles ?? [], '../')
                 } else {
                     Swal.fire({
                         title: "エラー!",
@@ -401,7 +401,12 @@ $(document).ready(function () {
                 html: html,
                 showDenyButton: true,
                 confirmButtonText: "Ok",
-                denyButtonText: `キャンセル`
+                denyButtonText: `キャンセル`,
+                customClass: {
+                    actions: 'print-confirm',
+                    confirmButton: 'order-2',
+                    denyButton: 'order-1'
+                }
             }).then((result) => {
                 if (result.isConfirmed) {
                     printHospitalDetail(printHospitalList);

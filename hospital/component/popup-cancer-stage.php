@@ -1,6 +1,6 @@
 <div class="popup" id="cancerStagePopup">
     <div class="popup-header">
-        <h2>ガン ステージをご選択ください。<span class="badge bg-danger">必須</span></h2>
+        <h2>がんのステージをご選択ください。<span class="badge bg-danger">必須</span></h2>
         <span class="popup-close">✖</span>
     </div>
     <div class="popup-checkbox-content">

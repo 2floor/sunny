@@ -1,5 +1,6 @@
 let currentIndex = 0;
 let pdfLinks = [];
+let path = '../';
 
 function showPdf(index) {
     $('.pdf-container').removeClass('active');
@@ -23,7 +24,7 @@ $('#nextPDF').click(function() {
 $('#downloadAllPDF').click(function() {
     pdfLinks.forEach(function(link) {
         let a = document.createElement('a');
-        a.href = '../' + link;
+        a.href = path + link;
         a.download = link.split('/').pop();
         document.body.appendChild(a);
         a.click();
@@ -35,8 +36,9 @@ $('#closePDF').click(function() {
     $('.print-result').hide();
 });
 
-function handlePrintPDF (data) {
+function handlePrintPDF (data, innerPath ='../') {
     currentIndex = 0;
+    path = innerPath;
     $('.print-result').show();
     $('#pdf-render-container').empty();
     pdfLinks = data;
@@ -44,7 +46,7 @@ function handlePrintPDF (data) {
     pdfLinks.forEach(function(link, index) {
         $('#pdf-render-container').append(`
             <div class="pdf-container" data-index="${index}">
-                <iframe src="../${link}"></iframe>
+                <iframe src="${path}${link}"></iframe>
             </div>
         `);
     });

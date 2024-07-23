@@ -40,12 +40,16 @@ $averageSurv = $initData['averageSurv'] ?? [];
 <main>
     <div class="container">
         <div class="main-detail">
+            <div class="search-result-header">
+                <div class="search-result-header-right">
+                    <span>チェックした対象を<br></span>
+                    <button class="confirm-button" id="printButton">印刷</button>
+                </div>
+            </div>
             <div class="title">
                 <h3 class="text-center"><?php echo $cancerName; ?></h3>
                 <h1 class="text-center"><?php echo $infoHospital['name'] ?? ''; ?></h1>
             </div>
-
-
             <ul class="nav nav-tabs mt-4" id="myTab" role="tablist">
                 <li class="nav-item active">
                     <a class="nav-link" id="summary-tab" data-toggle="tab" href="#summary" role="tab" aria-controls="summary" aria-selected="true">サマリー</a>
@@ -63,7 +67,6 @@ $averageSurv = $initData['averageSurv'] ?? [];
                     <a class="nav-link" id="notification-tab" data-toggle="tab" href="#notification" role="tab" aria-controls="notification" aria-selected="false">特記事項</a>
                 </li>
             </ul>
-
             <div class="tab-content mt-3" id="tabContent">
                 <div class="tab-pane fade active in" id="summary" role="tabpanel" aria-labelledby="summary-tab">
                     <div class="summary-content-tab">
@@ -138,25 +141,15 @@ $averageSurv = $initData['averageSurv'] ?? [];
                     </div>
                 </div>
             </div>
+            <div class="loading-overlay">
+                <div class="loading-spinner"></div>
+            </div>
+            <?php include '../../hospital/component/print-pdf-result.php';?>
         </div>
     </div>
 </main>
 </body>
 <?php print $pageinfo->html_foot; ?>
-<script>
-    $(document).ready(function() {
-        $('#collapseOne').prev('.panel-heading').find('.arrow').toggleClass('glyphicon-chevron-down glyphicon-chevron-up');
-        $('#collapseOne').prev('.panel-heading').addClass('active');
-
-        $('#accordion').on('show.bs.collapse', function(e) {
-            $(e.target).prev('.panel-heading').addClass('active');
-            $(e.target).prev('.panel-heading').find('.arrow').removeClass('glyphicon-chevron-down').addClass('glyphicon-chevron-up');
-        });
-
-        $('#accordion').on('hide.bs.collapse', function(e) {
-            $(e.target).prev('.panel-heading').removeClass('active');
-            $(e.target).prev('.panel-heading').find('.arrow').removeClass('glyphicon-chevron-up').addClass('glyphicon-chevron-down');
-        });
-    });
-</script>
+<script type="text/javascript" src="../../assets/js/print-pdf.js"></script>
+<script type="text/javascript" src="../../assets/js/hospital_detail.js"></script>
 </html>

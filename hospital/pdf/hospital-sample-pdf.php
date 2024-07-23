@@ -173,7 +173,7 @@
                         <td>
                             <p>
                                 <?php
-                                echo $multiTreatment ? '<span class="badge bg-secondary">あり</span>' : '<span class="badge bg-warning">なし</span>';
+                                echo $multiTreatment ? '<span class="badge bg-secondary">あり</span>' : '';
                                 ?>
                             </p>
                         </td>

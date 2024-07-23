@@ -162,12 +162,14 @@ input[type="radio"], input[type="checkbox"] {
 /* Popup styles */
 .popup-container {
     position: absolute;
-    left: 50%;
-    transform: translateX(-50%);
-    width: 90%;
+    top: 0;
+    right: 0;
+    width: 100%;
     height: 100%;
     display: none;
     z-index: 10;
+    background: rgba(0, 0, 0, 0.4);
+    border-radius: 10px;
 }
 
 .popup {
@@ -177,8 +179,12 @@ input[type="radio"], input[type="checkbox"] {
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
     border-radius: 10px;
     z-index: 1000;
-    max-height: 1000px;
+    max-height: 950px;
     overflow: auto;
+    margin-top: 120px;
+    width: 90%;
+    margin-left: auto;
+    margin-right: auto;
 }
 
 .popup label {
@@ -539,7 +545,7 @@ input[type="radio"], input[type="checkbox"] {
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
     border-radius: 10px;
     margin-bottom: 20px;
-    padding: 20% 35%;
+    padding: 20% 37%;
     font-weight: bolder;
 
 }
@@ -648,5 +654,9 @@ input[type="radio"], input[type="checkbox"] {
     .print-footer {
         flex-direction: column;
         gap: 20px;
+    }
+
+    .no-data-message {
+        padding: 25% 25%;
     }
 }

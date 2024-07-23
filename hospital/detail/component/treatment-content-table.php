@@ -20,7 +20,7 @@ if (!isset($infoTreatment)) {
             <td>
                 <p>
                     <?php
-                        echo $infoTreatment['multiTreatment'] ? '<span class="badge bg-secondary">あり</span>' : '<span class="badge bg-warning">なし</span>';
+                        echo $infoTreatment['multiTreatment'] ? '<span class="badge bg-secondary">あり</span>' : '';
                     ?>
                 </p>
             </td>

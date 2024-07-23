@@ -46,7 +46,7 @@ $category = $initData['category'] ?? [];
 
                 <div class="filter-group">
                     <div class="filter-header show-popup" id="cancerStage">
-                        <h3>がんの段階</h3>
+                        <h3>がんのステージ</h3>
                         <span class="badge bg-danger">必須</span>
                         <span class="toggle">+</span>
                     </div>

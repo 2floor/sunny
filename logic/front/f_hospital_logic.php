@@ -2,6 +2,7 @@
 
 use App\Models\Hospital;
 use App\Models\HospitalCategory;
+use App\Models\Category;
 
 class f_hospital_logic
 {
@@ -11,6 +12,14 @@ class f_hospital_logic
 
         if ($keyword != '') {
             $query->where('hospital_name', 'like', "%$keyword%");
+            $query->orWhereHas('categories', function ($query) use ($keyword, $cancers) {
+                $query->where('data_type' , Category::HOSPITAL_TREATMENT_TYPE);
+                $query->where('level3', 'like', "%$keyword%");
+                $query->where(function ($query2) use ($cancers) {
+                    $query2->whereNull('t_category_hospital.cancer_id');
+                    $query2->orWhereIn('t_category_hospital.cancer_id', $cancers);
+                });
+            });
         }
 
         $query->whereHas('cancers', function ($query) use ($cancers) {
