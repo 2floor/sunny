@@ -22,8 +22,12 @@ class f_hospital_logic
         }
 
         if (!empty($categories)) {
-            $query->whereHas('categories', function ($query) use ($categories) {
+            $query->whereHas('categories', function ($query) use ($categories, $cancers) {
                 $query->whereIn('t_category.id', $categories);
+                $query->where(function ($query2) use ($cancers) {
+                    $query2->whereNull('t_category_hospital.cancer_id');
+                    $query2->orWhereIn('t_category_hospital.cancer_id', $cancers);
+                });
             });
         }
 

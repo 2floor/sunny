@@ -17,14 +17,22 @@ if (!isset($infoTreatment)) {
         </tr>
         <tr>
             <th>集学的治療体制の状況</th>
-            <td><span class="badge bg-secondary">あり</span></td>
+            <td>
+                <p>
+                    <?php
+                        echo $infoTreatment['multiTreatment'] ? '<span class="badge bg-secondary">あり</span>' : '<span class="badge bg-warning">なし</span>';
+                    ?>
+                </p>
+            </td>
         </tr>
         <tr>
             <th>名医の在籍状況</th>
             <td>
-                <p><span class="badge bg-secondary">あり</span></p>
-                <p>外科：坂本 直人</p>
-                <p>放射線科：牧元 信夫</p>
+                <p>
+                    <?php
+                        echo $infoTreatment['famousDoctor'] ? '<span class="badge bg-secondary">あり</span>' : '<span class="badge bg-warning">なし</span>';
+                    ?>
+                </p>
             </td>
         </tr>
         <tr>

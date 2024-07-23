@@ -523,10 +523,6 @@ input[type="radio"], input[type="checkbox"] {
     justify-content: flex-end;
 }
 
-.paginationjs .paginationjs-pages li {
-    padding: 0 1px;
-}
-
 .hospital-list {
     width: 100%;
 }
@@ -647,5 +643,10 @@ input[type="radio"], input[type="checkbox"] {
 
     .card-info .categories span {
         width: 100%;
+    }
+
+    .print-footer {
+        flex-direction: column;
+        gap: 20px;
     }
 }

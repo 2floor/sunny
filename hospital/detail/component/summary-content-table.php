@@ -42,7 +42,7 @@ if (!isset($yearSummary)) {
             </td>
         </tr>
         <tr>
-            <td class="criteria">年間新規患者数 <?php echo $yearSummary['dpc'] ? '(' .$yearSummary['stage'] .'年)' : ''?></td>
+            <td class="criteria">年間新規患者数 <?php echo $yearSummary['stage'] ? '(' .$yearSummary['stage'] .'年)' : ''?></td>
             <td class="center-icon"><?php echo ($avgData['avgNewNum'] ? $avgData['avgNewNum'] . '人' : '-') ?></td>
             <td class="center-icon">
                 <?php
@@ -64,7 +64,7 @@ if (!isset($yearSummary)) {
             </td>
         </tr>
         <tr>
-            <td class="criteria">5年後生存率数 <?php echo $yearSummary['dpc'] ? '(' .$yearSummary['survival'] .'年)' : ''?></td>
+            <td class="criteria">5年後生存率数 <?php echo $yearSummary['survival'] ? '(' .$yearSummary['survival'] .'年)' : ''?></td>
             <td class="center-icon"><?php echo ($avgData['avgSurvivalRate'] ?? '-') ?></td>
             <td class="center-icon">
                 <?php

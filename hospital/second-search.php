@@ -120,6 +120,7 @@ $category = $initData['category'] ?? [];
                 <div class="loading-overlay">
                     <div class="loading-spinner"></div>
                 </div>
+                <?php include 'component/print-pdf-result.php';?>
             </div>
         </div>
     </div>
@@ -129,5 +130,6 @@ $category = $initData['category'] ?? [];
 <script>
     const pageType = 'second-search';
 </script>
+<script type="text/javascript" src="./../assets/js/print-pdf.js"></script>
 <script type="text/javascript" src="./../assets/js/search_hospital.js"></script>
 </html>

@@ -109,17 +109,16 @@ $category = $initData['category'] ?? [];
                 <div class="loading-overlay">
                     <div class="loading-spinner"></div>
                 </div>
+                <?php include 'component/print-pdf-result.php';?>
             </div>
-        </div>
-        <div id="pdfViewer" style="display: none;">
         </div>
     </div>
 </main>
 </body>
 <?php print $pageinfo->html_foot; ?>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.7.570/pdf.min.js"></script>
 <script>
     const pageType = 'first-search';
 </script>
+<script type="text/javascript" src="./../assets/js/print-pdf.js"></script>
 <script type="text/javascript" src="./../assets/js/search_hospital.js"></script>
 </html>

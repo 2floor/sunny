@@ -1,27 +1,3 @@
-function renderPDF(url, canvasContainer) {
-    const loadingTask = pdfjsLib.getDocument(url);
-    loadingTask.promise.then(pdf => {
-        for (let pageNum = 1; pageNum <= pdf.numPages; pageNum++) {
-            pdf.getPage(pageNum).then(page => {
-                const viewport = page.getViewport({ scale: 1.5 });
-                const canvas = document.createElement('canvas');
-                const context = canvas.getContext('2d');
-                canvas.height = viewport.height;
-                canvas.width = viewport.width;
-
-                canvasContainer.appendChild(canvas);
-
-                const renderContext = {
-                    canvasContext: context,
-                    viewport: viewport
-                };
-                page.render(renderContext);
-            });
-        }
-    }, function(reason) {
-        console.error(reason);
-    });
-}
 $(document).ready(function () {
     handlePopupClick('#cancerType', '#cancerPopup');
     $('.search-hospital-footer').hide()
@@ -30,6 +6,7 @@ $(document).ready(function () {
     let cancerStageChecked = []
     let areaChecked = {}
     let categoryChecked = []
+    let printHospitalList = []
 
     $('.area-selection').select2({
         placeholder: '都道府県を選択',
@@ -142,6 +119,41 @@ $(document).ready(function () {
                 }
             });
         }
+    }
+
+    function printHospitalDetail() {
+        $.ajax({
+            url: '../controller/front/f_hospital_ct.php',
+            type: 'POST',
+            data: {method: 'printHospitalList', selectedItems: printHospitalList},
+            beforeSend: function() {
+                $('.loading-overlay').show();
+            },
+            success: function(response) {
+                window.scrollTo(0, 0);
+                $('.loading-overlay').hide();
+                let res = JSON.parse(response);
+                if (res.status === true) {
+                    handlePrintPDF(res.data.pdfFiles ?? [])
+                } else {
+                    Swal.fire({
+                        title: "エラー!",
+                        text: "病院情報の印刷に失敗しました",
+                        icon: "error",
+                        confirmButtonText: "Ok"
+                    });
+                }
+            },
+            error: function() {
+                $('.loading-overlay').hide();
+                Swal.fire({
+                    title: "エラー!",
+                    text: "病院情報の印刷に失敗しました",
+                    icon: "error",
+                    confirmButtonText: "Ok"
+                });
+            }
+        });
     }
 
     function flattenArray(nestedArray) {
@@ -364,38 +376,35 @@ $(document).ready(function () {
             });
         } else {
             let html = '';
+            let printCount = 1;
+            printHospitalList = [];
+
             $('.checkbox-print:checked').each(function () {
-                html += $(this).closest('.hospital-card').find('.hospital-info h2').text();
-                html += '<br>'
-            })
+                if (printCount <= 5) {
+                    let hospitalInfo = $(this).closest('.hospital-card').find('.hospital-info');
+                    html += hospitalInfo.find('h2').text() + '<br>';
 
-            // Swal.fire({
-            //     title: "下記のページを印刷しますか？",
-            //     icon: "question",
-            //     html: html,
-            //     showDenyButton: true,
-            //     confirmButtonText: "Ok",
-            //     denyButtonText: `キャンセル`
-            // });
-
-            $.ajax({
-                url: '../controller/front/f_hospital_ct.php',
-                type: 'POST',
-                data: {method: 'printHospitalList', selectedItems: [{hospitalId : 1}, {hospitalId : 2}]},
-                success: function(response) {
-                    let res = JSON.parse(response);
-                    if (res.status === 'success') {
-
-                        $('#pdfViewer').empty();
-                        res.pdfFiles.forEach(function(pdfFile) {
-                            const container = $('<div>', {
-                                class: 'pdf-container'
-                            });
-                            $('#pdfViewer').append(container);
-                            renderPDF(pdfFile, container[0]);
-                        });
-                        $('#pdfViewer').show();
+                    let printItem = {
+                        hospitalId : hospitalInfo.data('id'),
+                        cancerId : hospitalInfo.data('cancer-id')
                     }
+
+                    printHospitalList.push(printItem);
+                }
+
+                printCount++;
+            });
+
+            Swal.fire({
+                title: "下記のページを印刷しますか？",
+                icon: "question",
+                html: html,
+                showDenyButton: true,
+                confirmButtonText: "Ok",
+                denyButtonText: `キャンセル`
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    printHospitalDetail(printHospitalList);
                 }
             });
         }

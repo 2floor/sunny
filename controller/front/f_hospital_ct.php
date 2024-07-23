@@ -163,6 +163,8 @@ class f_hospital_ct
         $hospitalGen = $categories->firstWhere('hard_name2', 'hospital_gen');
         $specialClinic = $categories->firstWhere('hard_name3', 'special_clinic');
         $advancedMedical = $categories->firstWhere('hard_name3', 'advanced_medical');
+        $famousDoctor = $categories->firstWhere('hard_name3', 'famous_doctor');
+        $multiTreatment = $categories->firstWhere('hard_name3', 'multi_treatment');
 
         $treatment = $hospital->categories()->where('data_type', Category::HOSPITAL_TREATMENT_TYPE)
             ->pluck('level3')
@@ -206,6 +208,8 @@ class f_hospital_ct
             'hospitalGen' => $hospitalGen?->level3,
             'hasAdvancedMedical' => $advancedMedical ? 1 : 0,
             'advancedMedical' => $advancedMedical?->pivot->content1,
+            'famousDoctor' => $famousDoctor ? 1 : 0,
+            'multiTreatment' => $multiTreatment ? 1 : 0,
             'treatment' => $treatment
         ];
 
@@ -276,7 +280,7 @@ class f_hospital_ct
             $html .= '</div>';
             $html .= '<div class="card-info">';
             $html .= '<div class="tag">'.$areaName.'</div>';
-            $html .= '<div class="hospital-info">';
+            $html .= '<div class="hospital-info" data-id="'.$hospital->id.'" data-cancer-id="'.$cancers[0].'">';
             $html .= '<h2>'.$hospital->hospital_name.'</h2>';
             $html .= '<a target="_blank" href="'.$hospital->hp_url.'"><span class="info-icon"><img src="../img/icons/icon-go-home.png" alt="icon-home"> ホームページはこちら（外部リンク)</span></a>';
             $html .= '<p class="m-b-0">'.$hospital->addr.'</p>';
@@ -333,10 +337,9 @@ class f_hospital_ct
         foreach ($selectedItems as $item) {
             $hospitalId = $item['hospitalId'] ?? null;
             $cancerId = $item['cancerId'] ?? null;
+            $param = $this->getPrintData($hospitalId, $cancerId);
 
-            $param = [
-                'baseUrl' => BASE_URL
-            ];
+            if (empty($param)) continue;
 
             extract($param);
             ob_start();
@@ -353,8 +356,8 @@ class f_hospital_ct
             $dompdf->render();
 
 
-            $pdfFilePath = "../../download_files/hospital/detail-{$hospitalId}.pdf";
-            file_put_contents($pdfFilePath, $dompdf->output());
+            $pdfFilePath = "download_files/hospital/{$param['hospitalName']}-{$hospitalId}.pdf";
+            file_put_contents('../../'.$pdfFilePath, $dompdf->output());
             $pdfFiles[] = $pdfFilePath;
         }
 
@@ -366,7 +369,8 @@ class f_hospital_ct
         ];
     }
 
-    private function renderRankStat($class, $rank, $imgPath) {
+    private function renderRankStat($class, $rank, $imgPath)
+    {
         $roundedRank = $rank ?? '-';
         if (in_array($roundedRank, [1, 2, 3])) {
             $html = '<div class="'.$class.' rank-icon m-b-25 h-27">';
@@ -378,5 +382,102 @@ class f_hospital_ct
 
         $html .= '</div>';
         return $html;
+    }
+
+    private function getPrintData ($hospitalId, $cancerId)
+    {
+        $hospital = Hospital::where('id', $hospitalId)->whereHas('cancers', function ($query) use ($cancerId) {
+            $query->where('m_cancer.id', $cancerId);
+        })->first();
+
+        if (!$hospital) {
+            return [];
+        }
+
+        $cancer = Cancer::select('cancer_type')->where('id', $cancerId)->first();
+        $categories = $hospital->categories()
+            ->where('data_type', Category::HOSPITAL_DETAIL_TYPE)
+            ->orWhere('data_type', Category::HOSPITAL_TREATMENT_TYPE)
+            ->get();
+
+        $hospitalType = $categories->firstWhere('hard_name2', 'hospital_type');
+        $hospitalGen = $categories->firstWhere('hard_name2', 'hospital_gen');
+        $specialClinic = $categories->firstWhere('hard_name3', 'special_clinic');
+        $advancedMedical = $categories->firstWhere('hard_name3', 'advanced_medical');
+        $famousDoctor = $categories->firstWhere('hard_name3', 'famous_doctor');
+        $multiTreatment = $categories->firstWhere('hard_name3', 'multi_treatment');
+
+        $treatment = $hospital->categories()->where('data_type', Category::HOSPITAL_TREATMENT_TYPE)
+            ->pluck('level3')
+            ->implode(' ');
+
+        $yearSummaryDpc = $hospital->dpcs()
+            ->select('year')
+            ->where('cancer_id', $cancerId)
+            ->orderBy('year', 'desc')
+            ->take(3)
+            ->pluck('year')
+            ->implode('、');
+
+        $avgDpc = $hospital->dpcs()
+            ->select('n_dpc')
+            ->where('cancer_id', $cancerId)
+            ->orderBy('year', 'desc')
+            ->take(3)
+            ->avg('n_dpc');
+
+        $yearSummaryStage = $hospital->stages()
+            ->select('year')
+            ->where('cancer_id', $cancerId)
+            ->orderBy('year', 'desc')
+            ->take(3)
+            ->pluck('year')
+            ->implode('、');
+
+        $avgNewNum = $hospital->stages()
+            ->select('total_num_new')
+            ->where('cancer_id', $cancerId)
+            ->orderBy('year', 'desc')
+            ->take(3)
+            ->avg('total_num_new');
+
+        $yearSummarySurvival = $hospital->survivals()
+            ->select('year')
+            ->where('cancer_id', $cancerId)
+            ->orderBy('year', 'desc')
+            ->take(3)
+            ->pluck('year')
+            ->implode('、');
+
+        $avgSurvivalRate = $hospital->survivals()
+            ->select('survival_rate')
+            ->where('cancer_id', $cancerId)
+            ->orderBy('year', 'desc')
+            ->take(3)
+            ->avg('survival_rate');
+
+        return [
+            'baseUrl' => BASE_URL,
+            'hospitalName' => $hospital->hospital_name,
+            'cancerName' => $cancer->cancer_type,
+            'yearSummaryDpc' => $yearSummaryDpc,
+            'yearSummaryStage' => $yearSummaryStage,
+            'yearSummarySurvival' => $yearSummarySurvival,
+            'avgDpc' => $avgDpc ? round($avgDpc) : null,
+            'avgNewNum' => $avgNewNum ? round($avgNewNum) : null,
+            'avgSurvivalRate' => $avgSurvivalRate ? round($avgSurvivalRate, 2) : null,
+            'hospitalTel' => $hospital->tel,
+            'hospitalAddress' => $hospital->addr,
+            'hospitalUrl' => $hospital->hp_url,
+            'hospitalSpUrl' => $hospital->support_url,
+            'hospitalScUrl' => $specialClinic?->pivot->content1,
+            'hospitalType' => $hospitalType?->level3,
+            'hospitalGen' => $hospitalGen?->level3,
+            'hasAdvancedMedical' => $advancedMedical ? 1 : 0,
+            'advancedMedical' => $advancedMedical?->pivot->content1,
+            'famousDoctor' => $famousDoctor ? 1 : 0,
+            'multiTreatment' => $multiTreatment ? 1 : 0,
+            'treatment' => $treatment
+        ];
     }
 }
