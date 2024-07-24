@@ -13,9 +13,4 @@ class HospitalCategory extends BaseModel
         'content1',
         'content2',
     ];
-
-    protected $casts = [
-        'created_at' => 'datetime',
-        'updated_at' => 'datetime',
-    ];
 }

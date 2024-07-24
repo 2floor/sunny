@@ -4,6 +4,7 @@
  タイトル
  詳細
  画像
+ 新着フラグ(1:表示)
  公開フラグ
  削除フラグ
  作成日時
@@ -14,6 +15,7 @@
 'title',
 'detail',
 'img',
+'new_flg',
 'public_flg',
 'del_flg',
 'create_at',
@@ -26,6 +28,7 @@ $post['disp_date'],
 $post['title'],
 $post['detail'],
 $post['img'],
+$post['new_flg'],
 $post['public_flg'],
 $post['del_flg'],
 $post['create_at'],
@@ -37,6 +40,7 @@ $post['update_at'],
 'title' => $reult_detail['title'],
 'detail' => $reult_detail['detail'],
 'img' => $reult_detail['img'],
+'new_flg' => $reult_detail['new_flg'],
 'public_flg' => $reult_detail['public_flg'],
 'del_flg' => $reult_detail['del_flg'],
 'create_at' => $reult_detail['create_at'],

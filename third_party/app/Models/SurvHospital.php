@@ -56,11 +56,6 @@ class SurvHospital extends BaseModel
         'pref_survival_rate4',
     ];
 
-    protected $casts = [
-        'created_at' => 'datetime',
-        'updated_at' => 'datetime',
-    ];
-
     public function area(): BelongsTo
     {
         return $this->belongsTo(Area::class, 'area_id');

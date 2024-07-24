@@ -18,9 +18,4 @@ class DPC extends BaseModel
         'rank_area_dpc',
         'rank_pref_dpc',
     ];
-
-    protected $casts = [
-        'created_at' => 'datetime',
-        'updated_at' => 'datetime',
-    ];
 }

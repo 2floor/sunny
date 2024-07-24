@@ -32,11 +32,6 @@ class Hospital extends BaseModel
         'public_flg'
     ];
 
-    protected $casts = [
-        'created_at' => 'datetime',
-        'updated_at' => 'datetime',
-    ];
-
     public function categories(): BelongsToMany
     {
         return $this->belongsToMany(Category::class, 't_category_hospital')->withPivot('cancer_id', 'content1', 'content2');
@@ -44,7 +39,10 @@ class Hospital extends BaseModel
 
     public function cancers(): BelongsToMany
     {
-        return $this->belongsToMany(Cancer::class, 't_hospital_cancer');
+        return $this->belongsToMany(Cancer::class, 't_hospital_cancer')
+            ->withPivot('del_flg', 'public_flg')
+            ->wherePivot('del_flg', BaseModel::NOT_DELETED)
+            ->wherePivot('public_flg', BaseModel::PUBLISHED);
     }
 
     public function area(): BelongsTo

@@ -39,9 +39,4 @@ class HospitalCancer extends BaseModel
         'public_flg',
         'del_flg',
     ];
-
-    protected $casts = [
-        'created_at' => 'datetime',
-        'updated_at' => 'datetime',
-    ];
 }

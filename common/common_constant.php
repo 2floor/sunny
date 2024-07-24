@@ -16,7 +16,7 @@ define ( "HTTP_TYPE", (empty ( $_SERVER ["HTTPS"] ) ? "http://" : "https://") . 
  * @var unknown
  */
 // ビューリンク用path
-define ( "MEDICALNET_ADMIN_PATH", HTTP_TYPE . "/delphi/admin/" );
+define ( "MEDICALNET_ADMIN_PATH", HTTP_TYPE . "/sunny-health/admin/" );
 
 /**
  * ini_path
@@ -28,10 +28,12 @@ define ( "INI_PATH", __DIR__ . '/../common/config.ini' );
 /**
  * BaseUrl
  */
-$ini_array = parse_ini_file (INI_PATH, true );
-$base_url = $ini_array['url']['base_url'];
-define('BASE_URL', $base_url);
+$path = '/sunny-health/';
+$protocol = (!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off' || $_SERVER['SERVER_PORT'] == 443) ? "https://" : "http://";
+$host = $_SERVER['HTTP_HOST'];
+$baseUrl = $protocol . $host . $path;
 
+define('BASE_URL', $baseUrl);
 /**
  * ページタイトル、パンくず定義
  *

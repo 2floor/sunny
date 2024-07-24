@@ -14,9 +14,4 @@ class SurvAverage extends BaseModel
         'stage_survival3',
         'stage_survival4'
     ];
-
-    protected $casts = [
-        'created_at' => 'datetime',
-        'updated_at' => 'datetime',
-    ];
 }

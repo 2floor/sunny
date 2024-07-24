@@ -1455,7 +1455,7 @@ function searchMain(){
 		$.each(search_select['selectArea'], function(name, options){
 			if(options['search']){
 				selectFlg = true;
-				selectOption += '<option value="'+options['ColName']+'">'+name+'</option>';
+				selectOption += '<option value="'+options['ColName']+'" data-foreign-relation="'+(options['foreignRelation'] ? options['foreignRelation'] : '')+'">'+name+'</option>';
 			}
 			if(options['order']){
 				orderFlg = true;
@@ -1493,10 +1493,12 @@ function searchMain(){
 			var target = $('.searchAreaSelect').val();
 			var val = $('[name=search_input]').val();
 			var indexName = $('.searchAreaSelect option:selected').text();
+			var foreignRelation = $('.searchAreaSelect option:selected').data('foreign-relation');
 			search_select['value'] = {
 					target : target,
 					value : val,
 					name : indexName,
+					foreignRelation : foreignRelation ? foreignRelation : null,
 			}
 
 			var state = {
@@ -1527,7 +1529,7 @@ function searchMain(){
  * ソートマーク切り替え
  */
 var orderIconDispChange = function($target, Callback){
-	var order, target, indexName;
+	var order, target, indexName, foreignRelation;
 	if($target.hasClass('orderActive')){
 		if($target.attr('order') == 'desc'){
 			$target.find('i').addClass('fa-sort-amount-asc').removeClass('fa-sort-amount-desc');
@@ -1548,6 +1550,7 @@ var orderIconDispChange = function($target, Callback){
 		if(options['tableOrder'] == index){
 			target = options['ColName'];
 			indexName = name;
+			foreignRelation = options['foreignRelation'] ? options['foreignRelation'] : null;
 			return false;
 		}
 	});
@@ -1555,6 +1558,7 @@ var orderIconDispChange = function($target, Callback){
 			target : target,
 			order : order,
 			name : indexName,
+			foreignRelation : foreignRelation
 	}
 
     Callback();

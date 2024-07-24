@@ -118,9 +118,12 @@ class f_hospital_ct
 
     public function getDetailById($id, $cancerId)
     {
-        $hospital = Hospital::where('id', $id)->whereHas('cancers', function ($query) use ($cancerId) {
-            $query->where('m_cancer.id', $cancerId);
-        })->first();
+        $hospital = Hospital::where('id', $id)
+            ->where(['del_flg' => Hospital::NOT_DELETED, 'public_flg' => Hospital::PUBLISHED])
+            ->whereHas('cancers', function ($query) use ($cancerId) {
+                $query->where('m_cancer.id', $cancerId);
+                $query->where(['m_cancer.del_flg' => Cancer::NOT_DELETED, 'm_cancer.public_flg' => Cancer::PUBLISHED]);
+            })->first();
 
         if (!$hospital) {
             header("Location: " . BASE_URL . "error/404_page.php");
@@ -155,8 +158,11 @@ class f_hospital_ct
             ->implode('、');
 
         $categories = $hospital->categories()
-            ->where('data_type', Category::HOSPITAL_DETAIL_TYPE)
-            ->orWhere('data_type', Category::HOSPITAL_TREATMENT_TYPE)
+            ->where(function ($query) {
+                $query->where('data_type', Category::HOSPITAL_DETAIL_TYPE);
+                $query->orWhere('data_type', Category::HOSPITAL_TREATMENT_TYPE);
+            })
+            ->where(['del_flg' => Category::NOT_DELETED, 'public_flg' => Category::PUBLISHED])
             ->get();
 
         $hospitalType = $categories->firstWhere('hard_name2', 'hospital_type');
@@ -167,6 +173,7 @@ class f_hospital_ct
         $multiTreatment = $categories->firstWhere('hard_name3', 'multi_treatment');
 
         $treatment = $hospital->categories()->where('data_type', Category::HOSPITAL_TREATMENT_TYPE)
+            ->where(['del_flg' => Category::NOT_DELETED, 'public_flg' => Category::PUBLISHED])
             ->pluck('level3')
             ->implode(' ');
 
@@ -386,9 +393,12 @@ class f_hospital_ct
 
     private function getPrintData ($hospitalId, $cancerId)
     {
-        $hospital = Hospital::where('id', $hospitalId)->whereHas('cancers', function ($query) use ($cancerId) {
-            $query->where('m_cancer.id', $cancerId);
-        })->first();
+        $hospital = Hospital::where('id', $hospitalId)
+            ->where(['del_flg' => Hospital::NOT_DELETED, 'public_flg' => Hospital::PUBLISHED])
+            ->whereHas('cancers', function ($query) use ($cancerId) {
+                $query->where('m_cancer.id', $cancerId);
+                $query->where(['m_cancer.del_flg' => Cancer::NOT_DELETED, 'm_cancer.public_flg' => Cancer::PUBLISHED]);
+            })->first();
 
         if (!$hospital) {
             return [];
@@ -396,8 +406,11 @@ class f_hospital_ct
 
         $cancer = Cancer::select('cancer_type')->where('id', $cancerId)->first();
         $categories = $hospital->categories()
-            ->where('data_type', Category::HOSPITAL_DETAIL_TYPE)
-            ->orWhere('data_type', Category::HOSPITAL_TREATMENT_TYPE)
+            ->where(function ($query) {
+                $query->where('data_type', Category::HOSPITAL_DETAIL_TYPE);
+                $query->orWhere('data_type', Category::HOSPITAL_TREATMENT_TYPE);
+            })
+            ->where(['del_flg' => Category::NOT_DELETED, 'public_flg' => Category::PUBLISHED])
             ->get();
 
         $hospitalType = $categories->firstWhere('hard_name2', 'hospital_type');
@@ -407,7 +420,9 @@ class f_hospital_ct
         $famousDoctor = $categories->firstWhere('hard_name3', 'famous_doctor');
         $multiTreatment = $categories->firstWhere('hard_name3', 'multi_treatment');
 
-        $treatment = $hospital->categories()->where('data_type', Category::HOSPITAL_TREATMENT_TYPE)
+        $treatment = $hospital->categories()
+            ->where(['del_flg' => Category::NOT_DELETED, 'public_flg' => Category::PUBLISHED])
+            ->where('data_type', Category::HOSPITAL_TREATMENT_TYPE)
             ->pluck('level3')
             ->implode(' ');
 

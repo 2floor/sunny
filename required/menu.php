@@ -24,7 +24,7 @@ for($i = 0; $i < count ( $result_dealer ); $i ++) {
 	$row_dealer = $result_dealer [$i];
 	$result_child = $common_logic->select_logic_no_param ( "select * from t_admin_menu where admin_menu_class_level = '1' and admin_dealer_id = '".$row_dealer['admin_menu_id']."' and " . $where );
 
-	if (count ( $result_child ) != 0) {
+	if (count ( $result_child ?? [] ) != 0) {
 		$counter = $i + 1;
 
 		$side_menu_html .= '
@@ -41,7 +41,7 @@ for($i = 0; $i < count ( $result_dealer ); $i ++) {
 							<div class="card-box">
 								<h1>'. $row_dealer ['admin_menu_name'] .'</h1>';
 
-		for($n = 0; $n < count ( $result_child ); $n ++) {
+		for($n = 0; $n < count ( $result_child ?? [] ); $n ++) {
 			$row_child = $result_child [$n];
 			$side_menu_html .= '<li><a href="'. MEDICALNET_ADMIN_PATH . $row_child ['admin_menu_link'] . '">'. $row_child ['admin_menu_name'] .'</a></li>';
 			$menu_html .= '<blockquote>

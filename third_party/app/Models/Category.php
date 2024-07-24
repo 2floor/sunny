@@ -35,11 +35,6 @@ class Category extends BaseModel
         'public_flg'
     ];
 
-    protected $casts = [
-        'created_at' => 'datetime',
-        'updated_at' => 'datetime',
-    ];
-
     public function hospitals(): BelongsToMany
     {
         return $this->belongsToMany(Hospital::class, 't_category_hospital')->withPivot('cancer_id', 'content1', 'content2');

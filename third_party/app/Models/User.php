@@ -31,9 +31,4 @@ class User extends BaseModel
     protected $hidden = [
         'password'
     ];
-
-    protected $casts = [
-        'created_at' => 'datetime',
-        'updated_at' => 'datetime',
-    ];
 }

@@ -6,7 +6,7 @@ $nowDirAr = explode("/", $nowDir);
 // 同一階層では"./"を使用し、下層の階層では"../"を追加
 $path_base = "./";
 $DirCounter = 0;
-if (strpos($domain, "localhost") !== false || strpos($domain, "2floor.xyz") !== false) {
+if (strpos($domain, "localhost") !== false || strpos($domain, "2floor.space") !== false) {
   // ローカル、2fテスト環境時
   $DirCounter -= 0;  // ここは変更なし
 }
@@ -102,7 +102,7 @@ ob_start(); // 出力バッファリングを開始
 <div class="drawer js-drawer-open">
   <div class="drawer__inner">
     <div class="drawer__logo">
-      <img src="../assets/images/common/logo.png" alt="株式会社デルファイレーザージャパン">
+      <img src="[path]assets/images/common/logo.png" alt="株式会社デルファイレーザージャパン">
     </div>
     <nav class="drawer-nav">
       <ul class="drawer-nav__lists">

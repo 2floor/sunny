@@ -37,7 +37,7 @@ class html_conf{
 
 		$analytics = "analytics.php"; //google analyticsタグファイル名
 		$head_file_name = "html_head.php"; //ヘッドファイル名
-		$header_file_name = "header2.php"; //ヘッダーファイル名
+		$header_file_name = "header.php"; //ヘッダーファイル名
 		$foot_file_name = "html_foot.php"; //フッターファイル名
 
 		//そのファイル処理　コンバートなどは別途かけること

@@ -18,9 +18,4 @@ class Area extends BaseModel
         'del_flg',
         'public_flg'
     ];
-
-    protected $casts = [
-        'created_at' => 'datetime',
-        'updated_at' => 'datetime',
-    ];
 }
