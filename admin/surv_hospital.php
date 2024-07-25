@@ -25,7 +25,7 @@ require_once __DIR__ . '/../required/view_common_include.php';
                     <div class="col-xs-12">
                         <h2 class="pageTitle" id="page_title">
                             <i class="fa fa-list" aria-hidden="true"></i>
-                            病院一覧
+                            生存率一覧
                         </h2>
                     </div>
                 </div>
@@ -54,11 +54,6 @@ require_once __DIR__ . '/../required/view_common_include.php';
                                 </div>
                             </div>
                         </div>
-<!--                        <div class="searchBoxRight">-->
-<!--                            <div class="serachW110">-->
-<!--                                <button type="button" name="new_entry" class="btn btn-primary waves-effect w-md waves-light m-b-5">新規登録</button>-->
-<!--                            </div>-->
-<!--                        </div>-->
                     </div>
                 </div>
                 <!-- searchBox -->
@@ -98,9 +93,11 @@ require_once __DIR__ . '/../required/view_common_include.php';
                                             <tr>
                                                 <th>No</th>
                                                 <th>ID</th>
+                                                <th>年度</th>
                                                 <th>医療機関名</th>
-                                                <th>エリア</th>
-                                                <th>住所</th>
+                                                <th>がん種(Stage)</th>
+                                                <th>総数</th>
+                                                <th>生存率係数</th>
                                                 <th>作成日時</th>
                                                 <th>更新日時</th>
                                                 <th>操作</th>
@@ -422,14 +419,14 @@ require_once __DIR__ . '/../required/view_common_include.php';
 <!-- END wrapper -->
 <?php require_once __DIR__ . '/../required/foot.php'; ?>
 <!-- Start Personal script -->
-<script src="../assets/admin/js/hospital.js"></script>
+<script src="../assets/admin/js/surv_hospital.js"></script>
 
 
 
 
 <!-- End Personal script -->
 <!-- Start Personal Input -->
-<input type="hidden" id="ct_url" value="../controller/admin/hospital_ct.php">
+<input type="hidden" id="ct_url" value="../controller/admin/surv_hospital_ct.php">
 <input type="hidden" id="id" value="">
 <input type="hidden" id="page_type" value="">
 <input type="hidden" id="common_ct_url" value="../controller/admin/common_ct.php">

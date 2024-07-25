@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
@@ -31,6 +32,14 @@ class Hospital extends BaseModel
         'del_flg',
         'public_flg'
     ];
+
+    protected static function boot()
+    {
+        parent::boot();
+
+        static::addGlobalScope('deleted', fn(Builder $builder) => $builder->where('t_hospital.del_flg', '!=' , BaseModel::DELETED));
+        static::addGlobalScope('unpublish', fn(Builder $builder) => $builder->where('t_hospital.public_flg', '!=' , BaseModel::UNPUBLISHED));
+    }
 
     public function categories(): BelongsToMany
     {

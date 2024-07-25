@@ -25,9 +25,7 @@ if (!$security->validateCsrfToken($token)) {
 
 $user = User::where([
     'username' => $m_login,
-    'password' => $common_logic->convert_password_encode($m_pass),
-    'del_flg' => User::NOT_DELETED,
-    'public_flg' => User::PUBLISHED
+    'password' => $common_logic->convert_password_encode($m_pass)
 ])->first();
 
 if ($user) {

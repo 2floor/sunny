@@ -2,6 +2,8 @@
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Builder;
+
 class User extends BaseModel
 {
     protected $table = 't_user';
@@ -31,4 +33,12 @@ class User extends BaseModel
     protected $hidden = [
         'password'
     ];
+
+    protected static function boot()
+    {
+        parent::boot();
+
+        static::addGlobalScope('deleted', fn(Builder $builder) => $builder->where('t_user.del_flg', '!=' , BaseModel::DELETED));
+        static::addGlobalScope('unpublish', fn(Builder $builder) => $builder->where('t_user.public_flg', '!=' , BaseModel::UNPUBLISHED));
+    }
 }

@@ -10,8 +10,6 @@ class f_hospital_logic
     {
         $query = Hospital::query();
 
-        $query->where(['del_flg' => Hospital::NOT_DELETED, 'public_flg' => Hospital::PUBLISHED]);
-
         if ($keyword != '') {
             $query->where('hospital_name', 'like', "%$keyword%");
             $query->orWhereHas('categories', function ($query2) use ($keyword, $cancers) {
@@ -21,7 +19,6 @@ class f_hospital_logic
                     $query3->whereNull('t_category_hospital.cancer_id');
                     $query3->orWhereIn('t_category_hospital.cancer_id', $cancers);
                 });
-                $query2->where(['t_category.del_flg' => Category::NOT_DELETED, 't_category.public_flg' => Category::PUBLISHED]);
             });
         }
 

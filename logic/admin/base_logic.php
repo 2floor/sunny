@@ -26,6 +26,11 @@ abstract class base_logic {
         }
     }
 
+    public function getQueryWithoutGlobalScopes()
+    {
+        return $this->model->newQuery()->withoutGlobalScopes();
+    }
+
     public function getListData($params, $searchSelect = null, $withRelation = []) {
         $query = $this->createSearchQuery($searchSelect);
 
@@ -78,8 +83,9 @@ abstract class base_logic {
 
     protected function createSearchQuery($searchSelect)
     {
-        $query = $this->model->newQuery();
+        $query = $this->getQueryWithoutGlobalScopes();
         $searchSelect = json_decode(htmlspecialchars_decode($searchSelect), true);
+        $table = $this->model->getTable();
 
         if (!empty($searchSelect['value'])) {
             $search = $searchSelect['value'];
@@ -90,26 +96,37 @@ abstract class base_logic {
                     $query2->where($search['target'], 'like', '%'.$keySearch.'%');
                 });
             } else {
-                $query->where($search['target'], 'like', '%'.$keySearch.'%');
+                $query->where($table.'.'.$search['target'], 'like', '%'.$keySearch.'%');
             }
         }
 
-        $query->orderBy('del_flg', 'ASC');
+        $query->orderBy("$table.del_flg", 'ASC');
 
         if (!empty($searchSelect['order'])) {
             $order = $searchSelect['order'];
+            $name = $searchSelect['order']['name'];
+            $orderObj = $searchSelect['selectArea'][$name];
+            $type = $orderObj['type'] ?? null;
 
             if ($order['foreignRelation']) {
                 $relationName = $order['foreignRelation'];
                 $relation = $this->model->$relationName();
                 $foreignTable = $relation->getRelated()->getTable();
                 $foreignKey = $relation->getForeignKeyName();
-                $table = $this->model->getTable();
 
-                $query->leftJoin($foreignTable, "$table.$foreignKey", '=', "$foreignTable.id")
-                    ->orderBy("$foreignTable.{$order['target']}", $order['order']);
+                if ($type === 'int' || $type === 'bigint') {
+                    $query->leftJoin($foreignTable, "$table.$foreignKey", '=', "$foreignTable.id")
+                        ->orderByRaw("CAST($foreignTable.{$order['target']} AS SIGNED) {$order['order']}");
+                } else {
+                    $query->leftJoin($foreignTable, "$table.$foreignKey", '=', "$foreignTable.id")
+                        ->orderBy("$foreignTable.{$order['target']}", $order['order']);
+                }
             } else {
-                $query->orderBy($order['target'], $order['order']);
+                if ($type === 'int' || $type === 'bigint') {
+                    $query->orderByRaw("CAST($table.{$order['target']} AS SIGNED) {$order['order']}");
+                } else {
+                    $query->orderBy($table.'.'.$order['target'], $order['order']);
+                }
             }
         }
 

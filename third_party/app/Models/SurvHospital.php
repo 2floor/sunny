@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class SurvHospital extends BaseModel
@@ -56,8 +57,26 @@ class SurvHospital extends BaseModel
         'pref_survival_rate4',
     ];
 
+    protected static function boot()
+    {
+        parent::boot();
+
+        static::addGlobalScope('deleted', fn(Builder $builder) => $builder->where('t_surv_hospital.del_flg', '!=' , BaseModel::DELETED));
+        static::addGlobalScope('unpublish', fn(Builder $builder) => $builder->where('t_surv_hospital.public_flg', '!=' , BaseModel::UNPUBLISHED));
+    }
+
     public function area(): BelongsTo
     {
         return $this->belongsTo(Area::class, 'area_id');
+    }
+
+    public function cancer(): BelongsTo
+    {
+        return $this->belongsTo(Cancer::class, 'cancer_id');
+    }
+
+    public function hospital(): BelongsTo
+    {
+        return $this->belongsTo(Hospital::class, 'hospital_id');
     }
 }

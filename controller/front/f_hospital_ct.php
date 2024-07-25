@@ -75,21 +75,17 @@ class f_hospital_ct
 
     public function searchPageIndex($categoryType) {
         $cancer = Cancer::select('id', 'cancer_type')
-            ->where(['public_flg' => Cancer::PUBLISHED, 'del_flg' => Cancer::NOT_DELETED])
             ->orderBy('order_num', 'asc')
             ->orderBy('created_at', 'desc')
             ->get();
 
         $area = Area::select('id', 'area_name', 'prec_cd', 'pref_name')
-            ->where(['public_flg' => Area::PUBLISHED, 'del_flg' => Area::NOT_DELETED])
             ->get()
             ->groupBy('area_name');
 
         $category = Category::select('id', 'level1', 'level2', 'level3', 'order_num')
             ->where([
                 'category_group' => Category::HOSPITAL_GROUP,
-                'public_flg' => Category::PUBLISHED,
-                'del_flg' => Category::NOT_DELETED
             ])
             ->when($categoryType == 'detail', function ($query) {
                 $query->where('data_type', Category::HOSPITAL_DETAIL_TYPE);
@@ -119,10 +115,8 @@ class f_hospital_ct
     public function getDetailById($id, $cancerId)
     {
         $hospital = Hospital::where('id', $id)
-            ->where(['del_flg' => Hospital::NOT_DELETED, 'public_flg' => Hospital::PUBLISHED])
             ->whereHas('cancers', function ($query) use ($cancerId) {
                 $query->where('m_cancer.id', $cancerId);
-                $query->where(['m_cancer.del_flg' => Cancer::NOT_DELETED, 'm_cancer.public_flg' => Cancer::PUBLISHED]);
             })->first();
 
         if (!$hospital) {
@@ -162,7 +156,6 @@ class f_hospital_ct
                 $query->where('data_type', Category::HOSPITAL_DETAIL_TYPE);
                 $query->orWhere('data_type', Category::HOSPITAL_TREATMENT_TYPE);
             })
-            ->where(['del_flg' => Category::NOT_DELETED, 'public_flg' => Category::PUBLISHED])
             ->get();
 
         $hospitalType = $categories->firstWhere('hard_name2', 'hospital_type');
@@ -173,7 +166,6 @@ class f_hospital_ct
         $multiTreatment = $categories->firstWhere('hard_name3', 'multi_treatment');
 
         $treatment = $hospital->categories()->where('data_type', Category::HOSPITAL_TREATMENT_TYPE)
-            ->where(['del_flg' => Category::NOT_DELETED, 'public_flg' => Category::PUBLISHED])
             ->pluck('level3')
             ->implode(' ');
 
@@ -394,10 +386,8 @@ class f_hospital_ct
     private function getPrintData ($hospitalId, $cancerId)
     {
         $hospital = Hospital::where('id', $hospitalId)
-            ->where(['del_flg' => Hospital::NOT_DELETED, 'public_flg' => Hospital::PUBLISHED])
             ->whereHas('cancers', function ($query) use ($cancerId) {
                 $query->where('m_cancer.id', $cancerId);
-                $query->where(['m_cancer.del_flg' => Cancer::NOT_DELETED, 'm_cancer.public_flg' => Cancer::PUBLISHED]);
             })->first();
 
         if (!$hospital) {
@@ -410,7 +400,6 @@ class f_hospital_ct
                 $query->where('data_type', Category::HOSPITAL_DETAIL_TYPE);
                 $query->orWhere('data_type', Category::HOSPITAL_TREATMENT_TYPE);
             })
-            ->where(['del_flg' => Category::NOT_DELETED, 'public_flg' => Category::PUBLISHED])
             ->get();
 
         $hospitalType = $categories->firstWhere('hard_name2', 'hospital_type');
@@ -421,7 +410,6 @@ class f_hospital_ct
         $multiTreatment = $categories->firstWhere('hard_name3', 'multi_treatment');
 
         $treatment = $hospital->categories()
-            ->where(['del_flg' => Category::NOT_DELETED, 'public_flg' => Category::PUBLISHED])
             ->where('data_type', Category::HOSPITAL_TREATMENT_TYPE)
             ->pluck('level3')
             ->implode(' ');

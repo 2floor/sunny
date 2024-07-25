@@ -21,9 +21,7 @@ class auth_logic
         }
 
         $existedUser = User::where([
-            'id' => $user['id'] ?? 0,
-            'del_flg' => User::NOT_DELETED,
-            'public_flg' => User::PUBLISHED
+            'id' => $user['id'] ?? 0
         ])->exists();
 
         if (!$existedUser) {
