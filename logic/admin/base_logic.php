@@ -33,17 +33,12 @@ abstract class base_logic {
 
     public function getListData($params, $searchSelect = null, $withRelation = []) {
         $query = $this->createSearchQuery($searchSelect);
-
         $count = $query->count();
-        $pagerCount = ceil($count / $params[2]);
-        $offset = ($params[1] - 1) * $params[2];
-        $data = $query->with($withRelation)->offset($offset)->limit($params[2])->get()->toArray();
+        $data = $query->with($withRelation)->paginate($params[0], ['*'], 'page', $params[1])->toArray();
 
         return [
-            'offset' => $offset,
-            'pagerCount' => $pagerCount,
             'total' => $count,
-            'data' => $data
+            'data' => $data['data'] ?? []
         ];
     }
 

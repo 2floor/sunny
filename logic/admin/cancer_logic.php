@@ -2,18 +2,18 @@
 
 require_once __DIR__ . '/../../logic/admin/base_logic.php';
 
-use App\Models\Hospital;
+use App\Models\Cancer;
 use Carbon\Carbon;
 
-class hospital_logic extends base_logic
+class cancer_logic extends base_logic
 {
     public function getModel() {
-        return Hospital::class;
+        return Cancer::class;
     }
 
     public function create_data_list($params, $search_select = null)
     {
-        $data = $this->getListData($params, $search_select, ['area']);
+        $data = $this->getListData($params, $search_select);
         $all_cnt = $data['total'];
         $list = $data['data'];
 
@@ -79,10 +79,12 @@ class hospital_logic extends base_logic
             $return_html .= "
 					<tr " . $back_color_html . ">
 						<td class='count_no'>" . $cnt . "</td>
-						<td>" . $row['hospital_code'] . "</td>
-						<td>" . $row['hospital_name'] . "</td>
-						<td>" . $row['area']['area_name'] . "</td>
-						<td>" . $row['addr'] . "</td>
+						<td>" . $row['id'] . "</td>
+						<td>" . $row['cancer_type'] . "</td>
+						<td>" . $row['cancer_type_dpc'] . "</td>
+						<td>" . $row['cancer_type_stage'] . "</td>
+						<td>" . $row['cancer_type_surv'] . "</td>
+						<td>" . $row['order_num'] . "</td>
 						<td>" . $create_at . "</td>
 						<td>" . $update_at . "</td>
 						<td>

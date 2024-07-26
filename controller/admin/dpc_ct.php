@@ -2,7 +2,7 @@
 session_start();
 
 require_once __DIR__ . '/../../logic/common/common_logic.php';
-require_once __DIR__ . '/../../logic/admin/surv_hospital_logic.php';
+require_once __DIR__ . '/../../logic/admin/dpc_logic.php';
 require_once __DIR__ . '/../../common/security_common_logic.php';
 
 /**
@@ -26,11 +26,11 @@ if ($data['status']) {
     // 正常処理 コントローラー呼び出し
 
     // インスタンス生成
-    $surv_hospital_ct = new surv_hospital_ct();
+    $dpc_ct = new dpc_ct();
     $post_data = $_SERVER['REQUEST_METHOD'] == 'POST' ? $_POST : $_GET;
 
     // コントローラー呼び出し
-    $data = $surv_hospital_ct->main_control($post_data);
+    $data = $dpc_ct->main_control($post_data);
 } else {
     // パラメータに不正があった場合
     // AJAX返却用データ成型
@@ -55,17 +55,17 @@ echo json_encode(compact('data'));
  * @author Seidou
  *
  */
-class surv_hospital_ct
+class dpc_ct
 {
     /**
      * コンストラクタ
      */
-    protected $surv_hospital_logic;
+    protected $dpc_logic;
 
     public function __construct()
     {
         // 管理画面ユーザーロジックインスタンス
-        $this->surv_hospital_logic = new surv_hospital_logic();
+        $this->dpc_logic = new dpc_logic();
     }
 
     /**
@@ -110,7 +110,7 @@ class surv_hospital_ct
      */
     private function create_data_list($post)
     {
-        $list_html = $this->surv_hospital_logic->create_data_list([
+        $list_html = $this->dpc_logic->create_data_list([
             $post['pageSize'],
             $post['pageNumber']
         ],  $post['search_select']);

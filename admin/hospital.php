@@ -65,13 +65,11 @@ require_once __DIR__ . '/../required/view_common_include.php';
 
                 <!-- pager -->
                 <div class="container">
-                    <div class="listPagerBox">
-                        <div class="listPagerTxt now_disp_cnt_str">
+                    <div class="pagination-info">
+                        <div class="total-result" style="display: block;">
+                            <span class="badge bg-secondary"></span>
                         </div>
-                        <div class="listPager">
-                            <ul class="pagination pager_area">
-                            </ul>
-                        </div>
+                        <div id="pagination-container" class="paginationjs paginationjs-theme-blue paginationjs-big"></div>
                     </div>
                 </div>
                 <!-- /pager -->
@@ -117,19 +115,6 @@ require_once __DIR__ . '/../required/view_common_include.php';
                     </div>
                 </div>
                 <!-- /list1Col -->
-
-                <!-- pager -->
-                <div class="container">
-                    <div class="listPagerBox">
-                        <div class="listPagerTxt now_disp_cnt_str">
-                        </div>
-                        <div class="listPager">
-                            <ul class="pagination pager_area">
-                            </ul>
-                        </div>
-                    </div>
-                </div>
-                <!-- /pager -->
             </div>
             <!-- END Data List Area -->
 

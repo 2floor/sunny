@@ -8,6 +8,7 @@
             </div>
             <div>
                 <button id="downloadAllPDF" class="bg-success">すべてダウンロード</button>
+<!--                <button id="printAllPDF" class="bg-info">すべて印刷</button>-->
                 <button id="closePDF" class="bg-danger">近い</button>
             </div>
         </div>

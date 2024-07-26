@@ -15,7 +15,9 @@
 var query = getUrlVars();
 
 //ページタイトル
-var page_title = '病院';
+var page_title = 'DPC';
+
+var totalItems = 0;
 
 //画像input用配列
 var input_file_name = {};
@@ -27,39 +29,48 @@ var search_select = {
             search 		: true,
             order		: true,
             orderInit	: false,
-            ColName 	: 'hospital_code',
+            ColName 	: 'id',
             tableOrder 	: 1,
             type 		: 'bigint',
         },
-        '医療機関名' : {
+        '年度' : {
             search 		: true,
             order		: true,
-            ColName 	: 'hospital_name',
+            ColName 	: 'year',
             tableOrder 	: 2,
-            type 		: 'text',
+            type 		: 'int',
         },
-        'エリア' : {
+        'がん種(DPC)' : {
             search 		 : true,
             order		 : true,
-            ColName 	 : 'area_name',
+            ColName 	 : 'cancer_type_dpc',
             tableOrder 	 : 3,
             type 		 : 'text',
-            foreignRelation : 'area',
+            foreignRelation : 'cancer',
+        },
+
+        '医療機関名' : {
+            search 		 : true,
+            order		 : true,
+            ColName 	 : 'hospital_name',
+            tableOrder 	 : 4,
+            type 		 : 'text',
+            foreignRelation : 'hospital',
+        },
+
+        '年間入院患者数' : {
+            search 		 : false,
+            order		 : true,
+            ColName 	 : 'n_dpc',
+            tableOrder 	 : 5,
+            type 		 : 'int',
         },
         '更新日時' : {
             search 		: false,
             order		: true,
             ColName 	: 'updated_at',
-            tableOrder 	: 6,
+            tableOrder 	: 7,
             type 		: 'date',
-        },
-        'がんの種類' : {
-            search 		: true,
-            order		: false,
-            ColName 	: 'cancer_type',
-            tableOrder 	: -1,
-            type 		: 'text',
-            foreignRelation : 'cancers',
         },
     },
     //検索時内容

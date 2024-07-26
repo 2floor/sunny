@@ -2,7 +2,7 @@
 session_start();
 
 require_once __DIR__ . '/../../logic/common/common_logic.php';
-require_once __DIR__ . '/../../logic/admin/surv_hospital_logic.php';
+require_once __DIR__ . '/../../logic/admin/cancer_logic.php';
 require_once __DIR__ . '/../../common/security_common_logic.php';
 
 /**
@@ -26,11 +26,11 @@ if ($data['status']) {
     // 正常処理 コントローラー呼び出し
 
     // インスタンス生成
-    $surv_hospital_ct = new surv_hospital_ct();
+    $cancer_ct = new cancer_ct();
     $post_data = $_SERVER['REQUEST_METHOD'] == 'POST' ? $_POST : $_GET;
 
     // コントローラー呼び出し
-    $data = $surv_hospital_ct->main_control($post_data);
+    $data = $cancer_ct->main_control($post_data);
 } else {
     // パラメータに不正があった場合
     // AJAX返却用データ成型
@@ -55,17 +55,17 @@ echo json_encode(compact('data'));
  * @author Seidou
  *
  */
-class surv_hospital_ct
+class cancer_ct
 {
     /**
      * コンストラクタ
      */
-    protected $surv_hospital_logic;
+    protected $cancer_logic;
 
     public function __construct()
     {
         // 管理画面ユーザーロジックインスタンス
-        $this->surv_hospital_logic = new surv_hospital_logic();
+        $this->cancer_logic = new cancer_logic();
     }
 
     /**
@@ -110,7 +110,7 @@ class surv_hospital_ct
      */
     private function create_data_list($post)
     {
-        $list_html = $this->surv_hospital_logic->create_data_list([
+        $list_html = $this->cancer_logic->create_data_list([
             $post['pageSize'],
             $post['pageNumber']
         ],  $post['search_select']);

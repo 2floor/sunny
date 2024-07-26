@@ -15,7 +15,7 @@
 var query = getUrlVars();
 
 //ページタイトル
-var page_title = '病院';
+var page_title = 'がんの種類';
 
 //画像input用配列
 var input_file_name = {};
@@ -27,39 +27,51 @@ var search_select = {
             search 		: true,
             order		: true,
             orderInit	: false,
-            ColName 	: 'hospital_code',
+            ColName 	: 'id',
             tableOrder 	: 1,
             type 		: 'bigint',
         },
-        '医療機関名' : {
+        'がん種名' : {
             search 		: true,
             order		: true,
-            ColName 	: 'hospital_name',
+            ColName 	: 'cancer_type',
             tableOrder 	: 2,
             type 		: 'text',
         },
-        'エリア' : {
-            search 		 : true,
+        'がん種(DPC)' : {
+            search 		: true,
+            order		: true,
+            ColName 	: 'cancer_type_dpc',
+            tableOrder 	: 3,
+            type 		: 'text',
+        },
+        'がん種(Stage)' : {
+            search 		: true,
+            order		: true,
+            ColName 	: 'cancer_type_stage',
+            tableOrder 	: 4,
+            type 		: 'text',
+        },
+        'がん種(Surv)' : {
+            search 		: true,
+            order		: true,
+            ColName 	: 'cancer_type_surv',
+            tableOrder 	: 5,
+            type 		: 'text',
+        },
+        '表示順' : {
+            search 		 : false,
             order		 : true,
-            ColName 	 : 'area_name',
-            tableOrder 	 : 3,
-            type 		 : 'text',
-            foreignRelation : 'area',
+            ColName 	 : 'order_num',
+            tableOrder 	 : 6,
+            type 		 : 'int',
         },
         '更新日時' : {
             search 		: false,
             order		: true,
             ColName 	: 'updated_at',
-            tableOrder 	: 6,
+            tableOrder 	: 8,
             type 		: 'date',
-        },
-        'がんの種類' : {
-            search 		: true,
-            order		: false,
-            ColName 	: 'cancer_type',
-            tableOrder 	: -1,
-            type 		: 'text',
-            foreignRelation : 'cancers',
         },
     },
     //検索時内容
@@ -105,8 +117,6 @@ $(window).on('popstate.bb',function(e) {
             var form_datas = append_form_prams('init', 'frm', null, now_page_num_ini, page_num_ini, page_disp_cnt_ini);
             click_ctrl(null, page_title, 'init');
             call_ajax_init(form_datas);
-
-
         }else if(state.actType == 'disp_change'){
             $('#id').val(null);
             click_ctrl($('[name='+state.elemName+']'), page_title, 'nopush');
@@ -122,7 +132,6 @@ $(window).on('popstate.bb',function(e) {
             // ajax呼び出し
             call_ajax_edit_init(form_data);
         }else if(state.actType == 'search'){
-
             $('#now_page_num').val(now_page_num_ini);$('#page_num').val(page_num_ini);$('#page_disp_cnt').val(page_disp_cnt_ini);
             var form_data =  append_form_prams('init', 'frm', null,  now_page_num_ini, page_num_ini, page_disp_cnt_ini);
             form_data.append('search_select', JSON.stringify(search_select));
@@ -220,7 +229,6 @@ $(function() {
 
             // ajax呼び出し
             call_ajax_edit_init(form_data);
-
         });
     }
 

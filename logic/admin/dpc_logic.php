@@ -2,18 +2,18 @@
 
 require_once __DIR__ . '/../../logic/admin/base_logic.php';
 
-use App\Models\Hospital;
+use App\Models\DPC;
 use Carbon\Carbon;
 
-class hospital_logic extends base_logic
+class dpc_logic extends base_logic
 {
     public function getModel() {
-        return Hospital::class;
+        return DPC::class;
     }
 
     public function create_data_list($params, $search_select = null)
     {
-        $data = $this->getListData($params, $search_select, ['area']);
+        $data = $this->getListData($params, $search_select, ['hospital', 'cancer']);
         $all_cnt = $data['total'];
         $list = $data['data'];
 
@@ -79,10 +79,11 @@ class hospital_logic extends base_logic
             $return_html .= "
 					<tr " . $back_color_html . ">
 						<td class='count_no'>" . $cnt . "</td>
-						<td>" . $row['hospital_code'] . "</td>
-						<td>" . $row['hospital_name'] . "</td>
-						<td>" . $row['area']['area_name'] . "</td>
-						<td>" . $row['addr'] . "</td>
+						<td>" . $row['id'] . "</td>
+						<td>" . $row['year'] . "</td>
+						<td>" . $row['cancer']['cancer_type_dpc'] . "</td>
+						<td>" . $row['hospital']['hospital_name'] . "</td>
+						<td>" . $row['n_dpc'] . "</td>
 						<td>" . $create_at . "</td>
 						<td>" . $update_at . "</td>
 						<td>

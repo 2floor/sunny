@@ -32,6 +32,10 @@ $('#downloadAllPDF').click(function() {
     });
 });
 
+$('#printAllPDF').click(function() {
+    handlePrintAllPDF();
+});
+
 $('#closePDF').click(function() {
     $('.print-result').hide();
 });
@@ -52,4 +56,19 @@ function handlePrintPDF (data, innerPath ='../') {
     });
 
     showPdf(currentIndex);
+}
+
+function handlePrintAllPDF() {
+    pdfLinks.forEach(link => {
+        const iframe = document.createElement('iframe');
+        iframe.style.display = 'none';
+        iframe.src = link;
+        document.body.appendChild(iframe);
+
+        iframe.onload = function () {
+            iframe.contentWindow.focus();
+            iframe.contentWindow.print();
+            document.body.removeChild(iframe);
+        };
+    });
 }

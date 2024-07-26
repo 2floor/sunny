@@ -15,7 +15,7 @@
 var query = getUrlVars();
 
 //ページタイトル
-var page_title = '病院';
+var page_title = '生存率';
 
 //画像input用配列
 var input_file_name = {};
@@ -26,7 +26,7 @@ var search_select = {
         'ID' : {
             search 		: true,
             order		: true,
-            orderInit	: true,
+            orderInit	: false,
             ColName 	: 'id',
             tableOrder 	: 1,
             type 		: 'bigint',
@@ -72,7 +72,7 @@ var search_select = {
             search 		: false,
             order		: true,
             ColName 	: 'updated_at',
-            tableOrder 	: 7,
+            tableOrder 	: 8,
             type 		: 'date',
         },
     },
@@ -83,7 +83,6 @@ var search_select = {
 
 
 //初回定義
-var call_ajax_pager;
 var call_ajax_init;
 var call_ajax_edit_init;
 var now_page_num_ini, page_num_ini, page_disp_cnt_ini;
@@ -125,20 +124,6 @@ $(window).on('popstate.bb',function(e) {
         }else if(state.actType == 'disp_change'){
             $('#id').val(null);
             click_ctrl($('[name='+state.elemName+']'), page_title, 'nopush');
-        }else if(state.actType == 'page_change'){
-            // 次に表示するページ番号
-            $('#id').val(null);
-            var get_next_disp_page = $('#now_page_num').val();
-            var now_page_num = $('#now_page_num').val();
-
-            // 1ページに表示する件数
-            var page_disp_cnt = $('#page_disp_cnt').val();
-            get_next_disp_page = state.elemName;
-            $('#now_page_num').val(get_next_disp_page);
-
-            // 入力内容取得
-            var form_data =  append_form_prams('init', 'frm', null,  now_page_num, get_next_disp_page, page_disp_cnt);
-            call_ajax_pager(form_data);
         }else if(state.actType == 'edit'){
             // 編集対象ID設定
             $('#id').val(state.id);
@@ -158,7 +143,6 @@ $(window).on('popstate.bb',function(e) {
             call_ajax_init(form_data);
 
         }
-
     }
 });
 
@@ -168,55 +152,35 @@ $(function() {
      * 初期処理AJAX
      */
     call_ajax_init = function (post_data){
-        ajax.get(post_data).done(function(result) {
-            // 正常終了
-            if (result.data.status) {
-                //検索時ヒット無し
-                // 正常終了 一覧表示処理呼び出し
-                list_disp_exection(result.data);
-
-                // ページタイトル設定
-                $('#page_title').html('<i class="fa fa-list" aria-hidden="true"></i>'+ page_title + '一覧');
-
-                //更新初期処理
+        let uri = new URLSearchParams(post_data).toString();
+        $('#pagination-container').pagination({
+            dataSource: $('#ct_url').val() + '?' + uri,
+            locator: 'data.html',
+            totalNumberLocator: function(response) {
+                return response.data.html[1];
+            },
+            pageSize: 10,
+            autoHidePrevious: true,
+            autoHideNext:true,
+            showSizeChanger: true,
+            sizeChangerOptions: [10, 20, 30],
+            ajax: {
+                beforeSend: function() {
+                    $(".loading").show()
+                }
+            },
+            callback: function(data) {
+                list_disp_exection(data[0]);
                 edit_init_exection();
-
-                //共通処理呼び出し
                 common_func_bind();
-
-                //validate開始
                 validate_start();
-
-                //テーブル表示列切り替え
                 tableColDispChange();
-
-                //検索処理
                 searchMain();
 
-                //ロード終了
-                loaded();
-
-                /** ここから別途処理呼び出し **/
-                /** ここまで * */
-
-                $('.pagination').html(result.data.pager_html);
-                var disp_max_cnt = $('#page_disp_cnt').val();
-                if (result.data.cnt < disp_max_cnt) {
-                    disp_max_cnt = result.data.cnt;
-                }
-
-                $('.now_disp_cnt_str').html('登録件数：' + result.data.cnt + '件中&nbsp;&nbsp;1件目～'+disp_max_cnt+'件目を表示<br>');
-
-                // ページャー処理バインド
-                pager_link_disp(1);
-                $('#page_num').val(result.data.page_cnt);
-                pager_exection();
+                $('.pagination-info .total-result span').text(data[1] + ' 結果');
+                $('#page_title').html('<i class="fa fa-list" aria-hidden="true"></i>'+ page_title + '一覧');
+                $(".loading").hide();
             }
-
-
-        }).fail(function(result) {
-            // 異常終了
-            $('body').html(result.responseText);
         });
     }
 
@@ -226,7 +190,7 @@ $(function() {
     /**
      * 初期(一覧取得)処理
      */
-    function page_init(){
+    function page_init() {
         // コントローラー呼び出し
         page_ctrl(page_title);
 
@@ -239,182 +203,11 @@ $(function() {
         // 一覧表示処理
         $('.list_show').show();
 
-        now_page_num_ini = $('#now_page_num').val();
-        page_num_ini = $('#page_num').val();
-        page_disp_cnt_ini = $('#page_disp_cnt').val();
-
         // 入力内容取得
         var form_datas = append_form_prams('init', 'frm', null, null, null, null);
 
         // 初期処理AJAX呼び出し処理
         call_ajax_init(form_datas);
-    }
-
-    /**
-     * ページャーリンク表示処理(前後3件まで)
-     */
-    function pager_link_disp(now_page_num){
-        var disp_link_max = Number(now_page_num) + 3;
-        var disp_link_min = Number(now_page_num) - 5;
-
-        $('.pager_area').each(function(j, elem){
-            $(elem).find('.num_link').each(function(i){
-                if ((disp_link_max > i && disp_link_min < i) || now_page_num == i) {
-                    $(this).show();
-                } else {
-                    $(this).hide();
-                }
-            });
-        });
-    }
-
-    /**
-     * ページャー処理
-     *
-     * @param start_num
-     *            開始番号
-     * @param end_num
-     *            終了番号
-     */
-    function pager_exection(){
-        // 現在のページ取得
-        var now_page_num = $('#now_page_num').val();
-
-        // ページ総数取得
-        var total_page_num = $('#page_num').val();
-        // 前へリンク表示制御
-        if (now_page_num == 1) {
-            $('.prev').hide();
-        } else {
-            $('.prev').show();
-        }
-
-        // 次へリンク表示制御
-        $('.next').show();
-        if (now_page_num >= total_page_num) {
-            $('.next').hide();
-        }
-
-        // 現在のページactive処理
-        $('.num_link').parent('li').removeClass('active');
-        $('.num_link[disp_id="'+now_page_num+'"]').parent('li').addClass('active');
-
-        // ページング処理
-        $('.next, .prev, .num_link').on('click',function(){
-            // 次に表示するページ番号
-            var get_next_disp_page = $('#now_page_num').val();
-            var now_page_num = $('#now_page_num').val();
-
-            // 1ページに表示する件数
-            var page_disp_cnt = $('#page_disp_cnt').val();
-
-            if ($(this).attr('pager_type') == 'next') {
-                get_next_disp_page = Number(now_page_num) + 1;
-            } else if ($(this).attr('pager_type') == 'prev') {
-                // 前へ処理
-                get_next_disp_page = Number(now_page_num) - 1;
-            } else if ($(this).attr('num_link') == 'true') {
-                // 数字処理
-                get_next_disp_page = $(this).attr('disp_id');
-            }
-            var elemName = get_next_disp_page;
-            $('#now_page_num').val(get_next_disp_page);
-
-            var state = {
-                "actType": 'page_change',
-                "elemName" : elemName,
-                "search_select" : search_select,
-            };
-            history.pushState(state, null, null); //URL変更
-
-
-            // 入力内容取得
-            var form_data =  append_form_prams('init', 'frm', null,  now_page_num, get_next_disp_page, page_disp_cnt);
-
-            // ページャー処理呼び出し
-            call_ajax_pager(form_data);
-
-        });
-    }
-
-    /**
-     * ページャー処理AJAX
-     */
-    call_ajax_pager = function (post_data) {
-        //次に表示するページ番号
-        var get_next_disp_page = $('#now_page_num').val();
-
-        ajax.get(post_data).done(function(result) {
-            // 正常処理
-            list_disp_exection(result.data);
-            // 次のページactive処理
-            $('.num_link').parent('li').removeClass('active');
-            $('.num_link[disp_id="'+now_page_num+'"]').parent('li').addClass('active');
-            // 一覧HTML表示
-            $('#list_area').show();
-
-            // 初期HTMLリスト表示
-            $('#result').children('tbody').html(result.data.html);
-
-            // ページャー処理バインド
-            $('#page_num').val(result.data.page_cnt);
-
-            //更新初期処理
-            edit_init_exection();
-
-            //共通処理呼び出し
-            common_func_bind();
-
-            //validate開始
-            validate_start();
-
-            //テーブル表示列切り替え
-            tableColDispChange();
-
-            //検索処理
-            searchMain();
-
-            //ロード終了
-            loaded();
-
-            /** ここから別途処理呼び出し TODO **/
-            /** ここまで **/
-
-                // 現在のページ取得
-            var now_page_num = $('#now_page_num').val();
-
-            // ページ総数取得
-            total_page_num = $('#page_num').val();
-            page_disp_cnt = $('#page_disp_cnt').val();
-
-            var disp_max_cnt = now_page_num*page_disp_cnt - page_disp_cnt + $('.count_no').length;
-            var disp_min_cnt = now_page_num*page_disp_cnt - page_disp_cnt + 1;
-
-            $('.now_disp_cnt_str').html('登録件数：' + result.data.cnt + '件中&nbsp;&nbsp;'+disp_min_cnt+'件目～'+disp_max_cnt+'件目を表示<br>');
-
-            // 前へリンク表示制御
-            if (now_page_num == 1) {
-                $('.prev').hide();
-            } else {
-                $('.prev').show();
-            }
-
-            // 次へリンク表示制御
-            if (now_page_num == $('#page_num').val()) {
-                $('.next').hide();
-            } else {
-                $('.next').show();
-            }
-
-            // 現在のページactive処理
-            $('.num_link').parent('li').removeClass('active');
-            $('.num_link[disp_id="'+now_page_num+'"]').parent('li').addClass('active');
-            pager_link_disp(now_page_num);
-
-        }).fail(function(result) {
-            // 異常終了
-            $('body').html(result.responseText);
-        });
     }
 
     /**
@@ -477,9 +270,6 @@ $(function() {
         });
     }
 
-
-
-
     /**
      * 一覧表示処理
      */
@@ -488,24 +278,16 @@ $(function() {
         $('.list_disp_area').show();
 
         // 初期HTMLリスト表示
-        $('#list_html_area').html(data.html);
+        $('#list_html_area').html(data);
 
     }
 });
-
 
 
 /**
  * ページが切り替わる際の処理
  */
 function disp_change_func(type){
-    if(type == 'edit_init'){
-        $('[name=password]').removeClass("required");
-        $('.edit_hide_txt').text("変更時のみ入力").css("width", "auto");
-    }else if(type == 'list_show'){
-        $('[name=password]').addClass("required").css("width", "40px");
-        $('.edit_hide_txt').text("必須");
-    }
 }
 
 /**

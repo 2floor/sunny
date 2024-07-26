@@ -27,9 +27,10 @@ if ($data['status']) {
 
     // インスタンス生成
     $hospital_ct = new hospital_ct();
+    $post_data = $_SERVER['REQUEST_METHOD'] == 'POST' ? $_POST : $_GET;
 
     // コントローラー呼び出し
-    $data = $hospital_ct->main_control($_POST);
+    $data = $hospital_ct->main_control($post_data);
 } else {
     // パラメータに不正があった場合
     // AJAX返却用データ成型
@@ -109,24 +110,19 @@ class hospital_ct
      */
     private function create_data_list($post)
     {
-        $list_html = $this->hospital_logic->create_data_list(array(
-            $post['now_page_num'], // 現在のページ
-            $post['get_next_disp_page'], // 次に表示するページ
-            $post['page_disp_cnt'],
-        ),  $post['search_select']);
+        $list_html = $this->hospital_logic->create_data_list([
+            $post['pageSize'],
+            $post['pageNumber']
+        ],  $post['search_select']);
 
         // AJAX返却用データ成型
-        $data = array(
+        return [
             'status' => true,
-            'empty' => '',
-            'edit_menu_list_html' => $list_html['entry_menu_list_html'],
-            'html' => $list_html['list_html'],
-            'cnt' => $list_html['all_cnt'],
-            'pager_html' => $list_html['pager_html'],
-            'page_cnt' => $list_html['page_cnt'],
-        );
-
-        return $data;
+            'html' => [
+                $list_html['list_html'],
+                $list_html['all_cnt']
+            ],
+        ];
     }
 
     /**

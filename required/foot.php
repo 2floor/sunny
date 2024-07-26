@@ -32,6 +32,7 @@
 	<script src="../assets/admin/plugins/bootstrap-sweetalert/sweet-alert.min.js"></script>
 	<script src="../assets/admin/plugins/custombox/dist/custombox.min.js"></script>
 	<script src="../assets/admin/plugins/custombox/dist/legacy.min.js"></script>
+    <script src="../assets/admin/plugins/pagination-js/pagination.min.js" type="text/javascript"></script>
 	<!-- App js -->
 	<script src="../assets/admin/js/common/jquery.core.js"></script>
 	<script src="../assets/admin/js/common/jquery.app.js"></script>

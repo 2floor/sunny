@@ -862,6 +862,25 @@ select {
 	width: auto;
 }
 
+.total-result span {
+	font-size: 16px;
+}
+
+.pagination-info {
+	display: flex;
+	flex-direction: column;
+	gap: 10px;
+	margin-bottom: 20px;
+}
+
+.paginationjs ul {
+	background-color: #FFFFFF;
+}
+
+.paginationjs .paginationjs-last {
+	padding: 0 5px;
+}
+
 @media screen and (max-width: 1199px) {
 
 }

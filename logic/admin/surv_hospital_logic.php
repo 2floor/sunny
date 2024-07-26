@@ -11,20 +11,18 @@ class surv_hospital_logic extends base_logic
         return SurvHospital::class;
     }
 
-    public function create_data_list($params, $search_select = null){
+    public function create_data_list($params, $search_select = null)
+    {
         $data = $this->getListData($params, $search_select, ['hospital', 'cancer']);
         $all_cnt = $data['total'];
-        $offset = $data['offset'];
-        $pager_cnt = $data['pagerCount'];
-        $hospitals = $data['data'];
-        $admin_menu_list_html = $disp_all = '';
+        $list = $data['data'];
 
         $return_html = "";
         $back_color = 1;
-        $cnt = $offset;
+        $cnt = ($params[0] * ($params[1] - 1));
 
-        for($i = 0; $i < count ($hospitals ?? []); $i ++) {
-            $row = $hospitals[$i];
+        for($i = 0; $i < count ($list ?? []); $i ++) {
+            $row = $list[$i];
             $cnt ++;
 
             //削除フラグ
@@ -96,35 +94,17 @@ class surv_hospital_logic extends base_logic
 							$edit_html_b
 						</td>
 					</tr>
-";
+					";
             $back_color ++;
 
             if ($back_color >= 3) {
                 $back_color = 1;
             }
         }
-        // }
-
-        //ページャー部分HTML生成
-        $pager_html = '<li><a href="javascript:void(0)" class="page prev" pager_type="prev">prev</a></li>';
-        for ($i = 0; $i < $pager_cnt; $i++) {
-            $disp_cnt = $i+1;
-
-            if ($i == 0) {
-                $pager_html .= '<li><a href="javascript:void(0)" class="page num_link" num_link="true" disp_id="'.$disp_cnt.'">'.$disp_cnt.'</a></li>';
-            } else {
-                $pager_html .= '<li><a href="javascript:void(0)" class="page num_link" num_link="true" disp_id="'.$disp_cnt.'">'.$disp_cnt.'</a></li>';
-            }
-        }
-        $pager_html .= '<li><a href="javascript:void(0)" class="page next" pager_type="next">next</a></li>';
 
         return array (
-            "entry_menu_list_html" => $admin_menu_list_html,
             "list_html" => $return_html,
-            "pager_html" => $pager_html,
-            'page_cnt' => $pager_cnt,
-            'all_cnt' => $all_cnt,
-            'disp_all' => $disp_all,
+            'all_cnt' => $all_cnt
         );
     }
 }

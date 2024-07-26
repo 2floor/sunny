@@ -22,6 +22,7 @@
 <link href="../assets/admin/plugins/bootstrap-daterangepicker/daterangepicker.css" rel="stylesheet">
 <link href="../assets/admin/plugins/bootstrap-sweetalert/sweet-alert.css" rel="stylesheet" type="text/css" />
 <link href="../assets/admin/plugins/custombox/dist/custombox.min.css" rel="stylesheet">
+<link href="../assets/admin/plugins/pagination-js/pagination.css" rel="stylesheet" type="text/css" />
 
 <!-- App CSS -->
 <link href="../assets/admin/css/jquery-ui.min.css" rel="stylesheet" type="text/css" />
