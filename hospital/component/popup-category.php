@@ -7,6 +7,7 @@ if (!isset($category)) {
 $html = '';
 $categoryId = 1;
 $totalCategory = count($category);
+
 foreach ($category as $key1 => $value1) {
     $html .= '<div class="popup popup-dynamic" data-order="'.$categoryId.'" id="categoryPopup-'.$categoryId.'">';
 
@@ -20,7 +21,7 @@ foreach ($category as $key1 => $value1) {
 
         $html .= '<div class="popup-checkbox-content category-content">';
         foreach ($value2 as $value3) {
-            $html .= '<label><input type="checkbox" data-key="'.$value3['id'].'" data-value="'.$value3['level3'].'">'.$value3['level3'].'</label>';
+            $html .= '<label><input type="checkbox" data-key="'.$value3[0]['id'].'" data-value="'.$value3[0]['level3'].'">'.$value3[0]['level3'].'</label>';
         }
 
         $html .= '</div>';

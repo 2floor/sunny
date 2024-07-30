@@ -83,7 +83,7 @@ class f_hospital_ct
             ->get()
             ->groupBy('area_name');
 
-        $category = Category::select('id', 'level1', 'level2', 'level3', 'order_num')
+        $category = Category::select('id', 'level1', 'level2', 'level3', 'order_num2', 'order_num3')
             ->where([
                 'category_group' => Category::HOSPITAL_GROUP,
             ])
@@ -93,15 +93,20 @@ class f_hospital_ct
             ->get()
             ->groupBy('level1')->map(function ($items) {
                 return $items->groupBy('level2')->map(function ($subItems) {
-                    return $subItems->map(function ($item) {
-                        return [
-                            'id' => $item->id,
-                            'level3' => $item->level3,
-                            'order_num' => $item->order_num
-                        ];
+                    return $subItems->groupBy('level3')->map(function ($groupedItems) {
+                        return $groupedItems->sortBy('order_num3')->map(function ($item) {
+                            return [
+                                'id' => $item->id,
+                                'level3' => $item->level3,
+                                'order_num2' => $item->order_num2,
+                                'order_num3' => $item->order_num3,
+                            ];
+                        });
+                    })->sortBy(function ($groupedItems) {
+                        return $groupedItems->first()['order_num3'];
                     });
                 })->sortBy(function ($subItems, $key) {
-                    return $subItems->first()['order_num'];
+                    return $subItems->first()->first()['order_num2'];
                 });
             });
 
