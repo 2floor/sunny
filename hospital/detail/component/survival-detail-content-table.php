@@ -6,6 +6,7 @@ if (!isset($survivals)) {
 if (!isset($averageSurv)) {
     $averageSurv = [];
 }
+
 ?>
 <div class="table-responsive">
     <table class="table surv-detail-tb">
@@ -41,6 +42,8 @@ if (!isset($averageSurv)) {
         <?php
         $html = '';
         for ($i = 0; $i < 3; $i++) {
+            $avgSurv = $averageSurv->where('year', $survivals[$i]['year'])->first();
+            
             $tr = '<tr class="border-top border-bottom">';
             $tr .= '<td rowspan="5">'.($survivals[$i]['year'] ? ($survivals[$i]['year'] . '-' . ($survivals[$i]['year'] + 1)) : '-').'</td>';
             $tr .= '<td>参考:全国平均</td>';
@@ -48,10 +51,10 @@ if (!isset($averageSurv)) {
             $tr .= '<td></td>';
             $tr .= '<td></td>';
             $tr .= '<td></td>';
-            $tr .= '<td>'.($averageSurv[$i]['stage_survival1'] ? ($averageSurv[$i]['stage_survival1'] . '%') : '-').'</td>';
-            $tr .= '<td>'.($averageSurv[$i]['stage_survival2'] ? ($averageSurv[$i]['stage_survival2'] . '%') : '-').'</td>';
-            $tr .= '<td>'.($averageSurv[$i]['stage_survival3'] ? ($averageSurv[$i]['stage_survival3'] . '%') : '-').'</td>';
-            $tr .= '<td>'.($averageSurv[$i]['stage_survival4'] ? ($averageSurv[$i]['stage_survival4'] . '%') : '-').'</td>';
+            $tr .= '<td>'.($avgSurv['stage_survival1'] ? ($avgSurv['stage_survival1'] . '%') : '-').'</td>';
+            $tr .= '<td>'.($avgSurv['stage_survival2'] ? ($avgSurv['stage_survival2'] . '%') : '-').'</td>';
+            $tr .= '<td>'.($avgSurv['stage_survival3'] ? ($avgSurv['stage_survival3'] . '%') : '-').'</td>';
+            $tr .= '<td>'.($avgSurv['stage_survival4'] ? ($avgSurv['stage_survival4'] . '%') : '-').'</td>';
             $tr .= '</tr>';
 
             $tr .= '<tr class="border-top border-bottom">';
