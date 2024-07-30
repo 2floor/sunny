@@ -43,7 +43,7 @@ if (!isset($averageSurv)) {
         $html = '';
         for ($i = 0; $i < 3; $i++) {
             $avgSurv = $averageSurv->where('year', $survivals[$i]['year'])->first();
-            
+
             $tr = '<tr class="border-top border-bottom">';
             $tr .= '<td rowspan="5">'.($survivals[$i]['year'] ? ($survivals[$i]['year'] . '-' . ($survivals[$i]['year'] + 1)) : '-').'</td>';
             $tr .= '<td>参考:全国平均</td>';
@@ -212,7 +212,7 @@ if (!isset($averageSurv)) {
         $avgLocalRate4 = $survivals->avg('local_survival_rate4');
 
         $avgHtml .= '<tr class="border-top border-bottom">';
-        $avgHtml .= '<td>都道府県順位</td>';
+        $avgHtml .= '<td>地方順位</td>';
         $avgHtml .= '<td>'.render_html_helper::renderRank(($avgLocalStage1 ? round($avgLocalStage1) : null), '../../img/icons').'</td>';
         $avgHtml .= '<td>'.render_html_helper::renderRank(($avgLocalStage2 ? round($avgLocalStage2) : null), '../../img/icons').'</td>';
         $avgHtml .= '<td>'.render_html_helper::renderRank(($avgLocalStage3 ? round($avgLocalStage3) : null), '../../img/icons').'</td>';
@@ -234,7 +234,7 @@ if (!isset($averageSurv)) {
         $avgTotalRate4 = $survivals->avg('total_survival_rate4');
 
         $avgHtml .= '<tr class="border-top border-bottom">';
-        $avgHtml .= '<td>都道府県順位</td>';
+        $avgHtml .= '<td>全国順位</td>';
         $avgHtml .= '<td>'.render_html_helper::renderRank(($avgTotalStage1 ? round($avgTotalStage1) : null), '../../img/icons').'</td>';
         $avgHtml .= '<td>'.render_html_helper::renderRank(($avgTotalStage2 ? round($avgTotalStage2) : null), '../../img/icons').'</td>';
         $avgHtml .= '<td>'.render_html_helper::renderRank(($avgTotalStage3 ? round($avgTotalStage3) : null), '../../img/icons').'</td>';
