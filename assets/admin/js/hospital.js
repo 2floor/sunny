@@ -71,12 +71,14 @@ var search_select = {
 //初回定義
 var call_ajax_init;
 var call_ajax_edit_init;
-var now_page_num_ini, page_num_ini, page_disp_cnt_ini;
 
 var state = {
     "actType": 'init',
     "elemName" : $(this).attr('name'),
 };
+
+var currentPage = 1;
+
 history.replaceState(state, null, null);
 
 $(window).on('bb');
@@ -101,12 +103,9 @@ $(window).on('popstate.bb',function(e) {
 
             $('#page_type').val('list_show');
 
-            $('#now_page_num').val(now_page_num_ini);$('#page_num').val(page_num_ini);$('#page_disp_cnt').val(page_disp_cnt_ini);
-            var form_datas = append_form_prams('init', 'frm', null, now_page_num_ini, page_num_ini, page_disp_cnt_ini);
+            var form_datas = append_form_prams('init', 'frm', null, false);
             click_ctrl(null, page_title, 'init');
             call_ajax_init(form_datas);
-
-
         }else if(state.actType == 'disp_change'){
             $('#id').val(null);
             click_ctrl($('[name='+state.elemName+']'), page_title, 'nopush');
@@ -117,14 +116,12 @@ $(window).on('popstate.bb',function(e) {
             disp_ctrl();
 
             // 入力内容取得
-            var form_data = append_form_prams('edit_init', 'frm', null, null, null, null);
+            var form_data = append_form_prams('edit_init', 'frm', null, false);
 
             // ajax呼び出し
             call_ajax_edit_init(form_data);
         }else if(state.actType == 'search'){
-
-            $('#now_page_num').val(now_page_num_ini);$('#page_num').val(page_num_ini);$('#page_disp_cnt').val(page_disp_cnt_ini);
-            var form_data =  append_form_prams('init', 'frm', null,  now_page_num_ini, page_num_ini, page_disp_cnt_ini);
+            var form_data =  append_form_prams('init', 'frm', null, false);
             form_data.append('search_select', JSON.stringify(search_select));
             call_ajax_init(form_data);
 
@@ -137,7 +134,7 @@ $(function() {
     /**
      * 初期処理AJAX
      */
-    call_ajax_init = function (post_data){
+    call_ajax_init = function (post_data, startPage = 1, afterChange = false){
         let uri = new URLSearchParams(post_data).toString();
         $('#pagination-container').pagination({
             dataSource: $('#ct_url').val() + '?' + uri,
@@ -155,7 +152,7 @@ $(function() {
                     $(".loading").show()
                 }
             },
-            callback: function(data) {
+            callback: function(data, pagination) {
                 list_disp_exection(data[0]);
                 edit_init_exection();
                 common_func_bind();
@@ -166,6 +163,14 @@ $(function() {
                 $('.pagination-info .total-result span').text(data[1] + ' 結果');
                 $('#page_title').html('<i class="fa fa-list" aria-hidden="true"></i>'+ page_title + '一覧');
                 $(".loading").hide();
+
+                if (afterChange && pagination.pageNumber !== startPage) {
+                    $('#pagination-container').pagination('go', startPage);
+                }
+                afterChange = false
+            },
+            afterPageOnClick: function(event, pageNumber) {
+                currentPage = pageNumber;
             }
         });
     }
@@ -190,7 +195,7 @@ $(function() {
         $('.list_show').show();
 
         // 入力内容取得
-        var form_datas = append_form_prams('init', 'frm', null, null, null, null);
+        var form_datas = append_form_prams('init', 'frm', null, false);
 
         // 初期処理AJAX呼び出し処理
         call_ajax_init(form_datas);
@@ -216,7 +221,7 @@ $(function() {
             disp_ctrl();
 
             // 入力内容取得
-            var form_data = append_form_prams('edit_init', 'frm', null, null, null, null);
+            var form_data = append_form_prams('edit_init', 'frm', null, false);
 
             // ajax呼び出し
             call_ajax_edit_init(form_data);
@@ -237,6 +242,25 @@ $(function() {
                 //更新情報自動入力
                 console.log(result.data);
                 insert_edit_data(result.data, 'frm', null);
+
+                let areaId = result.data.area.id || null;
+                $('.area-selection').val(areaId).trigger('change');
+
+                let cancers = result.data.cancers || [];
+                $('.cancer-selection').val(cancers).trigger('change');
+
+                let categories = result.data.categories || [];
+
+                $.each(categories, function(index, value) {
+                    let checkbox = $('input[name="categories[]"][value="'+value.id+'"]');
+                    checkbox.prop('checked', true);
+                    checkbox.parent().parent().find('input[name="cateContent'+value.id+'"]').val(value.content1);
+
+                    if (value.is_whole_cancer === 0) {
+                        let cateCancers = value.cancer_id.split(",");
+                        checkbox.parent().parent().find('select[name="cateCancer'+value.id+'"]').val(cateCancers || []).trigger('change');
+                    }
+                });
 
                 //ロード終了
                 loaded();
@@ -282,3 +306,18 @@ function disp_change_func(type){
 function fd_add(fd){
     return fd;
 }
+
+$('.cancer-selection').select2({
+    placeholder: '病院でがんの種類を選択して',
+    allowClear: true
+});
+
+$('.cate-cancer-selection').select2({
+    placeholder: 'がんの種類',
+    allowClear: true
+});
+
+$('.area-selection').select2({
+    placeholder: '地域を選択',
+    allowClear: true
+});

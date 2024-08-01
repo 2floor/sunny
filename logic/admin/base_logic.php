@@ -47,13 +47,7 @@ abstract class base_logic {
     }
 
     public function getDetailById($id){
-        $result = $this->model::find($id);
-
-        if (empty($result)) {
-            return [];
-        }
-
-        return $result->toArray();
+        return $this->getQueryWithoutGlobalScopes()->find($id);
     }
 
     public function updateData($params){
@@ -61,19 +55,19 @@ abstract class base_logic {
     }
 
     public function recoveryData($id) {
-        return $this->model::update(['del_flg' => BaseModel::NOT_DELETED]);
+        return $this->getQueryWithoutGlobalScopes()->where('id', $id)->update(['del_flg' => BaseModel::NOT_DELETED]);
     }
 
     public function deleteData($id) {
-        return $this->model::update(['del_flg' => BaseModel::DELETED]);
+        return $this->getQueryWithoutGlobalScopes()->where('id', $id)->update(['del_flg' => BaseModel::DELETED]);
     }
 
     public function privateData($id) {
-        return $this->model::update(['public_flg' => BaseModel::PUBLISHED]);
+        return $this->getQueryWithoutGlobalScopes()->where('id', $id)->update(['public_flg' => BaseModel::UNPUBLISHED]);
     }
 
     public function releaseData($id) {
-        return $this->model::update(['public_flg' => BaseModel::NOT_DELETED]);
+        return $this->getQueryWithoutGlobalScopes()->where('id', $id)->update(['public_flg' => BaseModel::PUBLISHED]);
     }
 
     protected function createSearchQuery($searchSelect)

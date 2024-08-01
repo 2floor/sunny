@@ -1,8 +1,11 @@
 <?php
-session_start();
+if (!isset($_SESSION)) {
+    session_start();
+}
 
 require_once __DIR__ . '/../../logic/common/common_logic.php';
 require_once __DIR__ . '/../../logic/admin/hospital_logic.php';
+require_once __DIR__ . '/../../logic/admin/category_logic.php';
 require_once __DIR__ . '/../../common/security_common_logic.php';
 
 /**
@@ -105,6 +108,21 @@ class hospital_ct
         return $data;
     }
 
+    public function init_entry_new()
+    {
+        $category_logic = new category_logic();
+        $cancers = $this->hospital_logic->get_cancer_list()->toArray();
+        $area = $this->hospital_logic->get_area_list()->toArray();
+        $grouped_category = $category_logic->get_grouped_data_list(\App\Models\Category::HOSPITAL_GROUP)->toArray();
+
+
+        return [
+            'cancers' => $cancers,
+            'grouped_category' => $grouped_category,
+            'area' => $area
+        ];
+    }
+
     /**
      * 初期処理(一覧HTML生成)
      */
@@ -114,6 +132,8 @@ class hospital_ct
             $post['pageSize'],
             $post['pageNumber']
         ],  $post['search_select']);
+
+
 
         // AJAX返却用データ成型
         return [
@@ -175,53 +195,48 @@ class hospital_ct
     /**
      * 編集初期処理(詳細情報取得)
      *
-     * @param unknown $admin_user_id
      */
-    private function get_detail($member_id)
+    private function get_detail($id)
     {
-        $reult_detail = $this->hospital_logic->get_detail($member_id);
+        $detail = $this->hospital_logic->getDetailById($id)->load('area');
+        $detail = $detail ? $detail->toArray() : [];
+
+        $categories = $this->hospital_logic->get_category_by_hospital_id($id);
+        if ($categories) {
+            $categories = $categories->map(function($category) {
+                return [
+                    'id' => $category->id,
+                    'is_whole_cancer' => $category->is_whole_cancer,
+                    'content1' => $category->pivot->content1,
+                    'cancer_id' => $category->pivot->cancer_id,
+                ];
+            })->toArray();
+        }
+
+        $cancers = $this->hospital_logic->get_cancer_by_hospital_id($id)?->pluck('id');
 
         // AJAX返却用データ成型
-        $data = array(
+        return [
             'status' => true,
-            'name' => $reult_detail['name'],
-            'name_kana' => $reult_detail['name_kana'],
-            'office_name' => $reult_detail['office_name'],
-            'office_name_kana' => $reult_detail['office_name_kana'],
-            'zip' => $reult_detail['zip'],
-            'pref' => $reult_detail['pref'],
-            'addr' => $reult_detail['addr'],
-            'tel' => $reult_detail['tel'],
-            'tel2' => $reult_detail['tel2'],
-            'fax' => $reult_detail['fax'],
-            'resp_name' => $reult_detail['resp_name'],
-            'job' => $reult_detail['job'],
-            'mail' => $reult_detail['mail'],
-
-            'payment' => $reult_detail['payment'],
-            'jigyou' => $reult_detail['jigyou'],
-            'truck_num' => $reult_detail['truck_num'],
-            'url' => $reult_detail['url'],
-            'questionnaire' => $reult_detail['questionnaire'],
-            'etc1' => $reult_detail['etc1'],
-            'etc2' => $reult_detail['etc2'],
-            'etc3' => $reult_detail['s_code'],
-            'etc4' => $reult_detail['etc4'],
-            'etc5' => $reult_detail['etc5'],
-            'etc6' => $reult_detail['etc6'],
-            'etc7' => $reult_detail['etc7'],
-            'etc8' => $reult_detail['etc8'],
-
-        );
-
-        return $data;
+            'hospital_code' => $detail['hospital_code'] ?? '',
+            'hospital_name' => $detail['hospital_name'] ?? '',
+            'addr' => $detail['addr'] ?? '',
+            'tel' => $detail['tel'] ?? '',
+            'hp_url' => $detail['hp_url'] ?? '',
+            'social_info' => $detail['social_info'] ?? '',
+            'support_url' => $detail['support_url'] ?? '',
+            'introduction_url' => $detail['introduction_url'] ?? '',
+            'remarks' => $detail['remarks'] ?? '',
+            'area' => $detail['area'] ?? [],
+            'cancers' =>  $cancers ?? [],
+            'categories' => $categories ?? [],
+        ];
     }
 
 
     /**
      * 編集更新処理
      *
-     * @param unknown $admin_user_id
      */
     private function update_detail($post)
     {
@@ -269,12 +284,11 @@ class hospital_ct
     /**
      * 有効化処理
      *
-     * @param unknown $id
      */
-    public function recovery($id)
+    private function recovery($id)
     {
         // 更新ロジック呼び出し
-        $this->hospital_logic->recoveryl_func($id);
+        $this->hospital_logic->recoveryData($id);
 
         // AJAX返却用データ成型
         $data = array(
@@ -287,13 +301,11 @@ class hospital_ct
 
     /**
      * 削除処理
-     *
-     * @param unknown $post
      */
-    public function delete($id)
+    private function delete($id)
     {
         // 更新ロジック呼び出し
-        $this->hospital_logic->del_func($id);
+        $this->hospital_logic->deleteData($id);
 
         // AJAX返却用データ成型
         $data = array(
@@ -306,13 +318,11 @@ class hospital_ct
 
     /**
      * 非公開処理
-     *
-     * @param unknown $id
      */
-    public function private_func($id)
+    private function private_func($id)
     {
         // 更新ロジック呼び出し
-        $this->hospital_logic->private_func($id);
+        $this->hospital_logic->privateData($id);
 
         // AJAX返却用データ成型
         $data = array(
@@ -325,13 +335,11 @@ class hospital_ct
 
     /**
      * 公開処理
-     *
-     * @param unknown $post
      */
-    public function release($id)
+    private function release($id)
     {
         // 更新ロジック呼び出し
-        $this->hospital_logic->release_func($id);
+        $this->hospital_logic->releaseData($id);
 
         // AJAX返却用データ成型
         $data = array(

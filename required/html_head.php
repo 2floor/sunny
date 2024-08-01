@@ -12,8 +12,7 @@
 <!-- Plugins css-->
 <link href="../assets/admin/plugins/bootstrap-tagsinput/dist/bootstrap-tagsinput.css" rel="stylesheet" />
 <link href="../assets/admin/plugins/multiselect/css/multi-select.css" rel="stylesheet" type="text/css" />
-<link href="../assets/admin/plugins/select2/dist/css/select2.css" rel="stylesheet" type="text/css">
-<link href="../assets/admin/plugins/select2/dist/css/select2-bootstrap.css" rel="stylesheet" type="text/css">
+<link href="../assets/admin/plugins/select2/new-version/select2.min.css" rel="stylesheet"/>
 <link href="../assets/admin/plugins/bootstrap-touchspin/dist/jquery.bootstrap-touchspin.min.css" rel="stylesheet" />
 <link href="../assets/admin/plugins/switchery/switchery.min.css" rel="stylesheet" />
 <link href="../assets/admin/plugins/timepicker/bootstrap-timepicker.min.css" rel="stylesheet">

@@ -24,6 +24,13 @@ function validate_start(){
 		},
 	});
 
+	$('.selection2').on('select2:open', function() {
+		$(this).on('select2:close', function() {
+			if($(this).hasClass('validate')){
+				realtime_validate($(this), true);
+			}
+		});
+	});
 };
 
 var ini_color = "#fff";
@@ -53,11 +60,9 @@ function realtime_validate(check_elem, err_flg){
 		}
 
 		if(type != 'radio' && type != 'checkbox' && type != 'file' && !check_elem.hasClass('couple') ){
-
-
 			if(check_elem.hasClass('validate')){
 				if(check_elem.hasClass('required')){
-					if(check_elem.val()==""){
+					if(check_elem.val()=="" || check_elem.val()==null){
 						re_bool = disp_error_msg(check_elem, '必須項目です');
 					}
 				}
@@ -116,6 +121,17 @@ function realtime_validate(check_elem, err_flg){
 					}
 				}
 
+				if(check_elem.hasClass('tel-text')){
+					if (check_elem.val() && !check_elem.val().match(/^-?[\d-]*$/)) {
+						re_bool = disp_error_msg(check_elem, '入力には数値と - のみを使用してください');
+					}
+				}
+
+				if(check_elem.hasClass('url')){
+					if (check_elem.val() && !check_elem.val().match(/^(https?:\/\/)?([\da-z.-]+)\.([a-z.]{2,6})([\/\w .-]*)*\/?$/)) {
+						re_bool = disp_error_msg(check_elem, '有効なURLを入力してください');
+					}
+				}
 			}
 		}else if(type == "file"){
 

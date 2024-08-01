@@ -20,7 +20,7 @@
 	<script src="../assets/admin/plugins/bootstrap-tagsinput/dist/bootstrap-tagsinput.min.js"></script>
 	<script type="text/javascript" src="../assets/admin/plugins/multiselect/js/jquery.multi-select.js"></script>
 	<script type="text/javascript" src="../assets/admin/plugins/jquery-quicksearch/jquery.quicksearch.js"></script>
-	<script src="../assets/admin/plugins/select2/dist/js/select2.min.js" type="text/javascript"></script>
+    <script src="../assets/admin/plugins/select2/new-version/select2.min.js" type="text/javascript"></script>
 	<script src="../assets/admin/plugins/bootstrap-touchspin/dist/jquery.bootstrap-touchspin.min.js" type="text/javascript"></script>
 	<script src="../assets/admin/plugins/bootstrap-inputmask/bootstrap-inputmask.min.js" type="text/javascript"></script>
 	<script src="../assets/admin/plugins/moment/moment.js"></script>
@@ -33,6 +33,7 @@
 	<script src="../assets/admin/plugins/custombox/dist/custombox.min.js"></script>
 	<script src="../assets/admin/plugins/custombox/dist/legacy.min.js"></script>
     <script src="../assets/admin/plugins/pagination-js/pagination.min.js" type="text/javascript"></script>
+    <script src="../assets/admin/plugins/tinymce/tinymce.min.js" type="text/javascript"></script>
 	<!-- App js -->
 	<script src="../assets/admin/js/common/jquery.core.js"></script>
 	<script src="../assets/admin/js/common/jquery.app.js"></script>

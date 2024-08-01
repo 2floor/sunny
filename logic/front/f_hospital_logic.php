@@ -1,7 +1,6 @@
 <?php
 
 use App\Models\Hospital;
-use App\Models\HospitalCategory;
 use App\Models\Category;
 
 class f_hospital_logic
@@ -35,7 +34,9 @@ class f_hospital_logic
                 $query->whereIn('t_category.id', $categories);
                 $query->where(function ($query2) use ($cancers) {
                     $query2->whereNull('t_category_hospital.cancer_id');
-                    $query2->orWhereIn('t_category_hospital.cancer_id', $cancers);
+                    foreach ($cancers as $cancer) {
+                        $query2->orWhereRaw('FIND_IN_SET(?, t_category_hospital.cancer_id)', [$cancer]);
+                    }
                 });
             });
         }

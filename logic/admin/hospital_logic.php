@@ -2,7 +2,9 @@
 
 require_once __DIR__ . '/../../logic/admin/base_logic.php';
 
+use App\Models\Area;
 use App\Models\Hospital;
+use App\Models\Cancer;
 use Carbon\Carbon;
 
 class hospital_logic extends base_logic
@@ -104,5 +106,25 @@ class hospital_logic extends base_logic
             "list_html" => $return_html,
             'all_cnt' => $all_cnt
         );
+    }
+
+    public function get_cancer_list()
+    {
+        return Cancer::select(['id', 'cancer_type'])->orderBy('order_num')->get();
+    }
+
+    public function get_area_list()
+    {
+        return Area::select(['id', 'area_name', 'pref_name'])->get();
+    }
+
+    public function get_category_by_hospital_id($id)
+    {
+        return $this->getQueryWithoutGlobalScopes()->where('id', $id)->first()?->categories;
+    }
+
+    public function get_cancer_by_hospital_id($id)
+    {
+        return $this->getQueryWithoutGlobalScopes()->where('id', $id)->first()?->cancers;
     }
 }

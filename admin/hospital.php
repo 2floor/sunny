@@ -1,12 +1,114 @@
 <?php
-session_start();
+if (!isset($_SESSION)) {
+    session_start();
+}
 require_once __DIR__ . '/../required/view_common_include.php';
+require_once __DIR__ . '/../controller/admin/hospital_ct.php';
+
+$hospital_ct = new hospital_ct();
+$initData = $hospital_ct->init_entry_new();
+$cancers = $initData['cancers'] ?? [];
+$groupedCategory = $initData['grouped_category'] ?? [];
+$areas = $initData['area'] ?? [];
+
+$htmlCancerOption = '';
+foreach ($cancers as $cancer) {
+    $htmlCancerOption .= '<option value="'.$cancer['id'].'">'.$cancer['cancer_type'].'</option>';
+}
+
+$htmlAreaOption = '';
+foreach ($areas as $area) {
+    $htmlAreaOption .= '<option value="'.$area['id'].'">'.$area['area_name'] . '—' .$area['pref_name'] .'</option>';
+}
 ?>
 <!DOCTYPE html>
 <html>
 
 <head>
     <?php require_once __DIR__ . '/../required/html_head.php'; ?>
+    <style>
+        .select2-container .select2-selection--single {
+            height: 32px;
+        }
+
+        .cancer-selection, .area-selection {
+            width: 100%;
+        }
+
+        .panel-heading {
+            cursor: pointer;
+        }
+
+        .panel-title {
+            font-size: 14px;
+            font-weight: bold;
+        }
+        .panel-default {
+            border: 1px solid #ddd !important;
+            margin-bottom: 10px !important;
+        }
+
+        .panel-heading.active {
+            background-color: #337ab7;
+            color: white;
+        }
+        .panel-heading:not(.active) {
+            color: #4C3333;
+        }
+        .panel-collapse {
+            transition: height 1s ease;
+        }
+        .arrow {
+            float: right;
+            font-size: 14px;
+        }
+
+        .panel-body {
+            padding: 20px;
+        }
+
+        .checkbox-content {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 30px;
+            padding: 15px;
+        }
+
+        .checkbox-content label {
+            display: flex;
+            align-items: center;
+            font-size: 14px;
+            font-weight: unset;
+        }
+
+        .checkbox-content input[type="checkbox"] {
+            margin-right: 5px;
+        }
+
+        .checkbox-content input[type="text"] {
+            margin-left: 5px;
+        }
+
+        .checkbox-content .select2-container {
+            margin-left: 5px;
+            width: 66% !important;
+        }
+
+        .checkbox-content .select2-selection {
+            border-color: #ddd;
+        }
+
+        .checkbox-content .select2-container .select2-selection--multiple .select2-selection__choice {
+            white-space: normal;
+            word-wrap: break-word;
+            max-width: 200px;
+        }
+
+        .checkbox-content .select2-container .select2-results__option {
+            white-space: normal;
+            word-wrap: break-word;
+        }
+    </style>
 </head>
 
 <body class="fixed-left">
@@ -54,11 +156,11 @@ require_once __DIR__ . '/../required/view_common_include.php';
                                 </div>
                             </div>
                         </div>
-<!--                        <div class="searchBoxRight">-->
-<!--                            <div class="serachW110">-->
-<!--                                <button type="button" name="new_entry" class="btn btn-primary waves-effect w-md waves-light m-b-5">新規登録</button>-->
-<!--                            </div>-->
-<!--                        </div>-->
+                        <div class="searchBoxRight">
+                            <div class="serachW110">
+                                <button type="button" name="new_entry" class="btn btn-primary waves-effect w-md waves-light m-b-5">新規登録</button>
+                            </div>
+                        </div>
                     </div>
                 </div>
                 <!-- searchBox -->
@@ -140,253 +242,203 @@ require_once __DIR__ . '/../required/view_common_include.php';
                             <div class="contentBox">
                                 <div class="formRow">
                                     <div class="formItem">
-                                        法人名
+                                        病院ID
                                         <span class="label01 require_text">必須</span>
                                     </div>
                                     <div class="formTxt">
                                         <div class="formIn50">
-                                            <input type="text" class="form-control validate required" name="name" id="name" value="">
+                                            <input type="text" class="form-control validate required" name="hospital_code" id="hospital_code">
                                         </div>
                                     </div>
                                 </div>
                                 <div class="formRow">
                                     <div class="formItem">
-                                        法人名ふりがな
+                                        医療機関名
                                         <span class="label01 require_text">必須</span>
                                     </div>
                                     <div class="formTxt">
                                         <div class="formIn50">
-                                            <input type="text" class="form-control validate required" name="name_kana" id="name_kana" value="">
+                                            <input type="text" class="form-control validate required" name="hospital_name" id="hospital_name">
                                         </div>
                                     </div>
                                 </div>
+
                                 <div class="formRow">
                                     <div class="formItem">
-                                        営業所名
+                                        エリア
                                         <span class="label01 require_text">必須</span>
                                     </div>
                                     <div class="formTxt">
                                         <div class="formIn50">
-                                            <input type="text" class="form-control validate " name="office_name" id="office_name" value="">
+                                            <select class="selection2 area-selection validate required" name="areas">
+                                                <option value="" disabled selected hidden></option>
+                                                <?php
+                                                    echo $htmlAreaOption;
+                                                ?>
+                                            </select>
                                         </div>
                                     </div>
                                 </div>
+
                                 <div class="formRow">
                                     <div class="formItem">
-                                        営業所名ふりがな
+                                        医療機関のがんの種類
                                         <span class="label01 require_text">必須</span>
                                     </div>
                                     <div class="formTxt">
                                         <div class="formIn50">
-                                            <input type="text" class="form-control validate " name="office_name_kana" id="office_name_kana" value="">
+                                            <select class="selection2 cancer-selection validate required" name="cancers" multiple="multiple">
+                                                <?php
+                                                    echo $htmlCancerOption;
+                                                ?>
+                                            </select>
                                         </div>
                                     </div>
                                 </div>
-                                <div class="formRow">
-                                    <div class="formItem">
-                                        郵便番号
-                                        <span class="label01 require_text">必須</span>
-                                    </div>
-                                    <div class="formTxt">
-                                        <div class="formIn50">
-                                            <input type="tel" class="form-control validate number required" name="zip" id="zip" value="">
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="formRow">
-                                    <div class="formItem">
-                                        都道府県
-                                        <span class="label01 require_text">必須</span>
-                                    </div>
-                                    <div class="formTxt">
-                                        <div class="formIn50">
-                                        </div>
-                                    </div>
-                                </div>
+
                                 <div class="formRow">
                                     <div class="formItem">
                                         住所
-                                        <span class="label01 require_text">必須</span>
                                     </div>
                                     <div class="formTxt">
                                         <div class="formIn50">
-                                            <input type="text" class="form-control validate required" name="addr" id="addr" value="">
+                                            <input type="text" class="form-control" name="addr" id="addr">
                                         </div>
                                     </div>
                                 </div>
+
                                 <div class="formRow">
                                     <div class="formItem">
                                         電話番号
-                                        <span class="label01 require_text">必須</span>
                                     </div>
                                     <div class="formTxt">
                                         <div class="formIn50">
-                                            <input type="tel" class="form-control validate number required" name="tel" id="tel" value="">
+                                            <input type="text" class="form-control validate tel-text" name="tel" id="tel">
                                         </div>
                                     </div>
                                 </div>
+
                                 <div class="formRow">
                                     <div class="formItem">
-                                        FAX
-                                        <span class="label01 require_text">必須</span>
+                                        公式URL
                                     </div>
                                     <div class="formTxt">
                                         <div class="formIn50">
-                                            <input type="tel" class="form-control validate number required" name="fax" id="fax" value="">
+                                            <input type="text" class="form-control validate url" name="hp_url" id="hp_url">
                                         </div>
                                     </div>
                                 </div>
+
                                 <div class="formRow">
                                     <div class="formItem">
-                                        代表者名
-                                        <span class="label01 require_text">必須</span>
+                                        学会認定施設情報
                                     </div>
                                     <div class="formTxt">
                                         <div class="formIn50">
-                                            <input type="text" class="form-control validate required" name="resp_name" id="resp_name" value="">
+                                            <input type="text" class="form-control" name="social_info" id="social_info">
                                         </div>
                                     </div>
                                 </div>
-                                <div class="formRow" style="display:none;">
-                                    <div class="formItem">
-                                        役職
-                                    </div>
-                                    <div class="formTxt">
-                                        <div class="formIn50">
-                                            <input type="text" class="form-control validate" name="job" id="job" value="">
-                                        </div>
-                                    </div>
-                                </div>
+
                                 <div class="formRow">
                                     <div class="formItem">
-                                        メールアドレス
-                                        <span class="label01 require_text">必須</span>
+                                        がん相談支援センターURL
                                     </div>
                                     <div class="formTxt">
                                         <div class="formIn50">
-                                            <input type="email" class="form-control validate required mail" name="mail" id="mail" value="">
+                                            <input type="text" class="form-control validate url" name="support_url" id="support_url">
                                         </div>
                                     </div>
                                 </div>
+
                                 <div class="formRow">
                                     <div class="formItem">
-                                        パスワード
-                                        <span class="label01 require_text">必須</span>
+                                        患者紹介方法URL
                                     </div>
                                     <div class="formTxt">
                                         <div class="formIn50">
-                                            <input type="password" class="form-control validate password required" name="password" id="password" value="">
+                                            <input type="text" class="form-control validate url" name="introduction_url" id="introduction_url">
                                         </div>
                                     </div>
                                 </div>
+
                                 <div class="formRow">
                                     <div class="formItem">
-                                        紹介企業コード
+                                        カテゴリー
                                     </div>
-                                    <div class="formTxt">
-                                        <div class="formIn50">
-                                            <input type="text" class="form-control validate  " name="s_code" id="s_code" value="">
-                                        </div>
+                                    <div class="form-inline" style="width: 86%">
+                                        <?php
+                                        $html = '<div class="tab-pane" role="tabpanel">';
+                                        $html .= '<div class="result-content-tab">';
+                                        $html .= '<div class="panel-group" id="accordion">';
+                                        $accordionChild = 0;
+                                        foreach ($groupedCategory as $level1 => $category) {
+                                            $accordionChild++;
+                                            $html .= '<div class="panel panel-default">';
+                                            $html .= '<div class="panel-heading collapsed" data-toggle="collapse" data-parent="#accordion" href="#'.$level1.'" aria-expanded="false">';
+                                            $html .= '<p class="panel-title">'.$level1.'<span class="glyphicon arrow glyphicon-chevron-down"></span> </p>';
+                                            $html .= '</div>';
+                                            $html .= '<div id="'.$level1.'" class="panel-collapse collapse" aria-expanded="false" style="height: 0px;">';
+                                            $html .= '<div class="panel-body">';
+                                            $html .= '<div class="tab-pane" role="tabpanel">';
+                                            $html .= '<div class="result-content-tab">';
+                                            $html .= '<div class="panel-group" id="accordion'.$accordionChild.'">';
+                                            foreach ($category as $level2 => $item) {
+                                                $html .= '<div class="panel panel-default">';
+                                                $html .= '<div class="panel-heading collapsed" data-toggle="collapse" data-parent="#accordion'.$accordionChild.'" href="#'.$level2.'" aria-expanded="false">';
+                                                $html .= '<p class="panel-title">'.$level2.'<span class="glyphicon arrow glyphicon-chevron-down"></span> </p>';
+                                                $html .= '</div>';
+                                                $html .= '<div id="'.$level2.'" class="panel-collapse collapse" aria-expanded="false" style="height: 0px;">';
+                                                $html .= '<div class="panel-body">';
+                                                $html .= '<div class="checkbox-content">';
+                                                foreach ($item as $level3 => $item2) {
+                                                    $main = $item2[0] ?? [];
+                                                    $html .= '<div>';
+                                                    $html .= '<label><input type="checkbox" class="form-control" name="categories[]" value="'.($main['id'] ?? '').'">'.($main['level3'] ?? '').'</label>';
+
+                                                    if (!($main['is_whole_cancer'] ?? 1))
+                                                    {
+                                                        $html .= '<label>がんの種類<select class="selection2 cate-cancer-selection" name="cateCancer'.($main['id'] ?? '').'" multiple="multiple">';
+                                                        $html .= '<option value="" disabled selected hidden></option>';
+                                                        $html .= $htmlCancerOption;
+                                                        $html .= '</select></label>';
+                                                    }
+                                                    $html .= '<label>コンテンツ<input type="text" name="cateContent'.($main['id'] ?? '').'" class="form-control"></label>';
+                                                    $html .= '</div>';
+                                                }
+                                                $html .= '</div>';
+                                                $html .= '</div>';
+                                                $html .= '</div>';
+                                                $html .= '</div>';
+                                            }
+
+                                            $html .= '</div>';
+                                            $html .= '</div>';
+                                            $html .= '</div>';
+                                            $html .= '</div>';
+                                            $html .= '</div>';
+                                            $html .= '</div>';
+                                        }
+                                        $html .= '</div>';
+                                        $html .= '</div>';
+                                        $html .= '</div>';
+
+                                        echo $html;
+                                        ?>
                                     </div>
                                 </div>
-                                <div class="formRow" style="display:none">
-                                    <div class="formItem">
-                                        支払い条件
-                                        <span class="label01 require_text">必須</span>
-                                    </div>
-                                    <div class="formTxt">
-                                        <div class="formIn50">
-                                            <input type="text" class="form-control validate " name="payment" id="payment" value="">
-                                        </div>
-                                    </div>
-                                </div>
+
                                 <div class="formRow">
                                     <div class="formItem">
-                                        事業内容
-                                        <span class="label01 require_text">必須</span>
+                                        備考
                                     </div>
                                     <div class="formTxt">
                                         <div class="formIn50">
-                                            <div class="chk_cl">
-                                                <input type="checkbox" name="jigyou" id="jigyou" value="0" class="validate checkboxRequired"><label for="jigyou" class="">倉庫業</label>
-                                            </div>
-                                            <div class="chk_cl">
-                                                <input type="checkbox" name="jigyou" id="jigyou_2" value="1" class="validate checkboxRequired"><label for="jigyou" class="">運送行</label>
-                                            </div>
-                                            <div class="chk_cl">
-                                                <input type="checkbox" name="jigyou" id="jigyou_3" value="2" class="validate checkboxRequired"><label for="jigyou" class="">メーカー</label>
-                                            </div>
-                                            <div class="chk_cl">
-                                                <input type="checkbox" name="jigyou" id="jigyou_4" value="3" class="validate checkboxRequired"><label for="jigyou" class="">その他</label>
-                                            </div>
+                                            <input type="text" class="form-control" name="remarks" id="remarks">
                                         </div>
                                     </div>
                                 </div>
-                                <div class="formRow">
-                                    <div class="formItem">
-                                        トラック保有
-                                        <span class="label01 require_text">必須</span>
-                                    </div>
-                                    <div class="formTxt">
-                                        <div class="formIn50">
-                                            <select class="form-control validate number required" name="truck_num" id="truck_num">
-                                                <option value="">選択して下さい</option>
-                                                <option value="1">あり</option>
-                                                <option value="0">なし</option>
-                                            </select>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="formRow">
-                                    <div class="formItem">
-                                        URL
-                                    </div>
-                                    <div class="formTxt">
-                                        <div class="formIn50">
-                                            <input type="text" class="form-control validate" name="URL" id="URL" value="">
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="formRow">
-                                    <div class="formItem">
-                                        利用プラン
-                                        <span class="label01 require_text">必須</span>
-                                    </div>
-                                    <div class="formTxt">
-                                        <div class="formIn50">
-                                            <select class="form-control validate number required" name="etc2" id="etc2">
-                                                <option value="">選択して下さい</option>
-                                                <option value="0">無料プラン</option>
-                                                <option value="1">有料プラン</option>
-                                            </select>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="formRow">
-                                    <div class="formItem">
-                                        利用開始日
-                                        <span class="label01 require_text">必須</span>
-                                    </div>
-                                    <div class="formTxt">
-                                        <div class="formIn50" style="display: flex; align-items: center;">
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class=" formRow">
-                                    <div class="formItem">
-                                        認証状態
-                                        <span class="label01">必須</span>
-                                    </div>
-                                    <div class="formTxt">
-                                        <div class="formIn50">
-                                            <select class="form-control" name="questionnaire" id="questionnaire">
-                                                <option value="0">未認証</option>
-                                                <option value="1">認証済み</option>
-                                                <option value="99">認証不可</option>
-                                            </select>
-                                        </div>
-                                    </div>
-                                </div>
+
                                 <button type="button" class="btn btn-primary waves-effect w-md waves-light m-b-5 button_input button_form" name='conf' id="conf">確認する</button>
                                 <button type="button" class="btn btn-inverse waves-effect w-md waves-light m-b-5 button_conf button_form" name='return' id="return">戻る</button>
                                 <button type="button" class="btn btn-info waves-effect w-md waves-light m-b-5 button_conf button_form" name='submit' id="submit">登録する</button>
@@ -408,7 +460,17 @@ require_once __DIR__ . '/../required/view_common_include.php';
 <?php require_once __DIR__ . '/../required/foot.php'; ?>
 <!-- Start Personal script -->
 <script src="../assets/admin/js/hospital.js"></script>
+<script>
+    $('#accordion').on('show.bs.collapse', function(e) {
+        $(e.target).prev('.panel-heading').addClass('active');
+        $(e.target).prev('.panel-heading').find('.arrow').removeClass('glyphicon-chevron-down').addClass('glyphicon-chevron-up');
+    });
 
+    $('#accordion').on('hide.bs.collapse', function(e) {
+        $(e.target).prev('.panel-heading').removeClass('active');
+        $(e.target).prev('.panel-heading').find('.arrow').removeClass('glyphicon-chevron-up').addClass('glyphicon-chevron-down');
+    });
+</script>
 
 
 

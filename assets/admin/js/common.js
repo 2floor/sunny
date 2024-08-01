@@ -113,7 +113,7 @@ var ajax_commonNoLoading = {
  * もしくはinput_file_nameに記載しない
  *
  */
-function append_form_prams(method, form_id, input_file_name, now_page_num, get_next_disp_page, page_disp_cnt){
+function append_form_prams(method, form_id, input_file_name, isGetFormData = true){
 
 	//フォーム活性化
 	disp_input();
@@ -124,40 +124,40 @@ function append_form_prams(method, form_id, input_file_name, now_page_num, get_n
 	}
 
 	//フォームの値を&区切りの文字列で取得
-	var query = $form.serialize();
-
-	//フォームの値をObjectで取得
-	var param = $form.serializeArray();
 	var param_array = new Array();
 
+	var fd = new FormData();
 
-	$($form).find('input, select, textarea').each(function(i, elem){
-		param_array[i] = {
+	if (isGetFormData) {
+		$($form).find('input, select, textarea').each(function(i, elem){
+			param_array[i] = {
 				'name' :$(this).attr('name'),
 				'value' :$(this).val(),
+				'type': $(this).attr('type')
 			};
-	});
+		});
 
-	var fd = new FormData();
-	//フォームの値を取得FormDataに設定
-	$.each(param_array, function(i, v) {
-		if(!$('[name='+v.name+']').hasClass('exception')){
-			$type = $('[name='+v.name+']').attr('type');
-			if ($type != 'radio' && $type != 'checkbox') {
-				//text,textarea,select設定
-				fd.append(v.name, v.value)
-			} else if($type == 'radio'){
-				//ラジオボタン設定
-				fd.append(v.name, $('[name='+v.name+']:checked').val())
-			} else if ($type == 'checkbox') {
-				//チェックボックス設定(配列)
-				var area = $('[name='+v.name+']:checked').map(function() {
-					return $(this).val();
-				}).get();
-				fd.append(v.name, area)
+		//フォームの値を取得FormDataに設定
+		$.each(param_array, function(i, v) {
+			var name = v.name || '';
+			var escapedName = name.replace(/[\[\]]/g, '\\$&');
+
+			if (!$('[name="' + escapedName + '"]').hasClass('exception')) {
+				if (v.type != 'radio' && v.type != 'checkbox') {
+					fd.append(name, v.value);
+				} else if (v.type == 'radio') {
+					fd.append(name, $('[name="' + escapedName + '"]:checked').val());
+				} else if (v.type == 'checkbox') {
+					// Xóa các giá trị checkbox trước khi thêm mới
+					$('input[name="' + escapedName + '"]').each(function() {
+						if ($(this).is(':checked')) {
+							fd.append(name + '[]', $(this).val());
+						}
+					});
+				}
 			}
-		}
-	});
+		});
+	}
 
 	//ファイル名取得
 	if(input_file_name != null && input_file_name != undefined){
@@ -191,16 +191,6 @@ function append_form_prams(method, form_id, input_file_name, now_page_num, get_n
 
 	if(search_select != undefined || search_select != null || search_select != ''){
 		fd.append('search_select', JSON.stringify(search_select));
-	}
-
-	if (now_page_num != null && now_page_num != undefined) {
-		fd.append('now_page_num', now_page_num);
-		fd.append('get_next_disp_page', get_next_disp_page);
-		fd.append('page_disp_cnt', page_disp_cnt);
-	} else {
-		fd.append('now_page_num', $('#now_page_num').val());
-		fd.append('get_next_disp_page', $('#page_num').val());
-		fd.append('page_disp_cnt', $('#page_disp_cnt').val());
 	}
 
 	return fd;
@@ -523,7 +513,7 @@ tinymce.init({
  */
 function submit_exec(){
 	// 入力フォームの値取得
-	var form_data = append_form_prams('entry', 'frm', input_file_name, null, null, null);
+	var form_data = append_form_prams('entry', 'frm', input_file_name);
 
 	// ajax呼び出し
 	call_ajax_change_state(form_data);
@@ -534,7 +524,7 @@ function submit_exec(){
  */
 function edit_exection(){
 	// 入力フォームの値取得
-	var form_data = append_form_prams('edit', 'frm', input_file_name, null, null, null);
+	var form_data = append_form_prams('edit', 'frm', input_file_name);
 
 	// ajax呼び出し
 	call_ajax_change_state(form_data);
@@ -564,7 +554,7 @@ function common_func_bind(){
 			if (isConfirm) {
 				// 呼び出し前method定義
 				var form_data = append_form_prams('delete', 'frm',
-						null, null, null, null);
+						null, false);
 				form_data.append('id', id);
 
 				// ajax呼び出し
@@ -594,7 +584,7 @@ function common_func_bind(){
 				if (isConfirm) {
 					// 呼び出し前method定義
 					var form_data = append_form_prams('recovery', 'frm',
-							null, null, null, null);
+							null, false);
 					form_data.append('id', id);
 
 					// ajax呼び出し
@@ -624,7 +614,7 @@ function common_func_bind(){
 			if (isConfirm) {
 				// 呼び出し前method定義
 				var form_data = append_form_prams('release', 'frm',
-						null, null, null, null);
+						null, false);
 				form_data.append('id', id);
 
 				// ajax呼び出し
@@ -654,7 +644,7 @@ function common_func_bind(){
 			if (isConfirm) {
 				// 呼び出し前method定義
 				var form_data = append_form_prams('private', 'frm',
-						null, null, null, null);
+						null, false);
 				form_data.append('id', id);
 
 				// ajax呼び出し
@@ -682,20 +672,15 @@ function call_ajax_change_state (post_data){
 				text : result.data.msg,
 				type : "success",
 				confirmButtonText : "Close",
-				closeOnConfirm : false
+				closeOnConfirm : true
 			}, function() {
-				// 次に表示するページ番号
-				var get_next_disp_page = $('#now_page_num').val();
-				var now_page_num = $('#now_page_num').val();
-				var page_disp_cnt = $('#page_disp_cnt').val();
 				if(result.data.method == 'entry' || result.data.method == 'update' ){
 					$('#page_type').val('list_show');
 					disp_ctrl(page_title)
 				}
 				// 再読み込み
-				var form_data =  append_form_prams('init', 'frm', input_file_name,  now_page_num, get_next_disp_page, page_disp_cnt);
-				call_ajax_pager(form_data);
-				swal.close();
+				var form_data = append_form_prams('init', 'frm', null, false);
+				call_ajax_init(form_data, currentPage, true);
 			});
 		} else if (!result.data.status && result.data.error_code == 0) {
 			// PHP返却エラー
@@ -1507,8 +1492,7 @@ function searchMain(){
 			};
 			history.pushState(state, null, null); //URL変更
 
-			$('#now_page_num').val(now_page_num_ini);$('#page_num').val(page_num_ini);$('#page_disp_cnt').val(page_disp_cnt_ini);
-			var form_data =  append_form_prams('init', 'frm', input_file_name,  now_page_num_ini, page_num_ini, page_disp_cnt_ini);
+			var form_data =  append_form_prams('init', 'frm', input_file_name);
 			form_data.append('search_select', JSON.stringify(search_select));
 			call_ajax_init(form_data);
 		});
@@ -1516,8 +1500,7 @@ function searchMain(){
 		$('.changeOrder').off('.changeOrder');
 		$('.changeOrder').on('click.changeOrder', function(){
 			orderIconDispChange($(this), function(){
-				$('#now_page_num').val(now_page_num_ini);$('#page_num').val(page_num_ini);$('#page_disp_cnt').val(page_disp_cnt_ini);
-				var form_data =  append_form_prams('init', 'frm', input_file_name,  now_page_num_ini, page_num_ini, page_disp_cnt_ini);
+				var form_data =  append_form_prams('init', 'frm', input_file_name);
 				form_data.append('search_select', JSON.stringify(search_select));
 				call_ajax_init(form_data);
 			});
