@@ -47,6 +47,8 @@ class Category extends BaseModel
 
     public function hospitals(): BelongsToMany
     {
-        return $this->belongsToMany(Hospital::class, 't_category_hospital')->withPivot('cancer_id', 'content1', 'content2');
+        return $this->belongsToMany(Hospital::class, 't_category_hospital')
+            ->withPivot('cancer_id', 'content1', 'content2')
+            ->withTimestamps();
     }
 }

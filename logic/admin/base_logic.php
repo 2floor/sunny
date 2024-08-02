@@ -50,8 +50,8 @@ abstract class base_logic {
         return $this->getQueryWithoutGlobalScopes()->find($id);
     }
 
-    public function updateData($params){
-        return $this->model::update($params);
+    public function updateData($id, $params){
+        return $this->getQueryWithoutGlobalScopes()->where('id', $id)->update($params);
     }
 
     public function recoveryData($id) {

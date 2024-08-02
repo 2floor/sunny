@@ -114,7 +114,6 @@ var ajax_commonNoLoading = {
  *
  */
 function append_form_prams(method, form_id, input_file_name, isGetFormData = true){
-
 	//フォーム活性化
 	disp_input();
 
@@ -131,16 +130,17 @@ function append_form_prams(method, form_id, input_file_name, isGetFormData = tru
 	if (isGetFormData) {
 		$($form).find('input, select, textarea').each(function(i, elem){
 			param_array[i] = {
-				'name' :$(this).attr('name'),
+				'name' : $(this).attr('name'),
 				'value' :$(this).val(),
-				'type': $(this).attr('type')
+				'type': $(this).attr('type'),
+				'checked': $(this).prop('checked')
 			};
 		});
 
 		//フォームの値を取得FormDataに設定
 		$.each(param_array, function(i, v) {
 			var name = v.name || '';
-			var escapedName = name.replace(/[\[\]]/g, '\\$&');
+			var escapedName = name.replace(/\[\]/g, '');
 
 			if (!$('[name="' + escapedName + '"]').hasClass('exception')) {
 				if (v.type != 'radio' && v.type != 'checkbox') {
@@ -148,12 +148,9 @@ function append_form_prams(method, form_id, input_file_name, isGetFormData = tru
 				} else if (v.type == 'radio') {
 					fd.append(name, $('[name="' + escapedName + '"]:checked').val());
 				} else if (v.type == 'checkbox') {
-					// Xóa các giá trị checkbox trước khi thêm mới
-					$('input[name="' + escapedName + '"]').each(function() {
-						if ($(this).is(':checked')) {
-							fd.append(name + '[]', $(this).val());
-						}
-					});
+					if (v.checked) {
+						fd.append(escapedName + '[]', v.value);
+					}
 				}
 			}
 		});

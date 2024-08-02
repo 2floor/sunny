@@ -31,7 +31,7 @@ foreach ($areas as $area) {
             height: 32px;
         }
 
-        .cancer-selection, .area-selection {
+        .area-selection {
             width: 100%;
         }
 
@@ -56,7 +56,7 @@ foreach ($areas as $area) {
             color: #4C3333;
         }
         .panel-collapse {
-            transition: height 1s ease;
+            transition: height 1s ease-in-out;
         }
         .arrow {
             float: right;
@@ -240,6 +240,7 @@ foreach ($areas as $area) {
                     <div class="row">
                         <div class="col-xs-12" id="frm">
                             <div class="contentBox">
+                                <input type="hidden" class="form-control" name="id" id="id">
                                 <div class="formRow">
                                     <div class="formItem">
                                         病院ID
@@ -270,7 +271,7 @@ foreach ($areas as $area) {
                                     </div>
                                     <div class="formTxt">
                                         <div class="formIn50">
-                                            <select class="selection2 area-selection validate required" name="areas">
+                                            <select class="selection2 area-selection validate required" name="area_id">
                                                 <option value="" disabled selected hidden></option>
                                                 <?php
                                                     echo $htmlAreaOption;
@@ -287,11 +288,32 @@ foreach ($areas as $area) {
                                     </div>
                                     <div class="formTxt">
                                         <div class="formIn50">
-                                            <select class="selection2 cancer-selection validate required" name="cancers" multiple="multiple">
-                                                <?php
-                                                    echo $htmlCancerOption;
-                                                ?>
-                                            </select>
+                                            <div class="panel-group" id="accordionCancer">
+                                                <div class="panel panel-default">
+                                                    <div class="panel-heading" data-toggle="collapse" data-parent="#accordionCancer" href="#cancerCollapseOne">
+                                                        <h4 class="panel-title">
+                                                            がんの種類のリスト
+                                                            <span class="glyphicon glyphicon-chevron-down arrow"></span>
+                                                        </h4>
+                                                    </div>
+                                                    <div id="cancerCollapseOne" class="panel-collapse collapse">
+                                                        <div class="panel-body">
+                                                            <div class="checkbox-content validate required">
+                                                               <?php
+                                                                    foreach ($cancers as $cancer) {
+                                                                        $html = '<div>';
+                                                                        $html .= '<label><input style="width: unset" type="checkbox" class="form-control" name="cancers[]" value="'.($cancer['id'] ?? '').'">'.($cancer['cancer_type'] ?? '').'</label>';
+                                                                        $html .= '<label style="flex-direction: column; gap:5px">学会認定施設情報<input type="text" name="socialInfoCancer'.($cancer['id'] ?? '').'" class="form-control"></label>';
+                                                                        $html .= '</div>';
+
+                                                                        echo $html;
+                                                                    }
+                                                               ?>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
@@ -461,12 +483,12 @@ foreach ($areas as $area) {
 <!-- Start Personal script -->
 <script src="../assets/admin/js/hospital.js"></script>
 <script>
-    $('#accordion').on('show.bs.collapse', function(e) {
+    $('#accordion, #accordionCancer').on('show.bs.collapse', function(e) {
         $(e.target).prev('.panel-heading').addClass('active');
         $(e.target).prev('.panel-heading').find('.arrow').removeClass('glyphicon-chevron-down').addClass('glyphicon-chevron-up');
     });
 
-    $('#accordion').on('hide.bs.collapse', function(e) {
+    $('#accordion, #accordionCancer').on('hide.bs.collapse', function(e) {
         $(e.target).prev('.panel-heading').removeClass('active');
         $(e.target).prev('.panel-heading').find('.arrow').removeClass('glyphicon-chevron-up').addClass('glyphicon-chevron-down');
     });

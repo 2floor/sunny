@@ -249,6 +249,20 @@ function validate_all(flg){
 		}
 	});
 
+	//custom
+	$('.checkbox-content').each(function(){
+		if($(this).hasClass('validate required')){
+			$(this).removeClass('error-form');
+			$(this).closest('.panel-group').find('.error').remove();
+			if ($(this).find('input[type=checkbox]:checked').length ===0)
+			{
+				$(this).closest('.panel-group').append('<span class="error">必須項目です</span>');
+				$(this).addClass('error-form');
+			}
+		}
+	});
+	//custom
+
 	//エラーの際の処理
 	if($(".error-form").size() > 0){
 		$('html,body').animate({ scrollTop: $(".error-form").offset().top-250 });

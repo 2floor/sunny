@@ -150,46 +150,56 @@ class hospital_ct
      */
     private function entry_new_data($post)
     {
-        // 登録ロジック呼び出し
-        $this->hospital_logic->entry_new_data(array(
-            $post['name'],
-            $post['name_kana'],
-            $post['office_name'],
-            $post['office_name_kana'],
-            $post['zip'],
-            $post['pref'],
-            $post['addr'],
-            $post['tel'],
-            $post['tel2'],
-            $post['fax'],
-            $post['resp_name'],
-            $post['job'],
-            $post['mail'],
-            $post['password'],
-            $post['payment'],
-            $post['jigyou'],
-            $post['truck_num'],
-            $post['url'],
-            $post['questionnaire'],
-            $post['etc1'],
-            $post['etc2'],
-            $post['s_code'],
-            $post['etc4'],
-            $post['etc5'],
-            $post['etc6'],
-            $post['etc7'],
-            $post['etc8'],
-            '0',
-        ));
+        if (!$post['hospital_code'] || $this->hospital_logic->get_hospital_by_code($post['hospital_code'])) {
+            return [
+                'status' => false,
+                'error_code' => 0,
+                'error_msg' => '病院IDが存在する',
+                'return_url' => MEDICALNET_ADMIN_PATH . 'hospital.php'
+            ];
+        }
+
+        $hospitalData = [
+            'hospital_code' => $post['hospital_code'],
+            'hospital_name' => $post['hospital_name'] ?? null,
+            'area_id' => $post['area_id'] ?? null,
+            'addr' => $post['addr'] ?? null,
+            'tel' => $post['tel'] ?? null,
+            'hp_url' => $post['hp_url'] ?? null,
+            'social_info' => $post['social_info'] ?? null,
+            'support_url' => $post['support_url'] ?? null,
+            'introduction_url' => $post['introduction_url'] ?? null,
+            'remarks' => $post['remarks'] ?? null,
+        ];
+
+        $hospital = $this->hospital_logic->createData($hospitalData);
+
+        if (!$hospital) {
+            return [
+                'status' => false,
+                'error_code' => 0,
+                'error_msg' => '病院データの作成に失敗しました',
+                'return_url' => MEDICALNET_ADMIN_PATH . 'hospital.php'
+            ];
+        }
+
+        foreach (($post['cancers'] ?? []) as $cancerId) {
+            $this->hospital_logic->attach_cancer_data($hospital, $cancerId, ['social_info' => $post['socialInfoCancer' . $cancerId] ?? null]);
+        }
+
+        foreach (($post['categories'] ?? []) as $categoryId) {
+            $this->hospital_logic->attach_category_data($hospital, $categoryId, [
+                'cancer_id' => $post['cateCancer' . $categoryId] ?? null,
+                'content1' => $post['cateContent' . $categoryId] ?? null,
+            ]);
+        }
 
         // AJAX返却用データ成型
-        $data = array(
+        return [
             'status' => true,
             'method' => 'entry',
             'msg' => '登録しました'
-        );
-
-        return $data;
+        ];
     }
 
     /**
@@ -213,11 +223,20 @@ class hospital_ct
             })->toArray();
         }
 
-        $cancers = $this->hospital_logic->get_cancer_by_hospital_id($id)?->pluck('id');
+        $cancers = $this->hospital_logic->get_cancer_by_hospital_id($id);
+        if ($cancers) {
+            $cancers = $cancers->map(function($cancer) {
+                return [
+                    'id' => $cancer->id,
+                    'social_info' => $cancer->pivot->social_info,
+                ];
+            })->toArray();
+        }
 
         // AJAX返却用データ成型
         return [
             'status' => true,
+            'id' => $detail['id'] ?? '',
             'hospital_code' => $detail['hospital_code'] ?? '',
             'hospital_name' => $detail['hospital_name'] ?? '',
             'addr' => $detail['addr'] ?? '',
@@ -240,45 +259,71 @@ class hospital_ct
      */
     private function update_detail($post)
     {
-        // 編集ロジック呼び出し
-        $this->hospital_logic->update_detail(array(
-            $post['name'],
-            $post['name_kana'],
-            $post['office_name'],
-            $post['office_name_kana'],
-            $post['zip'],
-            $post['pref'],
-            $post['addr'],
-            $post['tel'],
-            $post['tel2'],
-            $post['fax'],
-            $post['resp_name'],
-            $post['job'],
-            $post['mail'],
-            $post['payment'],
-            $post['jigyou'],
-            $post['truck_num'],
-            $post['url'],
-            $post['questionnaire'],
-            $post['etc1'],
-            $post['etc2'],
-            $post['s_code'],
-            $post['etc4'],
-            $post['etc5'],
-            $post['etc6'],
-            $post['etc7'],
-            $post['etc8'],
-            $post['edit_del_id']
-        ));
+        if (!$post['hospital_code']) {
+            return [
+                'status' => false,
+                'error_code' => 0,
+                'error_msg' => '病院コードが見つからない',
+                'return_url' => MEDICALNET_ADMIN_PATH . 'hospital.php'
+            ];
+        }
 
-        // AJAX返却用データ成型
-        $data = array(
+        $existHospital = $this->hospital_logic->get_hospital_by_code($post['hospital_code']);
+        if ($existHospital->id != ($post['id'] ?? null)) {
+            return [
+                'status' => false,
+                'error_code' => 0,
+                'error_msg' => '病院IDが存在する',
+                'return_url' => MEDICALNET_ADMIN_PATH . 'hospital.php'
+            ];
+        }
+
+        $hospitalData = [
+            'hospital_code' => $post['hospital_code'],
+            'hospital_name' => $post['hospital_name'] ?? null,
+            'area_id' => $post['area_id'] ?? null,
+            'addr' => $post['addr'] ?? null,
+            'tel' => $post['tel'] ?? null,
+            'hp_url' => $post['hp_url'] ?? null,
+            'social_info' => $post['social_info'] ?? null,
+            'support_url' => $post['support_url'] ?? null,
+            'introduction_url' => $post['introduction_url'] ?? null,
+            'remarks' => $post['remarks'] ?? null,
+        ];
+
+        if (!$this->hospital_logic->updateData(($post['id'] ?? null), $hospitalData)) {
+            return [
+                'status' => false,
+                'error_code' => 0,
+                'error_msg' => 'データ更新に失敗しました',
+                'return_url' => MEDICALNET_ADMIN_PATH . 'hospital.php'
+            ];
+        }
+
+        $hospital = $this->hospital_logic->getDetailById(($post['id'] ?? null));
+
+        $syncCancers = [];
+        foreach (($post['cancers'] ?? []) as $cancerId) {
+            $syncCancers[$cancerId] = ['social_info' => $post['socialInfoCancer' . $cancerId] ?? null];
+        }
+
+        $this->hospital_logic->sync_cancer_data($hospital, $syncCancers);
+
+        $syncCategories = [];
+        foreach (($post['categories'] ?? []) as $categoryId) {
+            $syncCategories[$categoryId] = [
+                'cancer_id' => $post['cateCancer' . $categoryId] ?? null,
+                'content1' => $post['cateContent' . $categoryId] ?? null,
+            ];
+        }
+
+        $this->hospital_logic->sync_category_data($hospital, $syncCategories);
+
+        return [
             'status' => true,
             'method' => 'update',
             'msg' => '変更しました'
-        );
-
-        return $data;
+        ];
     }
 
     /**

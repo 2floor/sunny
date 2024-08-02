@@ -127,4 +127,29 @@ class hospital_logic extends base_logic
     {
         return $this->getQueryWithoutGlobalScopes()->where('id', $id)->first()?->cancers;
     }
+
+    public function get_hospital_by_code($code)
+    {
+        return $this->getQueryWithoutGlobalScopes()->where('hospital_code', $code)->first();
+    }
+
+    public function attach_cancer_data($hospital, $cancerId, $extraData = [])
+    {
+        return $hospital->cancers()->attach($cancerId, $extraData);
+    }
+
+    public function attach_category_data($hospital, $categoryId, $extraData = [])
+    {
+        return $hospital->categories()->attach($categoryId, $extraData);
+    }
+
+    public function sync_cancer_data($hospital, $data)
+    {
+        return $hospital->cancers()->sync($data);
+    }
+
+    public function sync_category_data($hospital, $data)
+    {
+        return $hospital->categories()->sync($data);
+    }
 }

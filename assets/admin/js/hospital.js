@@ -240,17 +240,22 @@ $(function() {
             // 正常終了
             if (result.data.status) {
                 //更新情報自動入力
-                console.log(result.data);
                 insert_edit_data(result.data, 'frm', null);
+                $('.area-selection').val(null).trigger('change');
+                $('.cate-cancer-selection').val(null).trigger('change');
 
                 let areaId = result.data.area.id || null;
                 $('.area-selection').val(areaId).trigger('change');
 
                 let cancers = result.data.cancers || [];
-                $('.cancer-selection').val(cancers).trigger('change');
+                $.each(cancers, function (index, value) {
+                    let checkbox = $('input[name="cancers[]"][value="'+value.id+'"]');
+                    checkbox.prop('checked', true);
+                    checkbox.parent().parent().find('input[name="socialInfoCancer'+value.id+'"]').val(value.social_info);
+                });
+
 
                 let categories = result.data.categories || [];
-
                 $.each(categories, function(index, value) {
                     let checkbox = $('input[name="categories[]"][value="'+value.id+'"]');
                     checkbox.prop('checked', true);
@@ -306,11 +311,6 @@ function disp_change_func(type){
 function fd_add(fd){
     return fd;
 }
-
-$('.cancer-selection').select2({
-    placeholder: '病院でがんの種類を選択して',
-    allowClear: true
-});
 
 $('.cate-cancer-selection').select2({
     placeholder: 'がんの種類',
