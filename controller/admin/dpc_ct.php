@@ -1,5 +1,7 @@
 <?php
-session_start();
+if (!isset($_SESSION)) {
+    session_start();
+}
 
 require_once __DIR__ . '/../../logic/common/common_logic.php';
 require_once __DIR__ . '/../../logic/admin/dpc_logic.php';
@@ -71,8 +73,6 @@ class dpc_ct
     /**
      * コントローラー
      * 各処理の振り分けをmethodの文字列により行う
-     *
-     * @param unknown $post
      */
     public function main_control($post)
     {
@@ -105,6 +105,17 @@ class dpc_ct
         return $data;
     }
 
+    public function init_entry_new()
+    {
+        $cancers = $this->dpc_logic->get_cancer_list()->toArray();
+        $hospitals = $this->dpc_logic->get_hospital_list()->toArray();
+
+        return [
+            'cancers' => $cancers,
+            'hospitals' => $hospitals,
+        ];
+    }
+
     /**
      * 初期処理(一覧HTML生成)
      */
@@ -131,51 +142,62 @@ class dpc_ct
     private function entry_new_data($post)
     {
         // 登録ロジック呼び出し
-        $this->hospital_logic->entry_new_data(array(
-            $post['name'],
-            $post['name_kana'],
-            $post['office_name'],
-            $post['office_name_kana'],
-            $post['zip'],
-            $post['pref'],
-            $post['addr'],
-            $post['tel'],
-            $post['tel2'],
-            $post['fax'],
-            $post['resp_name'],
-            $post['job'],
-            $post['mail'],
-            $post['password'],
-            $post['payment'],
-            $post['jigyou'],
-            $post['truck_num'],
-            $post['url'],
-            $post['questionnaire'],
-            $post['etc1'],
-            $post['etc2'],
-            $post['s_code'],
-            $post['etc4'],
-            $post['etc5'],
-            $post['etc6'],
-            $post['etc7'],
-            $post['etc8'],
-            '0',
-        ));
+        $hospital = $this->dpc_logic->get_hospital_by_id($post['hospital_id'] ?? null);
+        $cancer = $this->dpc_logic->get_cancer_by_id($post['cancer_id'] ?? null);
+
+        if (!$post['year']) {
+            return [
+                'status' => false,
+                'error_code' => 0,
+                'error_msg' => '無効な年',
+                'return_url' => MEDICALNET_ADMIN_PATH . 'dpc.php'
+            ];
+        }
+
+        if (!$hospital || !$cancer) {
+            return [
+                'status' => false,
+                'error_code' => 0,
+                'error_msg' => '病院情報やがん情報が見つからない',
+                'return_url' => MEDICALNET_ADMIN_PATH . 'dpc.php'
+            ];
+        }
+
+        $dpcData = [
+            'cancer_id' => $cancer->id,
+            'hospital_id' => $hospital->id,
+            'area_id' => $hospital->area_id,
+            'cancer_name_dpc' => $cancer->cancer_type_dpc,
+            'hospital_name' => $hospital->hospital_name,
+            'year' => $post['year'],
+            'n_dpc' => ($post['n_dpc'] && $post['n_dpc'] != '') ? $post['n_dpc'] : null,
+            'rank_nation_dpc' => ($post['rank_nation_dpc'] && $post['rank_nation_dpc'] != '') ? $post['rank_nation_dpc'] : null,
+            'rank_area_dpc' => ($post['rank_area_dpc'] && $post['rank_area_dpc'] != '') ? $post['rank_area_dpc'] : null,
+            'rank_pref_dpc' => ($post['rank_pref_dpc'] && $post['rank_pref_dpc'] != '') ? $post['rank_pref_dpc'] : null,
+        ];
+
+        $dpc = $this->dpc_logic->createData($dpcData);
+
+        if (!$dpc) {
+            return [
+                'status' => false,
+                'error_code' => 0,
+                'error_msg' => 'DPCデータの作成に失敗しました',
+                'return_url' => MEDICALNET_ADMIN_PATH . 'dpc.php'
+            ];
+        }
 
         // AJAX返却用データ成型
-        $data = array(
+        return [
             'status' => true,
             'method' => 'entry',
             'msg' => '登録しました'
-        );
-
-        return $data;
+        ];
     }
 
     /**
      * 編集初期処理(詳細情報取得)
      *
-     * @param unknown $admin_user_id
      */
     private function get_detail($member_id)
     {
@@ -221,7 +243,6 @@ class dpc_ct
     /**
      * 編集更新処理
      *
-     * @param unknown $admin_user_id
      */
     private function update_detail($post)
     {
@@ -269,12 +290,11 @@ class dpc_ct
     /**
      * 有効化処理
      *
-     * @param unknown $id
      */
     public function recovery($id)
     {
         // 更新ロジック呼び出し
-        $this->hospital_logic->recoveryl_func($id);
+        $this->dpc_logic->recoveryData($id);
 
         // AJAX返却用データ成型
         $data = array(
@@ -287,13 +307,11 @@ class dpc_ct
 
     /**
      * 削除処理
-     *
-     * @param unknown $post
      */
     public function delete($id)
     {
         // 更新ロジック呼び出し
-        $this->hospital_logic->del_func($id);
+        $this->dpc_logic->deleteData($id);
 
         // AJAX返却用データ成型
         $data = array(
@@ -306,13 +324,11 @@ class dpc_ct
 
     /**
      * 非公開処理
-     *
-     * @param unknown $id
      */
     public function private_func($id)
     {
         // 更新ロジック呼び出し
-        $this->hospital_logic->private_func($id);
+        $this->dpc_logic->privateData($id);
 
         // AJAX返却用データ成型
         $data = array(
@@ -325,13 +341,11 @@ class dpc_ct
 
     /**
      * 公開処理
-     *
-     * @param unknown $post
      */
     public function release($id)
     {
         // 更新ロジック呼び出し
-        $this->hospital_logic->release_func($id);
+        $this->dpc_logic->releaseData($id);
 
         // AJAX返却用データ成型
         $data = array(

@@ -117,6 +117,8 @@ abstract class base_logic {
                     $query->orderBy($table.'.'.$order['target'], $order['order']);
                 }
             }
+        } else {
+            $query->orderBy("$table.created_at", 'DESC');
         }
 
         return $query;

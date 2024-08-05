@@ -74,8 +74,6 @@ class hospital_ct
     /**
      * コントローラー
      * 各処理の振り分けをmethodの文字列により行う
-     *
-     * @param unknown $post
      */
     public function main_control($post)
     {

@@ -132,6 +132,12 @@ function realtime_validate(check_elem, err_flg){
 						re_bool = disp_error_msg(check_elem, '有効なURLを入力してください');
 					}
 				}
+
+				if(check_elem.hasClass('integer')){
+					if(check_elem.val() && !isInteger(check_elem.val())){
+						re_bool = disp_error_msg(check_elem, '数値のみ入力可能です');
+					}
+				}
 			}
 		}else if(type == "file"){
 
@@ -281,6 +287,10 @@ function error_reset(){
 		check_elem.parents(".error-form").find('.error').remove();
 	});
 
+}
+
+function isInteger(value) {
+	return !isNaN(value) && parseInt(value, 10) == value;
 }
 
 
