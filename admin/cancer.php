@@ -54,6 +54,11 @@ require_once __DIR__ . '/../required/view_common_include.php';
                                 </div>
                             </div>
                         </div>
+<!--                        <div class="searchBoxRight">-->
+<!--                            <div class="serachW110">-->
+<!--                                <button type="button" name="new_entry" class="btn btn-primary waves-effect w-md waves-light m-b-5">新規登録</button>-->
+<!--                            </div>-->
+<!--                        </div>-->
                     </div>
                 </div>
                 <!-- searchBox -->
@@ -135,252 +140,59 @@ require_once __DIR__ . '/../required/view_common_include.php';
                     <div class="row">
                         <div class="col-xs-12" id="frm">
                             <div class="contentBox">
+                                <input type="hidden" class="form-control" name="id" id="id">
                                 <div class="formRow">
                                     <div class="formItem">
-                                        法人名
+                                        がん種名
                                         <span class="label01 require_text">必須</span>
                                     </div>
                                     <div class="formTxt">
                                         <div class="formIn50">
-                                            <input type="text" class="form-control validate required" name="name" id="name" value="">
+                                            <input type="text" class="form-control validate required" name="cancer_type" id="cancer_type" value="">
                                         </div>
                                     </div>
                                 </div>
+
                                 <div class="formRow">
                                     <div class="formItem">
-                                        法人名ふりがな
-                                        <span class="label01 require_text">必須</span>
+                                        がん種(DPC)
                                     </div>
                                     <div class="formTxt">
                                         <div class="formIn50">
-                                            <input type="text" class="form-control validate required" name="name_kana" id="name_kana" value="">
+                                            <input type="text" class="form-control" name="cancer_type_dpc" id="cancer_type_dpc" value="">
                                         </div>
                                     </div>
                                 </div>
+
                                 <div class="formRow">
                                     <div class="formItem">
-                                        営業所名
-                                        <span class="label01 require_text">必須</span>
+                                        がん種(Stage)
                                     </div>
                                     <div class="formTxt">
                                         <div class="formIn50">
-                                            <input type="text" class="form-control validate " name="office_name" id="office_name" value="">
+                                            <input type="text" class="form-control" name="cancer_type_stage" id="cancer_type_stage" value="">
                                         </div>
                                     </div>
                                 </div>
+
                                 <div class="formRow">
                                     <div class="formItem">
-                                        営業所名ふりがな
-                                        <span class="label01 require_text">必須</span>
+                                        がん種(Surv)
                                     </div>
                                     <div class="formTxt">
                                         <div class="formIn50">
-                                            <input type="text" class="form-control validate " name="office_name_kana" id="office_name_kana" value="">
+                                            <input type="text" class="form-control" name="cancer_type_surv" id="cancer_type_surv" value="">
                                         </div>
                                     </div>
                                 </div>
+
                                 <div class="formRow">
                                     <div class="formItem">
-                                        郵便番号
-                                        <span class="label01 require_text">必須</span>
+                                        表示順
                                     </div>
                                     <div class="formTxt">
                                         <div class="formIn50">
-                                            <input type="tel" class="form-control validate number required" name="zip" id="zip" value="">
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="formRow">
-                                    <div class="formItem">
-                                        都道府県
-                                        <span class="label01 require_text">必須</span>
-                                    </div>
-                                    <div class="formTxt">
-                                        <div class="formIn50">
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="formRow">
-                                    <div class="formItem">
-                                        住所
-                                        <span class="label01 require_text">必須</span>
-                                    </div>
-                                    <div class="formTxt">
-                                        <div class="formIn50">
-                                            <input type="text" class="form-control validate required" name="addr" id="addr" value="">
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="formRow">
-                                    <div class="formItem">
-                                        電話番号
-                                        <span class="label01 require_text">必須</span>
-                                    </div>
-                                    <div class="formTxt">
-                                        <div class="formIn50">
-                                            <input type="tel" class="form-control validate number required" name="tel" id="tel" value="">
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="formRow">
-                                    <div class="formItem">
-                                        FAX
-                                        <span class="label01 require_text">必須</span>
-                                    </div>
-                                    <div class="formTxt">
-                                        <div class="formIn50">
-                                            <input type="tel" class="form-control validate number required" name="fax" id="fax" value="">
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="formRow">
-                                    <div class="formItem">
-                                        代表者名
-                                        <span class="label01 require_text">必須</span>
-                                    </div>
-                                    <div class="formTxt">
-                                        <div class="formIn50">
-                                            <input type="text" class="form-control validate required" name="resp_name" id="resp_name" value="">
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="formRow" style="display:none;">
-                                    <div class="formItem">
-                                        役職
-                                    </div>
-                                    <div class="formTxt">
-                                        <div class="formIn50">
-                                            <input type="text" class="form-control validate" name="job" id="job" value="">
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="formRow">
-                                    <div class="formItem">
-                                        メールアドレス
-                                        <span class="label01 require_text">必須</span>
-                                    </div>
-                                    <div class="formTxt">
-                                        <div class="formIn50">
-                                            <input type="email" class="form-control validate required mail" name="mail" id="mail" value="">
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="formRow">
-                                    <div class="formItem">
-                                        パスワード
-                                        <span class="label01 require_text">必須</span>
-                                    </div>
-                                    <div class="formTxt">
-                                        <div class="formIn50">
-                                            <input type="password" class="form-control validate password required" name="password" id="password" value="">
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="formRow">
-                                    <div class="formItem">
-                                        紹介企業コード
-                                    </div>
-                                    <div class="formTxt">
-                                        <div class="formIn50">
-                                            <input type="text" class="form-control validate  " name="s_code" id="s_code" value="">
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="formRow" style="display:none">
-                                    <div class="formItem">
-                                        支払い条件
-                                        <span class="label01 require_text">必須</span>
-                                    </div>
-                                    <div class="formTxt">
-                                        <div class="formIn50">
-                                            <input type="text" class="form-control validate " name="payment" id="payment" value="">
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="formRow">
-                                    <div class="formItem">
-                                        事業内容
-                                        <span class="label01 require_text">必須</span>
-                                    </div>
-                                    <div class="formTxt">
-                                        <div class="formIn50">
-                                            <div class="chk_cl">
-                                                <input type="checkbox" name="jigyou" id="jigyou" value="0" class="validate checkboxRequired"><label for="jigyou" class="">倉庫業</label>
-                                            </div>
-                                            <div class="chk_cl">
-                                                <input type="checkbox" name="jigyou" id="jigyou_2" value="1" class="validate checkboxRequired"><label for="jigyou" class="">運送行</label>
-                                            </div>
-                                            <div class="chk_cl">
-                                                <input type="checkbox" name="jigyou" id="jigyou_3" value="2" class="validate checkboxRequired"><label for="jigyou" class="">メーカー</label>
-                                            </div>
-                                            <div class="chk_cl">
-                                                <input type="checkbox" name="jigyou" id="jigyou_4" value="3" class="validate checkboxRequired"><label for="jigyou" class="">その他</label>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="formRow">
-                                    <div class="formItem">
-                                        トラック保有
-                                        <span class="label01 require_text">必須</span>
-                                    </div>
-                                    <div class="formTxt">
-                                        <div class="formIn50">
-                                            <select class="form-control validate number required" name="truck_num" id="truck_num">
-                                                <option value="">選択して下さい</option>
-                                                <option value="1">あり</option>
-                                                <option value="0">なし</option>
-                                            </select>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="formRow">
-                                    <div class="formItem">
-                                        URL
-                                    </div>
-                                    <div class="formTxt">
-                                        <div class="formIn50">
-                                            <input type="text" class="form-control validate" name="URL" id="URL" value="">
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="formRow">
-                                    <div class="formItem">
-                                        利用プラン
-                                        <span class="label01 require_text">必須</span>
-                                    </div>
-                                    <div class="formTxt">
-                                        <div class="formIn50">
-                                            <select class="form-control validate number required" name="etc2" id="etc2">
-                                                <option value="">選択して下さい</option>
-                                                <option value="0">無料プラン</option>
-                                                <option value="1">有料プラン</option>
-                                            </select>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="formRow">
-                                    <div class="formItem">
-                                        利用開始日
-                                        <span class="label01 require_text">必須</span>
-                                    </div>
-                                    <div class="formTxt">
-                                        <div class="formIn50" style="display: flex; align-items: center;">
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class=" formRow">
-                                    <div class="formItem">
-                                        認証状態
-                                        <span class="label01">必須</span>
-                                    </div>
-                                    <div class="formTxt">
-                                        <div class="formIn50">
-                                            <select class="form-control" name="questionnaire" id="questionnaire">
-                                                <option value="0">未認証</option>
-                                                <option value="1">認証済み</option>
-                                                <option value="99">認証不可</option>
-                                            </select>
+                                            <input type="text" class="form-control validate integer" name="order_num" id="order_num" value="">
                                         </div>
                                     </div>
                                 </div>

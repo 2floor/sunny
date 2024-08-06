@@ -10,7 +10,7 @@ $hospitals = $initData['hospitals'] ?? [];
 
 $htmlCancerOption = '';
 foreach ($cancers as $cancer) {
-    $htmlCancerOption .= '<option value="'.$cancer['id'].'">'.$cancer['cancer_type'].'—'.$cancer['cancer_type_dpc'].'</option>';
+    $htmlCancerOption .= '<option value="'.$cancer['id'].'">'.$cancer['cancer_type'].($cancer['cancer_type_dpc'] ? ('—'.$cancer['cancer_type_dpc']): '').'</option>';
 }
 
 $htmlHospitalsOption = '';
@@ -163,6 +163,7 @@ foreach ($hospitals as $hospital) {
                     <div class="row">
                         <div class="col-xs-12" id="frm">
                             <div class="contentBox">
+                                <input type="hidden" class="form-control" name="id" id="id">
                                 <div class="formRow">
                                     <div class="formItem">
                                         病院

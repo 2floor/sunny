@@ -174,102 +174,66 @@ class cancer_ct
 
     /**
      * 編集初期処理(詳細情報取得)
-     *
-     * @param unknown $admin_user_id
      */
-    private function get_detail($member_id)
+    private function get_detail($id)
     {
-        $reult_detail = $this->hospital_logic->get_detail($member_id);
+        $detail = $this->cancer_logic->getDetailById($id);
 
         // AJAX返却用データ成型
-        $data = array(
+        return [
             'status' => true,
-            'name' => $reult_detail['name'],
-            'name_kana' => $reult_detail['name_kana'],
-            'office_name' => $reult_detail['office_name'],
-            'office_name_kana' => $reult_detail['office_name_kana'],
-            'zip' => $reult_detail['zip'],
-            'pref' => $reult_detail['pref'],
-            'addr' => $reult_detail['addr'],
-            'tel' => $reult_detail['tel'],
-            'tel2' => $reult_detail['tel2'],
-            'fax' => $reult_detail['fax'],
-            'resp_name' => $reult_detail['resp_name'],
-            'job' => $reult_detail['job'],
-            'mail' => $reult_detail['mail'],
-
-            'payment' => $reult_detail['payment'],
-            'jigyou' => $reult_detail['jigyou'],
-            'truck_num' => $reult_detail['truck_num'],
-            'url' => $reult_detail['url'],
-            'questionnaire' => $reult_detail['questionnaire'],
-            'etc1' => $reult_detail['etc1'],
-            'etc2' => $reult_detail['etc2'],
-            'etc3' => $reult_detail['s_code'],
-            'etc4' => $reult_detail['etc4'],
-            'etc5' => $reult_detail['etc5'],
-            'etc6' => $reult_detail['etc6'],
-            'etc7' => $reult_detail['etc7'],
-            'etc8' => $reult_detail['etc8'],
-
-        );
-
-        return $data;
+            'id' => $detail['id'] ?? '',
+            'cancer_type' => $detail['cancer_type'] ?? '',
+            'cancer_type_dpc' => $detail['cancer_type_dpc'] ?? '',
+            'cancer_type_stage' => $detail['cancer_type_stage'] ?? '',
+            'cancer_type_surv' => $detail['cancer_type_surv'] ?? '',
+            'order_num' => $detail['order_num'] ?? '',
+        ];
     }
 
 
     /**
      * 編集更新処理
-     *
-     * @param unknown $admin_user_id
      */
     private function update_detail($post)
     {
-        // 編集ロジック呼び出し
-        $this->hospital_logic->update_detail(array(
-            $post['name'],
-            $post['name_kana'],
-            $post['office_name'],
-            $post['office_name_kana'],
-            $post['zip'],
-            $post['pref'],
-            $post['addr'],
-            $post['tel'],
-            $post['tel2'],
-            $post['fax'],
-            $post['resp_name'],
-            $post['job'],
-            $post['mail'],
-            $post['payment'],
-            $post['jigyou'],
-            $post['truck_num'],
-            $post['url'],
-            $post['questionnaire'],
-            $post['etc1'],
-            $post['etc2'],
-            $post['s_code'],
-            $post['etc4'],
-            $post['etc5'],
-            $post['etc6'],
-            $post['etc7'],
-            $post['etc8'],
-            $post['edit_del_id']
-        ));
+        $cancer = $this->cancer_logic->getDetailById($post['id']);
+        if (!$cancer) {
+            return [
+                'status' => false,
+                'error_code' => 0,
+                'error_msg' => 'がんのデータは存在しない',
+                'return_url' => MEDICALNET_ADMIN_PATH . 'cancer.php'
+            ];
+        }
+
+        $cancerData = [
+            'cancer_type' => $post['cancer_type'] ?? null,
+            'cancer_type_dpc' => $post['cancer_type_dpc'] ?? null,
+            'cancer_type_stage' => $post['cancer_type_stage'] ?? null,
+            'cancer_type_surv' => $post['cancer_type_surv'] ?? null,
+            'order_num' => $post['order_num'] ?? null,
+        ];
+
+        if (!$this->cancer_logic->updateData($cancer->id, $cancerData)) {
+            return [
+                'status' => false,
+                'error_code' => 0,
+                'error_msg' => 'データ更新に失敗しました',
+                'return_url' => MEDICALNET_ADMIN_PATH . 'cancer.php'
+            ];
+        }
 
         // AJAX返却用データ成型
-        $data = array(
+        return [
             'status' => true,
             'method' => 'update',
             'msg' => '変更しました'
-        );
-
-        return $data;
+        ];
     }
 
     /**
      * 有効化処理
-     *
-     * @param unknown $id
      */
     public function recovery($id)
     {
@@ -287,8 +251,6 @@ class cancer_ct
 
     /**
      * 削除処理
-     *
-     * @param unknown $post
      */
     public function delete($id)
     {
@@ -306,8 +268,6 @@ class cancer_ct
 
     /**
      * 非公開処理
-     *
-     * @param unknown $id
      */
     public function private_func($id)
     {
@@ -325,8 +285,6 @@ class cancer_ct
 
     /**
      * 公開処理
-     *
-     * @param unknown $post
      */
     public function release($id)
     {

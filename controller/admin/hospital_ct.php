@@ -276,6 +276,9 @@ class hospital_ct
             ];
         }
 
+        $hospital = $this->hospital_logic->getDetailById(($post['id'] ?? null));
+        $oldAreaId = $hospital->area_id;
+
         $hospitalData = [
             'hospital_code' => $post['hospital_code'],
             'hospital_name' => $post['hospital_name'] ?? null,
@@ -298,7 +301,9 @@ class hospital_ct
             ];
         }
 
-        $hospital = $this->hospital_logic->getDetailById(($post['id'] ?? null));
+        if ($oldAreaId != $post['area_id']) {
+            $hospital->dpcs()->update(['area_id' => $post['area_id']]);
+        }
 
         $syncCancers = [];
         foreach (($post['cancers'] ?? []) as $cancerId) {

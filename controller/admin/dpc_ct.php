@@ -170,7 +170,7 @@ class dpc_ct
             'cancer_name_dpc' => $cancer->cancer_type_dpc,
             'hospital_name' => $hospital->hospital_name,
             'year' => $post['year'],
-            'n_dpc' => ($post['n_dpc'] && $post['n_dpc'] != '') ? $post['n_dpc'] : null,
+            'n_dpc' => ($post['n_dpc'] != '') ? $post['n_dpc'] : null,
             'rank_nation_dpc' => ($post['rank_nation_dpc'] && $post['rank_nation_dpc'] != '') ? $post['rank_nation_dpc'] : null,
             'rank_area_dpc' => ($post['rank_area_dpc'] && $post['rank_area_dpc'] != '') ? $post['rank_area_dpc'] : null,
             'rank_pref_dpc' => ($post['rank_pref_dpc'] && $post['rank_pref_dpc'] != '') ? $post['rank_pref_dpc'] : null,
@@ -199,46 +199,23 @@ class dpc_ct
      * 編集初期処理(詳細情報取得)
      *
      */
-    private function get_detail($member_id)
+    private function get_detail($id)
     {
-        $reult_detail = $this->hospital_logic->get_detail($member_id);
+        $detail = $this->dpc_logic->getDetailById($id)->load(['cancer','hospital']);
 
         // AJAX返却用データ成型
-        $data = array(
+        return [
             'status' => true,
-            'name' => $reult_detail['name'],
-            'name_kana' => $reult_detail['name_kana'],
-            'office_name' => $reult_detail['office_name'],
-            'office_name_kana' => $reult_detail['office_name_kana'],
-            'zip' => $reult_detail['zip'],
-            'pref' => $reult_detail['pref'],
-            'addr' => $reult_detail['addr'],
-            'tel' => $reult_detail['tel'],
-            'tel2' => $reult_detail['tel2'],
-            'fax' => $reult_detail['fax'],
-            'resp_name' => $reult_detail['resp_name'],
-            'job' => $reult_detail['job'],
-            'mail' => $reult_detail['mail'],
-
-            'payment' => $reult_detail['payment'],
-            'jigyou' => $reult_detail['jigyou'],
-            'truck_num' => $reult_detail['truck_num'],
-            'url' => $reult_detail['url'],
-            'questionnaire' => $reult_detail['questionnaire'],
-            'etc1' => $reult_detail['etc1'],
-            'etc2' => $reult_detail['etc2'],
-            'etc3' => $reult_detail['s_code'],
-            'etc4' => $reult_detail['etc4'],
-            'etc5' => $reult_detail['etc5'],
-            'etc6' => $reult_detail['etc6'],
-            'etc7' => $reult_detail['etc7'],
-            'etc8' => $reult_detail['etc8'],
-
-        );
-
-        return $data;
+            'id' => $detail['id'] ?? '',
+            'year' => $detail['year'] ?? '',
+            'n_dpc' => $detail['n_dpc'] ?? '',
+            'rank_nation_dpc' => $detail['rank_nation_dpc'] ?? '',
+            'rank_area_dpc' => $detail['rank_area_dpc'] ?? '',
+            'rank_pref_dpc' => $detail['rank_pref_dpc'] ?? '',
+            'hospital' => $detail->hospital ?? [],
+            'cancer' => $detail->cancer ?? []
+        ];
     }
-
 
     /**
      * 編集更新処理
@@ -247,44 +224,65 @@ class dpc_ct
     private function update_detail($post)
     {
         // 編集ロジック呼び出し
-        $this->hospital_logic->update_detail(array(
-            $post['name'],
-            $post['name_kana'],
-            $post['office_name'],
-            $post['office_name_kana'],
-            $post['zip'],
-            $post['pref'],
-            $post['addr'],
-            $post['tel'],
-            $post['tel2'],
-            $post['fax'],
-            $post['resp_name'],
-            $post['job'],
-            $post['mail'],
-            $post['payment'],
-            $post['jigyou'],
-            $post['truck_num'],
-            $post['url'],
-            $post['questionnaire'],
-            $post['etc1'],
-            $post['etc2'],
-            $post['s_code'],
-            $post['etc4'],
-            $post['etc5'],
-            $post['etc6'],
-            $post['etc7'],
-            $post['etc8'],
-            $post['edit_del_id']
-        ));
+        $dpc = $this->dpc_logic->getDetailById($post['id']);
+        if (!$dpc) {
+            return [
+                'status' => false,
+                'error_code' => 0,
+                'error_msg' => 'DPC データが存在しません',
+                'return_url' => MEDICALNET_ADMIN_PATH . 'dpc.php'
+            ];
+        }
+
+        if (!$post['year']) {
+            return [
+                'status' => false,
+                'error_code' => 0,
+                'error_msg' => '無効な年',
+                'return_url' => MEDICALNET_ADMIN_PATH . 'dpc.php'
+            ];
+        }
+
+        $hospital = $this->dpc_logic->get_hospital_by_id($post['hospital_id'] ?? null);
+        $cancer = $this->dpc_logic->get_cancer_by_id($post['cancer_id'] ?? null);
+
+        if (!$hospital || !$cancer) {
+            return [
+                'status' => false,
+                'error_code' => 0,
+                'error_msg' => '病院情報やがん情報が見つからない',
+                'return_url' => MEDICALNET_ADMIN_PATH . 'dpc.php'
+            ];
+        }
+
+        $dpcData = [
+            'hospital_id' => $hospital->id,
+            'cancer_id' => $cancer->id,
+            'area_id' => $hospital->area_id,
+            'cancer_name_dpc' => $cancer->cancer_type_dpc,
+            'hospital_name' => $hospital->hospital_name,
+            'year' => $post['year'],
+            'n_dpc' => ($post['n_dpc'] != '') ? $post['n_dpc'] : null,
+            'rank_nation_dpc' => ($post['rank_nation_dpc'] && $post['rank_nation_dpc'] != '') ? $post['rank_nation_dpc'] : null,
+            'rank_area_dpc' => ($post['rank_area_dpc'] && $post['rank_area_dpc'] != '') ? $post['rank_area_dpc'] : null,
+            'rank_pref_dpc' => ($post['rank_pref_dpc'] && $post['rank_pref_dpc'] != '') ? $post['rank_pref_dpc'] : null,
+        ];
+
+        if (!$this->dpc_logic->updateData($dpc->id, $dpcData)) {
+            return [
+                'status' => false,
+                'error_code' => 0,
+                'error_msg' => 'データ更新に失敗しました',
+                'return_url' => MEDICALNET_ADMIN_PATH . 'dpc.php'
+            ];
+        }
 
         // AJAX返却用データ成型
-        $data = array(
+        return [
             'status' => true,
             'method' => 'update',
             'msg' => '変更しました'
-        );
-
-        return $data;
+        ];
     }
 
     /**

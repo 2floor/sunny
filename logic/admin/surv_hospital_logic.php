@@ -2,6 +2,8 @@
 
 require_once __DIR__ . '/../../logic/admin/base_logic.php';
 
+use App\Models\Cancer;
+use App\Models\Hospital;
 use App\Models\SurvHospital;
 use Carbon\Carbon;
 
@@ -106,5 +108,25 @@ class surv_hospital_logic extends base_logic
             "list_html" => $return_html,
             'all_cnt' => $all_cnt
         );
+    }
+
+    public function get_cancer_list()
+    {
+        return Cancer::select(['id', 'cancer_type', 'cancer_type_surv'])->orderBy('order_num')->get();
+    }
+
+    public function get_hospital_list()
+    {
+        return Hospital::select(['id', 'hospital_code', 'hospital_name'])->orderBy('created_at', 'desc')->get();
+    }
+
+    public function get_hospital_by_id($id)
+    {
+        return Hospital::find($id);
+    }
+
+    public function get_cancer_by_id($id)
+    {
+        return Cancer::find($id);
     }
 }

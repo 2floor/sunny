@@ -1,12 +1,37 @@
 <?php
 session_start();
 require_once __DIR__ . '/../required/view_common_include.php';
+require_once __DIR__ . '/../controller/admin/surv_hospital_ct.php';
+
+$surv_hospital_ct = new surv_hospital_ct();
+$initData = $surv_hospital_ct->init_entry_new();
+$cancers = $initData['cancers'] ?? [];
+$hospitals = $initData['hospitals'] ?? [];
+
+$htmlCancerOption = '';
+foreach ($cancers as $cancer) {
+    $htmlCancerOption .= '<option value="'.$cancer['id'].'">'.$cancer['cancer_type'].($cancer['cancer_type_surv'] ? ('—'.$cancer['cancer_type_surv']): '').'</option>';
+}
+
+$htmlHospitalsOption = '';
+foreach ($hospitals as $hospital) {
+    $htmlHospitalsOption .= '<option value="'.$hospital['id'].'">'.$hospital['hospital_code'].'—'.$hospital['hospital_name'].'</option>';
+}
 ?>
 <!DOCTYPE html>
 <html>
 
 <head>
     <?php require_once __DIR__ . '/../required/html_head.php'; ?>
+    <style>
+        .select2-container .select2-selection--single {
+            height: 32px;
+        }
+
+        .hospital-selection, .cancer-selection {
+            width: 100%;
+        }
+    </style>
 </head>
 
 <body class="fixed-left">
@@ -54,6 +79,11 @@ require_once __DIR__ . '/../required/view_common_include.php';
                                 </div>
                             </div>
                         </div>
+<!--                        <div class="searchBoxRight">-->
+<!--                            <div class="serachW110">-->
+<!--                                <button type="button" name="new_entry" class="btn btn-primary waves-effect w-md waves-light m-b-5">新規登録</button>-->
+<!--                            </div>-->
+<!--                        </div>-->
                     </div>
                 </div>
                 <!-- searchBox -->
@@ -93,7 +123,7 @@ require_once __DIR__ . '/../required/view_common_include.php';
                                                 <th>ID</th>
                                                 <th>年度</th>
                                                 <th>医療機関名</th>
-                                                <th>がん種(Stage)</th>
+                                                <th>がん種(Surv)</th>
                                                 <th>総数</th>
                                                 <th>生存率係数</th>
                                                 <th>作成日時</th>
@@ -135,255 +165,505 @@ require_once __DIR__ . '/../required/view_common_include.php';
                     <div class="row">
                         <div class="col-xs-12" id="frm">
                             <div class="contentBox">
+                                <input type="hidden" class="form-control" name="id" id="id">
                                 <div class="formRow">
                                     <div class="formItem">
-                                        法人名
+                                        病院
                                         <span class="label01 require_text">必須</span>
                                     </div>
                                     <div class="formTxt">
                                         <div class="formIn50">
-                                            <input type="text" class="form-control validate required" name="name" id="name" value="">
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="formRow">
-                                    <div class="formItem">
-                                        法人名ふりがな
-                                        <span class="label01 require_text">必須</span>
-                                    </div>
-                                    <div class="formTxt">
-                                        <div class="formIn50">
-                                            <input type="text" class="form-control validate required" name="name_kana" id="name_kana" value="">
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="formRow">
-                                    <div class="formItem">
-                                        営業所名
-                                        <span class="label01 require_text">必須</span>
-                                    </div>
-                                    <div class="formTxt">
-                                        <div class="formIn50">
-                                            <input type="text" class="form-control validate " name="office_name" id="office_name" value="">
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="formRow">
-                                    <div class="formItem">
-                                        営業所名ふりがな
-                                        <span class="label01 require_text">必須</span>
-                                    </div>
-                                    <div class="formTxt">
-                                        <div class="formIn50">
-                                            <input type="text" class="form-control validate " name="office_name_kana" id="office_name_kana" value="">
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="formRow">
-                                    <div class="formItem">
-                                        郵便番号
-                                        <span class="label01 require_text">必須</span>
-                                    </div>
-                                    <div class="formTxt">
-                                        <div class="formIn50">
-                                            <input type="tel" class="form-control validate number required" name="zip" id="zip" value="">
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="formRow">
-                                    <div class="formItem">
-                                        都道府県
-                                        <span class="label01 require_text">必須</span>
-                                    </div>
-                                    <div class="formTxt">
-                                        <div class="formIn50">
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="formRow">
-                                    <div class="formItem">
-                                        住所
-                                        <span class="label01 require_text">必須</span>
-                                    </div>
-                                    <div class="formTxt">
-                                        <div class="formIn50">
-                                            <input type="text" class="form-control validate required" name="addr" id="addr" value="">
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="formRow">
-                                    <div class="formItem">
-                                        電話番号
-                                        <span class="label01 require_text">必須</span>
-                                    </div>
-                                    <div class="formTxt">
-                                        <div class="formIn50">
-                                            <input type="tel" class="form-control validate number required" name="tel" id="tel" value="">
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="formRow">
-                                    <div class="formItem">
-                                        FAX
-                                        <span class="label01 require_text">必須</span>
-                                    </div>
-                                    <div class="formTxt">
-                                        <div class="formIn50">
-                                            <input type="tel" class="form-control validate number required" name="fax" id="fax" value="">
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="formRow">
-                                    <div class="formItem">
-                                        代表者名
-                                        <span class="label01 require_text">必須</span>
-                                    </div>
-                                    <div class="formTxt">
-                                        <div class="formIn50">
-                                            <input type="text" class="form-control validate required" name="resp_name" id="resp_name" value="">
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="formRow" style="display:none;">
-                                    <div class="formItem">
-                                        役職
-                                    </div>
-                                    <div class="formTxt">
-                                        <div class="formIn50">
-                                            <input type="text" class="form-control validate" name="job" id="job" value="">
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="formRow">
-                                    <div class="formItem">
-                                        メールアドレス
-                                        <span class="label01 require_text">必須</span>
-                                    </div>
-                                    <div class="formTxt">
-                                        <div class="formIn50">
-                                            <input type="email" class="form-control validate required mail" name="mail" id="mail" value="">
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="formRow">
-                                    <div class="formItem">
-                                        パスワード
-                                        <span class="label01 require_text">必須</span>
-                                    </div>
-                                    <div class="formTxt">
-                                        <div class="formIn50">
-                                            <input type="password" class="form-control validate password required" name="password" id="password" value="">
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="formRow">
-                                    <div class="formItem">
-                                        紹介企業コード
-                                    </div>
-                                    <div class="formTxt">
-                                        <div class="formIn50">
-                                            <input type="text" class="form-control validate  " name="s_code" id="s_code" value="">
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="formRow" style="display:none">
-                                    <div class="formItem">
-                                        支払い条件
-                                        <span class="label01 require_text">必須</span>
-                                    </div>
-                                    <div class="formTxt">
-                                        <div class="formIn50">
-                                            <input type="text" class="form-control validate " name="payment" id="payment" value="">
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="formRow">
-                                    <div class="formItem">
-                                        事業内容
-                                        <span class="label01 require_text">必須</span>
-                                    </div>
-                                    <div class="formTxt">
-                                        <div class="formIn50">
-                                            <div class="chk_cl">
-                                                <input type="checkbox" name="jigyou" id="jigyou" value="0" class="validate checkboxRequired"><label for="jigyou" class="">倉庫業</label>
-                                            </div>
-                                            <div class="chk_cl">
-                                                <input type="checkbox" name="jigyou" id="jigyou_2" value="1" class="validate checkboxRequired"><label for="jigyou" class="">運送行</label>
-                                            </div>
-                                            <div class="chk_cl">
-                                                <input type="checkbox" name="jigyou" id="jigyou_3" value="2" class="validate checkboxRequired"><label for="jigyou" class="">メーカー</label>
-                                            </div>
-                                            <div class="chk_cl">
-                                                <input type="checkbox" name="jigyou" id="jigyou_4" value="3" class="validate checkboxRequired"><label for="jigyou" class="">その他</label>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="formRow">
-                                    <div class="formItem">
-                                        トラック保有
-                                        <span class="label01 require_text">必須</span>
-                                    </div>
-                                    <div class="formTxt">
-                                        <div class="formIn50">
-                                            <select class="form-control validate number required" name="truck_num" id="truck_num">
-                                                <option value="">選択して下さい</option>
-                                                <option value="1">あり</option>
-                                                <option value="0">なし</option>
+                                            <select class="selection2 hospital-selection validate required" name="hospital_id">
+                                                <option value="" disabled selected hidden></option>
+                                                <?php
+                                                echo $htmlHospitalsOption;
+                                                ?>
                                             </select>
                                         </div>
                                     </div>
                                 </div>
+
                                 <div class="formRow">
                                     <div class="formItem">
-                                        URL
-                                    </div>
-                                    <div class="formTxt">
-                                        <div class="formIn50">
-                                            <input type="text" class="form-control validate" name="URL" id="URL" value="">
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="formRow">
-                                    <div class="formItem">
-                                        利用プラン
+                                        がんの種類
                                         <span class="label01 require_text">必須</span>
                                     </div>
                                     <div class="formTxt">
                                         <div class="formIn50">
-                                            <select class="form-control validate number required" name="etc2" id="etc2">
-                                                <option value="">選択して下さい</option>
-                                                <option value="0">無料プラン</option>
-                                                <option value="1">有料プラン</option>
+                                            <select class="selection2 cancer-selection validate required" name="cancer_id">
+                                                <option value="" disabled selected hidden></option>
+                                                <?php
+                                                echo $htmlCancerOption;
+                                                ?>
                                             </select>
                                         </div>
                                     </div>
                                 </div>
+
                                 <div class="formRow">
                                     <div class="formItem">
-                                        利用開始日
+                                        年度
                                         <span class="label01 require_text">必須</span>
                                     </div>
                                     <div class="formTxt">
-                                        <div class="formIn50" style="display: flex; align-items: center;">
+                                        <div class="formIn50">
+                                            <input type="text" class="form-control validate required integer" name="year" id="year" value="">
                                         </div>
                                     </div>
                                 </div>
-                                <div class=" formRow">
+
+                                <div class="formRow">
                                     <div class="formItem">
-                                        認証状態
-                                        <span class="label01">必須</span>
+                                        合計
                                     </div>
                                     <div class="formTxt">
                                         <div class="formIn50">
-                                            <select class="form-control" name="questionnaire" id="questionnaire">
-                                                <option value="0">未認証</option>
-                                                <option value="1">認証済み</option>
-                                                <option value="99">認証不可</option>
-                                            </select>
+                                            <input type="text" class="form-control validate integer" name="total_num" id="total_num" value="">
                                         </div>
                                     </div>
                                 </div>
+
+                                <div class="formRow">
+                                    <div class="formItem">
+                                        ステージI対象者数
+                                    </div>
+                                    <div class="formTxt">
+                                        <div class="formIn50">
+                                            <input type="text" class="form-control validate integer" name="stage_target1" id="stage_target1" value="">
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="formRow">
+                                    <div class="formItem">
+                                        ステージII対象者数
+                                    </div>
+                                    <div class="formTxt">
+                                        <div class="formIn50">
+                                            <input type="text" class="form-control validate integer" name="stage_target2" id="stage_target2" value="">
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="formRow">
+                                    <div class="formItem">
+                                        ステージIII対象者数
+                                    </div>
+                                    <div class="formTxt">
+                                        <div class="formIn50">
+                                            <input type="text" class="form-control validate integer" name="stage_target3" id="stage_target3" value="">
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="formRow">
+                                    <div class="formItem">
+                                        ステージIV対象者数
+                                    </div>
+                                    <div class="formTxt">
+                                        <div class="formIn50">
+                                            <input type="text" class="form-control validate integer" name="stage_target4" id="stage_target4" value="">
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="formRow">
+                                    <div class="formItem">
+                                        生存率係数
+                                    </div>
+                                    <div class="formTxt">
+                                        <div class="formIn50">
+                                            <input type="text" class="form-control validate number" name="survival_rate" id="survival_rate" value="">
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="formRow">
+                                    <div class="formItem">
+                                        調整済み生存率係数
+                                    </div>
+                                    <div class="formTxt">
+                                        <div class="formIn50">
+                                            <input type="text" class="form-control validate number" name="adjustment_survival_rate" id="adjustment_survival_rate" value="">
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="formRow">
+                                    <div class="formItem">
+                                        ステージI5年生存率
+                                    </div>
+                                    <div class="formTxt">
+                                        <div class="formIn50">
+                                            <input type="text" class="form-control validate number" name="stage_survival_rate1" id="stage_survival_rate1" value="">
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="formRow">
+                                    <div class="formItem">
+                                        ステージII5年生存率
+                                    </div>
+                                    <div class="formTxt">
+                                        <div class="formIn50">
+                                            <input type="text" class="form-control validate number" name="stage_survival_rate2" id="stage_survival_rate2" value="">
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="formRow">
+                                    <div class="formItem">
+                                        ステージIII5年生存率
+                                    </div>
+                                    <div class="formTxt">
+                                        <div class="formIn50">
+                                            <input type="text" class="form-control validate number" name="stage_survival_rate3" id="stage_survival_rate3" value="">
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="formRow">
+                                    <div class="formItem">
+                                        ステージIV5年生存率
+                                    </div>
+                                    <div class="formTxt">
+                                        <div class="formIn50">
+                                            <input type="text" class="form-control validate number" name="stage_survival_rate4" id="stage_survival_rate4" value="">
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="formRow">
+                                    <div class="formItem">
+                                        全国順位(全段階の患者数)
+                                    </div>
+                                    <div class="formTxt">
+                                        <div class="formIn50">
+                                            <input type="text" class="form-control validate integer" name="total_stage_total_taget" id="total_stage_total_taget" value="">
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="formRow">
+                                    <div class="formItem">
+                                        地方順位(全段階の患者数)
+                                    </div>
+                                    <div class="formTxt">
+                                        <div class="formIn50">
+                                            <input type="text" class="form-control validate integer" name="local_stage_total_taget" id="local_stage_total_taget" value="">
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="formRow">
+                                    <div class="formItem">
+                                        都道府県順位(全段階の患者数)
+                                    </div>
+                                    <div class="formTxt">
+                                        <div class="formIn50">
+                                            <input type="text" class="form-control validate integer" name="pref_stage_total_taget" id="pref_stage_total_taget" value="">
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="formRow">
+                                    <div class="formItem">
+                                        全国順位(ステージI対象者数)
+                                    </div>
+                                    <div class="formTxt">
+                                        <div class="formIn50">
+                                            <input type="text" class="form-control validate integer" name="total_stage_taget1" id="total_stage_taget1" value="">
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="formRow">
+                                    <div class="formItem">
+                                        地方順位(ステージI対象者数)
+                                    </div>
+                                    <div class="formTxt">
+                                        <div class="formIn50">
+                                            <input type="text" class="form-control validate integer" name="local_stage_taget1" id="local_stage_taget1" value="">
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="formRow">
+                                    <div class="formItem">
+                                        都道府県順位(ステージI対象者数)
+                                    </div>
+                                    <div class="formTxt">
+                                        <div class="formIn50">
+                                            <input type="text" class="form-control validate integer" name="pref_stage_taget1" id="pref_stage_taget1" value="">
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="formRow">
+                                    <div class="formItem">
+                                        全国順位(ステージ2対象者数)
+                                    </div>
+                                    <div class="formTxt">
+                                        <div class="formIn50">
+                                            <input type="text" class="form-control validate integer" name="total_stage_taget2" id="total_stage_taget2" value="">
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="formRow">
+                                    <div class="formItem">
+                                        地方順位(ステージ2対象者数)
+                                    </div>
+                                    <div class="formTxt">
+                                        <div class="formIn50">
+                                            <input type="text" class="form-control validate integer" name="local_stage_taget2" id="local_stage_taget2" value="">
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="formRow">
+                                    <div class="formItem">
+                                        都道府県順位(ステージ2対象者数)
+                                    </div>
+                                    <div class="formTxt">
+                                        <div class="formIn50">
+                                            <input type="text" class="form-control validate integer" name="pref_stage_taget2" id="pref_stage_taget2" value="">
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="formRow">
+                                    <div class="formItem">
+                                        全国順位(ステージ3対象者数)
+                                    </div>
+                                    <div class="formTxt">
+                                        <div class="formIn50">
+                                            <input type="text" class="form-control validate integer" name="total_stage_taget3" id="total_stage_taget3" value="">
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="formRow">
+                                    <div class="formItem">
+                                        地方順位(ステージ3対象者数)
+                                    </div>
+                                    <div class="formTxt">
+                                        <div class="formIn50">
+                                            <input type="text" class="form-control validate integer" name="local_stage_taget3" id="local_stage_taget3" value="">
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="formRow">
+                                    <div class="formItem">
+                                        都道府県順位(ステージ3対象者数)
+                                    </div>
+                                    <div class="formTxt">
+                                        <div class="formIn50">
+                                            <input type="text" class="form-control validate integer" name="pref_stage_taget3" id="pref_stage_taget3" value="">
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="formRow">
+                                    <div class="formItem">
+                                        全国順位(ステージ4対象者数)
+                                    </div>
+                                    <div class="formTxt">
+                                        <div class="formIn50">
+                                            <input type="text" class="form-control validate integer" name="total_stage_taget4" id="total_stage_taget4" value="">
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="formRow">
+                                    <div class="formItem">
+                                        地方順位(ステージ4対象者数)
+                                    </div>
+                                    <div class="formTxt">
+                                        <div class="formIn50">
+                                            <input type="text" class="form-control validate integer" name="local_stage_taget4" id="local_stage_taget4" value="">
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="formRow">
+                                    <div class="formItem">
+                                        都道府県順位(ステージ4対象者数)
+                                    </div>
+                                    <div class="formTxt">
+                                        <div class="formIn50">
+                                            <input type="text" class="form-control validate integer" name="pref_stage_taget4" id="pref_stage_taget4" value="">
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="formRow">
+                                    <div class="formItem">
+                                        全国順位(総生存率)
+                                    </div>
+                                    <div class="formTxt">
+                                        <div class="formIn50">
+                                            <input type="text" class="form-control validate integer" name="total_survival_rate" id="total_survival_rate" value="">
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="formRow">
+                                    <div class="formItem">
+                                        地方順位(総生存率)
+                                    </div>
+                                    <div class="formTxt">
+                                        <div class="formIn50">
+                                            <input type="text" class="form-control validate integer" name="local_survival_rate" id="local_survival_rate" value="">
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="formRow">
+                                    <div class="formItem">
+                                        都道府県順位(総生存率)
+                                    </div>
+                                    <div class="formTxt">
+                                        <div class="formIn50">
+                                            <input type="text" class="form-control validate integer" name="pref_survival_rate" id="pref_survival_rate" value="">
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="formRow">
+                                    <div class="formItem">
+                                        全国順位(ステージ1合計生存率)
+                                    </div>
+                                    <div class="formTxt">
+                                        <div class="formIn50">
+                                            <input type="text" class="form-control validate integer" name="total_survival_rate1" id="total_survival_rate1" value="">
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="formRow">
+                                    <div class="formItem">
+                                        地方順位(ステージ1合計生存率)
+                                    </div>
+                                    <div class="formTxt">
+                                        <div class="formIn50">
+                                            <input type="text" class="form-control validate integer" name="local_survival_rate1" id="local_survival_rate1" value="">
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="formRow">
+                                    <div class="formItem">
+                                        都道府県順位(ステージ1合計生存率)
+                                    </div>
+                                    <div class="formTxt">
+                                        <div class="formIn50">
+                                            <input type="text" class="form-control validate integer" name="pref_survival_rate1" id="pref_survival_rate1" value="">
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="formRow">
+                                    <div class="formItem">
+                                        全国順位(ステージ2合計生存率)
+                                    </div>
+                                    <div class="formTxt">
+                                        <div class="formIn50">
+                                            <input type="text" class="form-control validate integer" name="total_survival_rate2" id="total_survival_rate2" value="">
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="formRow">
+                                    <div class="formItem">
+                                        地方順位(ステージ2合計生存率)
+                                    </div>
+                                    <div class="formTxt">
+                                        <div class="formIn50">
+                                            <input type="text" class="form-control validate integer" name="local_survival_rate2" id="local_survival_rate2" value="">
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="formRow">
+                                    <div class="formItem">
+                                        都道府県順位(ステージ2合計生存率)
+                                    </div>
+                                    <div class="formTxt">
+                                        <div class="formIn50">
+                                            <input type="text" class="form-control validate integer" name="pref_survival_rate2" id="pref_survival_rate2" value="">
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="formRow">
+                                    <div class="formItem">
+                                        全国順位(ステージ3合計生存率)
+                                    </div>
+                                    <div class="formTxt">
+                                        <div class="formIn50">
+                                            <input type="text" class="form-control validate integer" name="total_survival_rate3" id="total_survival_rate3" value="">
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="formRow">
+                                    <div class="formItem">
+                                        地方順位(ステージ3合計生存率)
+                                    </div>
+                                    <div class="formTxt">
+                                        <div class="formIn50">
+                                            <input type="text" class="form-control validate integer" name="local_survival_rate3" id="local_survival_rate3" value="">
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="formRow">
+                                    <div class="formItem">
+                                        都道府県順位(ステージ3合計生存率)
+                                    </div>
+                                    <div class="formTxt">
+                                        <div class="formIn50">
+                                            <input type="text" class="form-control validate integer" name="pref_survival_rate3" id="pref_survival_rate3" value="">
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="formRow">
+                                    <div class="formItem">
+                                        全国順位(ステージ4合計生存率)
+                                    </div>
+                                    <div class="formTxt">
+                                        <div class="formIn50">
+                                            <input type="text" class="form-control validate integer" name="total_survival_rate4" id="total_survival_rate4" value="">
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="formRow">
+                                    <div class="formItem">
+                                        地方順位(ステージ4合計生存率)
+                                    </div>
+                                    <div class="formTxt">
+                                        <div class="formIn50">
+                                            <input type="text" class="form-control validate integer" name="local_survival_rate4" id="local_survival_rate4" value="">
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="formRow">
+                                    <div class="formItem">
+                                        都道府県順位(ステージ4合計生存率)
+                                    </div>
+                                    <div class="formTxt">
+                                        <div class="formIn50">
+                                            <input type="text" class="form-control validate integer" name="pref_survival_rate4" id="pref_survival_rate4" value="">
+                                        </div>
+                                    </div>
+                                </div>
+
+
                                 <button type="button" class="btn btn-primary waves-effect w-md waves-light m-b-5 button_input button_form" name='conf' id="conf">確認する</button>
                                 <button type="button" class="btn btn-inverse waves-effect w-md waves-light m-b-5 button_conf button_form" name='return' id="return">戻る</button>
                                 <button type="button" class="btn btn-info waves-effect w-md waves-light m-b-5 button_conf button_form" name='submit' id="submit">登録する</button>

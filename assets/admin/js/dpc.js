@@ -248,7 +248,14 @@ $(function() {
             if (result.data.status) {
                 //更新情報自動入力
                 insert_edit_data(result.data, 'frm', null);
+                $('.cancer-selection').val(null).trigger('change');
+                $('.hospital-selection').val(null).trigger('change');
 
+                let cancerId = result.data.cancer.id || null;
+                $('.cancer-selection').val(cancerId).trigger('change');
+
+                let hospitalId = result.data.hospital.id || null;
+                $('.hospital-selection').val(hospitalId).trigger('change');
                 //ロード終了
                 loaded();
 

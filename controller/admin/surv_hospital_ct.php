@@ -105,6 +105,17 @@ class surv_hospital_ct
         return $data;
     }
 
+    public function init_entry_new()
+    {
+        $cancers = $this->surv_hospital_logic->get_cancer_list()->toArray();
+        $hospitals = $this->surv_hospital_logic->get_hospital_list()->toArray();
+
+        return [
+            'cancers' => $cancers,
+            'hospitals' => $hospitals,
+        ];
+    }
+
     /**
      * 初期処理(一覧HTML生成)
      */
@@ -174,102 +185,85 @@ class surv_hospital_ct
 
     /**
      * 編集初期処理(詳細情報取得)
-     *
-     * @param unknown $admin_user_id
      */
-    private function get_detail($member_id)
+    private function get_detail($id)
     {
-        $reult_detail = $this->hospital_logic->get_detail($member_id);
+        $detail = $this->surv_hospital_logic->getDetailById($id)->load(['cancer','hospital']);
 
         // AJAX返却用データ成型
-        $data = array(
+        return array_merge([
             'status' => true,
-            'name' => $reult_detail['name'],
-            'name_kana' => $reult_detail['name_kana'],
-            'office_name' => $reult_detail['office_name'],
-            'office_name_kana' => $reult_detail['office_name_kana'],
-            'zip' => $reult_detail['zip'],
-            'pref' => $reult_detail['pref'],
-            'addr' => $reult_detail['addr'],
-            'tel' => $reult_detail['tel'],
-            'tel2' => $reult_detail['tel2'],
-            'fax' => $reult_detail['fax'],
-            'resp_name' => $reult_detail['resp_name'],
-            'job' => $reult_detail['job'],
-            'mail' => $reult_detail['mail'],
-
-            'payment' => $reult_detail['payment'],
-            'jigyou' => $reult_detail['jigyou'],
-            'truck_num' => $reult_detail['truck_num'],
-            'url' => $reult_detail['url'],
-            'questionnaire' => $reult_detail['questionnaire'],
-            'etc1' => $reult_detail['etc1'],
-            'etc2' => $reult_detail['etc2'],
-            'etc3' => $reult_detail['s_code'],
-            'etc4' => $reult_detail['etc4'],
-            'etc5' => $reult_detail['etc5'],
-            'etc6' => $reult_detail['etc6'],
-            'etc7' => $reult_detail['etc7'],
-            'etc8' => $reult_detail['etc8'],
-
-        );
-
-        return $data;
+            'hospital' => $detail->hospital ?? [],
+            'cancer' => $detail->cancer ?? []
+        ], $detail->toArray());
     }
 
 
     /**
      * 編集更新処理
-     *
-     * @param unknown $admin_user_id
      */
     private function update_detail($post)
     {
         // 編集ロジック呼び出し
-        $this->hospital_logic->update_detail(array(
-            $post['name'],
-            $post['name_kana'],
-            $post['office_name'],
-            $post['office_name_kana'],
-            $post['zip'],
-            $post['pref'],
-            $post['addr'],
-            $post['tel'],
-            $post['tel2'],
-            $post['fax'],
-            $post['resp_name'],
-            $post['job'],
-            $post['mail'],
-            $post['payment'],
-            $post['jigyou'],
-            $post['truck_num'],
-            $post['url'],
-            $post['questionnaire'],
-            $post['etc1'],
-            $post['etc2'],
-            $post['s_code'],
-            $post['etc4'],
-            $post['etc5'],
-            $post['etc6'],
-            $post['etc7'],
-            $post['etc8'],
-            $post['edit_del_id']
-        ));
+        $surv = $this->surv_hospital_logic->getDetailById($post['id']);
+        if (!$surv) {
+            return [
+                'status' => false,
+                'error_code' => 0,
+                'error_msg' => 'SURV データが存在しません',
+                'return_url' => MEDICALNET_ADMIN_PATH . 'surv_hospital.php'
+            ];
+        }
+
+        if (!$post['year']) {
+            return [
+                'status' => false,
+                'error_code' => 0,
+                'error_msg' => '無効な年',
+                'return_url' => MEDICALNET_ADMIN_PATH . 'surv_hospital.php'
+            ];
+        }
+
+        $hospital = $this->surv_hospital_logic->get_hospital_by_id($post['hospital_id'] ?? null);
+        $cancer = $this->surv_hospital_logic->get_cancer_by_id($post['cancer_id'] ?? null);
+
+        if (!$hospital || !$cancer) {
+            return [
+                'status' => false,
+                'error_code' => 0,
+                'error_msg' => '病院情報やがん情報が見つからない',
+                'return_url' => MEDICALNET_ADMIN_PATH . 'surv_hospital.php'
+            ];
+        }
+
+        $updateData = array_map(function ($value) {
+            return ($value == '') ? null : $value;
+        }, $post);
+
+        unset($updateData['id']);
+        unset($updateData['method']);
+        unset($updateData['edit_del_id']);
+        unset($updateData['search_select']);
+
+        if (!$this->surv_hospital_logic->updateData($surv->id, array_merge($updateData, ['area_id' => $hospital->area_id]))) {
+            return [
+                'status' => false,
+                'error_code' => 0,
+                'error_msg' => 'データ更新に失敗しました',
+                'return_url' => MEDICALNET_ADMIN_PATH . 'surv_hospital.php'
+            ];
+        }
 
         // AJAX返却用データ成型
-        $data = array(
+        return [
             'status' => true,
             'method' => 'update',
             'msg' => '変更しました'
-        );
-
-        return $data;
+        ];
     }
 
     /**
      * 有効化処理
-     *
-     * @param unknown $id
      */
     public function recovery($id)
     {
@@ -287,8 +281,6 @@ class surv_hospital_ct
 
     /**
      * 削除処理
-     *
-     * @param unknown $post
      */
     public function delete($id)
     {
@@ -306,8 +298,6 @@ class surv_hospital_ct
 
     /**
      * 非公開処理
-     *
-     * @param unknown $id
      */
     public function private_func($id)
     {
@@ -325,8 +315,6 @@ class surv_hospital_ct
 
     /**
      * 公開処理
-     *
-     * @param unknown $post
      */
     public function release($id)
     {
