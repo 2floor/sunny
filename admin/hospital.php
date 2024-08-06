@@ -303,7 +303,7 @@ foreach ($areas as $area) {
                                                                     foreach ($cancers as $cancer) {
                                                                         $html = '<div>';
                                                                         $html .= '<label><input style="width: unset" type="checkbox" class="form-control" name="cancers[]" value="'.($cancer['id'] ?? '').'">'.($cancer['cancer_type'] ?? '').'</label>';
-                                                                        $html .= '<label style="flex-direction: column; gap:5px">学会認定施設情報<input type="text" name="socialInfoCancer'.($cancer['id'] ?? '').'" class="form-control"></label>';
+//                                                                        $html .= '<label style="flex-direction: column; gap:5px">学会認定施設情報<input type="text" name="socialInfoCancer'.($cancer['id'] ?? '').'" class="form-control"></label>';
                                                                         $html .= '</div>';
 
                                                                         echo $html;
