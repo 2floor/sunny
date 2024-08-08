@@ -54,11 +54,11 @@ require_once __DIR__ . '/../required/view_common_include.php';
                                 </div>
                             </div>
                         </div>
-<!--                        <div class="searchBoxRight">-->
-<!--                            <div class="serachW110">-->
-<!--                                <button type="button" name="new_entry" class="btn btn-primary waves-effect w-md waves-light m-b-5">新規登録</button>-->
-<!--                            </div>-->
-<!--                        </div>-->
+                        <div class="searchBoxRight">
+                            <div class="serachW110">
+                                <button type="button" name="new_entry" class="btn btn-primary waves-effect w-md waves-light m-b-5">新規登録</button>
+                            </div>
+                        </div>
                     </div>
                 </div>
                 <!-- searchBox -->

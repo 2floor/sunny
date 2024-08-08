@@ -131,45 +131,31 @@ class cancer_ct
     private function entry_new_data($post)
     {
         // 登録ロジック呼び出し
-        $this->hospital_logic->entry_new_data(array(
-            $post['name'],
-            $post['name_kana'],
-            $post['office_name'],
-            $post['office_name_kana'],
-            $post['zip'],
-            $post['pref'],
-            $post['addr'],
-            $post['tel'],
-            $post['tel2'],
-            $post['fax'],
-            $post['resp_name'],
-            $post['job'],
-            $post['mail'],
-            $post['password'],
-            $post['payment'],
-            $post['jigyou'],
-            $post['truck_num'],
-            $post['url'],
-            $post['questionnaire'],
-            $post['etc1'],
-            $post['etc2'],
-            $post['s_code'],
-            $post['etc4'],
-            $post['etc5'],
-            $post['etc6'],
-            $post['etc7'],
-            $post['etc8'],
-            '0',
-        ));
+        $cancerData = [
+            'cancer_type' => $post['cancer_type'] ?? null,
+            'cancer_type_dpc' => $post['cancer_type_dpc'] ?? null,
+            'cancer_type_stage' => $post['cancer_type_stage'] ?? null,
+            'cancer_type_surv' => $post['cancer_type_surv'] ?? null,
+            'order_num' => $post['order_num'] ?? null,
+        ];
+
+        $cancer = $this->cancer_logic->createData($cancerData);
+
+        if (!$cancer) {
+            return [
+                'status' => false,
+                'error_code' => 0,
+                'error_msg' => 'がんデータを作成できません',
+                'return_url' => MEDICALNET_ADMIN_PATH . 'cancer.php'
+            ];
+        }
 
         // AJAX返却用データ成型
-        $data = array(
+        return [
             'status' => true,
             'method' => 'entry',
             'msg' => '登録しました'
-        );
-
-        return $data;
+        ];
     }
 
     /**
@@ -238,7 +224,7 @@ class cancer_ct
     public function recovery($id)
     {
         // 更新ロジック呼び出し
-        $this->hospital_logic->recoveryl_func($id);
+        $this->cancer_logic->recoveryData($id);
 
         // AJAX返却用データ成型
         $data = array(
@@ -255,7 +241,7 @@ class cancer_ct
     public function delete($id)
     {
         // 更新ロジック呼び出し
-        $this->hospital_logic->del_func($id);
+        $this->cancer_logic->deleteData($id);
 
         // AJAX返却用データ成型
         $data = array(
@@ -272,7 +258,7 @@ class cancer_ct
     public function private_func($id)
     {
         // 更新ロジック呼び出し
-        $this->hospital_logic->private_func($id);
+        $this->cancer_logic->privateData($id);
 
         // AJAX返却用データ成型
         $data = array(
@@ -289,7 +275,7 @@ class cancer_ct
     public function release($id)
     {
         // 更新ロジック呼び出し
-        $this->hospital_logic->release_func($id);
+        $this->cancer_logic->releaseData($id);
 
         // AJAX返却用データ成型
         $data = array(

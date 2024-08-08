@@ -142,45 +142,53 @@ class surv_hospital_ct
     private function entry_new_data($post)
     {
         // 登録ロジック呼び出し
-        $this->hospital_logic->entry_new_data(array(
-            $post['name'],
-            $post['name_kana'],
-            $post['office_name'],
-            $post['office_name_kana'],
-            $post['zip'],
-            $post['pref'],
-            $post['addr'],
-            $post['tel'],
-            $post['tel2'],
-            $post['fax'],
-            $post['resp_name'],
-            $post['job'],
-            $post['mail'],
-            $post['password'],
-            $post['payment'],
-            $post['jigyou'],
-            $post['truck_num'],
-            $post['url'],
-            $post['questionnaire'],
-            $post['etc1'],
-            $post['etc2'],
-            $post['s_code'],
-            $post['etc4'],
-            $post['etc5'],
-            $post['etc6'],
-            $post['etc7'],
-            $post['etc8'],
-            '0',
-        ));
+        if (!$post['year']) {
+            return [
+                'status' => false,
+                'error_code' => 0,
+                'error_msg' => '無効な年',
+                'return_url' => MEDICALNET_ADMIN_PATH . 'surv_hospital.php'
+            ];
+        }
+
+        $hospital = $this->surv_hospital_logic->get_hospital_by_id($post['hospital_id'] ?? null);
+        $cancer = $this->surv_hospital_logic->get_cancer_by_id($post['cancer_id'] ?? null);
+
+        if (!$hospital || !$cancer) {
+            return [
+                'status' => false,
+                'error_code' => 0,
+                'error_msg' => '病院情報やがん情報が見つからない',
+                'return_url' => MEDICALNET_ADMIN_PATH . 'surv_hospital.php'
+            ];
+        }
+
+        $survData = array_map(function ($value) {
+            return ($value == '') ? null : $value;
+        }, $post);
+
+        unset($survData['id']);
+        unset($survData['method']);
+        unset($survData['edit_del_id']);
+        unset($survData['search_select']);
+
+        $surv = $this->surv_hospital_logic->createData(array_merge($survData, ['area_id' => $hospital->id]));
+
+        if (!$surv) {
+            return [
+                'status' => false,
+                'error_code' => 0,
+                'error_msg' => '生存データを生成できません',
+                'return_url' => MEDICALNET_ADMIN_PATH . 'surv_hospital.php'
+            ];
+        }
 
         // AJAX返却用データ成型
-        $data = array(
+        return [
             'status' => true,
             'method' => 'entry',
             'msg' => '登録しました'
-        );
-
-        return $data;
+        ];
     }
 
     /**
@@ -268,7 +276,7 @@ class surv_hospital_ct
     public function recovery($id)
     {
         // 更新ロジック呼び出し
-        $this->hospital_logic->recoveryl_func($id);
+        $this->surv_hospital_logic->recoveryData($id);
 
         // AJAX返却用データ成型
         $data = array(
@@ -285,7 +293,7 @@ class surv_hospital_ct
     public function delete($id)
     {
         // 更新ロジック呼び出し
-        $this->hospital_logic->del_func($id);
+        $this->surv_hospital_logic->deleteData($id);
 
         // AJAX返却用データ成型
         $data = array(
@@ -302,7 +310,7 @@ class surv_hospital_ct
     public function private_func($id)
     {
         // 更新ロジック呼び出し
-        $this->hospital_logic->private_func($id);
+        $this->surv_hospital_logic->privateData($id);
 
         // AJAX返却用データ成型
         $data = array(
@@ -319,7 +327,7 @@ class surv_hospital_ct
     public function release($id)
     {
         // 更新ロジック呼び出し
-        $this->hospital_logic->release_func($id);
+        $this->surv_hospital_logic->releaseData($id);
 
         // AJAX返却用データ成型
         $data = array(
