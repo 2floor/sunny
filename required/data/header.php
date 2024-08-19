@@ -21,16 +21,16 @@
                         <ul class="pc-nav__lists">
                             <li class="pc-nav__list"><a href="[path]" class="pc-nav__link">ホーム</a></li>
                             <li class="pc-nav__list js-drop"><a href="[path]hospital" class="pc-nav__link pc-nav-drop">病院を探す</a>
-                                <div class="drop js-drop-open" style="width:70%">
-                                    <div class="drop__inner" style="padding-right: 2.5rem;padding-bottom: 2.6875rem;padding-left: 2.5rem;">
+                                <div class="drop js-drop-open" style="max-width:210px;border-radius: 5px;">
+                                    <div class="drop__inner" style="padding-right: 15px;padding-bottom: 20px;padding-left: 15px;">
                                         <div class="drop--red"></div>
-                                        <ul class="drop__lists">
-                                            <li class="drop__list">
+                                        <ul class="drop__lists" style="margin-top: 5px; gap: 5px">
+                                            <li class="drop__list" style="margin-right: 0">
                                                 <a href="[path]hospital/first-search.php" class="drop__link">
                                                     <p class="drop-card__title">初めて知る</p>
                                                 </a>
                                             </li>
-                                            <li class="drop__list">
+                                            <li class="drop__list" style="margin-right: 0">
                                                 <a href="[path]hospital/second-search.php" class="drop__link">
                                                     <p class="drop-card__title">セカンドオピニオンを得る</p>
                                                 </a>
