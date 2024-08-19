@@ -6,7 +6,7 @@
               <img class="u-desktop" src="[path]assets/images/common/header_parts-pc.png" alt="">
             </div> -->
             <div class="header__contents header__contents--top">
-                <a href="[path]" target="_blank" class="header__logo--top js-drawer-open m-b-10">
+                <a href="[path]" target="_blank" class="header__logo--top js-drawer-open">
                     <img src="[path]assets/images/common/logo.png" alt="株式会社デルファイレーザージャパン">
                 </a>
 
@@ -41,9 +41,7 @@
                             </li>
                             <li class="pc-nav__list"><a href="#" class="pc-nav__link">医者を探す</a></li>
                             <li class="pc-nav__list">
-                                <div class="global">
-                                    <a href="[path]logout.php" class="global__header js-accordion">ログアウト</a>
-                                </div>
+                                <a href="[path]logout.php" class="pc-nav__link"><img src="[path]img/icons/logout-icon.png" class="logout_img" alt="logout-icon">ログアウト</a>
                             </li>
                         </ul><!-- ./drawer-nav__lists -->
                     </nav><!-- /.heder-pc__nav -->
@@ -56,9 +54,7 @@
 
     <div class="drawer js-drawer-open">
         <div class="drawer__inner">
-            <div class="drawer__logo">
-                <img src="[path]assets/images/common/logo.png">
-            </div>
+
             <nav class="drawer-nav">
                 <ul class="drawer-nav__lists">
                     <li class="drawer-nav__list"><a href="[path]" class="drawer-nav__link">ホーム</a></li>

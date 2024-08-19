@@ -22,18 +22,25 @@ $pageinfo = $page_init->get_info();
 <?php print $pageinfo->header; ?>
 
 
-<section>
-    <div class="card-container">
-        <h2>がん治療実績データベース</h2>
-        <p></p>
-        <a href="./hospital" class="option red">
-            病院を検索する
-        </a>
-        <a href="#" class="option green">
-            名医を検索する
-        </a>
-    </div>
-</section>
+    <section>
+        <div class="outer-card">
+            <div class="card-container">
+                <h2>がん治療実績データベース</h2>
+                <p></p>
+                <div class="buttons">
+                    <a href="./hospital" class="btn btn-hospital">
+                        <span class="icon"><img src="img/icons/hospital-icon.png" alt="Hospital Icon"></span>
+                        <span class="text">病院を検索する</span>
+                    </a>
+                    <a href="#" class="btn btn-doctor">
+                        <span class="icon"><img src="img/icons/doctor-icon.png" alt="Doctor Icon"></span>
+                        <span class="text">名医を検索する</span>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </section>
+
 </body>
 <?php print $pageinfo->html_foot; ?>
 

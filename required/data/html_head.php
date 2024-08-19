@@ -15,3 +15,8 @@
 <link rel="stylesheet" href="[path]assets/css/styles.css">
 <link href="[path]assets/admin/css/core.css" rel="stylesheet" type="text/css" />
 <link href="[path]assets/admin/css/font-awesome.css" rel="stylesheet" type="text/css" />
+<style>
+    body {
+        background-color: #FFFFFF;
+    }
+</style>

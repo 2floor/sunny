@@ -69,7 +69,6 @@ $no_msg = 'ログインID、もしくは、パスワードが違います。再�
     <div class="page-titles__inner">
         <div class="page-titles__content">
             <p class="page-title">ログイン</p>
-            <span class="page-title--en">Login</span>
         </div>
     </div>
 </div><!-- /.page-titles -->
@@ -78,8 +77,8 @@ $no_msg = 'ログインID、もしくは、パスワードが違います。再�
     <div class="login-container">
         <div class="login-card">
             <div class="login-header">
-                <h1>Sign In</h1>
-                <p>Your Social Campaigns</p>
+                <h1>ログイン</h1>
+                <p>サニーヘルス株式会社</p>
             </div>
             <form method="POST" action="logon.php">
                 <input type="hidden" name="csrf_token" value="<?php echo htmlspecialchars($csrf_token); ?>">
