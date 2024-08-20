@@ -30,12 +30,12 @@ $pageinfo = $page_init->get_info();
             <p></p>
             <div class="button-sub-text">
                 <a href="./first-search.php" class="btn btn-hospital">
-                    <span class="icon"><img src="../img/icons/first-search-icon.png" alt="Hospital Icon"></span>
+                    <span class="icon"><span class="border-icon"><img src="../img/icons/first-search-icon.png" alt="Hospital Icon"></span></span>
                     <span class="text">新規医療機関検索</span>
                 </a>
                 <span class="sub-text">がんの疑いがあり,治療を受ける病院を検索する<br>（確定診断を受けていない方向け）</span>
                 <a href="./second-search.php" class="btn btn-doctor">
-                    <span class="icon"><img src="../img/icons/second-search-icon.png" alt="Doctor Icon"></span>
+                    <span class="icon"><span class="border-icon"><img src="../img/icons/second-search-icon.png" alt="Doctor Icon"></span></span>
                     <span class="text">セカンドオピニオン検索</span>
                 </a>
                 <span class="sub-text">セカンドオピニオンを受ける病院や特殊な治療方法などから病院を検索する<br>（確定診断を受けている方向け）</span>

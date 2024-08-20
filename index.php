@@ -29,11 +29,11 @@ $pageinfo = $page_init->get_info();
                 <p></p>
                 <div class="buttons">
                     <a href="./hospital" class="btn btn-hospital">
-                        <span class="icon"><img src="img/icons/hospital-icon.png" alt="Hospital Icon"></span>
+                        <span class="icon"><span class="border-icon"><img src="img/icons/hospital-icon.png" alt="Hospital Icon"></span></span>
                         <span class="text">病院を検索する</span>
                     </a>
                     <a href="#" class="btn btn-doctor">
-                        <span class="icon"><img src="img/icons/doctor-icon.png" alt="Doctor Icon"></span>
+                        <span class="icon"><span class="border-icon"><img src="img/icons/doctor-icon.png" alt="Doctor Icon"></span></span>
                         <span class="text">名医を検索する</span>
                     </a>
                 </div>

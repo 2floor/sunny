@@ -104,9 +104,20 @@ section {
     border-bottom-left-radius: 50px;
 }
 
+.btn .icon .border-icon {
+    background-color: #FFFFFF;
+    border-radius: 50%;
+    height: 45px;
+    width: 45px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+}
+
 .btn .icon img {
-    max-height: 50px;
-    max-width: 50px;
+    max-height: 32px;
+    max-width: 32px;
 }
 
 .btn .text {
