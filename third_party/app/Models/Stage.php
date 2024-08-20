@@ -41,4 +41,14 @@ class Stage extends BaseModel
     {
         return $this->belongsTo(Area::class, 'area_id');
     }
+
+    public function cancer(): BelongsTo
+    {
+        return $this->belongsTo(Cancer::class, 'cancer_id');
+    }
+
+    public function hospital(): BelongsTo
+    {
+        return $this->belongsTo(Hospital::class, 'hospital_id');
+    }
 }

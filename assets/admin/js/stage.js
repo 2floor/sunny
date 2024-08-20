@@ -15,7 +15,7 @@
 var query = getUrlVars();
 
 //ページタイトル
-var page_title = '年間入院患者数（DPC）';
+var page_title = '年間新規入院患者数（ステージ)';
 
 //画像input用配列
 var input_file_name = {};
@@ -38,28 +38,29 @@ var search_select = {
             tableOrder 	: 2,
             type 		: 'int',
         },
-        'がん種(DPC)' : {
-            search 		 : true,
-            order		 : true,
-            ColName 	 : 'cancer_type_dpc',
-            tableOrder 	 : 3,
-            type 		 : 'text',
-            foreignRelation : 'cancer',
-        },
 
         '医療機関名' : {
             search 		 : true,
             order		 : true,
             ColName 	 : 'hospital_name',
-            tableOrder 	 : 4,
+            tableOrder 	 : 3,
             type 		 : 'text',
             foreignRelation : 'hospital',
         },
 
-        '年間入院患者数' : {
+        'がん種(Stage)' : {
+            search 		 : true,
+            order		 : true,
+            ColName 	 : 'cancer_type_stage',
+            tableOrder 	 : 4,
+            type 		 : 'text',
+            foreignRelation : 'cancer',
+        },
+
+        '合計者数' : {
             search 		 : false,
             order		 : true,
-            ColName 	 : 'n_dpc',
+            ColName 	 : 'total_num_new',
             tableOrder 	 : 5,
             type 		 : 'int',
         },

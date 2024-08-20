@@ -1,16 +1,16 @@
 <?php
 session_start();
 require_once __DIR__ . '/../required/view_common_include.php';
-require_once __DIR__ . '/../controller/admin/dpc_ct.php';
+require_once __DIR__ . '/../controller/admin/stage_ct.php';
 
-$dpc_ct = new dpc_ct();
-$initData = $dpc_ct->init_entry_new();
+$stage_ct = new stage_ct();
+$initData = $stage_ct->init_entry_new();
 $cancers = $initData['cancers'] ?? [];
 $hospitals = $initData['hospitals'] ?? [];
 
 $htmlCancerOption = '';
 foreach ($cancers as $cancer) {
-    $htmlCancerOption .= '<option value="'.$cancer['id'].'">'.$cancer['cancer_type'].($cancer['cancer_type_dpc'] ? ('—'.$cancer['cancer_type_dpc']): '').'</option>';
+    $htmlCancerOption .= '<option value="'.$cancer['id'].'">'.$cancer['cancer_type'].($cancer['cancer_type_stage'] ? ('—'.$cancer['cancer_type_stage']): '').'</option>';
 }
 
 $htmlHospitalsOption = '';
@@ -50,7 +50,7 @@ foreach ($hospitals as $hospital) {
                     <div class="col-xs-12">
                         <h2 class="pageTitle" id="page_title">
                             <i class="fa fa-list" aria-hidden="true"></i>
-                            年間入院患者数（DPC）一覧
+                            年間新規入院患者数（ステージ)一覧
                         </h2>
                     </div>
                 </div>
@@ -79,14 +79,15 @@ foreach ($hospitals as $hospital) {
                                 </div>
                             </div>
                         </div>
-                        <div class="searchBoxRight">
-                            <div class="serachW110">
-                                <button type="button" name="new_entry" class="btn btn-primary waves-effect w-md waves-light m-b-5">新規登録</button>
-                            </div>
-                        </div>
+<!--                        <div class="searchBoxRight">-->
+<!--                            <div class="serachW110">-->
+<!--                                <button type="button" name="new_entry" class="btn btn-primary waves-effect w-md waves-light m-b-5">新規登録</button>-->
+<!--                            </div>-->
+<!--                        </div>-->
                     </div>
                 </div>
                 <!-- searchBox -->
+
                 <!-- pager -->
                 <div class="container">
                     <div class="pagination-info">
@@ -121,9 +122,9 @@ foreach ($hospitals as $hospital) {
                                                 <th>No</th>
                                                 <th>ID</th>
                                                 <th>年度</th>
-                                                <th>がん種(DPC)</th>
                                                 <th>医療機関名</th>
-                                                <th>年間入院患者数</th>
+                                                <th>がん種(Stage)</th>
+                                                <th>合計者数</th>
                                                 <th>作成日時</th>
                                                 <th>更新日時</th>
                                                 <th>操作</th>
@@ -174,7 +175,7 @@ foreach ($hospitals as $hospital) {
                                             <select class="selection2 hospital-selection validate required" name="hospital_id">
                                                 <option value="" disabled selected hidden></option>
                                                 <?php
-                                                    echo $htmlHospitalsOption;
+                                                echo $htmlHospitalsOption;
                                                 ?>
                                             </select>
                                         </div>
@@ -191,7 +192,7 @@ foreach ($hospitals as $hospital) {
                                             <select class="selection2 cancer-selection validate required" name="cancer_id">
                                                 <option value="" disabled selected hidden></option>
                                                 <?php
-                                                    echo $htmlCancerOption;
+                                                echo $htmlCancerOption;
                                                 ?>
                                             </select>
                                         </div>
@@ -212,45 +213,221 @@ foreach ($hospitals as $hospital) {
 
                                 <div class="formRow">
                                     <div class="formItem">
-                                        年間入院患者数
-                                        <span class="label01 require_text">必須</span>
+                                        合計年間新規患者数
                                     </div>
                                     <div class="formTxt">
                                         <div class="formIn50">
-                                            <input type="text" class="form-control validate required integer" name="n_dpc" id="n_dpc" value="">
+                                            <input type="text" class="form-control validate integer" name="total_num_new" id="total_num_new" value="">
                                         </div>
                                     </div>
                                 </div>
 
                                 <div class="formRow">
                                     <div class="formItem">
-                                        全国順位(患者数)
+                                        ステージI年間新規患者数
                                     </div>
                                     <div class="formTxt">
                                         <div class="formIn50">
-                                            <input type="text" class="form-control validate integer" name="rank_nation_dpc" id="rank_nation_dpc" value="">
+                                            <input type="text" class="form-control validate integer" name="stage_new1" id="stage_new1" value="">
                                         </div>
                                     </div>
                                 </div>
 
                                 <div class="formRow">
                                     <div class="formItem">
-                                        地方順位(患者数)
+                                        ステージ2年間新規患者数
                                     </div>
                                     <div class="formTxt">
                                         <div class="formIn50">
-                                            <input type="text" class="form-control validate integer" name="rank_area_dpc" id="rank_area_dpc" value="">
+                                            <input type="text" class="form-control validate integer" name="stage_new2" id="stage_new2" value="">
                                         </div>
                                     </div>
                                 </div>
 
                                 <div class="formRow">
                                     <div class="formItem">
-                                        都道府県順位(患者数)
+                                        ステージ3年間新規患者数
                                     </div>
                                     <div class="formTxt">
                                         <div class="formIn50">
-                                            <input type="text" class="form-control validate integer" name="rank_pref_dpc" id="rank_pref_dpc" value="">
+                                            <input type="text" class="form-control validate integer" name="stage_new3" id="stage_new3" value="">
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="formRow">
+                                    <div class="formItem">
+                                        ステージ4年間新規患者数
+                                    </div>
+                                    <div class="formTxt">
+                                        <div class="formIn50">
+                                            <input type="text" class="form-control validate integer" name="stage_new4" id="stage_new4" value="">
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="formRow">
+                                    <div class="formItem">
+                                        全国順位(合計年間新規患者数)
+                                    </div>
+                                    <div class="formTxt">
+                                        <div class="formIn50">
+                                            <input type="text" class="form-control validate integer" name="total_num_rank" id="total_num_rank" value="">
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="formRow">
+                                    <div class="formItem">
+                                        地方順位(合計年間新規患者数)
+                                    </div>
+                                    <div class="formTxt">
+                                        <div class="formIn50">
+                                            <input type="text" class="form-control validate integer" name="local_num_rank" id="local_num_rank" value="">
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="formRow">
+                                    <div class="formItem">
+                                        都道府県順位(合計年間新規患者数)
+                                    </div>
+                                    <div class="formTxt">
+                                        <div class="formIn50">
+                                            <input type="text" class="form-control validate integer" name="pref_num_rank" id="pref_num_rank" value="">
+                                        </div>
+                                    </div>
+                                </div>
+
+
+                                <div class="formRow">
+                                    <div class="formItem">
+                                        全国順位(ステージI年間新規患者数)
+                                    </div>
+                                    <div class="formTxt">
+                                        <div class="formIn50">
+                                            <input type="text" class="form-control validate integer" name="total_num_rank_stage1" id="total_num_rank_stage1" value="">
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="formRow">
+                                    <div class="formItem">
+                                        地方順位(ステージI年間新規患者数)
+                                    </div>
+                                    <div class="formTxt">
+                                        <div class="formIn50">
+                                            <input type="text" class="form-control validate integer" name="local_num_rank_stage1" id="local_num_rank_stage1" value="">
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="formRow">
+                                    <div class="formItem">
+                                        都道府県順位(ステージI年間新規患者数)
+                                    </div>
+                                    <div class="formTxt">
+                                        <div class="formIn50">
+                                            <input type="text" class="form-control validate integer" name="pref_num_rank_stage1" id="pref_num_rank_stage1" value="">
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="formRow">
+                                    <div class="formItem">
+                                        全国順位(ステージ2年間新規患者数)
+                                    </div>
+                                    <div class="formTxt">
+                                        <div class="formIn50">
+                                            <input type="text" class="form-control validate integer" name="total_num_rank_stage2" id="total_num_rank_stage2" value="">
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="formRow">
+                                    <div class="formItem">
+                                        地方順位(ステージ2年間新規患者数)
+                                    </div>
+                                    <div class="formTxt">
+                                        <div class="formIn50">
+                                            <input type="text" class="form-control validate integer" name="local_num_rank_stage2" id="local_num_rank_stage2" value="">
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="formRow">
+                                    <div class="formItem">
+                                        都道府県順位(ステージ2年間新規患者数)
+                                    </div>
+                                    <div class="formTxt">
+                                        <div class="formIn50">
+                                            <input type="text" class="form-control validate integer" name="pref_num_rank_stage2" id="pref_num_rank_stage2" value="">
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="formRow">
+                                    <div class="formItem">
+                                        全国順位(ステージ3年間新規患者数)
+                                    </div>
+                                    <div class="formTxt">
+                                        <div class="formIn50">
+                                            <input type="text" class="form-control validate integer" name="total_num_rank_stage3" id="total_num_rank_stage3" value="">
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="formRow">
+                                    <div class="formItem">
+                                        地方順位(ステージ3年間新規患者数)
+                                    </div>
+                                    <div class="formTxt">
+                                        <div class="formIn50">
+                                            <input type="text" class="form-control validate integer" name="local_num_rank_stage3" id="local_num_rank_stage3" value="">
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="formRow">
+                                    <div class="formItem">
+                                        都道府県順位(ステージ3年間新規患者数)
+                                    </div>
+                                    <div class="formTxt">
+                                        <div class="formIn50">
+                                            <input type="text" class="form-control validate integer" name="pref_num_rank_stage3" id="pref_num_rank_stage3" value="">
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="formRow">
+                                    <div class="formItem">
+                                        全国順位(ステージ4年間新規患者数)
+                                    </div>
+                                    <div class="formTxt">
+                                        <div class="formIn50">
+                                            <input type="text" class="form-control validate integer" name="total_num_rank_stage4" id="total_num_rank_stage4" value="">
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="formRow">
+                                    <div class="formItem">
+                                        地方順位(ステージ4年間新規患者数)
+                                    </div>
+                                    <div class="formTxt">
+                                        <div class="formIn50">
+                                            <input type="text" class="form-control validate integer" name="local_num_rank_stage4" id="local_num_rank_stage4" value="">
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="formRow">
+                                    <div class="formItem">
+                                        都道府県順位(ステージ4年間新規患者数)
+                                    </div>
+                                    <div class="formTxt">
+                                        <div class="formIn50">
+                                            <input type="text" class="form-control validate integer" name="pref_num_rank_stage4" id="pref_num_rank_stage4" value="">
                                         </div>
                                     </div>
                                 </div>
@@ -275,14 +452,14 @@ foreach ($hospitals as $hospital) {
 <!-- END wrapper -->
 <?php require_once __DIR__ . '/../required/foot.php'; ?>
 <!-- Start Personal script -->
-<script src="../assets/admin/js/dpc.js"></script>
+<script src="../assets/admin/js/stage.js"></script>
 
 
 
 
 <!-- End Personal script -->
 <!-- Start Personal Input -->
-<input type="hidden" id="ct_url" value="../controller/admin/dpc_ct.php">
+<input type="hidden" id="ct_url" value="../controller/admin/stage_ct.php">
 <input type="hidden" id="id" value="">
 <input type="hidden" id="page_type" value="">
 <input type="hidden" id="common_ct_url" value="../controller/admin/common_ct.php">
