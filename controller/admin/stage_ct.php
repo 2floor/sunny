@@ -217,7 +217,7 @@ class stage_ct
      */
     private function get_detail($id)
     {
-        $detail = $this->stage_logic->get_DetailById($id)->load(['cancer','hospital']);
+        $detail = $this->stage_logic->getDetailById($id)->load(['cancer','hospital']);
 
         // AJAX返却用データ成型
         return array_merge([
