@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 
 class User extends BaseModel
 {
@@ -40,5 +41,11 @@ class User extends BaseModel
 
         static::addGlobalScope('deleted', fn(Builder $builder) => $builder->where('t_user.del_flg', '!=' , BaseModel::DELETED));
         static::addGlobalScope('unpublish', fn(Builder $builder) => $builder->where('t_user.public_flg', '!=' , BaseModel::UNPUBLISHED));
+    }
+
+    public function hospitals(): BelongsToMany
+    {
+        return $this->belongsToMany(Hospital::class, 't_hospital_user')
+            ->withPivot('remarks');
     }
 }

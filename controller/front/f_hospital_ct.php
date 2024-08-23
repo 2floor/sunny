@@ -70,6 +70,10 @@ class f_hospital_ct
             $data = $this->printHospitalList($post);
         }
 
+        if ($post['method'] == 'updateRemarks') {
+            $data = $this->updateRemarks($post);
+        }
+
         return $data;
     }
 
@@ -217,6 +221,9 @@ class f_hospital_ct
             'treatment' => $treatment
         ];
 
+        $loginUser = $_SESSION['authentication']['login_user'];
+        $remarks = $hospital->users()->where('t_user.id', $loginUser['id'] ?? null)->first()?->pivot->remarks;
+
         return [
             'cancerName' => $cancer->cancer_type,
             'avgData' => $avgData,
@@ -231,6 +238,7 @@ class f_hospital_ct
             'stages' => $stages,
             'survivals' => $survivals,
             'averageSurv' => $averageSurv,
+            'remarks' => $remarks,
         ];
     }
 
@@ -307,18 +315,19 @@ class f_hospital_ct
             $html .= $this->renderRankStat('stat1', $avgData['avgPrefDpcRank'], "../img/icons/");
             $html .= $this->renderRankStat('stat2',  $avgData['avgAreaDpcRank'], "../img/icons/");
             $html .= $this->renderRankStat('stat3', $avgData['avgGlobalDpcRank'], "../img/icons/");
-            $html .= '<div class="stat4 stat m-b-25"><div class="stat-info stat-info-extended rank-row-1"><p>年間入院患者数:</p><p>'.($avgData['avgDpc'] ? number_format($avgData['avgDpc']) . '人' : "-").'</p></div></div>';
+            $html .= '<div class="stat4 stat m-b-25"><div class="stat-info stat-info-extended rank-row-1"><p>年間入院患者数:</p><p>'.(is_numeric($avgData['avgDpc']) ? number_format($avgData['avgDpc']) . '人' : "-").'</p></div></div>';
             $html .= $this->renderRankStat('stat5', $avgData['avgPrefNewNumRank'], "../img/icons/");
             $html .= $this->renderRankStat('stat6', $avgData['avgLocalNewNumRank'], "../img/icons/");
             $html .= $this->renderRankStat('stat7', $avgData['avgGlobalNewNumRank'], "../img/icons/");
-            $html .= '<div class="stat8 stat m-b-25"><div class="stat-info stat-info-extended rank-row-2"><p>年閒新現患者数:</p><p>'.($avgData['avgNewNum'] ? number_format($avgData['avgNewNum']) . '人' : "-").'</p></div></div>';
+            $html .= '<div class="stat8 stat m-b-25"><div class="stat-info stat-info-extended rank-row-2"><p>年閒新現患者数:</p><p>'.(is_numeric($avgData['avgNewNum']) ? number_format($avgData['avgNewNum']) . '人' : "-").'</p></div></div>';
             $html .= $this->renderRankStat('stat9', $avgData['avgPrefRate'], "../img/icons/");
             $html .= $this->renderRankStat('stat10', $avgData['avgLocalRate'], "../img/icons/");
             $html .= $this->renderRankStat('stat11', $avgData['avgGlobalRate'], "../img/icons/");
-            $html .= '<div class="stat12 stat m-b-25"><div class="stat-info stat-info-extended rank-row-3"><p>5年後生存率係数:</p><p>'.($avgData['avgSurvivalRate'] ?? "-").'</p></div></div>';
+            $html .= '<div class="stat12 stat m-b-25"><div class="stat-info stat-info-extended rank-row-3"><p>5年後生存率係数:</p><p>'.(is_numeric($avgData['avgSurvivalRate']) ? $avgData['avgSurvivalRate'] : "-").'</p></div></div>';
             $html .= '</div>';
             $html .= '<div class="dpc-info">';
-            $html .= '<p>DPC治療指数: <span>'.($avgData['avgDpc'] ? number_format($avgData['avgDpc']) : "-").'</span></p>';
+//            $html .= '<p>DPC治療指数: <span>'.($avgData['avgDpc'] ? number_format($avgData['avgDpc']) : "-").'</span></p>';
+            $html .= '<p><span></span></p>';
             $html .= '<a target="_bank" href="detail/index.php?id='.$hospital->id.'&cancerId='.$cancers[0].'" class="detail-button">この医療機関の詳細を見る</a>';
             $html .= '</div>';
             $html .= '</div>';
@@ -375,7 +384,7 @@ class f_hospital_ct
 
     private function renderRankStat($class, $rank, $imgPath)
     {
-        $roundedRank = $rank ?? '-';
+        $roundedRank = is_numeric($rank) ? $rank : '-';
         if (in_array($roundedRank, [1, 2, 3])) {
             $html = '<div class="'.$class.' rank-icon m-b-25 h-27">';
             $html .= '<div class="rank-icon"><img src="' . $imgPath . 'rank' . $roundedRank . '.png" alt="rank-img"></div>';
@@ -471,9 +480,9 @@ class f_hospital_ct
             'yearSummaryDpc' => $yearSummaryDpc,
             'yearSummaryStage' => $yearSummaryStage,
             'yearSummarySurvival' => $yearSummarySurvival,
-            'avgDpc' => $avgDpc ? round($avgDpc) : null,
-            'avgNewNum' => $avgNewNum ? round($avgNewNum) : null,
-            'avgSurvivalRate' => $avgSurvivalRate ? round($avgSurvivalRate, 2) : null,
+            'avgDpc' => is_numeric($avgDpc) ? round($avgDpc, 1) : null,
+            'avgNewNum' => is_numeric($avgNewNum) ? round($avgNewNum, 1) : null,
+            'avgSurvivalRate' => is_numeric($avgSurvivalRate) ? round($avgSurvivalRate, 2) : null,
             'hospitalTel' => $hospital->tel,
             'hospitalAddress' => $hospital->addr,
             'hospitalUrl' => $hospital->hp_url,
@@ -486,6 +495,34 @@ class f_hospital_ct
             'famousDoctor' => $famousDoctor ? 1 : 0,
             'multiTreatment' => $multiTreatment ? 1 : 0,
             'treatment' => $treatment
+        ];
+    }
+
+    private function updateRemarks($post)
+    {
+        $data = $post['data'] ?? [];
+        $hospitalId = $data['hospitalId'] ?? null;
+        $hospital = Hospital::find($hospitalId);
+
+        if (!$hospital) {
+            return [
+                'status' => false,
+                'data' => []
+            ];
+        }
+
+        if (!$hospital->users()->sync([ $_SESSION['authentication']['login_user']['id'] => ['remarks' => $data['remarks'] ?? '']])) {
+            return [
+                'status' => false,
+                'data' => []
+            ];
+        }
+
+        return [
+            'status' => true,
+            'data' => [
+                'remarks' => $data['remarks'],
+            ]
         ];
     }
 }

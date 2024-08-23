@@ -77,6 +77,12 @@ class Hospital extends BaseModel
         return $this->hasMany(SurvHospital::class, 'hospital_id');
     }
 
+    public function users(): BelongsToMany
+    {
+        return $this->belongsToMany(User::class, 't_hospital_user')
+            ->withPivot('remarks');
+    }
+
     public function calculateAvgCommonData($cancerId): array
     {
         $dpcs = $this->dpcs()
@@ -121,7 +127,7 @@ class Hospital extends BaseModel
         $avgPrefRate = $survivals->avg('pref_survival_rate');
 
         return [
-            'avgDpc' => $avgDpc ? round($avgDpc) : null,
+            'avgDpc' => $avgDpc ? round($avgDpc, 1) : null,
             'avgGlobalDpcRank' => $avgGlobalDpcRank ? round($avgGlobalDpcRank) : null,
             'avgAreaDpcRank' => $avgAreaDpcRank ? round($avgAreaDpcRank) : null,
             'avgPrefDpcRank' => $avgPrefDpcRank ? round($avgPrefDpcRank) : null,
@@ -129,7 +135,7 @@ class Hospital extends BaseModel
             'avgGlobalRate' => $avgGlobalRate ? round($avgGlobalRate) : null,
             'avgLocalRate' => $avgLocalRate ? round($avgLocalRate) : null,
             'avgPrefRate' => $avgPrefRate ? round($avgPrefRate) : null,
-            'avgNewNum' => $avgNewNum ? round($avgNewNum) : null,
+            'avgNewNum' => $avgNewNum ? round($avgNewNum, 1) : null,
             'avgGlobalNewNumRank' => $avgGlobalNewNumRank ? round($avgGlobalNewNumRank) : null,
             'avgLocalNewNumRank' => $avgLocalNewNumRank ? round($avgLocalNewNumRank) : null,
             'avgPrefNewNumRank' => $avgPrefNewNumRank ? round($avgPrefNewNumRank) : null,

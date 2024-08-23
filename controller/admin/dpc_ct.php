@@ -170,10 +170,10 @@ class dpc_ct
             'cancer_name_dpc' => $cancer->cancer_type_dpc,
             'hospital_name' => $hospital->hospital_name,
             'year' => $post['year'],
-            'n_dpc' => ($post['n_dpc'] != '') ? $post['n_dpc'] : null,
-            'rank_nation_dpc' => ($post['rank_nation_dpc'] && $post['rank_nation_dpc'] != '') ? $post['rank_nation_dpc'] : null,
-            'rank_area_dpc' => ($post['rank_area_dpc'] && $post['rank_area_dpc'] != '') ? $post['rank_area_dpc'] : null,
-            'rank_pref_dpc' => ($post['rank_pref_dpc'] && $post['rank_pref_dpc'] != '') ? $post['rank_pref_dpc'] : null,
+            'n_dpc' => ($post['n_dpc'] != null && $post['n_dpc'] != '') ? $post['n_dpc'] : null,
+            'rank_nation_dpc' => ($post['rank_nation_dpc'] != null && $post['rank_nation_dpc'] != '') ? $post['rank_nation_dpc'] : null,
+            'rank_area_dpc' => ($post['rank_area_dpc'] != null && $post['rank_area_dpc'] != '') ? $post['rank_area_dpc'] : null,
+            'rank_pref_dpc' => ($post['rank_pref_dpc'] != null && $post['rank_pref_dpc'] != '') ? $post['rank_pref_dpc'] : null,
         ];
 
         $dpc = $this->dpc_logic->createData($dpcData);
@@ -262,10 +262,10 @@ class dpc_ct
             'cancer_name_dpc' => $cancer->cancer_type_dpc,
             'hospital_name' => $hospital->hospital_name,
             'year' => $post['year'],
-            'n_dpc' => ($post['n_dpc'] != '') ? $post['n_dpc'] : null,
-            'rank_nation_dpc' => ($post['rank_nation_dpc'] && $post['rank_nation_dpc'] != '') ? $post['rank_nation_dpc'] : null,
-            'rank_area_dpc' => ($post['rank_area_dpc'] && $post['rank_area_dpc'] != '') ? $post['rank_area_dpc'] : null,
-            'rank_pref_dpc' => ($post['rank_pref_dpc'] && $post['rank_pref_dpc'] != '') ? $post['rank_pref_dpc'] : null,
+            'n_dpc' => ($post['n_dpc'] != null && $post['n_dpc'] != '') ? $post['n_dpc'] : null,
+            'rank_nation_dpc' => ($post['rank_nation_dpc'] != null && $post['rank_nation_dpc'] != '') ? $post['rank_nation_dpc'] : null,
+            'rank_area_dpc' => ($post['rank_area_dpc'] != null && $post['rank_area_dpc'] != '') ? $post['rank_area_dpc'] : null,
+            'rank_pref_dpc' => ($post['rank_pref_dpc'] != null && $post['rank_pref_dpc'] != '') ? $post['rank_pref_dpc'] : null,
         ];
 
         if (!$this->dpc_logic->updateData($dpc->id, $dpcData)) {
