@@ -161,7 +161,7 @@ if ($initData['remarks']['approved_time']) {
                                 </div>
                             </div>
                             <div>
-                                <a class="btn btn-edit-memo" style="float: left; display:none; margin-bottom: 2px;" id="btnSaveMemo">
+                                <a class="btn btn-edit-memo" style="float: left; display:none; margin-bottom: 3px;" id="btnSaveMemo">
                                     <img src="../../img/icons/green-save.png" alt="Hospital Icon"><span class="text">保存</span>
                                 </a>
                             </div>
