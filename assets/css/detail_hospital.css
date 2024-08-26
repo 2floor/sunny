@@ -247,7 +247,6 @@
     line-height: 40px;
     text-decoration: underline dotted #84c2d3;
     min-height: 250px;
-    min-width: 62vw;
 }
 
 .note-container .text-with-lines textarea {
@@ -263,6 +262,8 @@
 .note-content {
     display: inline-block;
     margin-top: 15px;
+    margin-bottom: 15px;
+    width: 100%;
 }
 
 .btn-edit-memo {
@@ -280,7 +281,7 @@
     float: right;
     background-color: #DEF3FD;
     border: 1px solid #3FB6B6;
-    box-shadow: 0 2px 3px rgba(0, 0, 0, 0.2);
+    box-shadow: 0 2px 3px rgba(0, 0, 0, 0.2) !important;
 }
 
 .btn-edit-memo img {

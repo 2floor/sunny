@@ -24,7 +24,13 @@ $stages = $initData['stages'] ?? [];
 $dpcs = $initData['dpcs'] ?? [];
 $survivals = $initData['survivals'] ?? [];
 $averageSurv = $initData['averageSurv'] ?? [];
-$remarks = $initData['remarks'] ?? '';
+$remarks = $initData['remarks']['remarks'] ?? '';
+$approved_time = '';
+
+if ($initData['remarks']['approved_time']) {
+    $date = new DateTime($initData['remarks']['approved_time']);
+    $approved_time = $date->format('Y-m-d');
+}
 ?>
 
 <!DOCTYPE html>
@@ -139,20 +145,25 @@ $remarks = $initData['remarks'] ?? '';
                 <div class="tab-pane fade" id="notification" role="tabpanel" aria-labelledby="notification-tab">
                     <div class="notification-content-tab">
                         <div class="note-container">
-                            <div class="memo-edit">
-                                <a class="btn btn-edit-memo">
+                            <div>
+                                <a class="btn btn-edit-memo" id="btnEditMemo">
                                     <img src="../../img/icons/green-edit.png" alt="Hospital Icon"><span class="text">印刷</span>
                                 </a>
                             </div>
                             <div class="note-content">
                                 <div class="header">
                                     <span class="label">更新日</span>
-                                    <span class="date">2024-08-16</span>
+                                    <span class="date"><?= $approved_time?></span>
                                 </div>
                                 <div class="content">
                                     <div class="text-with-lines" id="text-content"><?= $remarks;?></div>
                                     <input type="hidden" name="remarks" value="<?= $remarks;?>">
                                 </div>
+                            </div>
+                            <div>
+                                <a class="btn btn-edit-memo" style="float: left; display:none; margin-bottom: 2px;" id="btnSaveMemo">
+                                    <img src="../../img/icons/green-save.png" alt="Hospital Icon"><span class="text">保存</span>
+                                </a>
                             </div>
                         </div>
                     </div>

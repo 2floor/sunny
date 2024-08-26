@@ -222,7 +222,7 @@ class f_hospital_ct
         ];
 
         $loginUser = $_SESSION['authentication']['login_user'];
-        $remarks = $hospital->users()->where('t_user.id', $loginUser['id'] ?? null)->first()?->pivot->remarks;
+        $remarks = $hospital->users()->where('t_user.id', $loginUser['id'] ?? null)->first()?->pivot;
 
         return [
             'cancerName' => $cancer->cancer_type,
@@ -511,7 +511,11 @@ class f_hospital_ct
             ];
         }
 
-        if (!$hospital->users()->sync([ $_SESSION['authentication']['login_user']['id'] => ['remarks' => $data['remarks'] ?? '']])) {
+        if (!$hospital->users()->sync([ $_SESSION['authentication']['login_user']['id'] => [
+            'remarks' => $data['remarks'] ?? '',
+            'approved_time' => date('Y-m-d H:i:s')]
+        ])) {
+
             return [
                 'status' => false,
                 'data' => []
@@ -522,6 +526,7 @@ class f_hospital_ct
             'status' => true,
             'data' => [
                 'remarks' => $data['remarks'],
+                'approved_time' => date('Y-m-d')
             ]
         ];
     }

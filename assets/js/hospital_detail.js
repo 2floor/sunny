@@ -51,8 +51,8 @@ $(document).ready(function() {
                 $('.loading-overlay').hide();
                 let res = JSON.parse(response);
                 if (res.status === true) {
-                    console.log($("input[name='remarks']"))
                     $("input[name='remarks']").val(res.data.remarks);
+                    $(".note-content .date").text(res.data.approved_time);
                     Swal.fire({
                         title: "完了!",
                         text: "正常に更新されました",
@@ -117,40 +117,40 @@ $(document).ready(function() {
         });
     });
 
-    $('.btn-edit-memo').on('click', function() {
+    $('#btnEditMemo').on('click', function() {
         let textContent = $('#text-content');
+        let currentText = textContent.text();
+        let currentWidth = textContent.outerWidth();
+        textContent.replaceWith(createTextArea(currentText, currentWidth));
+        $(this).hide();
+        $('#btnSaveMemo').show();
+    });
 
-        if (textContent.is("textarea")) {
-            let newContent = textContent.val();
-            Swal.fire({
-                title: "備考を変更しますか？",
-                icon: "question",
-                showDenyButton: true,
-                confirmButtonText: "Ok",
-                denyButtonText: `キャンセル`,
-                customClass: {
-                    actions: 'print-confirm',
-                    confirmButton: 'order-2',
-                    denyButton: 'order-1'
-                }
-            }).then((result) => {
-                if (result.isConfirmed) {
-                    updateRemarks({remarks : newContent, hospitalId : id});
-                    textContent.replaceWith(createTextDiv(newContent));
-                } else {
-                    textContent.replaceWith(createTextDiv($("input[name='remarks']").val()));
-                }
+    $('#btnSaveMemo').on('click', function() {
+        let textContent = $('#text-content');
+        let newContent = textContent.val();
+        Swal.fire({
+            title: "備考を変更しますか？",
+            icon: "question",
+            showDenyButton: true,
+            confirmButtonText: "Ok",
+            denyButtonText: `キャンセル`,
+            customClass: {
+                actions: 'print-confirm',
+                confirmButton: 'order-2',
+                denyButton: 'order-1'
+            }
+        }).then((result) => {
+            if (result.isConfirmed) {
+                updateRemarks({remarks : newContent, hospitalId : id});
+                textContent.replaceWith(createTextDiv(newContent));
+            } else {
+                textContent.replaceWith(createTextDiv($("input[name='remarks']").val()));
+            }
 
-                $(this).find('.text').text('印刷');
-                $(this).find('img').attr('src','../../img/icons/green-edit.png');
-            });
-        } else {
-            let currentText = textContent.text();
-            let currentWidth = textContent.outerWidth();
-            textContent.replaceWith(createTextArea(currentText, currentWidth));
-            $(this).find('.text').text('保存');
-            $(this).find('img').attr('src','../../img/icons/green-save.png');
-        }
+            $(this).hide();
+            $('#btnEditMemo').show();
+        });
     });
 
     function createTextArea(text, width) {
