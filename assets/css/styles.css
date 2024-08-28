@@ -4762,14 +4762,47 @@ iframe {
 
 .order-1 {
     order: 1;
+    background-color: #FFFFFF;
+    color: #545454;
+    border: 1px solid #24B2FE;
+    box-shadow: 0 2px 3px rgba(0, 0, 0, 0.2)
 }
 
 .order-2 {
     order: 2;
+    background-color: #24B2FE;
+    color: #545454;
+    border: 1px solid #24B2FE;
+    box-shadow: 0 2px 3px rgba(0, 0, 0, 0.2)
 }
 
 .logout_img {
     height: 20px;
     width: 20px;
     margin-right: 5px;
+}
+
+.list-print-hospital {
+    list-style: inside;
+    margin-top: 20px;
+    margin-bottom: 10px;
+}
+
+.list-print-hospital .center-print {
+    margin: 0 auto;
+    width: 80%;
+}
+
+.list-print-hospital li {
+    text-align: left;
+    font-size: 16px
+}
+
+.print-confirm {
+    width: 50%;
+    justify-content: space-between;
+}
+
+.pc-nav__list a:hover {
+    color: #24B2FE;
 }

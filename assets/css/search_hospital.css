@@ -659,4 +659,8 @@ input[type="radio"], input[type="checkbox"] {
     .no-data-message {
         padding: 25% 25%;
     }
+
+    .list-print-hospital .center-print {
+        width: 100%;
+    }
 }

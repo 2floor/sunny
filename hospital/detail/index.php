@@ -49,8 +49,9 @@ if ($initData['remarks']['approved_time']) {
         <div class="main-detail">
             <div class="search-result-header">
                 <div class="search-result-header-right">
-                    <span>チェックした対象を<br></span>
-                    <button class="confirm-button" id="printButton">印刷</button>
+                    <a class="btn btn-edit-memo" id="printButton" style="border-color: #0A74B0">
+                        <img src="../../img/icons/print-icon.png" alt="Hospital Icon"><span class="text">印刷</span>
+                    </a>
                 </div>
             </div>
             <div class="title">
@@ -59,26 +60,28 @@ if ($initData['remarks']['approved_time']) {
             </div>
             <ul class="nav nav-tabs mt-4" id="myTab" role="tablist">
                 <li class="nav-item active">
-                    <a class="nav-link" id="summary-tab" data-toggle="tab" href="#summary" role="tab" aria-controls="summary" aria-selected="true">サマリー</a>
+                    <a class="nav-link" id="summary-tab" data-toggle="tab" href="#summary" role="tab" aria-controls="summary" aria-selected="true"><span>サマリー</span></a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" id="info-tab" data-toggle="tab" href="#info" role="tab" aria-controls="info" aria-selected="false">医療機関情報</a>
+                    <a class="nav-link" id="info-tab" data-toggle="tab" href="#info" role="tab" aria-controls="info" aria-selected="false"><span>医療機関情報</span></a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" id="treatment-tab" data-toggle="tab" href="#treatment" role="tab" aria-controls="treatment" aria-selected="false">提供する治療情報</a>
+                    <a class="nav-link" id="treatment-tab" data-toggle="tab" href="#treatment" role="tab" aria-controls="treatment" aria-selected="false"><span>提供する治療情報</span></a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" id="results-tab" data-toggle="tab" href="#results" role="tab" aria-controls="results" aria-selected="false">治療実績</a>
+                    <a class="nav-link" id="results-tab" data-toggle="tab" href="#results" role="tab" aria-controls="results" aria-selected="false"><span>治療実績</span></a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" id="notification-tab" data-toggle="tab" href="#notification" role="tab" aria-controls="notification" aria-selected="false">特記事項</a>
+                    <a class="nav-link" id="notification-tab" data-toggle="tab" href="#notification" role="tab" aria-controls="notification" aria-selected="false"><span>特記事項</span></a>
                 </li>
             </ul>
             <div class="tab-content mt-3" id="tabContent">
                 <div class="tab-pane fade active in" id="summary" role="tabpanel" aria-labelledby="summary-tab">
                     <div class="summary-content-tab">
                         <div class="treatment-results">
-                            <h3>治療実績 (直近3年平均)</h3>
+                            <div class="header">
+                                <h4>治療実績 (直近3年平均)</h4>
+                            </div>
                             <?php include 'component/summary-content-table.php'; ?>
                         </div>
                     </div>

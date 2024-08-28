@@ -139,7 +139,7 @@ class f_hospital_ct
         $yearDpc = $hospital->dpcs()
             ->select('year')
             ->where('cancer_id', $cancerId)
-            ->orderBy('year', 'desc')
+            ->orderBy('year', 'asc')
             ->take(3)
             ->pluck('year')
             ->implode('、');
@@ -147,7 +147,7 @@ class f_hospital_ct
         $yearStage = $hospital->stages()
             ->select('year')
             ->where('cancer_id', $cancerId)
-            ->orderBy('year', 'desc')
+            ->orderBy('year', 'asc')
             ->take(3)
             ->pluck('year')
             ->implode('、');
@@ -155,7 +155,7 @@ class f_hospital_ct
         $yearSurvival = $hospital->survivals()
             ->select('year')
             ->where('cancer_id', $cancerId)
-            ->orderBy('year', 'desc')
+            ->orderBy('year', 'asc')
             ->take(3)
             ->pluck('year')
             ->implode('、');
@@ -174,9 +174,7 @@ class f_hospital_ct
         $famousDoctor = $categories->firstWhere('hard_name3', 'famous_doctor');
         $multiTreatment = $categories->firstWhere('hard_name3', 'multi_treatment');
 
-        $treatment = $hospital->categories()->where('data_type', Category::HOSPITAL_TREATMENT_TYPE)
-            ->pluck('level3')
-            ->implode(' ');
+        $treatment = $hospital->cancers()?->first()?->pivot?->sp_treatment;
 
         $stages = $hospital->stages()
             ->where('cancer_id', $cancerId)

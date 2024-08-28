@@ -140,7 +140,10 @@ $(document).ready(function () {
                         title: "エラー!",
                         text: "病院情報の印刷に失敗しました",
                         icon: "error",
-                        confirmButtonText: "Ok"
+                        confirmButtonText: "閉じる",
+                        customClass: {
+                            confirmButton: 'order-2',
+                        }
                     });
                 }
             },
@@ -150,7 +153,10 @@ $(document).ready(function () {
                     title: "エラー!",
                     text: "病院情報の印刷に失敗しました",
                     icon: "error",
-                    confirmButtonText: "Ok"
+                    confirmButtonText: "閉じる",
+                    customClass: {
+                        confirmButton: 'order-2',
+                    }
                 });
             }
         });
@@ -375,14 +381,14 @@ $(document).ready(function () {
                 text: "印刷する病院が選択されていません",
             });
         } else {
-            let html = '';
+            let html = '<ul class="list-print-hospital"><div class="center-print">';
             let printCount = 1;
             printHospitalList = [];
 
             $('.checkbox-print:checked').each(function () {
                 if (printCount <= 5) {
                     let hospitalInfo = $(this).closest('.hospital-card').find('.hospital-info');
-                    html += hospitalInfo.find('h2').text() + '<br>';
+                    html += ('<li>' + hospitalInfo.find('h2').text() + '</li>');
 
                     let printItem = {
                         hospitalId : hospitalInfo.data('id'),
@@ -395,13 +401,16 @@ $(document).ready(function () {
                 printCount++;
             });
 
+            html += '</div></ul>';
+
             Swal.fire({
-                title: "下記のページを印刷しますか？",
+                title: "下記病院の情報を印刷しますか？",
                 icon: "question",
                 html: html,
+                showCloseButton: true,
                 showDenyButton: true,
-                confirmButtonText: "Ok",
-                denyButtonText: `キャンセル`,
+                confirmButtonText: "印刷",
+                denyButtonText: `戻る`,
                 customClass: {
                     actions: 'print-confirm',
                     confirmButton: 'order-2',

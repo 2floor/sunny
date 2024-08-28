@@ -8,7 +8,7 @@ class HospitalCancer extends BaseModel
     protected $primaryKey = 'id';
     protected $fillable = [
         'cancer_id',
-        'item_content',
+        'base_hospital',
         'order_num',
         'cancer_name',
         'hospital_id',

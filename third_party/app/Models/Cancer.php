@@ -35,7 +35,7 @@ class Cancer extends BaseModel
     public function hospitals(): BelongsToMany
     {
         return $this->belongsToMany(Hospital::class, 't_hospital_cancer')
-            ->withPivot('del_flg', 'public_flg')
+            ->withPivot('del_flg', 'public_flg', 'social_info', 'base_hospital', 'sp_treatment')
             ->withTimestamps()
             ->wherePivot('del_flg', BaseModel::NOT_DELETED)
             ->wherePivot('public_flg', BaseModel::PUBLISHED);

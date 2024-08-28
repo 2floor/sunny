@@ -777,8 +777,8 @@ textarea.form-control {
 .nav-tabs > .active > a,
 .nav-tabs > .active > a:focus,
 .nav-tabs > .active > a:hover {
-  border: 2px solid #eeeeee !important;
-  border-bottom-color: #ffffff !important;
+  border: 2px solid #eeeeee;
+  border-bottom-color: #ffffff;
 }
 .nav-tabs {
   border-bottom: 2px solid #eeeeee;

@@ -23,7 +23,10 @@ $(document).ready(function() {
                         title: "エラー!",
                         text: "病院情報の印刷に失敗しました",
                         icon: "error",
-                        confirmButtonText: "Ok"
+                        confirmButtonText: "閉じる",
+                        customClass: {
+                            confirmButton: 'order-2',
+                        }
                     });
                 }
             },
@@ -33,7 +36,10 @@ $(document).ready(function() {
                     title: "エラー!",
                     text: "病院情報の印刷に失敗しました",
                     icon: "error",
-                    confirmButtonText: "Ok"
+                    confirmButtonText: "閉じる",
+                    customClass: {
+                        confirmButton: 'order-2',
+                    }
                 });
             }
         });
@@ -57,7 +63,10 @@ $(document).ready(function() {
                         title: "完了!",
                         text: "正常に更新されました",
                         icon: "success",
-                        confirmButtonText: "Ok"
+                        confirmButtonText: "閉じる",
+                        customClass: {
+                            confirmButton: 'order-2',
+                        }
                     });
                 } else {
                     Swal.fire({
@@ -98,8 +107,9 @@ $(document).ready(function() {
             title: "下記のページを印刷しますか？",
             icon: "question",
             showDenyButton: true,
-            confirmButtonText: "Ok",
-            denyButtonText: `キャンセル`,
+            showCloseButton: true,
+            confirmButtonText: "印刷",
+            denyButtonText: `戻る`,
             customClass: {
                 actions: 'print-confirm',
                 confirmButton: 'order-2',
@@ -132,9 +142,10 @@ $(document).ready(function() {
         Swal.fire({
             title: "備考を変更しますか？",
             icon: "question",
+            showCloseButton: true,
             showDenyButton: true,
             confirmButtonText: "Ok",
-            denyButtonText: `キャンセル`,
+            denyButtonText: `戻る`,
             customClass: {
                 actions: 'print-confirm',
                 confirmButton: 'order-2',

@@ -8,19 +8,17 @@ if (!isset($yearSummary)) {
 }
 ?>
 <div class="table-responsive">
-    <table class="table table-bordered">
-        <thead>
-        <tr>
-            <th class="table-title col-xs-4"></th>
-            <th class="table-title col-xs-2">実績値</th>
-            <th class="table-title col-xs-2">都道府県</th>
-            <th class="table-title col-xs-2">地方</th>
-            <th class="table-title col-xs-2">全国</th>
-        </tr>
-        </thead>
+    <table class="table table-bordered table-summary">
         <tbody>
         <tr>
-            <td class="criteria">年間入院患者数 <?php echo $yearSummary['dpc'] ? '(' .$yearSummary['dpc'] .'年)' : ''?></td>
+            <td class="center-icon criteria w-30"></td>
+            <td class="center-icon"><b>実績値</b></td>
+            <td class="center-icon"><b>都道府県</b></td>
+            <td class="center-icon"><b>地方</b></td>
+            <td class="center-icon"><b>全国</b></td>
+        </tr>
+        <tr>
+            <td class="criteria  w-30">年間入院患者数 <?php echo $yearSummary['dpc'] ? '(' .$yearSummary['dpc'] .'年)' : ''?></td>
             <td class="center-icon"><?php echo ($avgData['avgDpc'] ? $avgData['avgDpc'] . '人' : '-') ?></td>
             <td class="center-icon">
                 <?php
@@ -42,7 +40,7 @@ if (!isset($yearSummary)) {
             </td>
         </tr>
         <tr>
-            <td class="criteria">年間新規患者数 <?php echo $yearSummary['stage'] ? '(' .$yearSummary['stage'] .'年)' : ''?></td>
+            <td class="criteria w-30">年間新規患者数 <?php echo $yearSummary['stage'] ? '(' .$yearSummary['stage'] .'年)' : ''?></td>
             <td class="center-icon"><?php echo ($avgData['avgNewNum'] ? $avgData['avgNewNum'] . '人' : '-') ?></td>
             <td class="center-icon">
                 <?php
@@ -64,7 +62,7 @@ if (!isset($yearSummary)) {
             </td>
         </tr>
         <tr>
-            <td class="criteria">5年後生存率数 <?php echo $yearSummary['survival'] ? '(' .$yearSummary['survival'] .'年)' : ''?></td>
+            <td class="criteria  w-30">5年後生存率数 <?php echo $yearSummary['survival'] ? '(' .$yearSummary['survival'] .'年)' : ''?></td>
             <td class="center-icon"><?php echo ($avgData['avgSurvivalRate'] ?? '-') ?></td>
             <td class="center-icon">
                 <?php
