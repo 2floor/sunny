@@ -104,7 +104,7 @@ $(document).ready(function() {
 
     $('#printButton').on('click', function () {
         Swal.fire({
-            title: "下記のページを印刷しますか？",
+            title: "このページを印刷しますか？",
             icon: "question",
             showDenyButton: true,
             showCloseButton: true,

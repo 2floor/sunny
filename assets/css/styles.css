@@ -4782,9 +4782,12 @@ iframe {
     margin-right: 5px;
 }
 
+.swal2-title {
+    margin-bottom: 20px;
+}
+
 .list-print-hospital {
     list-style: inside;
-    margin-top: 20px;
     margin-bottom: 10px;
 }
 
