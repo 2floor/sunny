@@ -27,12 +27,12 @@
                                         <ul class="drop__lists" style="margin-top: 5px; gap: 5px">
                                             <li class="drop__list" style="margin-right: 0">
                                                 <a href="[path]hospital/first-search.php" class="drop__link">
-                                                    <p class="drop-card__title">初めて知る</p>
+                                                    <p class="drop-card__title">新規医療機関検索</p>
                                                 </a>
                                             </li>
                                             <li class="drop__list" style="margin-right: 0">
                                                 <a href="[path]hospital/second-search.php" class="drop__link">
-                                                    <p class="drop-card__title">セカンドオピニオンを得る</p>
+                                                    <p class="drop-card__title">セカンドオピニオン検索</p>
                                                 </a>
                                             </li>
                                         </ul>
