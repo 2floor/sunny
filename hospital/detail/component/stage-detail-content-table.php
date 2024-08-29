@@ -30,7 +30,7 @@ if (!isset($stages)) {
             $percentStage4 = is_numeric($stages[$i]['stage_new4']) ? ('(' . (round($stages[$i]['stage_new4'] / $totalStage * 100, 2)) . '%)') : '';
             $tr = '<tr class="border-top border-bottom">';
             $tr .= '<td rowspan="4">'.(($stages[$i]['year'] != null && $stages[$i]['year'] !='') ? ($stages[$i]['year'] . '年') : '-').'</td>';
-            $tr .= '<td>産患者数</td>';
+            $tr .= '<td>新規患者数</td>';
             $tr .= '<td class="center-icon">'.(($stages[$i]['stage_new1'] != null && $stages[$i]['stage_new1'] != '') ? ($stages[$i]['stage_new1'] . '人 ' .  $percentStage1) : '-').'</td>';
             $tr .= '<td class="center-icon">'.(($stages[$i]['stage_new2'] != null && $stages[$i]['stage_new2'] != '') ? ($stages[$i]['stage_new2'] . '人 ' .  $percentStage2) : '-').'</td>';
             $tr .= '<td class="center-icon">'.(($stages[$i]['stage_new3'] != null && $stages[$i]['stage_new3'] != '') ? ($stages[$i]['stage_new3'] . '人 ' .  $percentStage3) : '-').'</td>';
@@ -91,14 +91,26 @@ if (!isset($stages)) {
         $avgStage3 = $stages->avg('stage_new3');
         $avgStage4 = $stages->avg('stage_new4');
 
+        $avgStage1 = ($avgStage1 != null && $avgStage1 != '') ? (round($avgStage1, 1)) : null;
+        $avgStage2 = ($avgStage2 != null && $avgStage2 != '') ? (round($avgStage2, 1)) : null;
+        $avgStage3 = ($avgStage3 != null && $avgStage3 != '') ? (round($avgStage3, 1)) : null;
+        $avgStage4 = ($avgStage4 != null && $avgStage4 != '') ? (round($avgStage4, 1)) : null;
+
+        $totalStage = $avgStage1 + $avgStage2 + $avgStage3 + $avgStage4;
+
+        $percentStage1 = (is_numeric($avgStage1) && is_numeric($totalStage)) ? ('(' . (round($avgStage1 / $totalStage * 100, 2)) . '%)') : '';
+        $percentStage2 = (is_numeric($avgStage2) && is_numeric($totalStage)) ? ('(' . (round($avgStage2 / $totalStage * 100, 2)) . '%)') : '';
+        $percentStage3 = (is_numeric($avgStage3) && is_numeric($totalStage)) ? ('(' . (round($avgStage3 / $totalStage * 100, 2)) . '%)') : '';
+        $percentStage4 = (is_numeric($avgStage4) && is_numeric($totalStage)) ? ('(' . (round($avgStage4 / $totalStage * 100, 2)) . '%)') : '';
+
         $avgHtml = '<tr class="border-top border-bottom">';
         $avgHtml .= '<td rowspan="4">直近3年平均</td>';
-        $avgHtml .= '<td>産患者数</td>';
-        $avgHtml .= '<td class="center-icon">'.(($avgStage1 != null && $avgStage1 != '') ? (round($avgStage1, 1) . '人') : '-').'</td>';
-        $avgHtml .= '<td class="center-icon">'.(($avgStage2 != null && $avgStage2 != '') ? (round($avgStage2, 1) . '人') : '-').'</td>';
-        $avgHtml .= '<td class="center-icon">'.(($avgStage3 != null && $avgStage3 != '') ? (round($avgStage3, 1) . '人') : '-').'</td>';
-        $avgHtml .= '<td class="center-icon">'.(($avgStage4 != null && $avgStage4 != '') ? (round($avgStage4, 1) . '人') : '-').'</td>';
-        $avgHtml .= '<td></td>';
+        $avgHtml .= '<td>新規患者数</td>';
+        $avgHtml .= '<td class="center-icon">'.($avgStage1 ? ($avgStage1 . '人' . $percentStage1) : '-').'</td>';
+        $avgHtml .= '<td class="center-icon">'.($avgStage2 ? ($avgStage2 . '人' . $percentStage2) : '-').'</td>';
+        $avgHtml .= '<td class="center-icon">'.($avgStage3 ? ($avgStage3 . '人' . $percentStage3) : '-').'</td>';
+        $avgHtml .= '<td class="center-icon">'.($avgStage4 ? ($avgStage4 . '人' . $percentStage4) : '-').'</td>';
+        $avgHtml .= '<td>'.(is_numeric($totalStage) ? ($totalStage.'人') : '-').'</td>';
         $avgHtml .= '</tr>';
 
         $avgPrefRank1 = $stages->avg('pref_num_rank_stage1');

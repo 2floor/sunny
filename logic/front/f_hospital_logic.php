@@ -10,13 +10,15 @@ class f_hospital_logic
         $query = Hospital::query();
 
         if ($keyword != '') {
-            $query->where('hospital_name', 'like', "%$keyword%");
-            $query->orWhereHas('categories', function ($query2) use ($keyword, $cancers) {
-                $query2->where('data_type' , Category::HOSPITAL_TREATMENT_TYPE);
-                $query2->where('level3', 'like', "%$keyword%");
-                $query2->where(function ($query3) use ($cancers) {
-                    $query3->whereNull('t_category_hospital.cancer_id');
-                    $query3->orWhereIn('t_category_hospital.cancer_id', $cancers);
+            $query->where(function ($query2) use ($keyword, $cancers) {
+                $query2->where('hospital_name', 'like', "%$keyword%");
+                $query2->orWhereHas('categories', function ($query3) use ($keyword, $cancers) {
+                    $query3->where('data_type' , Category::HOSPITAL_TREATMENT_TYPE);
+                    $query3->where('level3', 'like', "%$keyword%");
+                    $query3->where(function ($query4) use ($cancers) {
+                        $query4->whereNull('t_category_hospital.cancer_id');
+                        $query4->orWhereIn('t_category_hospital.cancer_id', $cancers);
+                    });
                 });
             });
         }

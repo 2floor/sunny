@@ -43,6 +43,7 @@ if (!isset($infoTreatment)) {
                     echo $infoTreatment['hasAdvancedMedical'] ? '<span class="badge bg-secondary">あり</span>' : '<span class="badge bg-warning">なし</span>';
                     ?>
                 </p>
+                <br>
                 <p><?php echo $infoTreatment['advancedMedical'] ? nl2br(e($infoTreatment['advancedMedical'])) : '' ?></p>
             </td>
         </tr>

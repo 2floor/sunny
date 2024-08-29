@@ -6,7 +6,7 @@
 }
 
 .title {
-    margin-bottom: 50px;
+    margin-bottom: 40px;
 }
 
 .nav-tabs li a {
@@ -16,7 +16,7 @@
 }
 
 .nav-tabs > li {
-    margin-bottom: 50px;
+    margin-bottom: 25px;
 }
 
 .nav-
@@ -154,7 +154,7 @@
 }
 
 .search-result-header {
-    margin-bottom: 50px;
+    margin-bottom: 40px;
 }
 
 .search-result-header-right {
@@ -315,7 +315,7 @@
     height: 3px;
     background: #24B2FE;
     position: absolute;
-    bottom: -21px;
+    bottom: -10px;
     left: 50%;
     -webkit-transform: translateX(-50%);
     transform: translateX(-50%);
