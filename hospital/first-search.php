@@ -73,9 +73,9 @@ $category = $initData['category'] ?? [];
                     </div>
                     <div class="filter-content">
                         <div class="radio-group">
-                            <label><input type="radio" name="sort" value="dpcSort" checked>入院患者数</label>
-                            <label><input type="radio" name="sort" value="newNumSort">新規がん患者数</label>
-                            <label><input type="radio" name="sort" value="survRateSort">生在率係数</label>
+                            <label><input type="radio" name="sort" value="dpcSort" checked>年間入院患者数</label>
+                            <label><input type="radio" name="sort" value="newNumSort">年間新規患者数</label>
+                            <label><input type="radio" name="sort" value="survRateSort">5年生存率係数</label>
                         </div>
                     </div>
                 </div>

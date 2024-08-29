@@ -6,6 +6,11 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class Stage extends BaseModel
 {
+    const STAGE_1 = 1;
+    const STAGE_2 = 2;
+    const STAGE_3 = 3;
+    const STAGE_4 = 4;
+
     protected $table = 't_stage';
     protected $primaryKey = 'id';
     protected $fillable = [
@@ -50,5 +55,15 @@ class Stage extends BaseModel
     public function hospital(): BelongsTo
     {
         return $this->belongsTo(Hospital::class, 'hospital_id');
+    }
+
+    public static function getListColumnStage(): array
+    {
+        return [
+            self::STAGE_1 => 'stage_new1',
+            self::STAGE_2 => 'stage_new2',
+            self::STAGE_3 => 'stage_new3',
+            self::STAGE_4 => 'stage_new4',
+        ];
     }
 }

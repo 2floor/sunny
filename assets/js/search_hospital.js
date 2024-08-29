@@ -63,12 +63,20 @@ $(document).ready(function () {
                 icon: "error",
                 title: 'エラー!',
                 text: '少なくとも1種類のがんを選択する必要があります',
+                confirmButtonText: "閉じる",
+                customClass: {
+                    confirmButton: 'order-2',
+                }
             });
         } else if (pageType == 'second-search' && cancerStageChecked.length === 0) {
             Swal.fire({
                 icon: "error",
                 title: 'エラー!',
                 text: 'がんのステージを少なくとも 1 つ選択する必要があります',
+                confirmButtonText: "閉じる",
+                customClass: {
+                    confirmButton: 'order-2',
+                }
             });
         } else {
             let keyword = $('input#keyword').val();
@@ -379,6 +387,10 @@ $(document).ready(function () {
                 icon: "error",
                 title: 'エラー!',
                 text: "印刷する病院が選択されていません",
+                confirmButtonText: "閉じる",
+                customClass: {
+                    confirmButton: 'order-2',
+                }
             });
         } else {
             let html = '<ul class="list-print-hospital"><div class="center-print">';
@@ -456,6 +468,24 @@ $(document).ready(function () {
             });
 
             filterContent.append(span)
+
+            let stageAble = [1, 2, 3, 4];
+            if (stageAble.includes(cancerStageChecked[0])) {
+                if ($('.sort-group').find('.added-sort').length == 0) {
+                    let addedSort = '<label class="added-sort"><input type="radio" name="sort" value="stageSort">ステージ別年間新規患者数</label>' +
+                        '<label class="added-sort"><input type="radio" name="sort" value="stageSurvSort">ステージ別生存率</label>';
+                    $('.sort-group').append(addedSort);
+                }
+            } else {
+                if ($('.sort-group').find('.added-sort').length > 0) {
+                    let sortChecked = $('input[name="sort"]:checked');
+
+                    if (sortChecked.val() == "stageSort" || sortChecked.val() == "stageSurvSort") {
+                        $('input[name="sort"][value="dpcSort"]').prop('checked', true);
+                    }
+                    $('.sort-group').find('.added-sort').remove();
+                }
+            }
         }
 
         if (idPopup.includes("#categoryPopup")) {

@@ -20,7 +20,7 @@
                     <nav class="heder-pc__nav">
                         <ul class="pc-nav__lists">
                             <li class="pc-nav__list"><a href="[path]" class="pc-nav__link">ホーム</a></li>
-                            <li class="pc-nav__list js-drop"><a href="[path]hospital" class="pc-nav__link pc-nav-drop">病院を探す</a>
+                            <li class="pc-nav__list js-drop"><a href="[path]hospital" class="pc-nav__link pc-nav-drop">病院検索</a>
                                 <div class="drop js-drop-open" style="max-width:210px;border-radius: 5px;">
                                     <div class="drop__inner" style="padding-right: 15px;padding-bottom: 20px;padding-left: 15px;">
                                         <div class="drop--red"></div>
@@ -39,7 +39,7 @@
                                     </div>
                                 </div><!-- /.drop -->
                             </li>
-                            <li class="pc-nav__list"><a href="#" class="pc-nav__link">医者を探す</a></li>
+                            <li class="pc-nav__list"><a href="#" class="pc-nav__link">名医検索</a></li>
                             <li class="pc-nav__list">
                                 <a href="[path]logout.php" class="pc-nav__link"><img src="[path]img/icons/logout-icon.png" class="logout_img" alt="logout-icon">ログアウト</a>
                             </li>
@@ -58,8 +58,8 @@
             <nav class="drawer-nav">
                 <ul class="drawer-nav__lists">
                     <li class="drawer-nav__list"><a href="[path]" class="drawer-nav__link">ホーム</a></li>
-                    <li class="drawer-nav__list"><a href="[path]hospital" class="drawer-nav__link">病院を探す</a></li>
-                    <li class="drawer-nav__list"><a href="#" class="drawer-nav__link">医者を探す</a></li>
+                    <li class="drawer-nav__list"><a href="[path]hospital" class="drawer-nav__link">病院検索</a></li>
+                    <li class="drawer-nav__list"><a href="#" class="drawer-nav__link">名医検索</a></li>
                     <li class="drawer-nav__list"><a href="[path]logout.php" class="drawer-nav__link">ログアウト</a>
        </li>
                 </ul><!-- ./drawer-nav__lists -->

@@ -10,6 +10,7 @@ function showPdf(index) {
 $('#prevPDF').click(function() {
     if (currentIndex > 0) {
         currentIndex--;
+        $('.slide-indicator').text((currentIndex + 1) + '/' + pdfLinks.length);
         showPdf(currentIndex);
     }
 });
@@ -17,6 +18,7 @@ $('#prevPDF').click(function() {
 $('#nextPDF').click(function() {
     if (currentIndex < pdfLinks.length - 1) {
         currentIndex++;
+        $('.slide-indicator').text((currentIndex + 1) + '/' + pdfLinks.length);
         showPdf(currentIndex);
     }
 });
@@ -55,6 +57,7 @@ function handlePrintPDF (data, innerPath ='../') {
         `);
     });
 
+    $('.slide-indicator').text('1/' + pdfLinks.length);
     showPdf(currentIndex);
 }
 

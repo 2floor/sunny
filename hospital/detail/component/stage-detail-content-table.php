@@ -110,7 +110,7 @@ if (!isset($stages)) {
         $avgHtml .= '<td class="center-icon">'.($avgStage2 ? ($avgStage2 . '人' . $percentStage2) : '-').'</td>';
         $avgHtml .= '<td class="center-icon">'.($avgStage3 ? ($avgStage3 . '人' . $percentStage3) : '-').'</td>';
         $avgHtml .= '<td class="center-icon">'.($avgStage4 ? ($avgStage4 . '人' . $percentStage4) : '-').'</td>';
-        $avgHtml .= '<td>'.(is_numeric($totalStage) ? ($totalStage.'人') : '-').'</td>';
+        $avgHtml .= '<td class="center-icon">'.(is_numeric($totalStage) ? ($totalStage.'人') : '-').'</td>';
         $avgHtml .= '</tr>';
 
         $avgPrefRank1 = $stages->avg('pref_num_rank_stage1');

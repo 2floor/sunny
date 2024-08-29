@@ -2,10 +2,12 @@
 
 use App\Models\Hospital;
 use App\Models\Category;
+use App\Models\Stage;
+use App\Models\SurvHospital;
 
 class f_hospital_logic
 {
-    public function getHospitalsFromFilter($keyword, $cancers, $areas, $categories, $sort, $page, $limit)
+    public function getHospitalsFromFilter($keyword, $cancers, $areas, $categories, $stages, $sort, $page, $limit)
     {
         $query = Hospital::query();
 
@@ -71,6 +73,34 @@ class f_hospital_logic
                     ->orderByDesc('year')
                     ->limit(3);
             });
+        } else if ($sort == 'stageSort') {
+            $listColumn = Stage::getListColumnStage();
+            $columnSort = $listColumn[$stages[0] ?? 0] ?? null;
+
+            if ($columnSort) {
+                $query->orderByDesc(function ($query) use ($cancers, $columnSort) {
+                    $query->selectRaw('AVG('.$columnSort.') as average_stage')
+                        ->from('t_stage')
+                        ->whereColumn('t_stage.hospital_id', 't_hospital.id')
+                        ->whereIn('t_stage.cancer_id', $cancers)
+                        ->orderByDesc('year')
+                        ->limit(3);
+                });
+            }
+        } else if ($sort == 'stageSurvSort') {
+            $listColumn = SurvHospital::getListColumnStage();
+            $columnSort = $listColumn[$stages[0] ?? 0] ?? null;
+
+            if ($columnSort) {
+                $query->orderByDesc(function ($query) use ($cancers, $columnSort) {
+                    $query->selectRaw('AVG('.$columnSort.') as average_stage')
+                        ->from('t_surv_hospital')
+                        ->whereColumn('t_surv_hospital.hospital_id', 't_hospital.id')
+                        ->whereIn('t_surv_hospital.cancer_id', $cancers)
+                        ->orderByDesc('year')
+                        ->limit(3);
+                });
+            }
         }
 
         return [

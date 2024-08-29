@@ -245,6 +245,7 @@ class f_hospital_ct
         $cancers = $get['cancer'] ?? [];
         $areaRaw = $get['area'] ?? [];
         $categories = $get['category'] ?? [];
+        $stages = $get['stage'] ?? [];
         $keyword = $get['keyword'] ?? '';
         $sort = $get['sort'] ?? '';
         $page = $get['pageNumber'] ?? 1;
@@ -269,7 +270,7 @@ class f_hospital_ct
         }
 
         $hospitalLogic = new f_hospital_logic();
-        $data = $hospitalLogic->getHospitalsFromFilter($keyword, $cancers, $areas, $categories, $sort, $page, $limit);
+        $data = $hospitalLogic->getHospitalsFromFilter($keyword, $cancers, $areas, $categories, $stages, $sort, $page, $limit);
         $totalNumber = $data['total'];
         $hospitals = $data['hospitals'];
 
