@@ -430,7 +430,7 @@ class f_hospital_ct
         $yearSummaryDpc = $hospital->dpcs()
             ->select('year')
             ->where('cancer_id', $cancerId)
-            ->orderBy('year', 'desc')
+            ->orderBy('year', 'asc')
             ->take(3)
             ->pluck('year')
             ->implode('、');
@@ -445,7 +445,7 @@ class f_hospital_ct
         $yearSummaryStage = $hospital->stages()
             ->select('year')
             ->where('cancer_id', $cancerId)
-            ->orderBy('year', 'desc')
+            ->orderBy('year', 'asc')
             ->take(3)
             ->pluck('year')
             ->implode('、');
@@ -460,7 +460,7 @@ class f_hospital_ct
         $yearSummarySurvival = $hospital->survivals()
             ->select('year')
             ->where('cancer_id', $cancerId)
-            ->orderBy('year', 'desc')
+            ->orderBy('year', 'asc')
             ->take(3)
             ->pluck('year')
             ->implode('、');
@@ -471,6 +471,30 @@ class f_hospital_ct
             ->orderBy('year', 'desc')
             ->take(3)
             ->avg('survival_rate');
+
+        $dpcs = $hospital->dpcs()
+            ->select(['year', 'n_dpc', 'rank_nation_dpc', 'rank_area_dpc', 'rank_pref_dpc'])
+            ->where('cancer_id', $cancerId)
+            ->orderBy('year', 'desc')
+            ->take(3)
+            ->get();
+
+        $stages = $hospital->stages()
+            ->where('cancer_id', $cancerId)
+            ->orderBy('year', 'desc')
+            ->take(3)
+            ->get();
+
+        $survivals = $hospital->survivals()
+            ->where('cancer_id', $cancerId)
+            ->orderBy('year', 'desc')
+            ->take(3)
+            ->get();
+
+        $averageSurv = SurvAverage::where('cancer_id', $cancerId)
+            ->whereIn('year', $survivals->pluck('year'))
+            ->orderBy('year', 'desc')
+            ->get();
 
         return [
             'baseUrl' => BASE_URL,
@@ -493,7 +517,11 @@ class f_hospital_ct
             'advancedMedical' => $advancedMedical?->pivot->content1,
             'famousDoctor' => $famousDoctor ? 1 : 0,
             'multiTreatment' => $multiTreatment ? 1 : 0,
-            'treatment' => $treatment
+            'treatment' => $treatment,
+            'dpcs' => $dpcs,
+            'stages' => $stages,
+            'survivals' => $survivals,
+            'averageSurv' => $averageSurv
         ];
     }
 

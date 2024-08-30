@@ -24,10 +24,10 @@ if (!isset($stages)) {
         for ($i = 0; $i < 3; $i++) {
 
             $totalStage = $stages[$i]['stage_new1'] + $stages[$i]['stage_new2'] + $stages[$i]['stage_new3'] + $stages[$i]['stage_new4'];
-            $percentStage1 = is_numeric($stages[$i]['stage_new1']) ? ('(' . (round($stages[$i]['stage_new1'] / $totalStage * 100, 2)) . '%)') : '';
-            $percentStage2 = is_numeric($stages[$i]['stage_new2']) ? ('(' . (round($stages[$i]['stage_new2'] / $totalStage * 100, 2)) . '%)') : '';
-            $percentStage3 = is_numeric($stages[$i]['stage_new3']) ? ('(' . (round($stages[$i]['stage_new3'] / $totalStage * 100, 2)) . '%)') : '';
-            $percentStage4 = is_numeric($stages[$i]['stage_new4']) ? ('(' . (round($stages[$i]['stage_new4'] / $totalStage * 100, 2)) . '%)') : '';
+            $percentStage1 = (is_numeric($stages[$i]['stage_new1']) && is_numeric($totalStage)) ? ('(' . (round($stages[$i]['stage_new1'] / $totalStage * 100, 2)) . '%)') : '';
+            $percentStage2 = (is_numeric($stages[$i]['stage_new2']) && is_numeric($totalStage)) ? ('(' . (round($stages[$i]['stage_new2'] / $totalStage * 100, 2)) . '%)') : '';
+            $percentStage3 = (is_numeric($stages[$i]['stage_new3']) && is_numeric($totalStage)) ? ('(' . (round($stages[$i]['stage_new3'] / $totalStage * 100, 2)) . '%)') : '';
+            $percentStage4 = (is_numeric($stages[$i]['stage_new4']) && is_numeric($totalStage)) ? ('(' . (round($stages[$i]['stage_new4'] / $totalStage * 100, 2)) . '%)') : '';
             $tr = '<tr class="border-top border-bottom">';
             $tr .= '<td rowspan="4">'.(($stages[$i]['year'] != null && $stages[$i]['year'] !='') ? ($stages[$i]['year'] . '年') : '-').'</td>';
             $tr .= '<td>新規患者数</td>';

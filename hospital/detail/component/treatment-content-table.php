@@ -44,7 +44,7 @@ if (!isset($infoTreatment)) {
         <tr>
             <th>特別な治療の提供状況</th>
             <td>
-                <b><?php echo $infoTreatment['treatment'] ? nl2br(e($infoTreatment['treatment'])) : '<span class="badge bg-warning">なし</span>' ?></b>
+                <?php echo $infoTreatment['treatment'] ? nl2br(e($infoTreatment['treatment'])) : '<span class="badge bg-warning">なし</span>' ?>
             </td>
         </tr>
         </tbody>
