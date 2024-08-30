@@ -6,11 +6,10 @@
     <link href="<?php echo $baseUrl; ?>assets/admin/css/bootstrap.min.css" rel="stylesheet" type="text/css" />
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;700&display=swap');
+
         body {
             font-family: 'Noto Sans JP', sans-serif;
             font-size: 10px;
-            padding:0;
-            font-weight: 300;
         }
 
         main, .main-detail, .container-fluid {
@@ -31,7 +30,7 @@
 
         .hospital-name {
             color: #505458;
-            font-weight: bolder;
+            font-weight: bold;
             font-size: 16px;
             line-height: 8px !important;
         }
@@ -46,7 +45,6 @@
             line-height: 8px !important;
             word-wrap: break-word !important;
             white-space: normal !important;
-            font-weight: 300 !important;
         }
 
         .table-info {
@@ -60,6 +58,7 @@
             border-bottom: 1px solid #b6e8e8 !important;
             border-right: none !important;
             border-left: none !important;
+            font-weight: normal !important;
         }
 
         .table-info td {
@@ -129,7 +128,7 @@
 
         .info-file {
             float: right;
-            margin-top: 25px;
+            margin-top: 22px;
             opacity: 0.3;
             color: #505458;
             font-weight: bold;
