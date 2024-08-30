@@ -5,12 +5,12 @@
     <title><?php echo $hospitalName; ?></title>
     <link href="<?php echo $baseUrl; ?>assets/admin/css/bootstrap.min.css" rel="stylesheet" type="text/css" />
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Kosugi+Maru&family=Noto+Sans+JP&display=swap');
-
+        @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;700&display=swap');
         body {
-            font-family: 'Kosugi Maru', 'Noto Sans JP', sans-serif;
+            font-family: 'Noto Sans JP', sans-serif;
             font-size: 10px;
             padding:0;
+            font-weight: 300;
         }
 
         main, .main-detail, .container-fluid {
@@ -46,8 +46,7 @@
             line-height: 8px !important;
             word-wrap: break-word !important;
             white-space: normal !important;
-            color: #0b0b0b;
-            font-weight: 300;
+            font-weight: 300 !important;
         }
 
         .table-info {
@@ -478,7 +477,7 @@
                         $avgSurvivalRate4 = $survivals->avg('stage_survival_rate4');
 
                         $avgHtml = '<tr>';
-                        $avgHtml .= '<td class="center-icon" rowspan="2">直近3<br><br>年平均</td>';
+                        $avgHtml .= '<td class="center-icon" rowspan="2">直近3<br><br><br>年平均</td>';
                         $avgHtml .= '<td class="center-icon">全国平均</td>';
                         $avgHtml .= '<td></td>';
                         $avgHtml .= '<td></td>';
