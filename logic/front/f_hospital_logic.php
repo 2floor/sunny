@@ -93,7 +93,7 @@ class f_hospital_logic
 
             if ($columnSort) {
                 $query->orderByDesc(function ($query) use ($cancers, $columnSort) {
-                    $query->selectRaw('AVG('.$columnSort.') as average_stage')
+                    $query->selectRaw('AVG('.$columnSort.') as average_rate')
                         ->from('t_surv_hospital')
                         ->whereColumn('t_surv_hospital.hospital_id', 't_hospital.id')
                         ->whereIn('t_surv_hospital.cancer_id', $cancers)

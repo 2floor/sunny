@@ -7,10 +7,10 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class SurvHospital extends BaseModel
 {
-    const STAGE_1 = 1;
-    const STAGE_2 = 2;
-    const STAGE_3 = 3;
-    const STAGE_4 = 4;
+    const STAGE_RATE_1 = 1;
+    const STAGE_RATE_2 = 2;
+    const STAGE_RATE_3 = 3;
+    const STAGE_RATE_4 = 4;
 
     protected $table = 't_surv_hospital';
     protected $primaryKey = 'id';
@@ -88,10 +88,10 @@ class SurvHospital extends BaseModel
     public static function getListColumnStage(): array
     {
         return [
-            self::STAGE_1 => 'stage_target1',
-            self::STAGE_2 => 'stage_target2',
-            self::STAGE_3 => 'stage_target3',
-            self::STAGE_4 => 'stage_target4',
+            self::STAGE_RATE_1 => 'stage_survival_rate1',
+            self::STAGE_RATE_2 => 'stage_survival_rate2',
+            self::STAGE_RATE_3 => 'stage_survival_rate3',
+            self::STAGE_RATE_4 => 'stage_survival_rate4',
         ];
     }
 }
