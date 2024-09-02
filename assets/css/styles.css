@@ -4764,7 +4764,7 @@ iframe {
     order: 1;
     background-color: #FFFFFF;
     color: #545454;
-    border: 1px solid #24B2FE;
+    border: 1px solid #0A74B0;
     box-shadow: 0 2px 3px rgba(0, 0, 0, 0.2)
 }
 
@@ -4772,7 +4772,11 @@ iframe {
     order: 2;
     background-color: #24B2FE;
     color: #545454;
-    border: 1px solid #24B2FE;
+    border: 1px solid #0A74B0;
+    box-shadow: 0 2px 3px rgba(0, 0, 0, 0.2)
+}
+
+.order-2:focus-visible {
     box-shadow: 0 2px 3px rgba(0, 0, 0, 0.2)
 }
 

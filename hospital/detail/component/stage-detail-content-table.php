@@ -9,8 +9,8 @@ if (!isset($stages)) {
     <table class="table stage-detail-tb">
         <thead>
         <tr class="border-top border-bottom">
-            <th class="table-title">年度</th>
-            <th class="table-title"></th>
+            <th class="table-title center-icon">年度</th>
+            <th class="table-title center-icon"></th>
             <th class="table-title center-icon">ステージI</th>
             <th class="table-title center-icon">ステージII</th>
             <th class="table-title center-icon">ステージIII</th>
@@ -29,8 +29,8 @@ if (!isset($stages)) {
             $percentStage3 = (is_numeric($stages[$i]['stage_new3']) && is_numeric($totalStage)) ? ('(' . (round($stages[$i]['stage_new3'] / $totalStage * 100, 2)) . '%)') : '';
             $percentStage4 = (is_numeric($stages[$i]['stage_new4']) && is_numeric($totalStage)) ? ('(' . (round($stages[$i]['stage_new4'] / $totalStage * 100, 2)) . '%)') : '';
             $tr = '<tr class="border-top border-bottom">';
-            $tr .= '<td rowspan="4">'.(($stages[$i]['year'] != null && $stages[$i]['year'] !='') ? ($stages[$i]['year'] . '年') : '-').'</td>';
-            $tr .= '<td>新規患者数</td>';
+            $tr .= '<td class="center-icon rowspan-col" rowspan="4">'.(($stages[$i]['year'] != null && $stages[$i]['year'] !='') ? ($stages[$i]['year'] . '年') : '-').'</td>';
+            $tr .= '<td class="center-icon table-title">新規患者数</td>';
             $tr .= '<td class="center-icon">'.(($stages[$i]['stage_new1'] != null && $stages[$i]['stage_new1'] != '') ? ($stages[$i]['stage_new1'] . '人 ' .  $percentStage1) : '-').'</td>';
             $tr .= '<td class="center-icon">'.(($stages[$i]['stage_new2'] != null && $stages[$i]['stage_new2'] != '') ? ($stages[$i]['stage_new2'] . '人 ' .  $percentStage2) : '-').'</td>';
             $tr .= '<td class="center-icon">'.(($stages[$i]['stage_new3'] != null && $stages[$i]['stage_new3'] != '') ? ($stages[$i]['stage_new3'] . '人 ' .  $percentStage3) : '-').'</td>';
@@ -46,7 +46,7 @@ if (!isset($stages)) {
 
 
             $tr .= '<tr class="border-top border-bottom">';
-            $tr .= '<td>都道府県</td>';
+            $tr .= '<td class="center-icon table-title">都道府県</td>';
             $tr .= '<td class="center-icon">'.$prefRank1.'</td>';
             $tr .= '<td class="center-icon">'.$prefRank2.'</td>';
             $tr .= '<td class="center-icon">'.$prefRank3.'</td>';
@@ -60,7 +60,7 @@ if (!isset($stages)) {
             $localRank4 = render_html_helper::renderRank($stages[$i]['local_num_rank_stage4'], '../../img/icons');
 
             $tr .= '<tr class="border-top border-bottom">';
-            $tr .= '<td>地方</td>';
+            $tr .= '<td class="center-icon table-title">地方</td>';
             $tr .= '<td class="center-icon">'.$localRank1.'</td>';
             $tr .= '<td class="center-icon">'.$localRank2.'</td>';
             $tr .= '<td class="center-icon">'.$localRank3.'</td>';
@@ -74,7 +74,7 @@ if (!isset($stages)) {
             $totalRank4 = render_html_helper::renderRank($stages[$i]['total_num_rank_stage4'], '../../img/icons');
 
             $tr .= '<tr class="border-top border-bottom">';
-            $tr .= '<td>全国</td>';
+            $tr .= '<td class="center-icon table-title">全国</td>';
             $tr .= '<td class="center-icon">'.$totalRank1.'</td>';
             $tr .= '<td class="center-icon">'.$totalRank2.'</td>';
             $tr .= '<td class="center-icon">'.$totalRank3.'</td>';
@@ -104,8 +104,8 @@ if (!isset($stages)) {
         $percentStage4 = (is_numeric($avgStage4) && is_numeric($totalStage)) ? ('(' . (round($avgStage4 / $totalStage * 100, 2)) . '%)') : '';
 
         $avgHtml = '<tr class="border-top border-bottom">';
-        $avgHtml .= '<td rowspan="4">直近3年平均</td>';
-        $avgHtml .= '<td>新規患者数</td>';
+        $avgHtml .= '<td class="center-icon rowspan-col" rowspan="4">直近3年平均</td>';
+        $avgHtml .= '<td class="center-icon table-title">新規患者数</td>';
         $avgHtml .= '<td class="center-icon">'.($avgStage1 ? ($avgStage1 . '人' . $percentStage1) : '-').'</td>';
         $avgHtml .= '<td class="center-icon">'.($avgStage2 ? ($avgStage2 . '人' . $percentStage2) : '-').'</td>';
         $avgHtml .= '<td class="center-icon">'.($avgStage3 ? ($avgStage3 . '人' . $percentStage3) : '-').'</td>';
@@ -119,7 +119,7 @@ if (!isset($stages)) {
         $avgPrefRank4 = $stages->avg('pref_num_rank_stage4');
 
         $avgHtml .= '<tr class="border-top border-bottom">';
-        $avgHtml .= '<td>都道府県</td>';
+        $avgHtml .= '<td class="center-icon table-title">都道府県</td>';
         $avgHtml .= '<td class="center-icon">'.render_html_helper::renderRank((($avgPrefRank1 != null && $avgPrefRank1 != '') ? round($avgPrefRank1) : null), '../../img/icons').'</td>';
         $avgHtml .= '<td class="center-icon">'.render_html_helper::renderRank((($avgPrefRank2 != null && $avgPrefRank2 != '') ? round($avgPrefRank2) : null), '../../img/icons').'</td>';
         $avgHtml .= '<td class="center-icon">'.render_html_helper::renderRank((($avgPrefRank3 != null && $avgPrefRank3 != '') ? round($avgPrefRank3) : null), '../../img/icons').'</td>';
@@ -133,7 +133,7 @@ if (!isset($stages)) {
         $avgLocalRank4 = $stages->avg('local_num_rank_stage4');
 
         $avgHtml .= '<tr class="border-top border-bottom">';
-        $avgHtml .= '<td>地方</td>';
+        $avgHtml .= '<td class="center-icon table-title">地方</td>';
         $avgHtml .= '<td class="center-icon">'.render_html_helper::renderRank((($avgLocalRank1 != null && $avgLocalRank1 != '') ? round($avgLocalRank1) : null), '../../img/icons').'</td>';
         $avgHtml .= '<td class="center-icon">'.render_html_helper::renderRank((($avgLocalRank2 != null && $avgLocalRank2 != '') ? round($avgLocalRank2) : null), '../../img/icons').'</td>';
         $avgHtml .= '<td class="center-icon">'.render_html_helper::renderRank((($avgLocalRank3 != null && $avgLocalRank3 != '') ? round($avgLocalRank3) : null), '../../img/icons').'</td>';
@@ -147,7 +147,7 @@ if (!isset($stages)) {
         $avgTotalRank4 = $stages->avg('total_num_rank_stage4');
 
         $avgHtml .= '<tr class="border-top border-bottom">';
-        $avgHtml .= '<td>全国</td>';
+        $avgHtml .= '<td class="center-icon table-title">全国</td>';
         $avgHtml .= '<td class="center-icon">'.render_html_helper::renderRank((($avgTotalRank1 != null && $avgTotalRank1 != '') ? round($avgTotalRank1) : null), '../../img/icons').'</td>';
         $avgHtml .= '<td class="center-icon">'.render_html_helper::renderRank((($avgTotalRank2 != null && $avgTotalRank2 != '') ? round($avgTotalRank2) : null), '../../img/icons').'</td>';
         $avgHtml .= '<td class="center-icon">'.render_html_helper::renderRank((($avgTotalRank3 != null && $avgTotalRank3 != '') ? round($avgTotalRank3) : null), '../../img/icons').'</td>';

@@ -10,16 +10,14 @@ if (!isset($avgData)) {
 ?>
 <div class="table-responsive">
     <table class="table dpc-tb overflow-auto">
-        <thead>
-        <tr class="border-top border-bottom">
-            <th class="table-title col-xs-4">年度</th>
-            <th class="table-title col-xs-2 center-icon">統計價</th>
-            <th class="table-title col-xs-2 center-icon">都道府</th>
-            <th class="table-title col-xs-2 center-icon">地方</th>
-            <th class="table-title col-xs-2 center-icon">全国</th>
-        </tr>
-        </thead>
         <tbody>
+        <tr class="border-top border-bottom">
+            <td class="table-title center-icon">年度</td>
+            <td class="table-title center-icon">統計價</td>
+            <td class="table-title center-icon">都道府</td>
+            <td class="table-title center-icon">地方</td>
+            <td class="table-title center-icon">全国</td>
+        </tr>
         <?php
         $html = '';
         for ($i = 0; $i < 3; $i++) {
@@ -29,12 +27,12 @@ if (!isset($avgData)) {
             $totalRank = render_html_helper::renderRank($dpcs[$i]['rank_nation_dpc'], '../../img/icons');
 
             $tr = '<tr class="border-top border-bottom">';
-            $tr .= '<td class="criteria">'.(($dpcs[$i]['year'] != null && $dpcs[$i]['year'] != '') ? ($dpcs[$i]['year'] . '年') : '-').'</td>';
+            $tr .= '<td class="center-icon">'.(($dpcs[$i]['year'] != null && $dpcs[$i]['year'] != '') ? ($dpcs[$i]['year'] . '年') : '-').'</td>';
             $tr .= '<td class="center-icon">' . (($dpcs[$i]['n_dpc'] != null && $dpcs[$i]['n_dpc'] != '') ? $dpcs[$i]['n_dpc'] . '人' : '-') . '</td>';
             $tr .= '<td class="center-icon">'.$prefRank.'</td>';
             $tr .= '<td class="center-icon">'.$localRank.'</td>';
             $tr .= '<td class="center-icon">'.$totalRank.'</td>';
-            $tr .= '<tr>';
+            $tr .= '</tr>';
 
             $html = $tr . $html;
         }
@@ -42,7 +40,7 @@ if (!isset($avgData)) {
         echo $html;
         ?>
         <tr class="border-top border-bottom">
-            <td class="criteria">直近3年平均</td>
+            <td class="center-icon">直近3年平均</td>
             <td class="center-icon"><?php echo (($avgData['avgDpc'] != null && $avgData['avgDpc'] != '') ? round($avgData['avgDpc'], 1) . '人' : '-') ?></td>
             <td class="center-icon">
                 <?php

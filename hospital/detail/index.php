@@ -98,51 +98,36 @@ if ($initData['remarks']['approved_time']) {
                 </div>
                 <div class="tab-pane fade" id="results" role="tabpanel" aria-labelledby="results-tab">
                     <div class="result-content-tab">
-                        <div class="panel-group" id="accordion">
-                            <div class="panel panel-default">
-                                <div class="panel-heading" data-toggle="collapse" data-parent="#accordion" href="#collapseOne">
-                                    <h4 class="panel-title">
-                                        年間入院患者数
-                                        <span class="glyphicon glyphicon-chevron-down arrow"></span>
-                                    </h4>
-                                </div>
-                                <div id="collapseOne" class="panel-collapse collapse in">
-                                    <div class="panel-body">
-                                        <?php include 'component/dpc-content-table.php'; ?>
-                                    </div>
-                                </div>
+                        <section id="dpc-table" class="table-sec">
+                            <div class="header">
+                                <h4>年間入院患者数</h4>
                             </div>
-                            <div class="panel panel-default">
-                                <div class="panel-heading" data-toggle="collapse" data-parent="#accordion" href="#collapseTwo">
-                                    <h4 class="panel-title">
-                                        年間新規入院患者数
-                                        <span class="glyphicon glyphicon-chevron-down arrow"></span>
-                                    </h4>
-                                </div>
-                                <div id="collapseTwo" class="panel-collapse collapse">
-                                    <div class="panel-body">
-                                        <?php include 'component/stage-content-table.php'; ?>
-                                        <div><h3><b>ステージ別</b></h3></div>
-                                        <?php include 'component/stage-detail-content-table.php'; ?>
-                                    </div>
-                                </div>
+                            <?php include 'component/dpc-content-table.php'; ?>
+                        </section>
+
+                        <section id="stage-table" class="table-sec">
+                            <div class="header">
+                                <h4>年間新規入院患者数</h4>
                             </div>
-                            <div class="panel panel-default">
-                                <div class="panel-heading" data-toggle="collapse" data-parent="#accordion" href="#collapseThree">
-                                    <h4 class="panel-title">
-                                        5年後生在率・生存幸係数
-                                        <span class="glyphicon glyphicon-chevron-down arrow"></span>
-                                    </h4>
-                                </div>
-                                <div id="collapseThree" class="panel-collapse collapse">
-                                    <div class="panel-body">
-                                        <?php include 'component/survival-content-table.php'; ?>
-                                        <div><h3><b>ステージ別</b></h3></div>
-                                        <?php include 'component/survival-detail-content-table.php'; ?>
-                                    </div>
-                                </div>
+                            <?php include 'component/stage-content-table.php'; ?>
+                            <?php include 'component/stage-detail-content-table.php'; ?>
+                        </section>
+
+                        <section id="survival-table" class="table-sec">
+                            <div class="header">
+                                <h4>5年後生在率・生存幸係数</h4>
                             </div>
-                        </div>
+                            <div class="note-sec">
+                                <h5>集計対象者数</h5>
+                            </div>
+                            <?php include 'component/survival-content-table-1.php'; ?>
+                            <?php include 'component/survival-detail-content-table-1.php'; ?>
+                            <div class="note-sec">
+                                <h5>生在率係数</h5>
+                            </div>
+                            <?php include 'component/survival-content-table-2.php'; ?>
+                            <?php include 'component/survival-detail-content-table-2.php'; ?>
+                        </section>
                     </div>
                 </div>
                 <div class="tab-pane fade" id="notification" role="tabpanel" aria-labelledby="notification-tab">

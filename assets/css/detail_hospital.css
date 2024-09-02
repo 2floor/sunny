@@ -73,7 +73,7 @@
     border: none;
 }
 
-.table-info th, td {
+td, .table>thead>tr>th {
     border-top: thin solid #8dd5d5 !important;
     border-bottom: thin solid #8dd5d5 !important;
     line-height: 35px !important;
@@ -129,28 +129,15 @@
     padding: 20px;
 }
 
-.result-content-tab .dpc-tb th {
-    background-color: #DAE9F5;
+.result-content-tab table {
+    border: 1px solid #c3e4ed;
+    border-top: 4px solid #c3e4ed;
+    border-radius: 5px;
+    margin-top: 2px;
 }
 
-.result-content-tab .dpc-tb {
-    margin-bottom: 0
-}
-
-.result-content-tab .stage-tb th {
-    background-color: #DAE9F5;
-}
-
-.result-content-tab .surv-tb th {
-    background-color: #DAE9F5;
-}
-
-.result-content-tab .stage-detail-tb th {
-    background-color: #DAE9F5;
-}
-
-.result-content-tab .surv-detail-tb th {
-    background-color: #DAE9F5;
+.result-content-tab table tr:nth-child(even) {
+    background-color: #DEF3FD;
 }
 
 .search-result-header {
@@ -357,7 +344,7 @@
     color: #71b6f9;
 }
 
-.treatment-results .header {
+.treatment-results .header, .result-content-tab .header{
     position: unset;
     background: linear-gradient(to right, #3FB6B6, #ffffff);
     padding: 3px 10px;
@@ -365,7 +352,7 @@
     border: 1px solid #c3e4ed;
 }
 
-.treatment-results .header h4 {
+.treatment-results .header h4, .result-content-tab .header h4 {
     color: #FFFFFF;
 }
 
@@ -383,6 +370,41 @@
 
 .w-30 {
     width: 30%;
+}
+
+.table-title {
+    font-weight: 700;
+}
+
+.dpc-tb, .stage-tb, .surv-tb, .surv-detail-tb, .stage-detail-tb {
+    table-layout: fixed;
+    width: 100%;
+}
+
+.dpc-tb .table-title, .stage-tb .table-title, .surv-tb .table-title, .surv-detail-tb .table-title, .stage-detail-tb .table-title{
+    width: auto;
+}
+
+.table-sec {
+    margin-bottom: 50px;
+}
+
+.table>tbody>tr>td {
+    vertical-align: middle !important;
+}
+
+.rowspan-col {
+    border-right: thin solid #8dd5d5 !important;
+    background-color: #FFFFFF !important;
+}
+
+.note-sec {
+    margin-top: 20px;
+    font-weight: 700;
+}
+
+.note-sec h5{
+    font-weight: 700;
 }
 @media (max-width: 1200px) {
     .summary-content-tab {
