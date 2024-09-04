@@ -24,13 +24,7 @@ $stages = $initData['stages'] ?? [];
 $dpcs = $initData['dpcs'] ?? [];
 $survivals = $initData['survivals'] ?? [];
 $averageSurv = $initData['averageSurv'] ?? [];
-$remarks = $initData['remarks']['remarks'] ?? '';
-$approved_time = '';
-
-if ($initData['remarks']['approved_time']) {
-    $date = new DateTime($initData['remarks']['approved_time']);
-    $approved_time = $date->format('Y-m-d');
-}
+$remarks = $initData['remarks'] ?? [];
 ?>
 
 <!DOCTYPE html>
@@ -98,6 +92,11 @@ if ($initData['remarks']['approved_time']) {
                 </div>
                 <div class="tab-pane fade" id="results" role="tabpanel" aria-labelledby="results-tab">
                     <div class="result-content-tab">
+                        <div class="nav-section">
+                            <a href="#dpc-table" id="navDpcTb"><img src="../../img/icons/bed-icon.png" alt="Hospital Icon"><span>年間入院患者数</span></a>
+                            <a href="#stage-table" id="navStageTb"><img src="../../img/icons/list-icon.png" alt="Hospital Icon"><span>年間新規入院患者数</span></a>
+                            <a href="#survival-table" id="navSurvivalTb"><img src="../../img/icons/healthy-icon.png" alt="Hospital Icon"><span>5年後生在率・生存幸係数</span></a>
+                        </div>
                         <section id="dpc-table" class="table-sec">
                             <div class="header">
                                 <h4>年間入院患者数</h4>
@@ -132,26 +131,49 @@ if ($initData['remarks']['approved_time']) {
                 </div>
                 <div class="tab-pane fade" id="notification" role="tabpanel" aria-labelledby="notification-tab">
                     <div class="notification-content-tab">
-                        <div class="note-container">
-                            <div>
-                                <a class="btn btn-edit-memo" id="btnEditMemo">
-                                    <img src="../../img/icons/green-edit.png" alt="Hospital Icon"><span class="text">印刷</span>
-                                </a>
+                        <div class="memo-container">
+                            <div class="card-container" id="cardContainer">
+                                <?php
+                                    if (!empty($remarks)) {
+                                        $author = $_SESSION['authentication']['login_user']['name'];
+                                        foreach ($remarks  as $remark) {
+                                            echo '<div class="card">
+                                                <div class="card-content">
+                                                    <div class="card-header">
+                                                       <div class="author"><span>'.$author.'</span><span>'.$remark['approved_time'].'</span></div>
+                                                       <div class="card-actions">
+                                                            <a id="btnEditMemo">
+                                                                <img src="../../img/icons/edit-memo-icon.png" alt="alt">
+                                                            </a>
+                                                            <a id="btnDeleteMemo">
+                                                                <img src="../../img/icons/delete-memo-icon.png" alt="alt">
+                                                            </a>
+                                                       </div>
+                                                    </div>
+                                                    <div class="card-body">
+                                                       <p>'.($remark['remarks'] ?? '').'</p>
+                                                    </div>
+                                                </div>
+                                              </div>';
+                                        }
+                                    } else {
+                                        echo '<p id="NoMemoText">まだメモを追加していません!</p>';
+                                    }
+                                ?>
                             </div>
-                            <div class="note-content">
-                                <div class="header">
-                                    <span class="label">更新日</span>
-                                    <span class="date"><?= $approved_time?></span>
+                            <div class="add-memo-container">
+                                <div class="card-add">
+                                    <div class="card-content">
+                                        <div class="card-body">
+                                            <textarea id="text-content"  placeholder="ここにメモを追加..." class="text-with-lines"></textarea>
+                                        </div>
+                                    </div>
                                 </div>
-                                <div class="content">
-                                    <div class="text-with-lines" id="text-content"><?= $remarks;?></div>
-                                    <input type="hidden" name="remarks" value="<?= $remarks;?>">
+                                <div>
+                                    <a class="btn btn-add-memo" id="btnSaveMemo">
+                                        <span class="text">追加</span>
+                                    </a>
                                 </div>
-                            </div>
-                            <div>
-                                <a class="btn btn-edit-memo" style="float: left; display:none; margin-bottom: 3px;" id="btnSaveMemo">
-                                    <img src="../../img/icons/green-save.png" alt="Hospital Icon"><span class="text">保存</span>
-                                </a>
                             </div>
                         </div>
                     </div>

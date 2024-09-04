@@ -74,15 +74,14 @@
 }
 
 td, .table>thead>tr>th {
-    border-top: thin solid #8dd5d5 !important;
-    border-bottom: thin solid #8dd5d5 !important;
+    border: thin solid #8dd5d5 !important;
     line-height: 35px !important;
 }
 
 .table-info th {
     width: 20%;
     background-color: #DEF3FD;
-    border-right: thin solid #8dd5d5 !important;
+    border: thin solid #8dd5d5 !important;
 }
 
 .table-info td {
@@ -133,7 +132,7 @@ td, .table>thead>tr>th {
     border: 1px solid #c3e4ed;
     border-top: 4px solid #c3e4ed;
     border-radius: 5px;
-    margin-top: 2px;
+    margin-top: 4px;
 }
 
 .result-content-tab table tr:nth-child(even) {
@@ -190,69 +189,6 @@ td, .table>thead>tr>th {
 
 #nextPDF {
     display: none;
-}
-
-.note-container {
-    overflow: hidden;
-}
-
-.note-container .header {
-    position: unset;
-    background: linear-gradient(to right, #3FB6B6, #ffffff);
-    padding: 10px;
-    display: flex;
-    align-items: center;
-    gap: 30px;
-    border: 1px solid #c3e4ed;
-}
-
-.note-container .header .label {
-    color: #FFFFFF;
-    font-size: 16px;
-}
-
-.note-container .header .date {
-    color: #FFFFFF;
-    font-size: 16px;
-}
-
-.note-container .content {
-    padding: 20px;
-    color: #999;
-    font-size: 14px;
-    line-height: 2;
-    position: relative;
-    border: 1px solid #c3e4ed;
-    border-top: 4px solid #c3e4ed;
-    border-radius: 5px;
-    margin-top:2px
-}
-
-.note-container .text-with-lines {
-    position: relative;
-    white-space: pre-wrap;
-    word-wrap: break-word;
-    padding-right: 10px;
-    line-height: 40px;
-    text-decoration: underline dotted #84c2d3;
-    min-height: 250px;
-}
-
-.note-container .text-with-lines textarea {
-    width: 100%;
-    height: 100%;
-    border: none;
-    padding: 10px;
-    box-sizing: border-box;
-    background: #f9f9f9;
-    resize: none;
-}
-
-.note-content {
-    display: inline-block;
-    margin-top: 15px;
-    margin-bottom: 15px;
-    width: 100%;
 }
 
 .btn-edit-memo {
@@ -360,7 +296,7 @@ td, .table>thead>tr>th {
     border: 1px solid #c3e4ed;
     border-top: 4px solid #c3e4ed;
     border-radius: 5px;
-    margin-top: 2px;
+    margin-top: 4px;
 }
 
 
@@ -406,6 +342,137 @@ td, .table>thead>tr>th {
 .note-sec h5{
     font-weight: 700;
 }
+
+.nav-section {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    margin-bottom: 70px;
+    width: 80%;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.nav-section a {
+    display: flex;
+    flex-direction: row;
+    align-items: flex-end;
+    font-weight: 700;
+}
+
+.nav-section a img{
+    width: 45px;
+    height: 45px;
+}
+
+.nav-section a:hover, .nav-section a.nav-section-active {
+    color: #35979A;
+}
+
+.memo-container {
+    display: flex;
+    flex-direction: column;
+    gap: 50px;
+    width: 100%;
+}
+
+.card-container {
+    margin: 20px auto;
+    width: 100%;
+
+}
+
+.card {
+    display: flex;
+    align-items: center;
+    border:  1px solid #B7E4EC;
+    border-left: 12px solid #B7E4EC;
+    border-radius: 6px;
+    padding: 15px 25px;
+    margin-bottom: 15px;
+    background-color: #fff;
+}
+
+.card-add {
+    display: flex;
+    align-items: center;
+    border:  1px solid #EFEFEF;
+    border-radius: 6px;
+    padding: 15px 25px;
+    margin-bottom: 15px;
+    background-color: #EFEFEF;
+}
+
+.card-add textarea {
+    width: 100%;
+    height: 20px;
+    transition: height 1s ease;
+}
+
+.card-add textarea:focus {
+    height: 150px;
+}
+
+.card-content {
+    flex: 1;
+}
+
+.card-header {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 20px;
+    font-weight: bold;
+    color: #333;
+}
+
+.card-header .author {
+    display: flex;
+    gap: 20px;
+}
+
+.card-body {
+    line-height: 1.5;
+}
+
+.card-actions {
+    display: flex;
+    flex-direction: row;
+    gap: 8px;
+    margin-right: 5px;
+}
+
+.card-actions a {
+    text-decoration: none;
+    cursor: pointer;
+    transition: color 0.3s;
+}
+
+.card-actions a img {
+    width: 25px;
+    height: 25px;
+}
+
+.card-actions a:hover {
+    color: #007bff;
+}
+
+.btn-add-memo {
+    background-color: #24B2FE;
+    border: 1px solid #0A74B0;
+    border-radius: 6px;
+    text-decoration: none;
+    color: #33322F;
+    transition: background-color 0.3s;
+    width: 100px;
+    float: left;
+    box-shadow: 0 2px 3px rgba(0, 0, 0, 0.2) !important;
+    padding: 3px 10px 4px 10px;
+}
+
+.btn-add-memo .text {
+    line-height: 0;
+}
+
 @media (max-width: 1200px) {
     .summary-content-tab {
         flex-direction: column;
@@ -424,15 +491,18 @@ td, .table>thead>tr>th {
         gap: 20px;
     }
 
-    .note-container .text-with-lines {
-        min-width: unset;
-    }
-
-    .note-container .header {
-        background: #56B2F5;
-    }
-
     .list-print-hospital .center-print {
         width: 100%;
+    }
+
+    ul.nav-tabs {
+        display: flex;
+        flex-direction: column;
+    }
+
+    .nav-section {
+        flex-direction: column;
+        width: 100%;
+        gap: 20px;
     }
 }

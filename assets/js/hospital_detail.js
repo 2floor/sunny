@@ -57,8 +57,6 @@ $(document).ready(function() {
                 $('.loading-overlay').hide();
                 let res = JSON.parse(response);
                 if (res.status === true) {
-                    $("input[name='remarks']").val(res.data.remarks);
-                    $(".note-content .date").text(res.data.approved_time);
                     Swal.fire({
                         title: "完了!",
                         text: "正常に更新されました",
@@ -66,6 +64,31 @@ $(document).ready(function() {
                         confirmButtonText: "閉じる",
                         customClass: {
                             confirmButton: 'order-2',
+                        }
+                    }).then((result) => {
+                        if (result.isConfirmed) {
+                            let html = `<div class="card">
+                                                <div class="card-content">
+                                                    <div class="card-header">
+                                                       <div class="author"><span>${res.data.author || ''}</span><span>${res.data.approved_time || ''}</span></div>
+                                                       <div class="card-actions">
+                                                            <a id="btnEditMemo">
+                                                                <img src="../../img/icons/edit-memo-icon.png" alt="alt">
+                                                            </a>
+                                                            <a id="btnDeleteMemo">
+                                                                <img src="../../img/icons/delete-memo-icon.png" alt="alt">
+                                                            </a>
+                                                       </div>
+                                                    </div>
+                                                    <div class="card-body">
+                                                       <p>${res.data.remarks || ''}</p>
+                                                    </div>
+                                                </div>
+                                              </div>`;
+
+                            $('#cardContainer').append(html);
+                            $('#NoMemoText').remove();
+                            $('#text-content').val('');
                         }
                     });
                 } else {
@@ -127,20 +150,11 @@ $(document).ready(function() {
         });
     });
 
-    $('#btnEditMemo').on('click', function() {
-        let textContent = $('#text-content');
-        let currentText = textContent.text();
-        let currentWidth = textContent.outerWidth();
-        textContent.replaceWith(createTextArea(currentText, currentWidth));
-        $(this).hide();
-        $('#btnSaveMemo').show();
-    });
-
     $('#btnSaveMemo').on('click', function() {
         let textContent = $('#text-content');
         let newContent = textContent.val();
         Swal.fire({
-            title: "備考を変更しますか？",
+            title: "新しいメモを追加しましたか？",
             icon: "question",
             showCloseButton: true,
             showDenyButton: true,
@@ -154,30 +168,47 @@ $(document).ready(function() {
         }).then((result) => {
             if (result.isConfirmed) {
                 updateRemarks({remarks : newContent, hospitalId : id});
-                textContent.replaceWith(createTextDiv(newContent));
-            } else {
-                textContent.replaceWith(createTextDiv($("input[name='remarks']").val()));
             }
-
-            $(this).hide();
-            $('#btnEditMemo').show();
         });
     });
 
-    function createTextArea(text, width) {
-        return $('<textarea>')
-            .val(text)
-            .css({
-                'width': width + 'px',
-            })
-            .attr('id', 'text-content')
-            .addClass('text-with-lines');
+    function getSectionNavImageSrc(id, isHover) {
+        let base = isHover ? '-hover-icon.png' : '-icon.png';
+
+        switch (id) {
+            case 'navDpcTb':
+                return 'bed' + base;
+            case 'navStageTb':
+                return 'list' + base;
+            default:
+                return 'healthy' + base;
+        }
     }
 
-    function createTextDiv(text) {
-        return $('<div>')
-            .text(text)
-            .attr('id', 'text-content')
-            .addClass('text-with-lines');
-    }
+    $('.nav-section a').hover(
+        function () {
+            let id = $(this).attr('id');
+            let src = '../../img/icons/' + getSectionNavImageSrc(id, true);
+            $(this).find('img').attr('src', src);
+        },
+        function () {
+            if (!$(this).hasClass('nav-section-active')) {
+                let id = $(this).attr('id');
+                let src = '../../img/icons/' + getSectionNavImageSrc(id, false);
+                $(this).find('img').attr('src', src);
+            }
+        }
+    );
+
+    $('.nav-section a').on('click', function () {
+        $('.nav-section a').removeClass('nav-section-active');
+        $(this).addClass('nav-section-active');
+
+        $('.nav-section a').each(function () {
+            let id = $(this).attr('id');
+            let isActive = $(this).hasClass('nav-section-active');
+            let src = '../../img/icons/' + getSectionNavImageSrc(id, isActive);
+            $(this).find('img').attr('src', src);
+        });
+    });
 });
