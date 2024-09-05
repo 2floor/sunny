@@ -5,6 +5,7 @@ use App\Models\Cancer;
 use App\Models\Category;
 use App\Models\Hospital;
 use App\Models\SurvAverage;
+use App\Models\HospitalUser;
 use Dompdf\Dompdf;
 use Dompdf\Options;
 
@@ -70,8 +71,12 @@ class f_hospital_ct
             $data = $this->printHospitalList($post);
         }
 
-        if ($post['method'] == 'updateRemarks') {
-            $data = $this->updateRemarks($post);
+        if ($post['method'] == 'createRemark') {
+            $data = $this->createRemark($post);
+        }
+
+        if ($post['method'] == 'updateRemark') {
+            $data = $this->updateRemark($post);
         }
 
         return $data;
@@ -219,11 +224,7 @@ class f_hospital_ct
             'treatment' => $treatment
         ];
 
-        $loginUser = $_SESSION['authentication']['login_user'];
-        $remarks = $hospital->users()->where('t_user.id', $loginUser['id'] ?? null)->get();
-        $remarks = !empty($remarks) ? $remarks->map(function ($item) {
-            return $item->pivot->toArray();
-        })->toArray() : [];
+        $remarks = $this->getRemarksList($hospital);
 
         return [
             'cancerName' => $cancer->cancer_type,
@@ -528,7 +529,7 @@ class f_hospital_ct
         ];
     }
 
-    private function updateRemarks($post)
+    private function createRemark($post)
     {
         $data = $post['data'] ?? [];
         $hospitalId = $data['hospitalId'] ?? null;
@@ -541,19 +542,68 @@ class f_hospital_ct
             ];
         }
 
-        $approved_time = date('Y-m-d H:i:s');
         $hospital->users()->attach([ $_SESSION['authentication']['login_user']['id'] => [
             'remarks' => $data['remarks'] ?? '',
-            'approved_time' => $approved_time]
+            'approved_time' => date('Y-m-d H:i:s'),
+            'updated_at' => null,
+            ],
         ]);
+
+        $remarks = $this->getRemarksList($hospital);
 
         return [
             'status' => true,
-            'data' => [
-                'remarks' => $data['remarks'],
-                'approved_time' => $approved_time,
-                'author' => $_SESSION['authentication']['login_user']['name']
-            ]
+            'data' => $remarks
         ];
+    }
+
+    private function updateRemark($post)
+    {
+        $data = $post['data'] ?? [];
+        $idPivot = $data['id'] ?? null;
+        $hospitalId = $data['hospitalId'] ?? null;
+        $updateType = $data['updateType'] ?? null;
+        $hospital = Hospital::find($hospitalId);
+
+        if (!$hospital || !$idPivot || !$updateType) {
+            return [
+                'status' => false,
+                'data' => []
+            ];
+        }
+
+        if ($updateType == 'update') {
+            $updateData = [
+                'remarks' => $data['remarks'],
+                'updated_at' => date('Y-m-d H:i:s')
+            ];
+        } else {
+            $updateData = [
+                'del_flg' => 1,
+                'updated_at' => date('Y-m-d H:i:s')
+            ];
+        }
+
+        HospitalUser::where('id', $idPivot)->update($updateData);
+        $remarks = $this->getRemarksList($hospital);
+
+        return [
+            'status' => true,
+            'data' => $remarks
+        ];
+    }
+
+    private function getRemarksList($hospital)
+    {
+        $loginUser = $_SESSION['authentication']['login_user'];
+        $remarks = $hospital->users()->where('t_user.id', $loginUser['id'] ?? null)->get();
+        return !empty($remarks) ? $remarks->map(function ($item) use ($loginUser) {
+            $pivotData = $item->pivot->toArray();
+            if (isset($pivotData['remarks'])) {
+                $pivotData['remarks'] =  nl2br(e($pivotData['remarks']));
+            }
+
+            return array_merge($pivotData, ['author' => $loginUser['name']]);
+        })->toArray() : [];
     }
 }

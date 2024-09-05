@@ -135,17 +135,19 @@ $remarks = $initData['remarks'] ?? [];
                             <div class="card-container" id="cardContainer">
                                 <?php
                                     if (!empty($remarks)) {
-                                        $author = $_SESSION['authentication']['login_user']['name'];
                                         foreach ($remarks  as $remark) {
                                             echo '<div class="card">
                                                 <div class="card-content">
                                                     <div class="card-header">
-                                                       <div class="author"><span>'.$author.'</span><span>'.$remark['approved_time'].'</span></div>
+                                                       <div class="author"><span>'.$remark['author'].'</span><span>作成日時: '.$remark['approved_time'].'</span>'.($remark['updated_at'] ? '<span>更新日時: '.$remark['updated_at'].'</span>' : '').'</div>
                                                        <div class="card-actions">
-                                                            <a id="btnEditMemo">
+                                                            <a class="btnEditMemo">
                                                                 <img src="../../img/icons/edit-memo-icon.png" alt="alt">
                                                             </a>
-                                                            <a id="btnDeleteMemo">
+                                                            <a class="btnSaveEditMemo" style="display: none" data-remark-id="'.$remark['id'].'">
+                                                                <img src="../../img/icons/blue-save.png" alt="alt">
+                                                            </a>
+                                                            <a class="btnDeleteMemo" data-remark-id="'.$remark['id'].'">
                                                                 <img src="../../img/icons/delete-memo-icon.png" alt="alt">
                                                             </a>
                                                        </div>

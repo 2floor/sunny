@@ -45,11 +45,11 @@ $(document).ready(function() {
         });
     }
 
-    function updateRemarks(data) {
+    function updateRemarks(method, data) {
         $.ajax({
             url: '../../controller/front/f_hospital_ct.php',
             type: 'POST',
-            data: {method: 'updateRemarks', data : data},
+            data: {method: method, data : data},
             beforeSend: function() {
                 $('.loading-overlay').show();
             },
@@ -67,28 +67,40 @@ $(document).ready(function() {
                         }
                     }).then((result) => {
                         if (result.isConfirmed) {
-                            let html = `<div class="card">
-                                                <div class="card-content">
-                                                    <div class="card-header">
-                                                       <div class="author"><span>${res.data.author || ''}</span><span>${res.data.approved_time || ''}</span></div>
-                                                       <div class="card-actions">
-                                                            <a id="btnEditMemo">
-                                                                <img src="../../img/icons/edit-memo-icon.png" alt="alt">
-                                                            </a>
-                                                            <a id="btnDeleteMemo">
-                                                                <img src="../../img/icons/delete-memo-icon.png" alt="alt">
-                                                            </a>
-                                                       </div>
-                                                    </div>
-                                                    <div class="card-body">
-                                                       <p>${res.data.remarks || ''}</p>
-                                                    </div>
-                                                </div>
-                                              </div>`;
-
-                            $('#cardContainer').append(html);
-                            $('#NoMemoText').remove();
+                            $('#cardContainer').empty();
                             $('#text-content').val('');
+                            console.log(res.data.length);
+                            if (res.data.length !== 0) {
+                                let html = '';
+                                $('#NoMemoText').remove();
+                                $.each(res.data, function(index, value) {
+                                    html += `<div class="card">
+                                            <div class="card-content">
+                                                <div class="card-header">
+                                                   <div class="author"><span>${value.author || ''}</span><span>作成日時: ${value.approved_time || ''}</span>${value.updated_at ? ('<span>更新日時: ' + value.updated_at + '</span>') : ''}</span></div>
+                                                   <div class="card-actions">
+                                                        <a class="btnEditMemo">
+                                                            <img src="../../img/icons/edit-memo-icon.png" alt="alt">
+                                                        </a>
+                                                        <a class="btnSaveEditMemo" style="display: none" data-remark-id="${value.id}">
+                                                            <img src="../../img/icons/blue-save.png" alt="alt">
+                                                        </a>
+                                                        <a class="btnDeleteMemo" data-remark-id="${value.id}">
+                                                            <img src="../../img/icons/delete-memo-icon.png" alt="alt">
+                                                        </a>
+                                                   </div>
+                                                </div>
+                                                <div class="card-body">
+                                                   <p>${value.remarks || ''}</p>
+                                                </div>
+                                            </div>
+                                          </div>`;
+                                });
+
+                                $('#cardContainer').append(html);
+                            } else {
+                                $('#cardContainer').append('<p id="NoMemoText">まだメモを追加していません!</p>');
+                            }
                         }
                     });
                 } else {
@@ -167,7 +179,7 @@ $(document).ready(function() {
             }
         }).then((result) => {
             if (result.isConfirmed) {
-                updateRemarks({remarks : newContent, hospitalId : id});
+                updateRemarks('createRemark', {remarks : newContent, hospitalId : id});
             }
         });
     });
@@ -211,4 +223,73 @@ $(document).ready(function() {
             $(this).find('img').attr('src', src);
         });
     });
+
+    $(document).on('click', '.btnEditMemo', function() {
+        let pTag = $(this).closest('.card-header').next().find('p');
+        let currentText = pTag.text();
+        let currentWidth = pTag.outerWidth();
+        let textArea = createTextArea(currentText, currentWidth);
+        pTag.replaceWith(textArea);
+        textArea.focus().css('height', '150px');
+        $(this).next().show();
+        $(this).hide();
+    });
+
+    $(document).on('click', '.btnSaveEditMemo', function() {
+        let idRemarks = $(this).data('remark-id');
+        let areaTag = $(this).closest('.card-header').next().find('textarea');
+        let currentText = areaTag.val();
+
+        Swal.fire({
+            title: "メモを更新しますか？",
+            icon: "question",
+            showCloseButton: true,
+            showDenyButton: true,
+            confirmButtonText: "Ok",
+            denyButtonText: `戻る`,
+            customClass: {
+                actions: 'print-confirm',
+                confirmButton: 'order-2',
+                denyButton: 'order-1'
+            }
+        }).then((result) => {
+            if (result.isConfirmed) {
+                updateRemarks('updateRemark', {remarks : currentText, id : idRemarks, hospitalId : id, updateType: 'update'});
+            }
+        });
+    });
+
+    $(document).on('click', '.btnDeleteMemo', function() {
+        let idRemarks = $(this).data('remark-id');
+
+        Swal.fire({
+            title: "メモを削除しますか？",
+            icon: "question",
+            showCloseButton: true,
+            showDenyButton: true,
+            confirmButtonText: "Ok",
+            denyButtonText: `戻る`,
+            customClass: {
+                actions: 'print-confirm',
+                confirmButton: 'order-2',
+                denyButton: 'order-1'
+            }
+        }).then((result) => {
+            if (result.isConfirmed) {
+                updateRemarks('updateRemark', {id : idRemarks, hospitalId : id, updateType: 'delete'});
+            }
+        });
+    });
+
+    function createTextArea(text, width) {
+        return $('<textarea>')
+            .html(text)
+            .css({
+                'width': width + 'px',
+                'height': '20px',
+                'transition': 'height 1s ease'
+            })
+            .attr('id', 'text-content')
+            .addClass('text-with-lines');
+    }
 });

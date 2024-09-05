@@ -80,7 +80,8 @@ class Hospital extends BaseModel
     public function users(): BelongsToMany
     {
         return $this->belongsToMany(User::class, 't_hospital_user')
-            ->withPivot('remarks', 'approved_time');
+            ->withPivot('id', 'remarks', 'approved_time', 'updated_at')
+            ->wherePivot('del_flg', BaseModel::NOT_DELETED);
     }
 
     public function calculateAvgCommonData($cancerId): array

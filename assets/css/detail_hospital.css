@@ -3,6 +3,7 @@
     padding: 15px 30px 40px 30px;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
     border-radius: 10px;
+    position: relative;
 }
 
 .title {
@@ -76,6 +77,7 @@
 td, .table>thead>tr>th {
     border: thin solid #8dd5d5 !important;
     line-height: 35px !important;
+    overflow: auto;
 }
 
 .table-info th {
@@ -140,13 +142,9 @@ td, .table>thead>tr>th {
 }
 
 .search-result-header {
-    margin-bottom: 40px;
-}
-
-.search-result-header-right {
-    float:right;
-    display: flex;
-    align-items: center;
+    position: absolute;
+    right: 15px;
+    top: 24px;
 }
 
 .search-result-header-right span {
@@ -504,5 +502,12 @@ td, .table>thead>tr>th {
         flex-direction: column;
         width: 100%;
         gap: 20px;
+    }
+
+    .search-result-header {
+        position: relative;
+        margin-bottom: 50px;
+        right: unset;
+        top: unset;
     }
 }

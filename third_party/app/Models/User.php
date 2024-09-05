@@ -46,6 +46,7 @@ class User extends BaseModel
     public function hospitals(): BelongsToMany
     {
         return $this->belongsToMany(Hospital::class, 't_hospital_user')
-            ->withPivot('remarks');
+            ->withPivot('id', 'remarks', 'approved_time', 'updated_at')
+            ->wherePivot('del_flg', BaseModel::NOT_DELETED);
     }
 }
