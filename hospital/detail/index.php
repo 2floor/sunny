@@ -16,6 +16,9 @@ $cancerId = $_GET['cancerId'] ?? null;
 $f_hospital_ct = new f_hospital_ct();
 $initData = $f_hospital_ct->getDetailById($id, $cancerId);
 $cancerName = $initData['cancerName'] ?? '';
+$cancerNameDPC = $initData['cancerNameDPC'] ?? '';
+$cancerNameStage = $initData['cancerNameStage'] ?? '';
+$cancerNameSurv = $initData['cancerNameSurv'] ?? '';
 $avgData = $initData['avgData'] ?? [];
 $yearSummary = $initData['yearSummary'] ?? [];
 $infoHospital = $initData['infoHospital'] ?? [];
@@ -99,14 +102,14 @@ $remarks = $initData['remarks'] ?? [];
                         </div>
                         <section id="dpc-table" class="table-sec">
                             <div class="header">
-                                <h4>年間入院患者数</h4>
+                                <h4>年間入院患者数 - <?= ($cancerNameDPC ? $cancerNameDPC : $cancerName) ?></h4>
                             </div>
                             <?php include 'component/dpc-content-table.php'; ?>
                         </section>
 
                         <section id="stage-table" class="table-sec">
                             <div class="header">
-                                <h4>年間新規入院患者数</h4>
+                                <h4>年間新規入院患者数 - <?= ($cancerNameStage ?  $cancerNameStage : $cancerName) ?></h4>
                             </div>
                             <?php include 'component/stage-content-table.php'; ?>
                             <?php include 'component/stage-detail-content-table.php'; ?>
@@ -114,7 +117,7 @@ $remarks = $initData['remarks'] ?? [];
 
                         <section id="survival-table" class="table-sec">
                             <div class="header">
-                                <h4>5年後生在率・生存幸係数</h4>
+                                <h4>5年後生在率・生存幸係数 - <?= ($cancerNameSurv ? $cancerNameSurv : $cancerName) ?></h4>
                             </div>
                             <div class="note-sec">
                                 <h5>集計対象者数</h5>

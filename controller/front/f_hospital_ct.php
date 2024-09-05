@@ -138,7 +138,7 @@ class f_hospital_ct
             exit();
         }
 
-        $cancer = Cancer::select('cancer_type')->where('id', $cancerId)->first();
+        $cancer = Cancer::select('cancer_type', 'cancer_type_dpc', 'cancer_type_stage', 'cancer_type_surv')->where('id', $cancerId)->first();
         $avgData = $hospital->calculateAvgCommonData($cancerId);
 
         $yearDpc = $hospital->dpcs()
@@ -228,6 +228,9 @@ class f_hospital_ct
 
         return [
             'cancerName' => $cancer->cancer_type,
+            'cancerNameDPC' => $cancer->cancer_type_dpc,
+            'cancerNameStage' => $cancer->cancer_type_stage,
+            'cancerNameSurv' => $cancer->cancer_type_surv,
             'avgData' => $avgData,
             'yearSummary' => [
                 'dpc' => $yearDpc,
