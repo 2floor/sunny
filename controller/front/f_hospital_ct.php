@@ -548,7 +548,6 @@ class f_hospital_ct
         $hospital->users()->attach([ $_SESSION['authentication']['login_user']['id'] => [
             'remarks' => $data['remarks'] ?? '',
             'approved_time' => date('Y-m-d H:i:s'),
-            'updated_at' => null,
             ],
         ]);
 
@@ -598,6 +597,7 @@ class f_hospital_ct
 
     private function getRemarksList($hospital)
     {
+        $hospital->refresh();
         $loginUser = $_SESSION['authentication']['login_user'];
         $remarks = $hospital->users()->where('t_user.id', $loginUser['id'] ?? null)->get();
         return !empty($remarks) ? $remarks->map(function ($item) use ($loginUser) {
@@ -607,6 +607,6 @@ class f_hospital_ct
             }
 
             return array_merge($pivotData, ['author' => $loginUser['name']]);
-        })->toArray() : [];
+        })->sortByDesc('updated_at')->values()->toArray() : [];
     }
 }

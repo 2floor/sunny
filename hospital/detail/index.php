@@ -142,7 +142,7 @@ $remarks = $initData['remarks'] ?? [];
                                             echo '<div class="card">
                                                 <div class="card-content">
                                                     <div class="card-header">
-                                                       <div class="author"><span>'.$remark['author'].'</span><span>作成日時: '.$remark['approved_time'].'</span>'.($remark['updated_at'] ? '<span>更新日時: '.$remark['updated_at'].'</span>' : '').'</div>
+                                                       <div class="author"><span>'.$remark['author'].'</span><span>作成日時: '.$remark['approved_time'].'</span>'.(($remark['updated_at'] && $remark['updated_at'] != $remark['approved_time']) ? '<span>更新日時: '.$remark['updated_at'].'</span>' : '').'</div>
                                                        <div class="card-actions">
                                                             <a class="btnEditMemo">
                                                                 <img src="../../img/icons/edit-memo-icon.png" alt="alt">

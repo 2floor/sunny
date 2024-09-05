@@ -77,7 +77,7 @@ $(document).ready(function() {
                                     html += `<div class="card">
                                             <div class="card-content">
                                                 <div class="card-header">
-                                                   <div class="author"><span>${value.author || ''}</span><span>作成日時: ${value.approved_time || ''}</span>${value.updated_at ? ('<span>更新日時: ' + value.updated_at + '</span>') : ''}</span></div>
+                                                   <div class="author"><span>${value.author || ''}</span><span>作成日時: ${value.approved_time || ''}</span>${(value.updated_at && value.updated_at != value.approved_time) ? ('<span>更新日時: ' + value.updated_at + '</span>') : ''}</span></div>
                                                    <div class="card-actions">
                                                         <a class="btnEditMemo">
                                                             <img src="../../img/icons/edit-memo-icon.png" alt="alt">
