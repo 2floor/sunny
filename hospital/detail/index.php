@@ -162,7 +162,7 @@ $remarks = $initData['remarks'] ?? [];
                                               </div>';
                                         }
                                     } else {
-                                        echo '<p id="NoMemoText">まだメモを追加していません!</p>';
+                                        echo '<p id="NoMemoText">まだ特記事項を追加していません!</p>';
                                     }
                                 ?>
                             </div>
@@ -170,7 +170,7 @@ $remarks = $initData['remarks'] ?? [];
                                 <div class="card-add">
                                     <div class="card-content">
                                         <div class="card-body">
-                                            <textarea id="text-content"  placeholder="ここにメモを追加..." class="text-with-lines"></textarea>
+                                            <textarea id="text-content"  placeholder="新規の特記事項をここに入力ください..." class="text-with-lines"></textarea>
                                         </div>
                                     </div>
                                 </div>
