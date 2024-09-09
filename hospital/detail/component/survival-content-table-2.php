@@ -40,23 +40,20 @@ if (!isset($avgData)) {
         ?>
         <tr class="border-top border-bottom">
             <td class="center-icon">直近3年平均</td>
-            <td class="center-icon"><?php echo (($avgData['avgSurvivalRate'] != null && $avgData['avgSurvivalRate'] != '') ? round($avgData['avgSurvivalRate'], 2) : '-') ?></td>
+            <td class="center-icon"><?php echo ($avgData['avgSurvivalRate'] ? $avgData['avgSurvivalRate'] : '-') ?></td>
             <td class="center-icon">
                 <?php
-                $avgPrefRate = render_html_helper::renderRank($avgData['avgPrefRate'], '../../img/icons');
-                echo $avgPrefRate;
+                echo render_html_helper::renderRank($avgData['avgPrefRate'], '../../img/icons');
                 ?>
             </td>
             <td class="center-icon">
                 <?php
-                $avgLocalRate = render_html_helper::renderRank($avgData['avgLocalRate'], '../../img/icons');
-                echo $avgLocalRate;
+                echo render_html_helper::renderRank($avgData['avgLocalRate'], '../../img/icons');
                 ?>
             </td>
             <td class="center-icon">
                 <?php
-                $avgGlobalRate = render_html_helper::renderRank($avgData['avgGlobalRate'], '../../img/icons');
-                echo $avgGlobalRate;
+                echo render_html_helper::renderRank($avgData['avgGlobalRate'], '../../img/icons');
                 ?>
             </td>
         </tr>

@@ -7,6 +7,9 @@ if (!isset($averageSurv)) {
     $averageSurv = [];
 }
 
+if (!isset($avgData)) {
+    $avgData = [];
+}
 ?>
 <div class="table-responsive">
     <table class="table surv-detail-tb">
@@ -113,43 +116,28 @@ if (!isset($averageSurv)) {
         $avgHtml .= '<td class="center-icon">'.(is_numeric($avgSurvivalRate4) ? (round($avgSurvivalRate4, 2) . '%') : '-').'</td>';
         $avgHtml .= '</tr>';
 
-        $avgPrefRate1 = $survivals->avg('pref_survival_rate1');
-        $avgPrefRate2 = $survivals->avg('pref_survival_rate2');
-        $avgPrefRate3 = $survivals->avg('pref_survival_rate3');
-        $avgPrefRate4 = $survivals->avg('pref_survival_rate4');
-
         $avgHtml .= '<tr class="border-top border-bottom">';
         $avgHtml .= '<td  class="center-icon table-title">都道府県順位</td>';
-        $avgHtml .= '<td class="center-icon">'.render_html_helper::renderRank((is_numeric($avgPrefRate1) ? round($avgPrefRate1) : null), '../../img/icons').'</td>';
-        $avgHtml .= '<td class="center-icon">'.render_html_helper::renderRank((is_numeric($avgPrefRate2) ? round($avgPrefRate2) : null), '../../img/icons').'</td>';
-        $avgHtml .= '<td class="center-icon">'.render_html_helper::renderRank((is_numeric($avgPrefRate3) ? round($avgPrefRate3) : null), '../../img/icons').'</td>';
-        $avgHtml .= '<td class="center-icon">'.render_html_helper::renderRank((is_numeric($avgPrefRate4) ? round($avgPrefRate4) : null), '../../img/icons').'</td>';
+        $avgHtml .= '<td class="center-icon">'.render_html_helper::renderRank($avgData['avgPrefRate1'], '../../img/icons').'</td>';
+        $avgHtml .= '<td class="center-icon">'.render_html_helper::renderRank($avgData['avgPrefRate2'], '../../img/icons').'</td>';
+        $avgHtml .= '<td class="center-icon">'.render_html_helper::renderRank($avgData['avgPrefRate3'], '../../img/icons').'</td>';
+        $avgHtml .= '<td class="center-icon">'.render_html_helper::renderRank($avgData['avgPrefRate4'], '../../img/icons').'</td>';
         $avgHtml .= '</tr>';
-
-        $avgLocalRate1 = $survivals->avg('local_survival_rate1');
-        $avgLocalRate2 = $survivals->avg('local_survival_rate2');
-        $avgLocalRate3 = $survivals->avg('local_survival_rate3');
-        $avgLocalRate4 = $survivals->avg('local_survival_rate4');
 
         $avgHtml .= '<tr class="border-top border-bottom">';
         $avgHtml .= '<td  class="center-icon table-title">地方順位</td>';
-        $avgHtml .= '<td class="center-icon">'.render_html_helper::renderRank((is_numeric($avgLocalRate1) ? round($avgLocalRate1) : null), '../../img/icons').'</td>';
-        $avgHtml .= '<td class="center-icon">'.render_html_helper::renderRank((is_numeric($avgLocalRate2) ? round($avgLocalRate2) : null), '../../img/icons').'</td>';
-        $avgHtml .= '<td class="center-icon">'.render_html_helper::renderRank((is_numeric($avgLocalRate3) ? round($avgLocalRate3) : null), '../../img/icons').'</td>';
-        $avgHtml .= '<td class="center-icon">'.render_html_helper::renderRank((is_numeric($avgLocalRate4) ? round($avgLocalRate4) : null), '../../img/icons').'</td>';
+        $avgHtml .= '<td class="center-icon">'.render_html_helper::renderRank($avgData['avgLocalRate1'], '../../img/icons').'</td>';
+        $avgHtml .= '<td class="center-icon">'.render_html_helper::renderRank($avgData['avgLocalRate2'], '../../img/icons').'</td>';
+        $avgHtml .= '<td class="center-icon">'.render_html_helper::renderRank($avgData['avgLocalRate3'], '../../img/icons').'</td>';
+        $avgHtml .= '<td class="center-icon">'.render_html_helper::renderRank($avgData['avgLocalRate4'], '../../img/icons').'</td>';
         $avgHtml .= '</tr>';
-
-        $avgTotalRate1 = $survivals->avg('total_survival_rate1');
-        $avgTotalRate2 = $survivals->avg('total_survival_rate2');
-        $avgTotalRate3 = $survivals->avg('total_survival_rate3');
-        $avgTotalRate4 = $survivals->avg('total_survival_rate4');
 
         $avgHtml .= '<tr class="border-top border-bottom">';
         $avgHtml .= '<td class="center-icon table-title">全国順位</td>';
-        $avgHtml .= '<td class="center-icon">'.render_html_helper::renderRank((is_numeric($avgTotalRate1) ? round($avgTotalRate1) : null), '../../img/icons').'</td>';
-        $avgHtml .= '<td class="center-icon">'.render_html_helper::renderRank((is_numeric($avgTotalRate2) ? round($avgTotalRate2) : null), '../../img/icons').'</td>';
-        $avgHtml .= '<td class="center-icon">'.render_html_helper::renderRank((is_numeric($avgTotalRate3) ? round($avgTotalRate3) : null), '../../img/icons').'</td>';
-        $avgHtml .= '<td class="center-icon">'.render_html_helper::renderRank((is_numeric($avgTotalRate4) ? round($avgTotalRate4) : null), '../../img/icons').'</td>';
+        $avgHtml .= '<td class="center-icon">'.render_html_helper::renderRank($avgData['avgGlobalRate1'], '../../img/icons').'</td>';
+        $avgHtml .= '<td class="center-icon">'.render_html_helper::renderRank($avgData['avgGlobalRate2'], '../../img/icons').'</td>';
+        $avgHtml .= '<td class="center-icon">'.render_html_helper::renderRank($avgData['avgGlobalRate3'], '../../img/icons').'</td>';
+        $avgHtml .= '<td class="center-icon">'.render_html_helper::renderRank($avgData['avgGlobalRate4'], '../../img/icons').'</td>';
         $avgHtml .= '</tr>';
 
 

@@ -41,26 +41,22 @@ if (!isset($avgData)) {
             <td class="center-icon">直近3年平均</td>
             <td class="center-icon">
                 <?php
-                $avgNum = $survivals->avg('total_num');
-                echo (($avgNum != null && $avgNum != '') ? (round($avgNum, 1) . '人') : '-');
+                echo ($avgData['avgNum'] ? ($avgData['avgNum'] . '人') : '-');
                 ?>
             </td>
             <td class="center-icon">
                 <?php
-                $avgPrefNumRank = $survivals->avg('pref_stage_total_taget');
-                echo render_html_helper::renderRank((($avgPrefNumRank != null && $avgPrefNumRank != '') ? round($avgPrefNumRank) : null), '../../img/icons')
+                echo render_html_helper::renderRank($avgData['avgPrefNum'], '../../img/icons')
                 ?>
             </td>
             <td class="center-icon">
                 <?php
-                $avgLocalNumRank = $survivals->avg('local_stage_total_taget');
-                echo render_html_helper::renderRank((($avgLocalNumRank != null && $avgLocalNumRank != '') ? round($avgLocalNumRank) : null), '../../img/icons')
+                echo render_html_helper::renderRank($avgData['avgLocalNum'], '../../img/icons')
                 ?>
             </td>
             <td class="center-icon">
                 <?php
-                $avgTotalNumRank = $survivals->avg('total_stage_total_taget');
-                echo render_html_helper::renderRank((($avgTotalNumRank != null && $avgTotalNumRank != '') ? round($avgTotalNumRank) : null), '../../img/icons')
+                echo render_html_helper::renderRank($avgData['avgGlobalNum'], '../../img/icons')
                 ?>
             </td>
         </tr>

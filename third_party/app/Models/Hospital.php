@@ -67,14 +67,29 @@ class Hospital extends BaseModel
         return $this->hasMany(DPC::class, 'hospital_id');
     }
 
+    public function avgDpcs(): HasMany
+    {
+        return $this->hasMany(DPCAvg::class, 'hospital_id');
+    }
+
     public function stages(): HasMany
     {
         return $this->hasMany(Stage::class, 'hospital_id');
     }
 
+    public function avgStages(): HasMany
+    {
+        return $this->hasMany(StageAvg::class, 'hospital_id');
+    }
+
     public function survivals(): HasMany
     {
         return $this->hasMany(SurvHospital::class, 'hospital_id');
+    }
+
+    public function avgSurvivals(): HasMany
+    {
+        return $this->hasMany(SurvHospitalAvg::class, 'hospital_id');
     }
 
     public function users(): BelongsToMany
@@ -87,59 +102,168 @@ class Hospital extends BaseModel
     public function calculateAvgCommonData($cancerId): array
     {
         $dpcs = $this->dpcs()
-            ->select(['n_dpc', 'rank_nation_dpc', 'rank_area_dpc', 'rank_pref_dpc'])
+            ->select(['n_dpc'])
             ->where('cancer_id', $cancerId)
             ->orderBy('year', 'desc')
             ->take(3)
             ->get();
+
+        $avgDpcRank = $this->avgDpcs()
+            ->select(['avg_rank_nation_dpc', 'avg_rank_area_dpc', 'avg_rank_pref_dpc'])
+            ->where('cancer_id', $cancerId)
+            ->orderBy('lasted_year', 'desc')
+            ->first();
+
 
         $avgDpc = $dpcs->avg('n_dpc');
-        $avgGlobalDpcRank = $dpcs->avg('rank_nation_dpc');
-        $avgAreaDpcRank = $dpcs->avg('rank_area_dpc');
-        $avgPrefDpcRank = $dpcs->avg('rank_pref_dpc');
+        $avgGlobalDpcRank = $avgDpcRank->avg_rank_nation_dpc;
+        $avgAreaDpcRank = $avgDpcRank->avg_rank_area_dpc;
+        $avgPrefDpcRank = $avgDpcRank->avg_rank_pref_dpc;
 
         $stages = $this->stages()
-            ->select(['total_num_new', 'total_num_rank', 'local_num_rank', 'pref_num_rank'])
+            ->select(['total_num_new'])
             ->where('cancer_id', $cancerId)
             ->orderBy('year', 'desc')
             ->take(3)
             ->get();
 
-        $avgNewNum = $stages->avg('total_num_new');
-        $avgGlobalNewNumRank = $stages->avg('total_num_rank');
-        $avgLocalNewNumRank = $stages->avg('local_num_rank');
-        $avgPrefNewNumRank = $stages->avg('pref_num_rank');
-
-        $survivals = $this->survivals()
-            ->select([
-                'survival_rate',
-                'total_survival_rate',
-                'local_survival_rate',
-                'pref_survival_rate'
+        $avgStageRank = $this->avgStages()
+            ->select(['avg_total_num_rank', 'avg_local_num_rank', 'avg_pref_num_rank',
+                'avg_total_num_rank_stage1', 'avg_local_num_rank_stage1', 'avg_pref_num_rank_stage1',
+                'avg_total_num_rank_stage2', 'avg_local_num_rank_stage2', 'avg_pref_num_rank_stage2',
+                'avg_total_num_rank_stage3', 'avg_local_num_rank_stage3', 'avg_pref_num_rank_stage3',
+                'avg_total_num_rank_stage4', 'avg_local_num_rank_stage4', 'avg_pref_num_rank_stage4',
             ])
             ->where('cancer_id', $cancerId)
+            ->orderBy('lasted_year', 'desc')
+            ->first();
+
+        $avgNewNum = $stages->avg('total_num_new');
+        $avgGlobalNewNumRank = $avgStageRank->avg_total_num_rank;
+        $avgLocalNewNumRank = $avgStageRank->avg_local_num_rank;
+        $avgPrefNewNumRank = $avgStageRank->avg_pref_num_rank;
+        $avgGlobalStage1 = $avgStageRank->avg_total_num_rank_stage1;
+        $avgGlobalStage2 = $avgStageRank->avg_total_num_rank_stage2;
+        $avgGlobalStage3 = $avgStageRank->avg_total_num_rank_stage3;
+        $avgGlobalStage4 = $avgStageRank->avg_total_num_rank_stage4;
+        $avgLocalStage1 = $avgStageRank->avg_local_num_rank_stage1;
+        $avgLocalStage2 = $avgStageRank->avg_local_num_rank_stage2;
+        $avgLocalStage3 = $avgStageRank->avg_local_num_rank_stage3;
+        $avgLocalStage4 = $avgStageRank->avg_local_num_rank_stage4;
+        $avgPrefStage1 = $avgStageRank->avg_pref_num_rank_stage1;
+        $avgPrefStage2 = $avgStageRank->avg_pref_num_rank_stage2;
+        $avgPrefStage3 = $avgStageRank->avg_pref_num_rank_stage3;
+        $avgPrefStage4 = $avgStageRank->avg_pref_num_rank_stage4;
+
+        $survivals = $this->survivals()
+            ->select(['survival_rate', 'total_num'])
+            ->where('cancer_id', $cancerId)
             ->orderBy('year', 'desc')
             ->take(3)
             ->get();
 
+        $avgSurvRank = $this->avgSurvivals()
+            ->select(['avg_total_survival_rate', 'avg_local_survival_rate', 'avg_pref_survival_rate',
+                'avg_total_survival_rate1', 'avg_local_survival_rate1', 'avg_pref_survival_rate1',
+                'avg_total_survival_rate2', 'avg_local_survival_rate2', 'avg_pref_survival_rate2',
+                'avg_total_survival_rate3', 'avg_local_survival_rate3', 'avg_pref_survival_rate3',
+                'avg_total_survival_rate4', 'avg_local_survival_rate4', 'avg_pref_survival_rate4',
+                'avg_total_stage_total_taget', 'avg_local_stage_total_taget', 'avg_pref_stage_total_taget',
+                'avg_total_stage_taget1', 'avg_local_stage_taget1', 'avg_pref_stage_taget1',
+                'avg_total_stage_taget2', 'avg_local_stage_taget2', 'avg_pref_stage_taget2',
+                'avg_total_stage_taget3', 'avg_local_stage_taget3', 'avg_pref_stage_taget3',
+                'avg_total_stage_taget4', 'avg_local_stage_taget4', 'avg_pref_stage_taget4'
+            ])
+            ->where('cancer_id', $cancerId)
+            ->orderBy('lasted_year', 'desc')
+            ->first();
+
         $avgSurvivalRate = $survivals->avg('survival_rate');
-        $avgGlobalRate = $survivals->avg('total_survival_rate');
-        $avgLocalRate = $survivals->avg('local_survival_rate');
-        $avgPrefRate = $survivals->avg('pref_survival_rate');
+        $avgGlobalRate = $avgSurvRank->avg_total_survival_rate;
+        $avgLocalRate = $avgSurvRank->avg_local_survival_rate;
+        $avgPrefRate = $avgSurvRank->avg_pref_survival_rate;
+        $avgGlobalRate1 = $avgSurvRank->avg_total_survival_rate1;
+        $avgLocalRate1 = $avgSurvRank->avg_local_survival_rate1;
+        $avgPrefRate1 = $avgSurvRank->avg_pref_survival_rate1;
+        $avgGlobalRate2 = $avgSurvRank->avg_total_survival_rate2;
+        $avgLocalRate2 = $avgSurvRank->avg_local_survival_rate2;
+        $avgPrefRate2 = $avgSurvRank->avg_pref_survival_rate2;
+        $avgGlobalRate3 = $avgSurvRank->avg_total_survival_rate3;
+        $avgLocalRate3 = $avgSurvRank->avg_local_survival_rate3;
+        $avgPrefRate3 = $avgSurvRank->avg_pref_survival_rate3;
+        $avgGlobalRate4 = $avgSurvRank->avg_total_survival_rate4;
+        $avgLocalRate4 = $avgSurvRank->avg_local_survival_rate4;
+        $avgPrefRate4 = $avgSurvRank->avg_pref_survival_rate4;
+        $avgNum = $survivals->avg('total_num');
+        $avgGlobalNum = $avgSurvRank->avg_total_stage_total_taget;
+        $avgLocalNum = $avgSurvRank->avg_local_stage_total_taget;
+        $avgPrefNum = $avgSurvRank->avg_pref_stage_total_taget;
+        $avgGlobalNum1 = $avgSurvRank->avg_total_stage_taget1;
+        $avgLocalNum1 = $avgSurvRank->avg_local_stage_taget1;
+        $avgPrefNum1 = $avgSurvRank->avg_pref_stage_taget1;
+        $avgGlobalNum2 = $avgSurvRank->avg_total_stage_taget2;
+        $avgLocalNum2 = $avgSurvRank->avg_local_stage_taget2;
+        $avgPrefNum2 = $avgSurvRank->avg_pref_stage_taget2;
+        $avgGlobalNum3 = $avgSurvRank->avg_total_stage_taget3;
+        $avgLocalNum3 = $avgSurvRank->avg_local_stage_taget3;
+        $avgPrefNum3 = $avgSurvRank->avg_pref_stage_taget3;
+        $avgGlobalNum4 = $avgSurvRank->avg_total_stage_taget4;
+        $avgLocalNum4 = $avgSurvRank->avg_local_stage_taget4;
+        $avgPrefNum4 = $avgSurvRank->avg_pref_stage_taget4;
 
         return [
-            'avgDpc' => $avgDpc ? round($avgDpc, 1) : null,
-            'avgGlobalDpcRank' => $avgGlobalDpcRank ? round($avgGlobalDpcRank) : null,
-            'avgAreaDpcRank' => $avgAreaDpcRank ? round($avgAreaDpcRank) : null,
-            'avgPrefDpcRank' => $avgPrefDpcRank ? round($avgPrefDpcRank) : null,
-            'avgSurvivalRate' => $avgSurvivalRate ? round($avgSurvivalRate, 2) : null,
-            'avgGlobalRate' => $avgGlobalRate ? round($avgGlobalRate) : null,
-            'avgLocalRate' => $avgLocalRate ? round($avgLocalRate) : null,
-            'avgPrefRate' => $avgPrefRate ? round($avgPrefRate) : null,
-            'avgNewNum' => $avgNewNum ? round($avgNewNum, 1) : null,
-            'avgGlobalNewNumRank' => $avgGlobalNewNumRank ? round($avgGlobalNewNumRank) : null,
-            'avgLocalNewNumRank' => $avgLocalNewNumRank ? round($avgLocalNewNumRank) : null,
-            'avgPrefNewNumRank' => $avgPrefNewNumRank ? round($avgPrefNewNumRank) : null,
+            'avgDpc' => is_numeric($avgDpc) ? round($avgDpc, 1) : null,
+            'avgGlobalDpcRank' => $avgGlobalDpcRank,
+            'avgAreaDpcRank' => $avgAreaDpcRank,
+            'avgPrefDpcRank' => $avgPrefDpcRank,
+            'avgSurvivalRate' => is_numeric($avgSurvivalRate) ? round($avgSurvivalRate, 2) : null,
+            'avgGlobalRate' => $avgGlobalRate,
+            'avgLocalRate' => $avgLocalRate,
+            'avgPrefRate' => $avgPrefRate,
+            'avgGlobalRate1' => $avgGlobalRate1,
+            'avgLocalRate1' => $avgLocalRate1,
+            'avgPrefRate1' => $avgPrefRate1,
+            'avgGlobalRate2' => $avgGlobalRate2,
+            'avgLocalRate2' => $avgLocalRate2,
+            'avgPrefRate2' => $avgPrefRate2,
+            'avgGlobalRate3' => $avgGlobalRate3,
+            'avgLocalRate3' => $avgLocalRate3,
+            'avgPrefRate3' => $avgPrefRate3,
+            'avgGlobalRate4' => $avgGlobalRate4,
+            'avgLocalRate4' => $avgLocalRate4,
+            'avgPrefRate4' => $avgPrefRate4,
+            'avgNum' => is_numeric($avgNum) ? round($avgNum, 1) : null,
+            'avgGlobalNum' => $avgGlobalNum,
+            'avgLocalNum' => $avgLocalNum,
+            'avgPrefNum' => $avgPrefNum,
+            'avgGlobalNum1' => $avgGlobalNum1,
+            'avgLocalNum1' => $avgLocalNum1,
+            'avgPrefNum1' => $avgPrefNum1,
+            'avgGlobalNum2' => $avgGlobalNum2,
+            'avgLocalNum2' => $avgLocalNum2,
+            'avgPrefNum2' => $avgPrefNum2,
+            'avgGlobalNum3' => $avgGlobalNum3,
+            'avgLocalNum3' => $avgLocalNum3,
+            'avgPrefNum3' => $avgPrefNum3,
+            'avgGlobalNum4' => $avgGlobalNum4,
+            'avgLocalNum4' => $avgLocalNum4,
+            'avgPrefNum4' => $avgPrefNum4,
+            'avgNewNum' => is_numeric($avgNewNum) ? round($avgNewNum, 1) : null,
+            'avgGlobalNewNumRank' => $avgGlobalNewNumRank,
+            'avgLocalNewNumRank' => $avgLocalNewNumRank,
+            'avgPrefNewNumRank' => $avgPrefNewNumRank,
+            'avgGlobalStage1' => $avgGlobalStage1,
+            'avgGlobalStage2' => $avgGlobalStage2,
+            'avgGlobalStage3' => $avgGlobalStage3,
+            'avgGlobalStage4' => $avgGlobalStage4,
+            'avgLocalStage1' => $avgLocalStage1,
+            'avgLocalStage2' => $avgLocalStage2,
+            'avgLocalStage3' => $avgLocalStage3,
+            'avgLocalStage4' => $avgLocalStage4,
+            'avgPrefStage1' => $avgPrefStage1,
+            'avgPrefStage2' => $avgPrefStage2,
+            'avgPrefStage3' => $avgPrefStage3,
+            'avgPrefStage4' => $avgPrefStage4,
         ];
     }
 }
