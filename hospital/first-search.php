@@ -73,6 +73,11 @@ $category = $initData['category'] ?? [];
             </div>
 
             <div class="sort-tab-container">
+                <div class="popup-container">
+                    <?php include 'component/popup-cancer.php'; ?>
+                    <?php include 'component/popup-area.php'; ?>
+                    <?php include 'component/popup-category.php';?>
+                </div>
                 <div class="sort-tab-title"><img src="./../img/icons/sort-icon.png" class="logout_img" alt="sort-icon"><span>並び替え</span></div>
                 <div class="sort-tab active" data-value="dpcSort">年間入院患者数</div>
                 <div class="sort-tab" data-value="newNumSort">年間新規患者数</div>
@@ -80,11 +85,7 @@ $category = $initData['category'] ?? [];
             </div>
 
             <div class="search-result">
-                <div class="popup-container">
-                    <?php include 'component/popup-cancer.php'; ?>
-                    <?php include 'component/popup-area.php'; ?>
-                    <?php include 'component/popup-category.php';?>
-                </div>
+                <div class="screen-popup-container"></div>
                 <div class="search-hospital-pagination">
                     <div id="pagination-container" class="paginationjs paginationjs-theme-blue paginationjs-big"></div>
                 </div>

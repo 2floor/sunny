@@ -10,7 +10,7 @@
             }
 
             foreach ($cancerData as $value) {
-                echo '<div class="checkbox-label m-b-10"><input type="checkbox" id="cancerSelect'.$value['id'].'" data-key="'.$value['id'].'" data-value="'.$value['cancer_type'].'"><label for="cancerSelect'.$value['id'].'">'.$value['cancer_type'].'</label></div>';
+                echo '<div class="checkbox-label m-b-10"><input type="radio" name="radioCancerTye" id="cancerSelect'.$value['id'].'" data-key="'.$value['id'].'" data-value="'.$value['cancer_type'].'"><label for="cancerSelect'.$value['id'].'">&nbsp;'.$value['cancer_type'].'</label></div>';
             }
         ?>
     </div>

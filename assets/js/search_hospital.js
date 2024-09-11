@@ -34,9 +34,11 @@ $(document).ready(function () {
 
         if (isHidden) {
             $('.popup-container').show();
+            $('.screen-popup-container').show();
             toggleIcon.text('—');
         } else {
             $('.popup-container').hide();
+            $('.screen-popup-container').hide();
             toggleIcon.text('+');
 
             if (!hiddenPopupId) {
@@ -235,7 +237,8 @@ $(document).ready(function () {
     $('.popup-close').on('click', function () {
         let popup = $(this).closest('.popup')
         popup.fadeOut()
-        $('.popup-container').hide()
+        $('.popup-container').hide();
+        $('.screen-popup-container').hide();
         $('.filter-group .show-popup .toggle').text('+');
 
         let data = {
@@ -349,6 +352,7 @@ $(document).ready(function () {
 
             $('.popup').hide();
             $('.popup-container').hide();
+            $('.screen-popup-container').hide();
         }
 
         initPagination()
@@ -361,10 +365,6 @@ $(document).ready(function () {
             $('.checkbox-print').prop('checked', false);
         }
     });
-
-    $('#cancerPopup input[type=checkbox]').on('click', function () {
-        $('#cancerPopup input[type=checkbox]').not($(this)).prop('checked', false)
-    })
 
     $('#cancerStagePopup input[type=checkbox]').on('click', function () {
         $('#cancerStagePopup input[type=checkbox]').not($(this)).prop('checked', false)
@@ -458,6 +458,7 @@ $(document).ready(function () {
         $(this).addClass('active');
         $('.popup').hide();
         $('.popup-container').hide();
+        $('.screen-popup-container').hide();
         initPagination();
     });
 
@@ -538,7 +539,7 @@ $(document).ready(function () {
                 region.push($(this).data('value'))
             });
 
-            if (region.length === totalRegion) {
+            if (region.length === totalRegion || region.length === 0) {
                 areaChecked.region = region = ['全国']
             } else {
                 areaChecked.region = region

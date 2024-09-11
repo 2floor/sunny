@@ -42,8 +42,8 @@
     flex-direction: column;
     justify-content: flex-start;
     align-items: flex-start;
-    position: relative;
     background-color: #EEEEEE;
+    position: relative;
 }
 
 .sort-tab-container {
@@ -53,6 +53,7 @@
     background-color: #FFFFFF;
     width: 100%;
     gap: 5px;
+    position: relative;
 }
 
 .search-filter h3 {
@@ -170,7 +171,7 @@ input[type="radio"], input[type="checkbox"] {
 .search-button {
     width: 100%;
     padding: 10px;
-    background-color: #8AD3D8;
+    background-color: #24B2FE;
     border: none;
     color: #505458;
     border-radius: 5px;
@@ -180,7 +181,7 @@ input[type="radio"], input[type="checkbox"] {
 }
 
 .search-button:hover {
-    background-color: #31c0ca;
+    background-image: linear-gradient(rgba(0, 0, 0, 0.1), rgba(0, 0, 0, 0.1));
 }
 
 .toggle-button {
@@ -189,6 +190,17 @@ input[type="radio"], input[type="checkbox"] {
 
 /* Popup styles */
 .popup-container {
+    position: absolute;
+    top: 0;
+    right: 0;
+    width: 100%;
+    height: 100%;
+    display: none;
+    z-index: 11;
+    border-radius: 10px;
+}
+
+.screen-popup-container {
     position: absolute;
     top: 0;
     right: 0;
@@ -589,6 +601,7 @@ input[type="radio"], input[type="checkbox"] {
     padding-right: 30px;
     align-items: center;
     color: #3FB6B6;
+    border-bottom-left-radius: 10px;
 }
 
 .row-rank-header {
@@ -878,7 +891,7 @@ button.clear-data {
         padding: 15px;
     }
 
-    .search-result {
+    .sort-tab-container {
         position: unset;
     }
 
@@ -892,6 +905,12 @@ button.clear-data {
 
     .hospital-card {
         grid-template-columns: 1fr;
+        grid-template-areas:
+                "card-checkbox"
+                "card-info"
+                "card-stats"
+                "footer-card";
+        grid-template-rows: unset;
     }
 
     .hospital-card .card-checkbox {
@@ -957,5 +976,37 @@ button.clear-data {
 
     .paginationjs-pages {
         order:3
+    }
+
+    .row-rank {
+        padding-right: 0;
+    }
+
+    .card-outer-header {
+        padding-right: 0;
+        margin-right: 0;
+        padding-left: 0;
+        margin-left: -10px;
+    }
+
+    .hospital-rank {
+        margin-right: 0;
+        padding: 30px 0;
+        background:unset;
+        border: unset;
+        margin-left: -10px;
+    }
+
+    .hospital-rank::after {
+        display: none;
+    }
+
+    .hospital-card .footer-card {
+        margin-right: 0;
+        padding-right:10px
+    }
+
+    .card-stats {
+        padding: 30px 0;
     }
 }
