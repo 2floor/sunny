@@ -527,7 +527,7 @@ a:focus {
   background-color: #f9c851 !important;
 }
 .bg-danger {
-  background-color: #ff5b5b !important;
+  background-color: #FF9674 !important;
 }
 .bg-muted {
   background-color: #f4f8fb !important;
@@ -706,7 +706,7 @@ textarea.form-control {
   background-color: #f9c851;
 }
 .badge-danger {
-  background-color: #ff5b5b;
+  background-color: #FF9674;
 }
 .badge-purple {
   background-color: #5b69bc;

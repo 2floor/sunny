@@ -1544,3 +1544,16 @@ var orderIconDispChange = function($target, Callback){
     Callback();
 };
 
+$(window).on('scroll', function() {
+	var backToTop = $('#backToTop');
+	if ($(this).scrollTop() > 100) {
+		backToTop.fadeIn();
+	} else {
+		backToTop.fadeOut();
+	}
+});
+
+$('#backToTop').on('click', function() {
+	$('html, body').animate({ scrollTop: 0 }, 'smooth');
+});
+

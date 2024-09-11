@@ -30,66 +30,62 @@ $category = $initData['category'] ?? [];
     <div class="container">
         <div class="main-search">
             <div class="search-filter">
-                <div class="search-title">
-                    <h2>検索条件を選択</h2>
-                    <div class="toggle-button" id="expandedSearchFilter">☰</div>
-                </div>
-                <div class="filter-group">
-                    <div class="filter-header show-popup" id="cancerType">
-                        <h3>ガン種類</h3>
-                        <span class="badge bg-danger">必須</span>
-                        <span class="toggle">+</span>
+                <div>
+                    <div class="search-title">
+                        <h3>検索条件を選択</h3>
+                        <div class="toggle-button" id="expandedSearchFilter">☰</div>
                     </div>
-                    <div class="filter-content content-required">
-                    </div>
-                </div>
-
-                <div class="filter-group">
-                    <div class="filter-header show-popup" id="cancerStage">
-                        <h3>がんのステージ</h3>
-                        <span class="badge bg-danger">必須</span>
-                        <span class="toggle">+</span>
-                    </div>
-                    <div class="filter-content content-required">
-                    </div>
-                </div>
-
-                <div class="filter-group">
-                    <div class="filter-header show-popup" id="area">
-                        <h3>エリア</h3>
-                        <span class="badge bg-success">任意</span>
-                        <span class="toggle">+</span>
-                    </div>
-                    <div class="filter-content content-option">
-                    </div>
-                </div>
-
-                <?php include 'component/filter-category.php'; ?>
-
-                <div class="filter-group filter-group-spaced">
-                    <div class="filter-header">
-                        <h3>その他</h3>
-                        <span class="toggle">—</span>
-                    </div>
-                    <div class="filter-content">
-                        <input type="text" class="keyword" id="keyword" placeholder="特に指定がない場合は、こちらに入力してください。">
-                    </div>
-                </div>
-
-                <div class="filter-group">
-                    <div class="filter-header">
-                        <h3>並び替え</h3>
-                        <span class="toggle">—</span>
-                    </div>
-                    <div class="filter-content">
-                        <div class="radio-group sort-group">
-                            <label><input type="radio" name="sort" value="dpcSort" checked>年間入院患者数</label>
-                            <label><input type="radio" name="sort" value="newNumSort">年間新規患者数</label>
-                            <label><input type="radio" name="sort" value="survRateSort">5年生存率係数</label>
+                    <div class="filter-group">
+                        <div class="filter-header show-popup" id="cancerType">
+                            <h3>ガン種類</h3>
+                            <span class="badge bg-danger">必須</span>
+                            <span class="toggle">+</span>
+                        </div>
+                        <div class="filter-content content-required">
                         </div>
                     </div>
+
+                    <div class="filter-group">
+                        <div class="filter-header show-popup" id="cancerStage">
+                            <h3>がんのステージ</h3>
+                            <span class="badge bg-danger">必須</span>
+                            <span class="toggle">+</span>
+                        </div>
+                        <div class="filter-content content-required">
+                        </div>
+                    </div>
+
+                    <div class="filter-group">
+                        <div class="filter-header show-popup" id="area">
+                            <h3>エリア</h3>
+                            <span class="badge bg-info">任意</span>
+                            <span class="toggle">+</span>
+                        </div>
+                        <div class="filter-content content-option">
+                        </div>
+                    </div>
+
+                    <?php include 'component/filter-category.php'; ?>
                 </div>
-                <button class="search-button search-hospital">検索</button>
+                <div>
+                    <div class="filter-group filter-group-spaced">
+                        <div class="filter-header">
+                            <h3>その他</h3>
+                            <span class="toggle">—</span>
+                        </div>
+                        <div class="filter-content">
+                            <input type="text" class="keyword" id="keyword" placeholder="特に指定がない場合は、こちらに入力してください。">
+                        </div>
+                    </div>
+                    <button class="search-button search-hospital">検索</button>
+                </div>
+            </div>
+
+            <div class="sort-tab-container sort-group">
+                <div class="sort-tab-title"><img src="./../img/icons/sort-icon.png" class="logout_img" alt="sort-icon"><span>並び替え</span></div>
+                <div class="sort-tab active" data-value="dpcSort">年間入院患者数</div>
+                <div class="sort-tab" data-value="newNumSort">年間新規患者数</div>
+                <div class="sort-tab" data-value="survRateSort">5年生存率係数</div>
             </div>
 
             <div class="search-result">
@@ -99,23 +95,28 @@ $category = $initData['category'] ?? [];
                     <?php include 'component/popup-area.php'; ?>
                     <?php include 'component/popup-category.php';?>
                 </div>
-                <div class="search-result-header">
-                    <label><input type="checkbox" class="m-r-10 checkbox-print-all"> 全チェック</label>
-                    <div class="search-result-header-right">
-                        <span>チェックした対象を<br><span style="font-size: 10px">（1回につき最大5件）</span></span>
-                        <button class="confirm-button" id="printButton">印刷</button>
-                    </div>
+                <div class="search-hospital-pagination">
+                    <div id="pagination-container" class="paginationjs paginationjs-theme-blue paginationjs-big"></div>
                 </div>
-                <div class="total-result">
-                    <span class="badge bg-secondary"></span> 見つかりました
+                <div class="search-result-header">
+                    <div class="checkbox-label">
+                        <input type="checkbox" id="printAll" class="m-r-10 checkbox-print-all">
+                        <label for="printAll">全チェック</label>
+                    </div>
+                    <div class="search-result-header-right">
+                        <div class="print-note">
+                            <span>チェックした対象を</span>
+                            <span style="font-size: 10px">（1回につき最大5件）</span>
+                        </div>
+                        <a class="btn btn-print" id="printButton" style="border-color: #0A74B0">
+                            <img src="../img/icons/print-icon.png" alt="Hospital Icon"><span class="text">印刷</span>
+                        </a>
+                    </div>
                 </div>
                 <div class="hospital-list">
                     <div class="hospital-no-data">
                         <div class="no-data-message">検索条件を選択してください。</div>
                     </div>
-                </div>
-                <div class="search-hospital-footer">
-                    <div id="pagination-container" class="paginationjs paginationjs-theme-blue paginationjs-big"></div>
                 </div>
                 <div class="loading-overlay">
                     <div class="loading-spinner"></div>
@@ -125,6 +126,7 @@ $category = $initData['category'] ?? [];
         </div>
     </div>
 </main>
+<button id="backToTop" style="display: none;">↑ TOP</button>
 </body>
 <?php print $pageinfo->html_foot; ?>
 <script>

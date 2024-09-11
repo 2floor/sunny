@@ -4886,3 +4886,104 @@ iframe {
     box-shadow: 0 2px 3px rgba(0, 0, 0, 0.2);
     border-radius: 10px;
 }
+
+input[type="checkbox"] {
+    height: 15px;
+    width: 15px;
+}
+
+.pagination-container, .paginationjs {
+    width: 100%;
+}
+.paginationjs {
+    justify-content: space-between;
+    position: relative;
+}
+.paginationjs-size-changer {
+    order:1
+}
+
+.paginationjs-pages {
+    order:2
+}
+
+.paginationjs .paginationjs-pages {
+    margin-left: 0;
+}
+
+.paginationjs:after {
+    display: none;
+}
+
+.J-paginationjs-size-select {
+    border-radius: 20px !important;
+    padding: 1px 30px 0 10px !important;
+    background-color: #E6E6E6 !important;
+    border: none !important;
+    box-shadow: 0 2px 3px rgba(0, 0, 0, 0.2) !important;
+    color: #0A74B0;
+
+}
+
+.paginationjs-size-changer {
+    position: relative;
+    max-width: 140px;
+}
+
+.paginationjs-size-changer::after {
+    content: '▼';
+    font-size: 14px;
+    color: #0A74B0;
+    position: absolute;
+    right: 10px;
+    top: 50%;
+    transform: translateY(-50%);
+    pointer-events: none;
+}
+
+.paginationjs.paginationjs-theme-blue .paginationjs-pages li>a {
+    background-color: #EEEEEE;
+    color: #0A74B0;
+    font-weight: 700;
+}
+
+li.J-paginationjs-page:not(.active) {
+    text-decoration: underline;
+    text-decoration-color: #0A74B0;
+}
+
+.paginationjs.paginationjs-theme-blue .paginationjs-pages li {
+    border: none;
+}
+
+.paginationjs.paginationjs-theme-blue .paginationjs-pages li.active>a {
+    background-color: #EEEEEE;
+    color: #505458;
+    text-decoration: none;
+}
+
+.J-paginationjs-next {
+    margin-left: 10px;
+}
+
+.paginationjs .paginationjs-size-changer {
+    margin-left: 0;
+}
+
+#backToTop {
+    position: fixed;
+    bottom: 5px;
+    left: 5px;
+    z-index: 100;
+    padding: 5px 7px;
+    font-size: 14px;
+    background-color: #8AD3D8;
+    color: #0c0c0c;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+#backToTop:hover {
+    background-color: #31c0ca;
+}

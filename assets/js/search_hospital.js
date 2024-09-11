@@ -80,7 +80,12 @@ $(document).ready(function () {
             });
         } else {
             let keyword = $('input#keyword').val();
-            let sort = $('input[name="sort"]:checked').val()
+            let sort = $('.sort-tab.active').data('value');
+            if (!sort) {
+                $('.sort-tab[data-value="dpcSort"]').first().addClass('active');
+                sort = 'dpcSort';
+            }
+
             let postData = {
                 method: 'searchHospitalList',
                 data: {
@@ -110,20 +115,32 @@ $(document).ready(function () {
                         $('.loading-overlay').show();
                     }
                 },
+                showPrevious: true,
+                showNext: true,
+                prevText: '« 前',
+                nextText: '次 »',
                 callback: function(data) {
                     $('.loading-overlay').hide();
                     $('.checkbox-print-all').prop('checked', false);
 
+                    $('.total-result').remove();
                     if (data[0]) {
-                        $('.total-result').show()
-                        $('.total-result span').text(data[1] + '件')
                         $('.hospital-list').html('').append(data[0]);
-                        $('.search-hospital-footer').show()
+                        $('.search-hospital-footer').show();
+
+                        $('.paginationjs:not(#pagination-container)').append('<div class="total-result" style="display: block;">' +
+                            '<span style="font-size: 24px;font-weight: 500;color: #505458;">/ '+data[1]+'件</span>見つかりました</div>');
                     } else {
                         $('.hospital-list').html('').append('<div class="hospital-no-data"><div class="no-data-message text-danger">一致するデータが見つかりません</div></div>');
-                        $('.search-hospital-footer').hide()
-                        $('.total-result').hide()
+                        $('.search-hospital-footer').hide();
                     }
+
+                    setTimeout(function() {
+                        $('#pagination-container .paginationjs-size-changer option').each(function() {
+                            let value = $(this).val();
+                            $(this).text('表示件数'+value+'件');
+                        });
+                    }, 100);
                 }
             });
         }
@@ -400,7 +417,7 @@ $(document).ready(function () {
             $('.checkbox-print:checked').each(function () {
                 if (printCount <= 5) {
                     let hospitalInfo = $(this).closest('.hospital-card').find('.hospital-info');
-                    html += ('<li>' + hospitalInfo.find('h2').text() + '</li>');
+                    html += ('<li>' + hospitalInfo.find('h3').text() + '</li>');
 
                     let printItem = {
                         hospitalId : hospitalInfo.data('id'),
@@ -434,6 +451,14 @@ $(document).ready(function () {
                 }
             });
         }
+    });
+
+    $(document).on('click', '.sort-tab', function() {
+        $('.sort-tab').removeClass('active');
+        $(this).addClass('active');
+        $('.popup').hide();
+        $('.popup-container').hide();
+        initPagination();
     });
 
     $(document).on('popupClosed', function (e, data) {
@@ -472,17 +497,12 @@ $(document).ready(function () {
             let stageAble = [1, 2, 3, 4];
             if (stageAble.includes(cancerStageChecked[0])) {
                 if ($('.sort-group').find('.added-sort').length == 0) {
-                    let addedSort = '<label class="added-sort"><input type="radio" name="sort" value="stageSort">ステージ別年間新規患者数</label>' +
-                        '<label class="added-sort"><input type="radio" name="sort" value="stageSurvSort">ステージ別生存率</label>';
+                    let addedSort = '<div class="sort-tab added-sort" data-value="stageSort">ステージ別年間新規患者数</div>' +
+                        '<div class="sort-tab added-sort" data-value="stageSurvSort">ステージ別生存率</div>';
                     $('.sort-group').append(addedSort);
                 }
             } else {
                 if ($('.sort-group').find('.added-sort').length > 0) {
-                    let sortChecked = $('input[name="sort"]:checked');
-
-                    if (sortChecked.val() == "stageSort" || sortChecked.val() == "stageSurvSort") {
-                        $('input[name="sort"][value="dpcSort"]').prop('checked', true);
-                    }
                     $('.sort-group').find('.added-sort').remove();
                 }
             }

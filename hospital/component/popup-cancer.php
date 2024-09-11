@@ -10,13 +10,13 @@
             }
 
             foreach ($cancerData as $value) {
-                echo '<label><input type="checkbox" data-key="'.$value['id'].'" data-value="'.$value['cancer_type'].'">'.$value['cancer_type'].'</label>';
+                echo '<div class="checkbox-label m-b-10"><input type="checkbox" id="cancerSelect'.$value['id'].'" data-key="'.$value['id'].'" data-value="'.$value['cancer_type'].'"><label for="cancerSelect'.$value['id'].'">'.$value['cancer_type'].'</label></div>';
             }
         ?>
     </div>
     <div class="popup-footer next-footer">
         <div style="margin-right: 5px">
-            <button class="clear-data bg-warning">クリア</button>
+            <button class="clear-data">クリア</button>
         </div>
         <div>
             <button class="open-next-popup">次へ</button>

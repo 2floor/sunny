@@ -290,6 +290,14 @@ class f_hospital_ct
                 ->get()
                 ->pluck('level3');
 
+            $categoryTreatment = $hospital->categories()->select('hard_name3')
+                ->where('data_type', Category::HOSPITAL_DETAIL_TYPE)
+                ->whereIn('hard_name3', [
+                    'multi_treatment', 'famous_doctor', 'advanced_medical', 'special_clinic', 'advanced_medical'
+                ])
+                ->get()
+                ->pluck('hard_name3')->toArray();
+
             $avgData = $hospital->calculateAvgCommonData($cancers[0]);
 
             $html .= '<div class="hospital-card">';
@@ -299,9 +307,9 @@ class f_hospital_ct
             $html .= '<div class="card-info">';
             $html .= '<div class="tag">'.$areaName.'</div>';
             $html .= '<div class="hospital-info" data-id="'.$hospital->id.'" data-cancer-id="'.$cancers[0].'">';
-            $html .= '<h2>'.$hospital->hospital_name.'</h2>';
+            $html .= '<h3>'.$hospital->hospital_name.'</h3>';
             $html .= '<a target="_blank" href="'.$hospital->hp_url.'"><span class="info-icon"><img src="../img/icons/icon-go-home.png" alt="icon-home"> ホームページはこちら（外部リンク)</span></a>';
-            $html .= '<p class="m-b-0">'.$hospital->addr.'</p>';
+            $html .= '<p class="m-b-0 m-t-20">'.$hospital->addr.'</p>';
             $html .= '<p>'.($hospital->tel ? $hospital->tel . ' (代表)': '').'</p>';
             $html .= '</div>';
             $html .= '<div class="categories">';
@@ -311,32 +319,75 @@ class f_hospital_ct
             }
 
             $html .= '</div>';
+            $html .= '<div class="treatment-info">';
+            $html .= '<div class="treatment-item"><span>集学的治療体制</span><span '.(in_array('multi_treatment', $categoryTreatment) ? 'class="has-treatment">あり' : '>なし') .'</span></div>';
+            $html .= '<div class="treatment-item"><span>名医の在籍あり</span><span '.(in_array('famous_doctor', $categoryTreatment) ? 'class="has-treatment">あり' : '>なし') .'</span></div>';
+            $html .= '<div class="treatment-item"><span>先進医療</span><span '.(in_array('advanced_medical', $categoryTreatment) ? 'class="has-treatment">あり' : '>なし') .'</span></div>';
+            $html .= '<div class="treatment-item"><span>特別室</span><span '.(in_array('special_clinic', $categoryTreatment) ? 'class="has-treatment">あり' : '>なし') .'</span></div>';
+            $html .= '<div class="treatment-item"><span>特別な治療法</span><span '.(in_array('advanced_medical', $categoryTreatment) ? 'class="has-treatment">あり' : '>なし') .'</span></div>';
+            $html .= '</div>';
             $html .= '</div>';
             $html .= '<div class="card-stats">';
+            $html .= '<div class="card-outer-header">';
+            $html .= '<div class="outer-header-hidden"></div>';
+            $html .= '<div class="outer-header-show">都道府県</div>';
+            $html .= '<div class="outer-header-show">地方</div>';
+            $html .= '<div class="outer-header-show">全国</div>';
+            $html .= '</div>';
             $html .= '<div class="hospital-rank">';
-            $html .= '<div class="header1 m-b-15">都道府県</div>';
-            $html .= '<div class="header2 m-b-15">地方</div>';
-            $html .= '<div class="header3 m-b-15">全国</div>';
-            $html .= '<div class="header4 m-b-15"></div>';
+            $html .= '<div class="row-rank">';
+            $html .= '<div class="row-rank-header">';
+            $html .= '<div class="rank-header-top">入院患者数</div>';
+            $html .= '<div class="rank-header-title">（直近3年平均）</div>';
+            $html .= '<div class="rank-header-content">'.(is_numeric($avgData['avgDpc']) ? number_format($avgData['avgDpc']) . '人' : "-").'</div>';
+            $html .= '</div>';
+            $html .= '<div class="row-rank-content">';
             $html .= $this->renderRankStat('stat1', $avgData['avgPrefDpcRank'], "../img/icons/");
+            $html .= '</div>';
+            $html .= '<div class="row-rank-content">';
             $html .= $this->renderRankStat('stat2',  $avgData['avgAreaDpcRank'], "../img/icons/");
+            $html .= '</div>';
+            $html .= '<div class="row-rank-content">';
             $html .= $this->renderRankStat('stat3', $avgData['avgGlobalDpcRank'], "../img/icons/");
-            $html .= '<div class="stat4 stat m-b-25"><div class="stat-info stat-info-extended rank-row-1"><p>年間入院患者数:</p><p>'.(is_numeric($avgData['avgDpc']) ? number_format($avgData['avgDpc']) . '人' : "-").'</p></div></div>';
+            $html .= '</div>';
+            $html .= '</div>';
+
+            $html .= '<div class="row-rank">';
+            $html .= '<div class="row-rank-header">';
+            $html .= '<div class="rank-header-top">新規がん患者数</div>';
+            $html .= '<div class="rank-header-title">（直近3年平均）</div>';
+            $html .= '<div class="rank-header-content">'.(is_numeric($avgData['avgNewNum']) ? number_format($avgData['avgNewNum']) . '人' : "-").'</div>';
+            $html .= '</div>';
+            $html .= '<div class="row-rank-content">';
             $html .= $this->renderRankStat('stat5', $avgData['avgPrefNewNumRank'], "../img/icons/");
+            $html .= '</div>';
+            $html .= '<div class="row-rank-content">';
             $html .= $this->renderRankStat('stat6', $avgData['avgLocalNewNumRank'], "../img/icons/");
+            $html .= '</div>';
+            $html .= '<div class="row-rank-content">';
             $html .= $this->renderRankStat('stat7', $avgData['avgGlobalNewNumRank'], "../img/icons/");
-            $html .= '<div class="stat8 stat m-b-25"><div class="stat-info stat-info-extended rank-row-2"><p>年閒新現患者数:</p><p>'.(is_numeric($avgData['avgNewNum']) ? number_format($avgData['avgNewNum']) . '人' : "-").'</p></div></div>';
+            $html .= '</div>';
+            $html .= '</div>';
+
+            $html .= '<div class="row-rank">';
+            $html .= '<div class="row-rank-header">';
+            $html .= '<div class="rank-header-top">5年後生在率係数</div>';
+            $html .= '<div class="rank-header-title">（直近3年平均）</div>';
+            $html .= '<div class="rank-header-content">'.(is_numeric($avgData['avgSurvivalRate']) ? $avgData['avgSurvivalRate'] : "-").'</div>';
+            $html .= '</div>';
+            $html .= '<div class="row-rank-content">';
             $html .= $this->renderRankStat('stat9', $avgData['avgPrefRate'], "../img/icons/");
+            $html .= '</div>';
+            $html .= '<div class="row-rank-content">';
             $html .= $this->renderRankStat('stat10', $avgData['avgLocalRate'], "../img/icons/");
+            $html .= '</div>';
+            $html .= '<div class="row-rank-content">';
             $html .= $this->renderRankStat('stat11', $avgData['avgGlobalRate'], "../img/icons/");
-            $html .= '<div class="stat12 stat m-b-25"><div class="stat-info stat-info-extended rank-row-3"><p>5年後生存率係数:</p><p>'.(is_numeric($avgData['avgSurvivalRate']) ? $avgData['avgSurvivalRate'] : "-").'</p></div></div>';
-            $html .= '</div>';
-            $html .= '<div class="dpc-info">';
-//            $html .= '<p>DPC治療指数: <span>'.($avgData['avgDpc'] ? number_format($avgData['avgDpc']) : "-").'</span></p>';
-            $html .= '<p><span></span></p>';
-            $html .= '<a target="_bank" href="detail/index.php?id='.$hospital->id.'&cancerId='.$cancers[0].'" class="detail-button">この医療機関の詳細を見る</a>';
             $html .= '</div>';
             $html .= '</div>';
+            $html .= '</div>';
+            $html .= '</div>';
+            $html .= '<div class="footer-card"><a target="_bank" href="detail/index.php?id='.$hospital->id.'&cancerId='.$cancers[0].'" class="detail-button">この医療機関の詳細を見る &#8594;</a></div>';
             $html .= '</div>';
         });
 
@@ -392,10 +443,10 @@ class f_hospital_ct
     {
         $roundedRank = is_numeric($rank) ? $rank : '-';
         if (in_array($roundedRank, [1, 2, 3])) {
-            $html = '<div class="'.$class.' rank-icon m-b-25 h-27">';
+            $html = '<div class="'.$class.' rank-icon">';
             $html .= '<div class="rank-icon"><img src="' . $imgPath . 'rank' . $roundedRank . '.png" alt="rank-img"></div>';
         } else {
-            $html = '<div class="'.$class.' m-b-25 h-27">';
+            $html = '<div class="'.$class.'">';
             $html .= ($roundedRank === '-') ? '-' : $roundedRank . '位';
         }
 
