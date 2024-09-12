@@ -539,7 +539,7 @@ $(document).ready(function () {
                 region.push($(this).data('value'))
             });
 
-            if (region.length === totalRegion || region.length === 0) {
+            if (region.length === totalRegion) {
                 areaChecked.region = region = ['全国']
             } else {
                 areaChecked.region = region
@@ -557,12 +557,16 @@ $(document).ready(function () {
             });
 
             region.forEach(function (value) {
-                filterContent.append('<span>' + value + '</span>')
+                filterContent.append('<span>' + value + '</span>');
             });
 
             area.forEach(function (value) {
-                filterContent.append('<span>' + value + '</span>')
+                filterContent.append('<span>' + value + '</span>');
             });
+
+            if (region.length == 0 && area.length == 0) {
+                filterContent.append('<span>全国</span>');
+            }
         }
     });
 });
