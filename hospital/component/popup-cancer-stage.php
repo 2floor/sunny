@@ -15,7 +15,7 @@
             <button class="open-previous-popup">戻る</button>
         </div>
         <div>
-            <button class="clear-data bg-warning">クリア</button>
+            <button class="clear-data">クリア</button>
             <button class="open-next-popup">次へ</button>
         </div>
     </div>
