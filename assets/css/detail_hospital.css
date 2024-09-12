@@ -288,7 +288,6 @@ td, .table>thead>tr>th {
     background: linear-gradient(to right, #3FB6B6, #ffffff);
     padding: 3px 10px;
     color: #FFFFFF;
-    border: 1px solid #c3e4ed;
 }
 
 .treatment-results .header h4, .result-content-tab .header h4 {
