@@ -417,7 +417,6 @@ input[type="radio"], input[type="checkbox"] {
     background-color: #fff;
     border: 1px solid #ddd;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-    border-radius: 10px;
     margin-bottom: 20px;
     width: 100%;
 }
@@ -451,7 +450,6 @@ input[type="radio"], input[type="checkbox"] {
     display: flex;
     justify-content: end;
     align-items: center;
-    margin-right: -5px;
 }
 
 .hospital-info {

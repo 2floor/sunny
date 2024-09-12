@@ -288,7 +288,7 @@
             <div class="company-overseas__img">
               <img src="./assets/images/common/CAPicardbuilding-2.jpg" alt="">
             </div>
-            <p class="company-overseas__text">米国 バトルクリーク工場（ミシガン州）</p>
+            <p class="company-overseas__text">米国 バトルクリーク工場（ミシがん州）</p>
           </li>
 
         </ul><!-- ./company-overseas__lists -->
