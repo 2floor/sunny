@@ -76,7 +76,7 @@ $remarks = $initData['remarks'] ?? [];
                 <div class="tab-pane fade active in" id="summary" role="tabpanel" aria-labelledby="summary-tab">
                     <div class="summary-content-tab">
                         <div class="treatment-results">
-                            <div class="header">
+                            <div class="header" style="border:none">
                                 <h4>治療実績 (直近3年平均)</h4>
                             </div>
                             <?php include 'component/summary-content-table.php'; ?>

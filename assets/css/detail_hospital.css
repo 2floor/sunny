@@ -155,6 +155,7 @@ td, .table>thead>tr>th {
     margin-right: 14px;
     font-weight: bolder;
     font-size: 14px;
+    margin-top: 2px;
 }
 
 .confirm-button {

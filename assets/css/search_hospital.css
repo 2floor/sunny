@@ -178,6 +178,7 @@ input[type="radio"], input[type="checkbox"] {
     cursor: pointer;
     font-size: 14px;
     font-weight: bolder;
+    margin-bottom: 60px;
 }
 
 .search-button:hover {
@@ -219,7 +220,7 @@ input[type="radio"], input[type="checkbox"] {
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
     border-radius: 10px;
     z-index: 1000;
-    max-height: 850px;
+    max-height: 975px;
     overflow: auto;
     margin-left: auto;
     margin-right: auto;
@@ -811,6 +812,7 @@ button.clear-data {
 
 .btn-print .text {
     line-height: 0;
+    margin-top: 2px;
 }
 
 .print-note {
