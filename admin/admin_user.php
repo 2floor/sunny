@@ -1,10 +1,6 @@
 <?php
 session_start();
 require_once __DIR__ . '/../required/view_common_include.php';
-
-
-
-
 ?>
 <!DOCTYPE html>
 <html>
@@ -180,7 +176,7 @@ require_once __DIR__ . '/../required/view_common_include.php';
 										</div>
 										<div class="formTxt">
 											<div class="formIn50">
-												<input type="text" class="form-control validate required" name="admin_user_id" id="admin_user_id" value="">
+												<input type="text" class="form-control validate required" name="id" id="id" value="">
 											</div>
 										</div>
 									</div>

@@ -26,7 +26,7 @@ class t_news_model {
 	/**
 	 * 詳細取得
 	 *
-	 * @param unknown $admin_user_id
+	 * @param unknown $id
 	 * @return Ambigous
 	 */
 	public function get_news_detail($news_id) {

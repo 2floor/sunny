@@ -121,7 +121,7 @@ class admin_user_ct {
 	private function entry_admin_user($post) {
 
 		// ログインID重複チェック
-		$chk_result = $this->admin_user_logic->chk_admin_login_id ( $post['admin_user_id'] );
+		$chk_result = $this->admin_user_logic->chk_admin_login_id ( $post['id'] );
 
 		if ($chk_result) {
 
@@ -132,7 +132,7 @@ class admin_user_ct {
 			$this->admin_user_logic->new_entry_admin_user ( array (
 					'0',
 					$post ['user_id'],
-					$post ['admin_user_id'],
+					$post ['id'],
 					$post ['mail'],
 					$post ['password'],
 					$post ['admin_authority'],
@@ -163,10 +163,10 @@ class admin_user_ct {
 	/**
 	 * 管理画面ユーザー編集初期処理(ユーザー詳細情報取得)
 	 *
-	 * @param unknown $admin_user_id
+	 * @param unknown $id
 	 */
-	private function get_admin_user_detail_html($admin_user_id) {
-		$admin_user_detail = $this->admin_user_logic->create_admin_user_detail_html ( $admin_user_id );
+	private function get_admin_user_detail_html($id) {
+		$admin_user_detail = $this->admin_user_logic->create_admin_user_detail_html ( $id );
 
 		// 配列に変換
 // 		$admin_user_detail ['authority'] = explode ( ',', $admin_user_detail ['authority'] );
@@ -175,7 +175,7 @@ class admin_user_ct {
 		$data = array (
 				'status' => true,
 				'user_id' => $admin_user_detail ['login_id'],
-				'admin_user_id' => $admin_user_detail ['name'],
+				'id' => $admin_user_detail ['name'],
 				'admin_authority' => $admin_user_detail ['authority']
 		);
 
@@ -185,7 +185,7 @@ class admin_user_ct {
 	/**
 	 * 管理画面ユーザー編集更新処理
 	 *
-	 * @param unknown $admin_user_id
+	 * @param unknown $id
 	 */
 	private function update_admin_user_detail($post) {
 
@@ -195,7 +195,7 @@ class admin_user_ct {
 		// 編集ロジック呼び出し
 		$this->admin_user_logic->update_admin_user ( array (
 				$post ['user_id'],
-				$post ['admin_user_id'],
+				$post ['id'],
 				$post ['mail'],
 				$post ['password'],
 				$authority_menu_comma,

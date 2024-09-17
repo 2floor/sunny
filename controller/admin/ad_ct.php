@@ -161,7 +161,7 @@ class ad_ct {
 	/**
 	 * 編集初期処理(詳細情報取得)
 	 *
-	 * @param unknown $admin_user_id
+	 * @param unknown $id
 	 */
 	private function get_detail($ad_id) {
 		$reult_detail = $this->ad_logic->get_detail ( $ad_id );
@@ -185,7 +185,7 @@ class ad_ct {
 	/**
 	 * 編集更新処理
 	 *
-	 * @param unknown $admin_user_id
+	 * @param unknown $id
 	 */
 	private function update_detail($post) {
 

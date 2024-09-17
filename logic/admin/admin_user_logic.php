@@ -37,7 +37,7 @@ class admin_user_logic {
 
 				// 管理画面ユーザー権限成型
 				$authority_list = explode ( ',', $row ['authority'] );
-				$admin_user_id = $this->common_logic->zero_padding ( $row ['admin_user_id'] );
+				$id = $this->common_logic->zero_padding ( $row ['id'] );
 				$member_id = $this->common_logic->zero_padding ( $row ['member_id'] );
 
 				// 各種変数初期化
@@ -78,14 +78,14 @@ class admin_user_logic {
 					$del_color = "color:#d3d3d3";
 					$del_html = "削除";
 
-					if ($row ['admin_user_id'] != 1) {
-						$edit_html = "<a herf='#' class='edit clr1' name='edit_" . $row ['admin_user_id'] . "' value='" . $row ['admin_user_id'] . "'><i class=\"fa fa-pencil\" aria-hidden=\"true\"></i></a><br>";
-						$edit_html .= "<a herf='#' class='recovery clr2' name='recovery_" . $row ['admin_user_id'] . "' value='" . $row ['admin_user_id'] . "'><i class=\"fa fa-undo\" aria-hidden=\"true\"></i></a>";
+					if ($row ['id'] != 1) {
+						$edit_html = "<a herf='#' class='edit clr1' name='edit_" . $row ['id'] . "' value='" . $row ['id'] . "'><i class=\"fa fa-pencil\" aria-hidden=\"true\"></i></a><br>";
+						$edit_html .= "<a herf='#' class='recovery clr2' name='recovery_" . $row ['id'] . "' value='" . $row ['id'] . "'><i class=\"fa fa-undo\" aria-hidden=\"true\"></i></a>";
 					}
 				} else {
-					if ($row ['admin_user_id'] != 1) {
-						$edit_html = "<a herf='#' class='edit clr1' name='edit_" . $row ['admin_user_id'] . "' value='" . $row ['admin_user_id'] . "'><i class=\"fa fa-pencil\" aria-hidden=\"true\"></i></a><br>";
-						$edit_html .= "<a herf='#' class='del clr2' name='del_" . $row ['admin_user_id'] . "' value='" . $row ['admin_user_id'] . "'><i class=\"fa fa-trash\" aria-hidden=\"true\"></i></a>";
+					if ($row ['id'] != 1) {
+						$edit_html = "<a herf='#' class='edit clr1' name='edit_" . $row ['id'] . "' value='" . $row ['id'] . "'><i class=\"fa fa-pencil\" aria-hidden=\"true\"></i></a><br>";
+						$edit_html .= "<a herf='#' class='del clr2' name='del_" . $row ['id'] . "' value='" . $row ['id'] . "'><i class=\"fa fa-trash\" aria-hidden=\"true\"></i></a>";
 					}
 				}
 
@@ -102,7 +102,7 @@ class admin_user_logic {
 				$return_html .= "
 					<tr " . $back_color_html . ">
 						<td>" . $cnt . "</td>
-						<td>" . $admin_user_id . "</td>
+						<td>" . $id . "</td>
 						<td>" . $del_html . "</td>
 						<td>" . $row ['login_id'] . "</td>
 						<td>**********</td>
@@ -181,10 +181,10 @@ class admin_user_logic {
 	/**
 	 * 管理画面ユーザー情報取得処理
 	 *
-	 * @param unknown $admin_user_id
+	 * @param unknown $id
 	 */
-	public function create_admin_user_detail_html($admin_user_id) {
-		$result = $this->t_admin_model->get_admin_user_detail ( $admin_user_id );
+	public function create_admin_user_detail_html($id) {
+		$result = $this->t_admin_model->get_admin_user_detail ( $id );
 		return $result [0];
 	}
 

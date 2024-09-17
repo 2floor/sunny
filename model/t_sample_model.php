@@ -26,7 +26,7 @@ class t_sample_model {
 	/**
 	 * 詳細取得
 	 *
-	 * @param unknown $admin_user_id
+	 * @param unknown $id
 	 * @return Ambigous
 	 */
 	public function get_sample_detail($sample_id) {

@@ -36,10 +36,10 @@ class login_logic{
 		if (count ((array) $result ) > 0) {
 
 			//CRF対策用トークンID更新
-			$token = $this->security_common_logic->createToken($result [0] ['admin_user_id']);
+			$token = $this->security_common_logic->createToken($result [0] ['id']);
 			unset($_SESSION ['adminer']['user_id']);
 			$_SESSION ['adminer']['login_name'] = $result [0] ['name'];
-			$_SESSION ['adminer']['user_id'] = $result [0] ['admin_user_id'];
+			$_SESSION ['adminer']['user_id'] = $result [0] ['id'];
 			$_SESSION ['adminer']['user_datas'] = $result [0];
 
 			return array (

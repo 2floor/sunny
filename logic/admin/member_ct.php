@@ -177,7 +177,7 @@ class member_ct {
 	/**
 	 * 編集初期処理(詳細情報取得)
 	 *
-	 * @param unknown $admin_user_id
+	 * @param unknown $id
 	 */
 	private function get_detail($member_id) {
 		$reult_detail = $this->member_logic->get_detail ( $member_id );
@@ -210,7 +210,7 @@ class member_ct {
 	/**
 	 * 編集更新処理
 	 *
-	 * @param unknown $admin_user_id
+	 * @param unknown $id
 	 */
 	private function update_detail($post) {
 		$common_logic = new common_logic();

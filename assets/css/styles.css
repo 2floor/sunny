@@ -1930,7 +1930,7 @@ select#about-select {
     margin-top: 13px;
     color: #ffffff;
     font-weight: 600;
-    font-size: 14px;
+    font-size: 16px;
     /*font-size: .875rem;*/
     line-height: 1.4;
 }
@@ -2439,7 +2439,7 @@ select#about-select {
 
 .heder-pc--top .pc-nav__link {
     color: #333333;
-    font-size: 14px;
+    font-size: 16px;
 }
 
 .header-margin {
@@ -4986,4 +4986,8 @@ li.J-paginationjs-page:not(.active) {
 
 #backToTop:hover {
     background-color: #31c0ca;
+}
+
+.header__logo--top, .header__logo--top:hover {
+    opacity: 0;
 }

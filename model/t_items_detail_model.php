@@ -26,7 +26,7 @@ class t_items_detail_model {
 	/**
 	 * 詳細取得
 	 *
-	 * @param unknown $admin_user_id
+	 * @param unknown $id
 	 * @return Ambigous
 	 */
 	public function get_items_detail_detail($items_detail_id) {

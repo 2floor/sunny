@@ -26,7 +26,7 @@ class t_ad_model {
 	/**
 	 * 詳細取得
 	 *
-	 * @param unknown $admin_user_id
+	 * @param unknown $id
 	 * @return Ambigous
 	 */
 	public function get_ad_detail($ad_id) {

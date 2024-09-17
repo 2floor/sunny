@@ -370,7 +370,7 @@
                 <table class="table table-summary table-even-odd table-bordered">
                     <thead>
                     <tr>
-                        <th class="table-title" colspan="3">5年後生在率・生存幸係数</th>
+                        <th class="table-title" colspan="3">5年後生在率・生存率係数</th>
                     </tr>
                     </thead>
                     <tbody>

@@ -98,7 +98,7 @@ $remarks = $initData['remarks'] ?? [];
                         <div class="nav-section">
                             <a href="#dpc-table" id="navDpcTb"><img src="../../img/icons/bed-icon.png" alt="Hospital Icon"><span>年間入院患者数</span></a>
                             <a href="#stage-table" id="navStageTb"><img src="../../img/icons/list-icon.png" alt="Hospital Icon"><span>年間新規入院患者数</span></a>
-                            <a href="#survival-table" id="navSurvivalTb"><img src="../../img/icons/healthy-icon.png" alt="Hospital Icon"><span>5年後生在率・生存幸係数</span></a>
+                            <a href="#survival-table" id="navSurvivalTb"><img src="../../img/icons/healthy-icon.png" alt="Hospital Icon"><span>5年後生在率・生存率係数</span></a>
                         </div>
                         <section id="dpc-table" class="table-sec">
                             <div class="header">
@@ -117,7 +117,7 @@ $remarks = $initData['remarks'] ?? [];
 
                         <section id="survival-table" class="table-sec">
                             <div class="header">
-                                <h4>5年後生在率・生存幸係数 - <?= ($cancerNameSurv ? $cancerNameSurv : $cancerName) ?></h4>
+                                <h4>5年後生在率・生存率係数 - <?= ($cancerNameSurv ? $cancerNameSurv : $cancerName) ?></h4>
                             </div>
                             <div class="note-sec">
                                 <h5>集計対象者数</h5>

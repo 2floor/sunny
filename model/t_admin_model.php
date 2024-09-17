@@ -21,11 +21,11 @@ class t_admin_model {
 	/**
 	 * セッションID更新
 	 *
-	 * @param unknown $admin_user_id
+	 * @param unknown $id
 	 * @param unknown $ses_id
 	 */
-	public function update_ses_id($admin_user_id, $ses_id) {
-		$this->common_logic->update_logic ( 't_admin_user', " where admin_user_id = '" . $admin_user_id . "'", array (
+	public function update_ses_id($id, $ses_id) {
+		$this->common_logic->update_logic ( 't_admin_user', " where id = '" . $id . "'", array (
 				'ses_id'
 		), array (
 				$ses_id
@@ -35,14 +35,14 @@ class t_admin_model {
 	/**
 	 * 指定セッションID、管理ID、セッション保持時間内検索
 	 *
-	 * @param unknown $admin_user_id
+	 * @param unknown $id
 	 * @param unknown $ses_id
 	 */
-	public function count_token_chk($admin_user_id, $ses_id, $ses_limit_time) {
+	public function count_token_chk($id, $ses_id, $ses_limit_time) {
 
 		// 該当ユーザー情報取得
-		$result = $this->common_logic->select_logic ( 'select * from t_admin_user where admin_user_id = ? and ses_id = ?', array (
-				$admin_user_id,
+		$result = $this->common_logic->select_logic ( 'select * from t_admin_user where id = ? and ses_id = ?', array (
+				$id,
 				$ses_id
 		) );
 
@@ -80,12 +80,12 @@ class t_admin_model {
 	/**
 	 * 管理画面ユーザー詳細情報取得
 	 *
-	 * @param unknown $admin_user_id
+	 * @param unknown $id
 	 * @return Ambigous
 	 */
-	public function get_admin_user_detail($admin_user_id) {
-		return $this->common_logic->select_logic ( 'select * from t_admin_user where admin_user_id = ?', array (
-				$admin_user_id
+	public function get_admin_user_detail($id) {
+		return $this->common_logic->select_logic ( 'select * from t_admin_user where id = ?', array (
+				$id
 		) );
 	}
 
@@ -95,7 +95,7 @@ class t_admin_model {
 	 * @param unknown $params
 	 */
 	public function update_admin_user($params) {
-		return $this->common_logic->update_logic ( "t_admin_user", " where admin_user_id = ?", array (
+		return $this->common_logic->update_logic ( "t_admin_user", " where id = ?", array (
 				"login_id",
 				"name",
 				"mail",
@@ -121,7 +121,7 @@ class t_admin_model {
 	 * @param unknown $id
 	 */
 	public function del_admin_user($id) {
-		return $this->common_logic->update_logic ( "t_admin_user", " where admin_user_id = ?", array (
+		return $this->common_logic->update_logic ( "t_admin_user", " where id = ?", array (
 				"del_flg"
 		), array (
 				'1',
@@ -135,7 +135,7 @@ class t_admin_model {
 	 * @param unknown $id
 	 */
 	public function recoveryl_admin_user($id) {
-		return $this->common_logic->update_logic ( "t_admin_user", " where admin_user_id = ?", array (
+		return $this->common_logic->update_logic ( "t_admin_user", " where id = ?", array (
 				"del_flg"
 		), array (
 				'0',
@@ -234,12 +234,12 @@ class t_admin_model {
 	/**
 	 * ニュース詳細情報取得
 	 *
-	 * @param unknown $admin_user_id
+	 * @param unknown $id
 	 * @return Ambigous
 	 */
-	public function get_performance_detail($admin_user_id) {
+	public function get_performance_detail($id) {
 		return $this->common_logic->select_logic ( 'select * from t_news where news_id = ?', array (
-				$admin_user_id
+				$id
 		) );
 	}
 	/**

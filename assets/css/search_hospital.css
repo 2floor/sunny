@@ -120,6 +120,7 @@
     padding: 10px;
     border-radius: 5px;
     border: 1px solid #8AD3D8;
+    font-size: 16px;
 }
 
 .content-required span {
@@ -127,6 +128,7 @@
     color: #505458;
     border: 1px solid #DD4809;
     font-weight: 500;
+    font-size: 16px;
 }
 
 .content-option span {
@@ -134,6 +136,7 @@
     color: #505458;
     border: 1px solid #24B2FE;
     font-weight: 500;
+    font-size: 16px;
 }
 
 .filter-group .toggle {
@@ -176,7 +179,7 @@ input[type="radio"], input[type="checkbox"] {
     color: #505458;
     border-radius: 5px;
     cursor: pointer;
-    font-size: 14px;
+    font-size: 16px;
     font-weight: bolder;
     margin-bottom: 60px;
 }
@@ -287,7 +290,7 @@ input[type="radio"], input[type="checkbox"] {
 .popup-checkbox-content label {
     display: flex;
     align-items: center;
-    font-size: 14px;
+    font-size: 16px;
     font-weight: 500;
 }
 
@@ -300,7 +303,7 @@ input[type="radio"], input[type="checkbox"] {
 }
 
 .popup-selection-content label {
-    font-size: 14px;
+    font-size: 16px;
 }
 
 .popup-selection-content .form-group {
@@ -347,6 +350,7 @@ input[type="radio"], input[type="checkbox"] {
     border-radius: 5px;
     cursor: pointer;
     transition: background-color 0.3s ease;
+    font-size: 16px;
 }
 
 .popup-footer button:hover {
@@ -365,7 +369,7 @@ input[type="radio"], input[type="checkbox"] {
 
 .search-result-header label{
     font-weight: bolder;
-    font-size: 14px;
+    font-size: 16px;
 }
 
 .search-result-header-right {
@@ -375,7 +379,7 @@ input[type="radio"], input[type="checkbox"] {
 
 .search-result-header-right span {
     font-weight: bolder;
-    font-size: 14px;
+    font-size: 16px;
 }
 
 .confirm-button {
@@ -394,11 +398,12 @@ input[type="radio"], input[type="checkbox"] {
     cursor: pointer;
     transition: font-size 0.3s;
     font-weight: 700;
-    font-family: "Helvetica Neue", Helvetica, Arial, sans-serif
+    font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+    font-size: 16px;
 }
 
 .detail-button:hover {
-    font-size: 16px;
+    font-size: 18px;
     padding: 15px 15px;
 }
 
@@ -408,7 +413,7 @@ input[type="radio"], input[type="checkbox"] {
 
 .hospital-card {
     display: grid;
-    grid-template-columns: 4% 49% 47%;
+    grid-template-columns: 3% 47% 50%;
     grid-template-rows: auto 35px;
     grid-template-areas:
                 "card-checkbox card-info card-stats"
@@ -426,7 +431,7 @@ input[type="radio"], input[type="checkbox"] {
     display: flex;
     align-items: start;
     justify-content: center;
-    padding: 30px 20px;
+    padding: 34px 20px;
 }
 
 .hospital-card .card-info {
@@ -441,7 +446,7 @@ input[type="radio"], input[type="checkbox"] {
     border-radius: 20px;
     display: inline-block;
     margin-bottom: 10px;
-    font-size: 14px;
+    font-size: 16px;
 }
 
 .hospital-card .footer-card {
@@ -462,7 +467,7 @@ input[type="radio"], input[type="checkbox"] {
 }
 
 .hospital-info span {
-    font-size: 12px;
+    font-size: 14px;
 }
 
 .hospital-info a {
@@ -483,7 +488,7 @@ input[type="radio"], input[type="checkbox"] {
 
 .hospital-info p {
     width: 80%;
-    font-size: 14px;
+    font-size: 16px;
     color: #555;
     font-weight: 600;
 }
@@ -503,7 +508,7 @@ input[type="radio"], input[type="checkbox"] {
     border: 1px solid #197DB5;
     padding: 5px 10px;
     border-radius: 12px;
-    font-size: 14px;
+    font-size: 16px;
     color: #0b0b0b;
     text-align: center;
     min-width: 189px;
@@ -519,7 +524,7 @@ input[type="radio"], input[type="checkbox"] {
 .card-info .treatment-item {
     border: 1px solid #197DB5;
     border-radius: 12px;
-    font-size: 14px;
+    font-size: 16px;
     color: #0b0b0b;
     text-align: center;
     display: flex;
@@ -541,6 +546,10 @@ input[type="radio"], input[type="checkbox"] {
 
 .card-info .treatment-item span.has-treatment {
     background-color: #E4F6FF;
+}
+
+.has-treatment {
+    font-size: 16px;
 }
 
 .card-stats {
@@ -605,16 +614,16 @@ input[type="radio"], input[type="checkbox"] {
 
 .row-rank-header {
     display: grid;
-    grid-template-columns: 70% 30%;
+    grid-template-columns: 68% 32%;
     grid-template-rows: auto auto;
     grid-template-areas:
                 "rank-header-top rank-header-content"
                 "rank-header-title rank-header-content";
-    width: 160px;
+    width: 180px;
 }
 
 .rank-header-title {
-    font-size: 12px;
+    font-size: 14px;
     background-color: #3FB6B6;
     color: #FFFFFF;
     border-top-left-radius: 10px;
@@ -623,14 +632,15 @@ input[type="radio"], input[type="checkbox"] {
     align-items: center;
     font-weight: 500;
     clip-path: polygon(0 0, calc(100% - 10px) 0, 100% 100%, 0 100%);
-    margin-right: 6px;
     padding-left: 3px;
     padding-top: 1px;
     padding-bottom: 1px;
+    margin-right: 6px;
 }
 
 .rank-header-top {
     grid-area: rank-header-top;
+    font-size: 16px;
 }
 
 .rank-header-title {
@@ -641,20 +651,23 @@ input[type="radio"], input[type="checkbox"] {
     grid-area: rank-header-content;
     display: flex;
     align-items: end;
+    font-size: 16px;
 }
 
 .outer-header-hidden {
-    width: 160px;
+    width: 180px;
 }
 
 .outer-header-show {
-    width: 56px;
+    width: 65px;
     text-align: center;
+    font-size: 16px;
 }
 
 .row-rank-content {
-    width: 56px;
+    width: 75px;
     text-align: center;
+    font-size: 16px;
 }
 
 .rank-icon {
@@ -695,6 +708,7 @@ input[type="radio"], input[type="checkbox"] {
     margin-bottom: 20px;
     padding: 20% 37%;
     font-weight: bolder;
+    font-size: 16px;
 
 }
 
@@ -734,7 +748,7 @@ button.clear-data {
 
 .sort-tab {
     padding: 8px 12px;
-    font-size: 14px;
+    font-size: 16px;
     font-weight: 500;
     position: relative;
     border: 1px solid #8AD3D8;
@@ -744,7 +758,7 @@ button.clear-data {
 
 .sort-tab-title {
     padding: 8px 12px;
-    font-size: 14px;
+    font-size: 16px;
     font-weight:700;
     color: #0A74B0;
     display: flex;
@@ -789,7 +803,7 @@ button.clear-data {
     display: flex;
     align-items: center;
     gap: 10px;
-    padding: 0 10px;
+    padding: 0 8px;
     border-radius: 10px;
     text-decoration: none;
     color: #33322F;
@@ -834,6 +848,18 @@ button.clear-data {
 
 .checkbox-label input{
    margin: 0;
+}
+
+.select2-selection__choice {
+    font-size: 16px;
+}
+
+.select2-results__option {
+    font-size: 16px;
+}
+
+.select2-selection__rendered {
+    font-size: 16px;
 }
 @media (max-width: 1200px) {
     .main-search {
@@ -1008,5 +1034,39 @@ button.clear-data {
 
     .card-stats {
         padding: 30px 0;
+    }
+
+    .outer-header-hidden {
+        width: 160px;
+    }
+
+    .outer-header-show {
+        width: 56px;
+        font-size: 14px;
+    }
+
+    .row-rank-header {
+        width: 160px;
+    }
+
+    .rank-header-top {
+        font-size: 14px;
+    }
+
+    .rank-header-title {
+        font-size: 12px;
+    }
+
+    .rank-header-content {
+        font-size: 14px;
+    }
+
+    .row-rank-content {
+        width: 56px;
+        font-size: 14px;
+    }
+
+    .card-stats {
+        gap: 0
     }
 }

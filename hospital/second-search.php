@@ -107,7 +107,7 @@ $category = $initData['category'] ?? [];
                     <div class="search-result-header-right">
                         <div class="print-note">
                             <span>チェックした対象を</span>
-                            <span style="font-size: 10px">（1回につき最大5件）</span>
+                            <span style="font-size: 12px">（1回につき最大5件）</span>
                         </div>
                         <a class="btn btn-print" id="printButton" style="border-color: #0A74B0">
                             <img src="../img/icons/print-icon.png" alt="Hospital Icon"><span class="text">印刷</span>
