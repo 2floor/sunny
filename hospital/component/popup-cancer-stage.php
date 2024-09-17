@@ -4,11 +4,11 @@
         <span class="popup-close">✖</span>
     </div>
     <div class="popup-checkbox-content">
-        <div class="checkbox-label m-b-5"><input type="checkbox" id="stageSelect1" data-key="1" data-value="ステージI"><label for="stageSelect1">ステージI</label></div>
-        <div class="checkbox-label m-b-5"><input type="checkbox" id="stageSelect2" data-key="2" data-value="ステージII"><label for="stageSelect2">ステージII</label></div>
-        <div class="checkbox-label m-b-5"><input type="checkbox" id="stageSelect3" data-key="3" data-value="ステージIII"><label for="stageSelect3">ステージIII</label></div>
-        <div class="checkbox-label m-b-5"><input type="checkbox" id="stageSelect4" data-key="4" data-value="ステージIV"><label for="stageSelect4">ステージIV</label></div>
-        <div class="checkbox-label m-b-5"><input type="checkbox" id="stageSelect5" data-key="5" data-value="指定しない"><label for="stageSelect5">指定しない</label></div>
+        <div class="checkbox-label m-b-5"><input type="radio" name="stageSelect" id="stageSelect1" data-key="1" data-value="ステージI"><label for="stageSelect1">ステージI</label></div>
+        <div class="checkbox-label m-b-5"><input type="radio" name="stageSelect" id="stageSelect2" data-key="2" data-value="ステージII"><label for="stageSelect2">ステージII</label></div>
+        <div class="checkbox-label m-b-5"><input type="radio" name="stageSelect" id="stageSelect3" data-key="3" data-value="ステージIII"><label for="stageSelect3">ステージIII</label></div>
+        <div class="checkbox-label m-b-5"><input type="radio" name="stageSelect" id="stageSelect4" data-key="4" data-value="ステージIV"><label for="stageSelect4">ステージIV</label></div>
+        <div class="checkbox-label m-b-5"><input type="radio" name="stageSelect" id="stageSelect5" data-key="5" data-value="指定しない"><label for="stageSelect5">指定しない</label></div>
     </div>
     <div class="popup-footer previous-footer">
         <div>

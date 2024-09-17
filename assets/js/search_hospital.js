@@ -366,10 +366,6 @@ $(document).ready(function () {
         }
     });
 
-    $('#cancerStagePopup input[type=checkbox]').on('click', function () {
-        $('#cancerStagePopup input[type=checkbox]').not($(this)).prop('checked', false)
-    })
-
     $('#areaPopup input[type=checkbox]').on('change', function () {
         let select = $(this).closest('.form-group').find('select')
 
