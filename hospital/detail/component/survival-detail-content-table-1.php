@@ -12,7 +12,7 @@ if (!isset($avgData)) {
     <table class="table surv-detail-tb">
         <thead>
         <tr class="border-top border-bottom">
-            <th class="table-title center-icon">年度</th>
+            <th class="table-title center-icon">年</th>
             <th class="table-title center-icon"></th>
             <th class="table-title center-icon">ステージI</th>
             <th class="table-title center-icon">ステージII</th>
@@ -25,16 +25,8 @@ if (!isset($avgData)) {
         $html = '';
         for ($i = 0; $i < 3; $i++) {
             $tr = '<tr class="border-top border-bottom">';
-            $tr .= '<td rowspan="5" class="center-icon rowspan-col">'.(($survivals[$i]['year'] != null && $survivals[$i]['year'] != '') ? (($survivals[$i]['year'] . '年') . '～' . (($survivals[$i]['year'] + 1))  . '年') : '-').'</td>';
-            $tr .= '<td class="center-icon table-title">参考:全国平均</td>';
-            $tr .= '<td class="center-icon">-</td>';
-            $tr .= '<td class="center-icon">-</td>';
-            $tr .= '<td class="center-icon">-</td>';
-            $tr .= '<td class="center-icon">-</td>';
-            $tr .= '</tr>';
-
-            $tr .= '<tr class="border-top border-bottom">';
-            $tr .= '<td class="center-icon table-title">実績価</td>';
+            $tr .= '<td rowspan="4" class="center-icon rowspan-col">'.(($survivals[$i]['year'] != null && $survivals[$i]['year'] != '') ? (($survivals[$i]['year']) . '～' . (($survivals[$i]['year'] + 1))  . '年') : '-').'</td>';
+            $tr .= '<td class="center-icon table-title">実績値</td>';
             $tr .= '<td class="center-icon">'.(($survivals[$i]['stage_target1'] != null && $survivals[$i]['stage_target1'] != '') ? ($survivals[$i]['stage_target1'] . '人') : '-').'</td>';
             $tr .= '<td class="center-icon">'.(($survivals[$i]['stage_target2'] != null && $survivals[$i]['stage_target2'] != '') ? ($survivals[$i]['stage_target2'] . '人') : '-').'</td>';
             $tr .= '<td class="center-icon">'.(($survivals[$i]['stage_target3'] != null && $survivals[$i]['stage_target3'] != '') ? ($survivals[$i]['stage_target3'] . '人') : '-').'</td>';
@@ -84,22 +76,14 @@ if (!isset($avgData)) {
 
         }
 
-        $avgHtml = '<tr class="border-top border-bottom">';
-        $avgHtml .= '<td rowspan="5" class="center-icon rowspan-col">直近3年平均</td>';
-        $avgHtml .= '<td class="center-icon table-title">参考:全国平均</td>';
-        $avgHtml .= '<td class="center-icon">-</td>';
-        $avgHtml .= '<td class="center-icon">-</td>';
-        $avgHtml .= '<td class="center-icon">-</td>';
-        $avgHtml .= '<td class="center-icon">-</td>';
-        $avgHtml .= '</tr>';
-
         $avgStageTarget1 = $survivals->avg('stage_target1');
         $avgStageTarget2 = $survivals->avg('stage_target2');
         $avgStageTarget3 = $survivals->avg('stage_target3');
         $avgStageTarget4 = $survivals->avg('stage_target4');
 
-        $avgHtml .= '<tr class="border-top border-bottom">';
-        $avgHtml .= '<td class="center-icon table-title">実績価</td>';
+        $avgHtml = '<tr class="border-top border-bottom">';
+        $avgHtml .= '<td rowspan="4" class="center-icon rowspan-col">直近3年平均</td>';
+        $avgHtml .= '<td class="center-icon table-title">実績値</td>';
         $avgHtml .= '<td class="center-icon">'.(is_numeric($avgStageTarget1) ? (round($avgStageTarget1, 1) . '人') : '-').'</td>';
         $avgHtml .= '<td class="center-icon">'.(is_numeric($avgStageTarget2) ? (round($avgStageTarget2, 1) . '人') : '-').'</td>';
         $avgHtml .= '<td class="center-icon">'.(is_numeric($avgStageTarget3) ? (round($avgStageTarget3, 1) . '人') : '-').'</td>';

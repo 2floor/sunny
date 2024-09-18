@@ -13,7 +13,7 @@ if (!isset($avgData)) {
     <table class="table stage-detail-tb">
         <thead>
         <tr class="border-top border-bottom">
-            <th class="table-title center-icon">年度</th>
+            <th class="table-title center-icon">年</th>
             <th class="table-title center-icon"></th>
             <th class="table-title center-icon">ステージI</th>
             <th class="table-title center-icon">ステージII</th>

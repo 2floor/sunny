@@ -125,7 +125,7 @@ $remarks = $initData['remarks'] ?? [];
                             <?php include 'component/survival-content-table-1.php'; ?>
                             <?php include 'component/survival-detail-content-table-1.php'; ?>
                             <div class="note-sec">
-                                <h5>生在率係数</h5>
+                                <h5>対象者数</h5>
                             </div>
                             <?php include 'component/survival-content-table-2.php'; ?>
                             <?php include 'component/survival-detail-content-table-2.php'; ?>

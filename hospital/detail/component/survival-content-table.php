@@ -11,12 +11,12 @@ if (!isset($avgData)) {
     <table class="table surv-tb">
         <thead>
         <tr class="border-top border-bottom">
-            <th class="table-title col-xs-2">年度</th>
+            <th class="table-title col-xs-2">年</th>
             <th class="table-title col-xs-2 center-icon">集計対象者数</th>
             <th class="table-title col-xs-1"></th>
             <th class="table-title col-xs-1"></th>
             <th class="table-title col-xs-1"></th>
-            <th class="table-title col-xs-2 center-icon">生在率係数</th>
+            <th class="table-title col-xs-2 center-icon">対象者数</th>
             <th class="table-title col-xs-1"></th>
             <th class="table-title col-xs-1"></th>
             <th class="table-title col-xs-1"></th>

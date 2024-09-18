@@ -11,8 +11,8 @@ if (!isset($avgData)) {
     <table class="table surv-tb">
         <tbody>
         <tr class="border-top border-bottom">
-            <td class="table-title center-icon">年度</td>
-            <td class="table-title center-icon">生在率係数</td>
+            <td class="table-title center-icon">年</td>
+            <td class="table-title center-icon">対象者数</td>
             <td class="table-title center-icon">都道府県</td>
             <td class="table-title center-icon">地方</td>
             <td class="table-title center-icon">全国</td>
@@ -25,7 +25,7 @@ if (!isset($avgData)) {
             $totalNumRank = render_html_helper::renderRank($survivals[$i]['total_stage_total_taget'], '../../img/icons');
 
             $tr = '<tr class="border-top border-bottom">';
-            $tr .= '<td class="center-icon">'.(($survivals[$i]['year'] != null && $survivals[$i]['year'] != '') ? (($survivals[$i]['year'] . '年') . '～' . (($survivals[$i]['year'] + 1)). '年') : '-').'</td>';
+            $tr .= '<td class="center-icon">'.(($survivals[$i]['year'] != null && $survivals[$i]['year'] != '') ? (($survivals[$i]['year']) . '～' . (($survivals[$i]['year'] + 1)). '年') : '-').'</td>';
             $tr .= '<td class="center-icon">' . (($survivals[$i]['total_num'] != null && $survivals[$i]['total_num'] != '') ? $survivals[$i]['total_num'] . '人' : '-') . '</td>';
             $tr .= '<td class="center-icon">'.$prefNumRank.'</td>';
             $tr .= '<td class="center-icon">'.$localNumRank.'</td>';

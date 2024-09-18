@@ -121,7 +121,7 @@ foreach ($hospitals as $hospital) {
                                             <tr>
                                                 <th>No</th>
                                                 <th>ID</th>
-                                                <th>年度</th>
+                                                <th>年</th>
                                                 <th>医療機関名</th>
                                                 <th>がん種(Stage)</th>
                                                 <th>合計者数</th>
@@ -201,7 +201,7 @@ foreach ($hospitals as $hospital) {
 
                                 <div class="formRow">
                                     <div class="formItem">
-                                        年度
+                                        年
                                         <span class="label01 require_text">必須</span>
                                     </div>
                                     <div class="formTxt">

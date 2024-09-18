@@ -12,7 +12,7 @@ if (!isset($avgData)) {
     <table class="table stage-tb">
         <tbody>
         <tr class="border-top border-bottom">
-            <td class="table-title center-icon">年度</td>
+            <td class="table-title center-icon">年</td>
             <td class="table-title center-icon">統計値</td>
             <td class="table-title center-icon">都道府県</td>
             <td class="table-title center-icon">地方</td>

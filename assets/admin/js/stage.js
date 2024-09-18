@@ -31,7 +31,7 @@ var search_select = {
             tableOrder 	: 1,
             type 		: 'bigint',
         },
-        '年度' : {
+        '年' : {
             search 		: true,
             order		: true,
             ColName 	: 'year',

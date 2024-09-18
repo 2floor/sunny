@@ -15,7 +15,7 @@ if (!isset($avgData)) {
     <table class="table surv-detail-tb">
         <thead>
         <tr class="border-top border-bottom">
-            <th class="table-title center-icon">年度</th>
+            <th class="table-title center-icon">年</th>
             <th class="table-title center-icon"></th>
             <th class="table-title center-icon">ステージI</th>
             <th class="table-title center-icon">ステージII</th>
@@ -30,7 +30,7 @@ if (!isset($avgData)) {
             $avgSurv = $averageSurv->where('year', $survivals[$i]['year'])->first();
 
             $tr = '<tr class="border-top border-bottom">';
-            $tr .= '<td rowspan="5" class="center-icon rowspan-col">'.(($survivals[$i]['year'] != null && $survivals[$i]['year'] != '') ? (($survivals[$i]['year'] . '年') . '～' . (($survivals[$i]['year'] + 1))  . '年') : '-').'</td>';
+            $tr .= '<td rowspan="5" class="center-icon rowspan-col">'.(($survivals[$i]['year'] != null && $survivals[$i]['year'] != '') ? (($survivals[$i]['year']) . '～' . (($survivals[$i]['year'] + 1))  . '年') : '-').'</td>';
             $tr .= '<td class="center-icon table-title">参考:全国平均</td>';
             $tr .= '<td class="center-icon">'.($avgSurv['stage_survival1'] ? ($avgSurv['stage_survival1'] . '%') : '-').'</td>';
             $tr .= '<td class="center-icon">'.($avgSurv['stage_survival2'] ? ($avgSurv['stage_survival2'] . '%') : '-').'</td>';
@@ -39,7 +39,7 @@ if (!isset($avgData)) {
             $tr .= '</tr>';
 
             $tr .= '<tr class="border-top border-bottom">';
-            $tr .= '<td class="center-icon table-title">実績価</td>';
+            $tr .= '<td class="center-icon table-title">実績値</td>';
             $tr .= '<td class="center-icon">'.(($survivals[$i]['stage_survival_rate1'] != null && $survivals[$i]['stage_survival_rate1'] != '') ? ($survivals[$i]['stage_survival_rate1'] . '%') : '-').'</td>';
             $tr .= '<td class="center-icon">'.(($survivals[$i]['stage_survival_rate2'] != null && $survivals[$i]['stage_survival_rate2'] != '') ? ($survivals[$i]['stage_survival_rate2'] . '%') : '-').'</td>';
             $tr .= '<td class="center-icon">'.(($survivals[$i]['stage_survival_rate3'] != null && $survivals[$i]['stage_survival_rate3'] != '') ? ($survivals[$i]['stage_survival_rate3'] . '%') : '-').'</td>';
@@ -109,7 +109,7 @@ if (!isset($avgData)) {
         $avgSurvivalRate4 = $survivals->avg('stage_survival_rate4');
 
         $avgHtml .= '<tr class="border-top border-bottom">';
-        $avgHtml .= '<td class="center-icon table-title">実績価</td>';
+        $avgHtml .= '<td class="center-icon table-title">実績値</td>';
         $avgHtml .= '<td class="center-icon">'.(is_numeric($avgSurvivalRate1) ? (round($avgSurvivalRate1, 2) . '%') : '-').'</td>';
         $avgHtml .= '<td class="center-icon">'.(is_numeric($avgSurvivalRate2) ? (round($avgSurvivalRate2, 2) . '%') : '-').'</td>';
         $avgHtml .= '<td class="center-icon">'.(is_numeric($avgSurvivalRate3) ? (round($avgSurvivalRate3, 2) . '%') : '-').'</td>';

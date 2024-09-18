@@ -12,7 +12,7 @@ if (!isset($avgData)) {
     <table class="table dpc-tb overflow-auto">
         <tbody>
         <tr class="border-top border-bottom">
-            <td class="table-title center-icon">年度</td>
+            <td class="table-title center-icon">年</td>
             <td class="table-title center-icon">統計價</td>
             <td class="table-title center-icon">都道府</td>
             <td class="table-title center-icon">地方</td>
@@ -21,7 +21,7 @@ if (!isset($avgData)) {
         <?php
         $html = '';
         for ($i = 0; $i < 3; $i++) {
-//            $criteria = ($i == 0) ? '令和3年度' : (($i == 1) ? '令和2年度' : '令和元年度');
+//            $criteria = ($i == 0) ? '令和3年' : (($i == 1) ? '令和2年' : '令和元年');
             $prefRank = render_html_helper::renderRank($dpcs[$i]['rank_pref_dpc'], '../../img/icons');
             $localRank = render_html_helper::renderRank($dpcs[$i]['rank_area_dpc'], '../../img/icons');
             $totalRank = render_html_helper::renderRank($dpcs[$i]['rank_nation_dpc'], '../../img/icons');

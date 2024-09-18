@@ -273,7 +273,7 @@
                     </thead>
                     <tbody>
                     <tr>
-                        <td class="center-icon">年度</td>
+                        <td class="center-icon">年</td>
                         <td class="center-icon">統計値</td>
                     </tr>
 
@@ -303,7 +303,7 @@
                     </thead>
                     <tbody>
                     <tr>
-                        <td class="center-icon">年度</td>
+                        <td class="center-icon">年</td>
                         <td class="center-icon">統計値</td>
                         <td class="center-icon">ステージI</td>
                         <td class="center-icon">ステージII</td>
@@ -375,9 +375,9 @@
                     </thead>
                     <tbody>
                     <tr>
-                        <td class="center-icon">年度</td>
+                        <td class="center-icon">年</td>
                         <td class="center-icon">集計対象者数</td>
-                        <td class="center-icon">生在率係数</td>
+                        <td class="center-icon">対象者数</td>
                     </tr>
 
                     <?php
@@ -408,9 +408,9 @@
                 <table class="table table-summary table-odd-even table-bordered">
                     <tbody>
                     <tr>
-                        <td class="center-icon" colspan="2">年度</td>
+                        <td class="center-icon" colspan="2">年</td>
                         <td class="center-icon" colspan="4">集計対象者数</td>
-                        <td class="center-icon" colspan="4">生在率係数</td>
+                        <td class="center-icon" colspan="4">対象者数</td>
                     </tr>
                     <tr>
                         <td class="center-icon" colspan="2"></td>
@@ -443,7 +443,7 @@
                             $tr .= '</tr>';
 
                             $tr .= '<tr>';
-                            $tr .= '<td class="center-icon">実績価</td>';
+                            $tr .= '<td class="center-icon">実績値</td>';
                             $tr .= '<td class="center-icon">'.(($survivals[$i]['stage_target1'] != null && $survivals[$i]['stage_target1'] != '') ? ($survivals[$i]['stage_target1'] . '人') : '-').'</td>';
                             $tr .= '<td class="center-icon">'.(($survivals[$i]['stage_target2'] != null && $survivals[$i]['stage_target2'] != '') ? ($survivals[$i]['stage_target2'] . '人') : '-').'</td>';
                             $tr .= '<td class="center-icon">'.(($survivals[$i]['stage_target3'] != null && $survivals[$i]['stage_target3'] != '') ? ($survivals[$i]['stage_target3'] . '人') : '-').'</td>';
@@ -489,7 +489,7 @@
                         $avgHtml .= '</tr>';
 
                         $avgHtml .= '<tr>';
-                        $avgHtml .= '<td class="center-icon">実績価</td>';
+                        $avgHtml .= '<td class="center-icon">実績値</td>';
                         $avgHtml .= '<td class="center-icon">'.(is_numeric($avgStageTarget1) ? (round($avgStageTarget1, 1) . '人') : '-').'</td>';
                         $avgHtml .= '<td class="center-icon">'.(is_numeric($avgStageTarget2) ? (round($avgStageTarget2, 1) . '人') : '-').'</td>';
                         $avgHtml .= '<td class="center-icon">'.(is_numeric($avgStageTarget3) ? (round($avgStageTarget3, 1) . '人') : '-').'</td>';

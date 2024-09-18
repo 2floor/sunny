@@ -371,7 +371,7 @@ class f_hospital_ct
 
             $html .= '<div class="row-rank">';
             $html .= '<div class="row-rank-header">';
-            $html .= '<div class="rank-header-top">5年後生在率係数</div>';
+            $html .= '<div class="rank-header-top">5年後対象者数</div>';
             $html .= '<div class="rank-header-title">（直近3年平均）</div>';
             $html .= '<div class="rank-header-content">'.(is_numeric($avgData['avgSurvivalRate']) ? $avgData['avgSurvivalRate'] : "-").'</div>';
             $html .= '</div>';
