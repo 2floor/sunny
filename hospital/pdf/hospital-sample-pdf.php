@@ -370,14 +370,14 @@
                 <table class="table table-summary table-even-odd table-bordered">
                     <thead>
                     <tr>
-                        <th class="table-title" colspan="3">5年後生在率・生存率係数</th>
+                        <th class="table-title" colspan="3">生存率係数・ステージ別5年実測生存率</th>
                     </tr>
                     </thead>
                     <tbody>
                     <tr>
                         <td class="center-icon">年</td>
                         <td class="center-icon">集計対象者数</td>
-                        <td class="center-icon">対象者数</td>
+                        <td class="center-icon">生存率係数</td>
                     </tr>
 
                     <?php
@@ -410,7 +410,7 @@
                     <tr>
                         <td class="center-icon" colspan="2">年</td>
                         <td class="center-icon" colspan="4">集計対象者数</td>
-                        <td class="center-icon" colspan="4">対象者数</td>
+                        <td class="center-icon" colspan="4">生存率係数</td>
                     </tr>
                     <tr>
                         <td class="center-icon" colspan="2"></td>

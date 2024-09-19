@@ -12,7 +12,7 @@ if (!isset($avgData)) {
         <tbody>
         <tr class="border-top border-bottom">
             <td class="table-title center-icon">年</td>
-            <td class="table-title center-icon">対象者数</td>
+            <td class="table-title center-icon">生存率係数</td>
             <td class="table-title center-icon">都道府県</td>
             <td class="table-title center-icon">地方</td>
             <td class="table-title center-icon">全国</td>

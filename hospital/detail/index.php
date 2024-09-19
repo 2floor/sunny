@@ -117,7 +117,7 @@ $remarks = $initData['remarks'] ?? [];
 
                         <section id="survival-table" class="table-sec">
                             <div class="header">
-                                <h4>5年後生在率・生存率係数 - <?= ($cancerNameSurv ? $cancerNameSurv : $cancerName) ?></h4>
+                                <h4>生存率係数・ステージ別5年実測生存率・ <?= ($cancerNameSurv ? $cancerNameSurv : $cancerName) ?></h4>
                             </div>
                             <div class="note-sec">
                                 <h5>集計対象者数</h5>
@@ -125,7 +125,7 @@ $remarks = $initData['remarks'] ?? [];
                             <?php include 'component/survival-content-table-1.php'; ?>
                             <?php include 'component/survival-detail-content-table-1.php'; ?>
                             <div class="note-sec">
-                                <h5>対象者数</h5>
+                                <h5>生存率係数・ステージ別5年実測生存率</h5>
                             </div>
                             <?php include 'component/survival-content-table-2.php'; ?>
                             <?php include 'component/survival-detail-content-table-2.php'; ?>
