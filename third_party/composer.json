@@ -12,6 +12,9 @@
   "require": {
     "illuminate/database": "^8.0",
     "illuminate/pagination": "^8.83",
-    "dompdf/dompdf": "^3.0"
+    "dompdf/dompdf": "^3.0",
+    "illuminate/notifications": "^8.83",
+    "illuminate/support": "^8.83",
+    "illuminate/mail": "^8.83"
   }
 }
