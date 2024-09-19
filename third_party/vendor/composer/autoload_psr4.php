@@ -49,6 +49,7 @@ return array(
     'Illuminate\\Contracts\\' => array($vendorDir . '/illuminate/contracts'),
     'Illuminate\\Container\\' => array($vendorDir . '/illuminate/container'),
     'Illuminate\\Console\\' => array($vendorDir . '/illuminate/console'),
+    'Illuminate\\Config\\' => array($vendorDir . '/illuminate/config'),
     'Illuminate\\Bus\\' => array($vendorDir . '/illuminate/bus'),
     'Illuminate\\Broadcasting\\' => array($vendorDir . '/illuminate/broadcasting'),
     'FontLib\\' => array($vendorDir . '/dompdf/php-font-lib/src/FontLib'),
