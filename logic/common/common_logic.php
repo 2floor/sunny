@@ -40,23 +40,11 @@ class common_logic
 	 */
 	public function mail_send($to, $subject, $body1, $header)
 	{
-
-
 		mb_language("Japanese");
 		mb_internal_encoding("UTF-8");
-		$order_no = str_pad($order_no, 8, "0", STR_PAD_LEFT);
 		$header = "From: " . $header;
-
-		$res = mb_send_mail($to, $subject, $body1, $header);
-		$res = mb_send_mail("seidoutakahiro@gmail.com", "title", "test", "From: from@example.jp");
-		
-		var_dump($res);
-		var_dump($to);
-		var_dump($subject);
-		var_dump($body1);
-		var_dump($header);
-		exit();
-		
+        $body = str_replace("\\r\\n", "\n", $body1);
+        mb_send_mail($to, $subject, $body, $header);
 	}
 
 	/**

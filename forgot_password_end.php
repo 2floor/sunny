@@ -7,14 +7,6 @@ require_once __DIR__ . '/common/security_common_logic.php';
 
 $security = new security_common_logic();
 $csrf_token = $security->generateCsrfToken();
-
-// エラーメッージ取得
-$msg = isset($_GET['msg']) ? $_GET['msg'] : false;
-
-// ID・PWが一致しない場合
-if ($msg) {
-$no_msg = 'ログインID、もしくは、パスワードが違います。再度、ログインID、PWが正しいかご確認をお願いします';
-}
 ?>
 
 <!DOCTYPE html>
@@ -25,7 +17,7 @@ $no_msg = 'ログインID、もしくは、パスワードが違います。再�
     <meta name="viewport" content="width=device-width,initial-scale=1.0" />
     <meta name="format-detection" content="telephone=no" />
     <!-- meta情報 -->
-    <title>Login</title>
+    <title>Forgot Password</title>
     <meta name="description" content="" />
     <meta name="keywords" content="" />
     <link rel="shortcut icon" href="favicon.ico" />
@@ -42,6 +34,23 @@ $no_msg = 'ログインID、もしくは、パスワードが違います。再�
     <link rel="stylesheet" href="./assets/css/styles.css">
     <link rel="stylesheet" href="./assets/css/login.css">
     <!-- JavaScript -->
+
+    <style>
+        section.login {
+            margin-top: 8rem;
+        }
+
+        .btn-back {
+            margin-top: 50px;
+            background-color: #FFFFFF;
+            border: 1px solid #0A74B0;
+            color: #0A74B0;
+        }
+
+        .btn-back:hover {
+            background-color: #EEEEEE;
+        }
+    </style>
 </head>
 
 <body>
@@ -77,33 +86,11 @@ $no_msg = 'ログインID、もしくは、パスワードが違います。再�
     <div class="login-container">
         <div class="login-card">
             <div class="login-header">
-                <h1>ログイン</h1>
-                <p>サニーヘルス株式会社</p>
+                <h1>パスワードを忘れた方</h1>
+                <p>ご登録のメールアドレス宛にお送りしました。<br>
+                    再設定用URLよりパスワードを設定してください。</p>
             </div>
-            <form method="POST" action="logon.php">
-                <input type="hidden" name="csrf_token" value="<?php echo htmlspecialchars($csrf_token); ?>">
-                <div class="form-group">
-                    <div class="label-info">
-                        <label for="username" class="bold">ログインID </label>
-                        <span class="status warrant login-warrant">必須</span>　
-                    </div>
-                    <input type="text" name="username" id="username" placeholder="例）yamataro" required>
-                </div>
-                <div class="form-group">
-                    <div class="label-info">
-                        <label for="password" class="bold">パスワード </label>
-                        <span class="status warrant login-warrant">必須</span>　
-                    </div>
-                    <input type="password" name="password" id="password" placeholder="半角英数8～12桁" required>
-                </div>
-                <div class="form-footer">
-                    <a href="forgot_password.php">パスワードをお忘れですか？</a>
-                </div>
-                <?php
-                    if ($msg) echo '<div class="errorMsg"><span>' .$no_msg. '</span></div>';
-                ?>
-                <button type="submit" class="btn-submit">ログインする</button>
-            </form>
+                <a href="login.php" class="btn btn-back btn-submit">ログイン画面へ戻る</a>
         </div>
     </div>
 </section>
