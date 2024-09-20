@@ -38,14 +38,17 @@ class common_logic
 	 * @param unknown $subject
 	 * @param unknown $body1
 	 */
-	public function mail_send($to, $subject, $body1, $header)
-	{
-		mb_language("Japanese");
-		mb_internal_encoding("UTF-8");
-		$header = "From: " . $header;
+    public function mail_send($to, $subject, $body1, $from)
+    {
+        mb_language("Japanese");
+        mb_internal_encoding("UTF-8");
+
+        $header = "From:" . mb_encode_mimeheader("トップ") . "<no-reply@sample.com>";
+
         $body = str_replace("\\r\\n", "\n", $body1);
+
         mb_send_mail($to, $subject, $body, $header);
-	}
+    }
 
 	/**
 	 * select処理(汎用型)
