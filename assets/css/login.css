@@ -110,6 +110,10 @@ section.login {
     max-height: 140px;
 }
 
+.errorMsg {
+    margin-bottom: 20px
+}
+
 @media (max-width: 768px) {
     .login-card {
         padding: 1em;

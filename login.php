@@ -13,7 +13,7 @@ $msg = isset($_GET['msg']) ? $_GET['msg'] : false;
 
 // ID・PWが一致しない場合
 if ($msg) {
-$no_msg = 'ログインID、もしくは、パスワードが違います。再度、ログインID、PWが正しいかご確認をお願いします';
+$no_msg = 'ログインID、もしくは、パスワードが違います。再度、ログインID、PWが正しいかご確認をお願いします。';
 }
 ?>
 
@@ -79,6 +79,9 @@ $no_msg = 'ログインID、もしくは、パスワードが違います。再�
             <div class="login-header">
                 <h1>ログイン</h1>
                 <p>サニーヘルス株式会社</p>
+                <?php
+                if ($msg) echo '<div class="errorMsg"><span>' .$no_msg. '</span></div>';
+                ?>
             </div>
             <form method="POST" action="logon.php">
                 <input type="hidden" name="csrf_token" value="<?php echo htmlspecialchars($csrf_token); ?>">
@@ -99,9 +102,6 @@ $no_msg = 'ログインID、もしくは、パスワードが違います。再�
                 <div class="form-footer">
                     <a href="forgot_password.php">パスワードをお忘れですか？</a>
                 </div>
-                <?php
-                    if ($msg) echo '<div class="errorMsg"><span>' .$no_msg. '</span></div>';
-                ?>
                 <button type="submit" class="btn-submit">ログインする</button>
             </form>
         </div>

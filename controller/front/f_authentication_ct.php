@@ -152,11 +152,11 @@ class f_authentication_ct
         $body = <<<EOF
 
 ―――――――――――――――――――――――――――――――――――
- このメッセージは マンション管理入札サイト より自動送信されています。
+このメッセージは 病院検病サイトより自動送信されています。
 ※no-reply@sunny.comは送信専用です。ご返信されても対応出来ませんのでご了承下さい。
 ―――――――――――――――――――――――――――――――――――
 
-{$name}　様
+{$name} 様
 　　　　
 いつもご利用頂き、誠にありがとうございます。
 以下のURLよりパスワードの再設定をお願いします。
@@ -173,7 +173,7 @@ https://2floor.space/sunny_health/reset_password.php?en={$token}
 
 
 ================================================================
-■マンション管理入札サイト
+■病院検病サイト
 https://2floor.space/sunny_health/
 
 こちらのメールに関してのお問い合わせはこちらからお願いいたします。
@@ -184,7 +184,7 @@ https://2floor.space/sunny_health/contact.php
 
 
 EOF;
-        $title = "【Sunny】パスワード再設定に関するご連絡です";
+        $title = "【病院検病サイト】パスワード再設定に関するご連絡です";
         $this->common_logic->mail_send($mail, $title, $body, "no-reply@sunny.com");
     }
 }
