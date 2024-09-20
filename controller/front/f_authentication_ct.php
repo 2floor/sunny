@@ -9,7 +9,6 @@ if (!isset($_SESSION)) {
 
 require_once __DIR__ . '/../../third_party/bootstrap.php';
 require_once __DIR__ . '/../../common/security_common_logic.php';
-require_once __DIR__ . "/../../logic/front/auth_logic.php";
 require_once __DIR__ . "/../../logic/common/common_logic.php";
 
 /**
@@ -66,7 +65,44 @@ class f_authentication_ct
             $data = $this->forgotPassword($post);
         }
 
+        if ($post['method'] == 'resetPassword') {
+            $data = $this->resetPassword($post);
+        }
+
         return $data;
+    }
+
+    public function resetPassword($post)
+    {
+        $csrf_token = $post["csrf_token"] ?? '';
+
+        if (!$this->security->validateCsrfToken($csrf_token)) {
+            header("Location: " . BASE_URL . "error/404_page.php");
+            exit();
+        }
+
+        $reset = PasswordReset::where([
+            'token' => $post['token'] ?? null,
+            'status' => PasswordReset::STATUS_ACTIVE
+        ])->first();
+
+        $isSuccess = false;
+
+        if ($reset && ($user = $reset->user) && $post['password']) {
+            if (strtotime($reset->expires_at) > time()) {
+                $user->password = $this->common_logic->convert_password_encode($post['password']);
+
+                if ($user->save()) {
+                    $reset->update(['status' => PasswordReset::STATUS_INACTIVE]);
+                    $isSuccess = true;
+                }
+            } else {
+                $reset->update(['status' => PasswordReset::STATUS_INACTIVE]);
+            }
+        }
+
+        header("Location: " . BASE_URL . "reset_password_end.php?status=" . ($isSuccess ? 'yes' : 'no'));
+        exit();
     }
 
     public function forgotPassword($post)
@@ -74,7 +110,7 @@ class f_authentication_ct
         $csrf_token = $post["csrf_token"] ?? '';
 
         if (!$this->security->validateCsrfToken($csrf_token)) {
-            header("Location: " . BASE_URL . "forgot_password.php?msg=k");
+            header("Location: " . BASE_URL . "error/404_page.php");
             exit();
         }
 
@@ -89,7 +125,7 @@ class f_authentication_ct
             ]);
 
             $token = bin2hex(random_bytes(32));
-            $expires_at = date("Y-m-d H:i:s", strtotime('+5 minutes'));
+            $expires_at = date("Y-m-d H:i:s", strtotime('+10 minutes'));
 
             $nps = PasswordReset::create([
                 'user_id' => $user->id,
@@ -113,7 +149,7 @@ class f_authentication_ct
         $name = $post['name'] ?? '';
         $token = $post['token'] ?? '';
 
-        $m_body = <<<EOF
+        $body = <<<EOF
 
 ―――――――――――――――――――――――――――――――――――
  このメッセージは マンション管理入札サイト より自動送信されています。
@@ -124,7 +160,7 @@ class f_authentication_ct
 　　　　
 いつもご利用頂き、誠にありがとうございます。
 以下のURLよりパスワードの再設定をお願いします。
-有効期限は5分です。
+有効期限は10分です。
 *******************************************************************
 
 
@@ -149,6 +185,6 @@ https://2floor.space/sunny_health/contact.php
 
 EOF;
         $title = "【Sunny】パスワード再設定に関するご連絡です";
-        $this->common_logic->mail_send($mail, $title, $m_body, "no-reply@sunny.com");
+        $this->common_logic->mail_send($mail, $title, $body, "no-reply@sunny.com");
     }
 }

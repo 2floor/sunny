@@ -144,25 +144,31 @@ class f_hospital_ct
         $yearDpc = $hospital->dpcs()
             ->select('year')
             ->where('cancer_id', $cancerId)
-            ->orderBy('year', 'asc')
+            ->orderBy('year', 'desc')
             ->take(3)
             ->pluck('year')
+            ->sort()
             ->implode('、');
 
         $yearStage = $hospital->stages()
             ->select('year')
             ->where('cancer_id', $cancerId)
-            ->orderBy('year', 'asc')
+            ->orderBy('year', 'desc')
             ->take(3)
             ->pluck('year')
+            ->sort()
             ->implode('、');
 
         $yearSurvival = $hospital->survivals()
             ->select('year')
             ->where('cancer_id', $cancerId)
-            ->orderBy('year', 'asc')
+            ->orderBy('year', 'desc')
             ->take(3)
             ->pluck('year')
+            ->sort()
+            ->map(function ($year) {
+                return $year . '～' . ($year + 1) .'年';
+            })
             ->implode('、');
 
         $categories = $hospital->categories()
@@ -371,7 +377,7 @@ class f_hospital_ct
 
             $html .= '<div class="row-rank">';
             $html .= '<div class="row-rank-header">';
-            $html .= '<div class="rank-header-top">5年後対象者数</div>';
+            $html .= '<div class="rank-header-top">5年生存率係数</div>';
             $html .= '<div class="rank-header-title">（直近3年平均）</div>';
             $html .= '<div class="rank-header-content">'.(is_numeric($avgData['avgSurvivalRate']) ? $avgData['avgSurvivalRate'] : "-").'</div>';
             $html .= '</div>';
@@ -488,9 +494,10 @@ class f_hospital_ct
         $yearSummaryDpc = $hospital->dpcs()
             ->select('year')
             ->where('cancer_id', $cancerId)
-            ->orderBy('year', 'asc')
+            ->orderBy('year', 'desc')
             ->take(3)
             ->pluck('year')
+            ->sort()
             ->implode('、');
 
         $avgDpc = $hospital->dpcs()
@@ -503,9 +510,10 @@ class f_hospital_ct
         $yearSummaryStage = $hospital->stages()
             ->select('year')
             ->where('cancer_id', $cancerId)
-            ->orderBy('year', 'asc')
+            ->orderBy('year', 'desc')
             ->take(3)
             ->pluck('year')
+            ->sort()
             ->implode('、');
 
         $avgNewNum = $hospital->stages()
@@ -518,9 +526,13 @@ class f_hospital_ct
         $yearSummarySurvival = $hospital->survivals()
             ->select('year')
             ->where('cancer_id', $cancerId)
-            ->orderBy('year', 'asc')
+            ->orderBy('year', 'desc')
             ->take(3)
             ->pluck('year')
+            ->sort()
+            ->map(function ($year) {
+                return $year . '～' . ($year + 1) .'年';
+            })
             ->implode('、');
 
         $avgSurvivalRate = $hospital->survivals()

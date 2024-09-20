@@ -62,7 +62,7 @@ if (!isset($yearSummary)) {
             </td>
         </tr>
         <tr>
-            <td class="criteria  w-30">5年後生存率数 <?php echo $yearSummary['survival'] ? '(' .$yearSummary['survival'] .'年)' : ''?></td>
+            <td class="criteria  w-30">5年生存率係数 <?php echo $yearSummary['survival'] ? '(' .$yearSummary['survival'] .')' : ''?></td>
             <td class="center-icon"><?php echo ($avgData['avgSurvivalRate'] ?? '-') ?></td>
             <td class="center-icon">
                 <?php

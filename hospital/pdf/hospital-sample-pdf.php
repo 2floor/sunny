@@ -251,7 +251,7 @@
                         <td class="center-icon"><?php echo ($avgNewNum ? $avgNewNum . '人' : '-') ?></td>
                     </tr>
                     <tr>
-                        <td class="criteria center-icon">5年後生存率数 <?php echo $yearSummarySurvival ? '(' .$yearSummarySurvival .'年)' : ''?></td>
+                        <td class="criteria center-icon">5年生存率係数 <?php echo $yearSummarySurvival ? '(' .$yearSummarySurvival .')' : ''?></td>
                         <td class="center-icon"><?php echo ($avgSurvivalRate ?? '-') ?></td>
                     </tr>
                     </tbody>
@@ -298,7 +298,7 @@
                 <table class="table table-summary table-even-odd table-bordered">
                     <thead>
                     <tr>
-                        <th class="table-title" colspan="6">年間新規入院患者数</th>
+                        <th class="table-title" colspan="6">年間新規患者数</th>
                     </tr>
                     </thead>
                     <tbody>

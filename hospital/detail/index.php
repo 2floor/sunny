@@ -97,19 +97,19 @@ $remarks = $initData['remarks'] ?? [];
                     <div class="result-content-tab">
                         <div class="nav-section">
                             <a href="#dpc-table" id="navDpcTb"><img src="../../img/icons/bed-icon.png" alt="Hospital Icon"><span>年間入院患者数</span></a>
-                            <a href="#stage-table" id="navStageTb"><img src="../../img/icons/list-icon.png" alt="Hospital Icon"><span>年間新規入院患者数</span></a>
-                            <a href="#survival-table" id="navSurvivalTb"><img src="../../img/icons/healthy-icon.png" alt="Hospital Icon"><span>5年後生在率・生存率係数</span></a>
+                            <a href="#stage-table" id="navStageTb"><img src="../../img/icons/list-icon.png" alt="Hospital Icon"><span>年間新規患者数</span></a>
+                            <a href="#survival-table" id="navSurvivalTb"><img src="../../img/icons/healthy-icon.png" alt="Hospital Icon"><span>生存率係数・ステージ別5年実測生存率</span></a>
                         </div>
                         <section id="dpc-table" class="table-sec">
                             <div class="header">
-                                <h4>年間入院患者数 - <?= ($cancerNameDPC ? $cancerNameDPC : $cancerName) ?></h4>
+                                <h4>年間入院患者数 ・ <?= ($cancerNameDPC ? $cancerNameDPC : $cancerName) ?></h4>
                             </div>
                             <?php include 'component/dpc-content-table.php'; ?>
                         </section>
 
                         <section id="stage-table" class="table-sec">
                             <div class="header">
-                                <h4>年間新規入院患者数 - <?= ($cancerNameStage ?  $cancerNameStage : $cancerName) ?></h4>
+                                <h4>年間新規患者数・ <?= ($cancerNameStage ?  $cancerNameStage : $cancerName) ?></h4>
                             </div>
                             <?php include 'component/stage-content-table.php'; ?>
                             <?php include 'component/stage-detail-content-table.php'; ?>

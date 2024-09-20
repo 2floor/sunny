@@ -94,7 +94,7 @@ $no_msg = 'ログインID、もしくは、パスワードが違います。再�
                         <label for="password" class="bold">パスワード </label>
                         <span class="status warrant login-warrant">必須</span>　
                     </div>
-                    <input type="password" name="password" id="password" placeholder="半角英数8～12桁" required>
+                    <input type="password" name="password" id="password" placeholder="パスワードを入力してください" required>
                 </div>
                 <div class="form-footer">
                     <a href="forgot_password.php">パスワードをお忘れですか？</a>

@@ -224,7 +224,11 @@ function disp_error_msg(elem, msg){
 
 		if(type != 'radio' && type != 'checkbox' && !elem.hasClass('couple')){
 			//通常のinput系
-			elem.parent('div').append('<span class="error">'+msg+'</span>');
+			if (elem.parent('div').hasClass('input-group')) {
+				elem.parent().parent().append('<span class="error">'+msg+'</span>');
+			} else {
+				elem.parent('div').append('<span class="error">'+msg+'</span>');
+			}
 			elem.addClass('error-form');
 
 		}else if(type == 'checkbox' ){

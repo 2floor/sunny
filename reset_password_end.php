@@ -1,16 +1,6 @@
 <?php
-if (!isset($_SESSION)) {
-    session_start();
-}
 
-require_once __DIR__ . '/common/security_common_logic.php';
-require_once  __DIR__ . "/required/page_init.php";
-
-$page_init = new page_init();
-$pageinfo = $page_init->get_info();
-
-$security = new security_common_logic();
-$csrf_token = $security->generateCsrfToken();
+$status = isset($_GET['status']) ? $_GET['status'] : 'no';
 ?>
 
 <!DOCTYPE html>
@@ -21,7 +11,7 @@ $csrf_token = $security->generateCsrfToken();
     <meta name="viewport" content="width=device-width,initial-scale=1.0" />
     <meta name="format-detection" content="telephone=no" />
     <!-- meta情報 -->
-    <title>Forgot Password</title>
+    <title>Reset Password</title>
     <meta name="description" content="" />
     <meta name="keywords" content="" />
     <link rel="shortcut icon" href="favicon.ico" />
@@ -41,20 +31,18 @@ $csrf_token = $security->generateCsrfToken();
 
     <style>
         section.login {
-            margin-top: 4rem;
+            margin-top: 8rem;
         }
 
-        form {
+        .btn-back {
             margin-top: 50px;
+            background-color: #FFFFFF;
+            border: 1px solid #0A74B0;
+            color: #0A74B0;
         }
 
-        .error {
-            color: red;
-        }
-
-        .error-form{
-            border-color: #ff5b5b;
-            background: #fdb8b8;
+        .btn-back:hover {
+            background-color: #EEEEEE;
         }
     </style>
 </head>
@@ -92,34 +80,22 @@ $csrf_token = $security->generateCsrfToken();
     <div class="login-container">
         <div class="login-card">
             <div class="login-header">
-                <h1>パスワードを忘れた方</h1>
-                <p>ご登録のメールアドレスに再設定用のURLをお送りいたします。<br>
-                    現在ご登録のメールアドレスをご入力ください。</p>
+                <?php if ($status == 'yes'): ?>
+                <h1>パスワードを正常にリセットしました</h1>
+                <p>新しいパスワードを使用してログインを続けることができます</p>
+                <?php else: ?>
+                    <h1>パスワードのリセットに失敗しました</h1>
+                    <p>もう一度試すか、カスタマーサービスにお問い合わせください。</p>
+                <?php endif; ?>
             </div>
-            <form method="POST" id="form01" action="controller/front/f_authentication_ct.php">
-                <input type="hidden" name="csrf_token" value="<?php echo htmlspecialchars($csrf_token); ?>">
-                <input type="hidden" name="method" value="forgotPassword">
-                <div class="form-group">
-                    <div class="label-info">
-                        <label for="email" class="bold">メールアドレス </label>
-                        <span class="status warrant login-warrant">必須</span>　
-                    </div>
-                    <input type="text" name="email" class="validate required mail" id="email" placeholder="例）yamataro@gmail.com" required>
-                </div>
-                <button type="submit" class="btn-submit">送信する</button>
-            </form>
+            <?php if ($status == 'yes'): ?>
+            <a href="login.php" class="btn btn-back btn-submit">ログイン画面へ戻る</a>
+            <?php else: ?>
+                <a href="forgot_password.php" class="btn btn-back btn-submit">パスワードを忘れた場合の画面に戻る</a>
+            <?php endif; ?>
         </div>
     </div>
 </section>
 </body>
-<?php print $pageinfo->html_foot; ?>
-<script>
-    $(document).ready(function(){
-        $("#form01").on("submit", function(event){
-            if (!validate_all()) {
-                event.preventDefault();
-            }
-        });
-    });
-</script>
+
 </html>
