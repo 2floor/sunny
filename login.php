@@ -42,6 +42,15 @@ $no_msg = 'ログインID、もしくは、パスワードが違います。再�
     <link rel="stylesheet" href="./assets/css/styles.css">
     <link rel="stylesheet" href="./assets/css/login.css">
     <!-- JavaScript -->
+    <style>
+        header {
+            display: none;
+        }
+
+        .header-margin {
+            margin: 0;
+        }
+    </style>
 </head>
 
 <body>

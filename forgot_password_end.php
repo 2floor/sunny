@@ -39,6 +39,14 @@
         .btn-back:hover {
             background-color: #EEEEEE;
         }
+
+        header {
+            display: none;
+        }
+
+        .header-margin {
+            margin: 0;
+        }
     </style>
 </head>
 

@@ -56,6 +56,14 @@ $csrf_token = $security->generateCsrfToken();
             border-color: #ff5b5b;
             background: #fdb8b8;
         }
+
+        header {
+            display: none;
+        }
+
+        .header-margin {
+            margin: 0;
+        }
     </style>
 </head>
 

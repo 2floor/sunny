@@ -44,6 +44,14 @@ $status = isset($_GET['status']) ? $_GET['status'] : 'no';
         .btn-back:hover {
             background-color: #EEEEEE;
         }
+
+        header {
+            display: none;
+        }
+
+        .header-margin {
+            margin: 0;
+        }
     </style>
 </head>
 

@@ -93,6 +93,14 @@ if (isset($_GET['en'])) {
         .input-group {
             position: relative;
         }
+
+        header {
+            display: none;
+        }
+
+        .header-margin {
+            margin: 0;
+        }
     </style>
 </head>
 
