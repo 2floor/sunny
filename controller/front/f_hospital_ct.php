@@ -181,9 +181,18 @@ class f_hospital_ct
         $hospitalType = $categories->firstWhere('hard_name2', 'hospital_type');
         $hospitalGen = $categories->firstWhere('hard_name2', 'hospital_gen');
         $specialClinic = $categories->firstWhere('hard_name3', 'special_clinic');
-        $advancedMedical = $categories->firstWhere('hard_name3', 'advanced_medical');
-        $famousDoctor = $categories->firstWhere('hard_name3', 'famous_doctor');
-        $multiTreatment = $categories->firstWhere('hard_name3', 'multi_treatment');
+
+        $advancedMedical = $categories->filter(function ($value) use ($cancerId) {
+            return $value->pivot['cancer_id'] == $cancerId;
+        })->firstWhere('hard_name3', 'advanced_medical');
+
+        $famousDoctor = $categories->filter(function ($value) use ($cancerId) {
+            return $value->pivot['cancer_id'] == $cancerId;
+        })->firstWhere('hard_name3', 'famous_doctor');
+
+        $multiTreatment = $categories->filter(function ($value) use ($cancerId) {
+            return $value->pivot['cancer_id'] == $cancerId;
+        })->firstWhere('hard_name3', 'multi_treatment');
 
         $treatment = $hospital->cancers()?->first()?->pivot?->sp_treatment;
 
@@ -482,9 +491,18 @@ class f_hospital_ct
         $hospitalType = $categories->firstWhere('hard_name2', 'hospital_type');
         $hospitalGen = $categories->firstWhere('hard_name2', 'hospital_gen');
         $specialClinic = $categories->firstWhere('hard_name3', 'special_clinic');
-        $advancedMedical = $categories->firstWhere('hard_name3', 'advanced_medical');
-        $famousDoctor = $categories->firstWhere('hard_name3', 'famous_doctor');
-        $multiTreatment = $categories->firstWhere('hard_name3', 'multi_treatment');
+
+        $advancedMedical = $categories->filter(function ($value) use ($cancerId) {
+            return $value->pivot['cancer_id'] == $cancerId;
+        })->firstWhere('hard_name3', 'advanced_medical');
+
+        $famousDoctor = $categories->filter(function ($value) use ($cancerId) {
+            return $value->pivot['cancer_id'] == $cancerId;
+        })->firstWhere('hard_name3', 'famous_doctor');
+
+        $multiTreatment = $categories->filter(function ($value) use ($cancerId) {
+            return $value->pivot['cancer_id'] == $cancerId;
+        })->firstWhere('hard_name3', 'multi_treatment');
 
         $treatment = $hospital->categories()
             ->where('data_type', Category::HOSPITAL_TREATMENT_TYPE)
