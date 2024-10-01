@@ -31,8 +31,13 @@ abstract class base_logic {
         return $this->model->newQuery()->withoutGlobalScopes();
     }
 
-    public function getListData($params, $searchSelect = null, $withRelation = []) {
+    public function getListData($params, $searchSelect = null, $withRelation = [], $whereClass= []) {
         $query = $this->createSearchQuery($searchSelect);
+
+        if (!empty($whereClass)) {
+            $query->where($whereClass);
+        }
+
         $count = $query->count();
         $data = $query->with($withRelation)->paginate($params[0], ['*'], 'page', $params[1])->toArray();
 

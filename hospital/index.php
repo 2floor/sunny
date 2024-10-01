@@ -4,10 +4,17 @@ if (!isset($_SESSION)) {
 }
 
 require_once  __DIR__ . "/../required/page_init.php";
-require_once  __DIR__ . "/../logic/front/auth_logic.php";
+require_once __DIR__ . "/../logic/front/auth_logic.php";
 
 $auth_logic = new auth_logic();
-$auth_logic->check_authentication();
+$permSH = $auth_logic->check_permission('search.hospital');
+$permSFH = $auth_logic->check_permission('search.first.hospital');
+$permSSH = $auth_logic->check_permission('search.second.hospital');
+if (!$permSH) {
+    header("Location: " . BASE_URL . "error/403_page.php");
+    exit();
+}
+
 $page_init = new page_init();
 $pageinfo = $page_init->get_info();
 ?>
@@ -29,16 +36,21 @@ $pageinfo = $page_init->get_info();
             <h2>がん治療実績データベース　病院検索</h2>
             <p></p>
             <div class="button-sub-text">
+                <?php if ($permSFH) { ?>
                 <a href="./first-search.php" class="btn btn-hospital">
                     <span class="icon"><span class="border-icon"><img src="../img/icons/first-search-icon.png" alt="Hospital Icon"></span></span>
                     <span class="text">新規医療機関検索</span>
                 </a>
                 <span class="sub-text">がんの疑いがあり,治療を受ける病院を検索する<br>（確定診断を受けていない方向け）</span>
+                <?php } ?>
+
+                <?php if ($permSSH) { ?>
                 <a href="./second-search.php" class="btn btn-doctor">
                     <span class="icon"><span class="border-icon"><img src="../img/icons/second-search-icon.png" alt="Doctor Icon"></span></span>
                     <span class="text">セカンドオピニオン検索</span>
                 </a>
                 <span class="sub-text">セカンドオピニオンを受ける病院や特殊な治療方法などから病院を検索する<br>（確定診断を受けている方向け）</span>
+                <?php } ?>
             </div>
         </div>
     </div>

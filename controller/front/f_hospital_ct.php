@@ -17,9 +17,6 @@ require_once __DIR__ . '/../../common/security_common_logic.php';
 require_once __DIR__ . "/../../logic/front/auth_logic.php";
 require_once __DIR__ . "/../../logic/front/f_hospital_logic.php";
 require_once __DIR__ . '/../../third_party/bootstrap.php';
-
-$auth_logic = new auth_logic();
-$auth_logic->check_authentication();
 /**
  * セキュリティチェック
  */
@@ -46,6 +43,13 @@ if (isset($_GET['method'])) {
 
 class f_hospital_ct
 {
+    protected $auth_logic;
+
+    public function  __construct()
+    {
+        $this->auth_logic = new auth_logic();
+    }
+
     public function mainAjaxGet($get)
     {
         $data = [
@@ -82,7 +86,13 @@ class f_hospital_ct
         return $data;
     }
 
-    public function searchPageIndex($categoryType) {
+    public function searchPageIndex($categoryType)
+    {
+        $permSH = $this->auth_logic->check_permission('search.hospital');
+        if (!$permSH) {
+            return [];
+        }
+
         $cancer = Cancer::select('id', 'cancer_type')
             ->orderBy('order_num', 'asc')
             ->orderBy('created_at', 'desc')
@@ -128,6 +138,11 @@ class f_hospital_ct
 
     public function getDetailById($id, $cancerId)
     {
+        $permVDH = $this->auth_logic->check_permission('view.detail.hospital');
+        if (!$permVDH) {
+            return [];
+        }
+
         $hospital = Hospital::where('id', $id)
             ->whereHas('cancers', function ($query) use ($cancerId) {
                 $query->where('m_cancer.id', $cancerId);
@@ -194,7 +209,7 @@ class f_hospital_ct
             return $value->pivot['cancer_id'] == $cancerId;
         })->firstWhere('hard_name3', 'multi_treatment');
 
-        $treatment = $hospital->cancers()?->first()?->pivot?->sp_treatment;
+        $treatment = $hospital->cancers()->where('cancer_id', $cancerId)?->first()?->pivot?->sp_treatment;
 
         $stages = $hospital->stages()
             ->where('cancer_id', $cancerId)
@@ -264,6 +279,16 @@ class f_hospital_ct
 
     public function searchHospitalList($get)
     {
+        $permSH = $this->auth_logic->check_permission('search.hospital');
+        if (!$permSH) {
+            return [
+                'status' => false,
+                'data' => []
+            ];
+        }
+
+        $permVDH = $this->auth_logic->check_permission('view.detail.hospital');
+
         $cancers = $get['cancer'] ?? [];
         $areaRaw = $get['area'] ?? [];
         $categories = $get['category'] ?? [];
@@ -297,7 +322,7 @@ class f_hospital_ct
         $hospitals = $data['hospitals'];
 
         $html = '';
-        $hospitals->each(function ($hospital) use ($cancers, &$html) {
+        $hospitals->each(function ($hospital) use ($cancers, &$html, $permVDH) {
             $areaName = $hospital->area->pref_name;
             $categories = $hospital->categories()->select('level3')
                 ->where('data_type', Category::HOSPITAL_DETAIL_TYPE)
@@ -305,13 +330,20 @@ class f_hospital_ct
                 ->get()
                 ->pluck('level3');
 
-            $categoryTreatment = $hospital->categories()->select('hard_name3')
+            $categoryTreatment = $hospital->categories()
+                ->where(function ($query) use ($cancers) {
+                    $query->where('t_category_hospital.cancer_id', $cancers[0]);
+                    $query->orWhereNull('t_category_hospital.cancer_id');
+                })
+                ->select('hard_name3')
                 ->where('data_type', Category::HOSPITAL_DETAIL_TYPE)
                 ->whereIn('hard_name3', [
-                    'multi_treatment', 'famous_doctor', 'advanced_medical', 'special_clinic', 'advanced_medical'
+                    'multi_treatment', 'famous_doctor', 'advanced_medical', 'special_clinic'
                 ])
                 ->get()
                 ->pluck('hard_name3')->toArray();
+
+            $treatment = $hospital->cancers()->where('cancer_id', $cancers[0])?->first()?->pivot?->sp_treatment;
 
             $avgData = $hospital->calculateAvgCommonData($cancers[0]);
 
@@ -339,7 +371,7 @@ class f_hospital_ct
             $html .= '<div class="treatment-item"><span>名医の在籍あり</span><span '.(in_array('famous_doctor', $categoryTreatment) ? 'class="has-treatment">あり' : '>なし') .'</span></div>';
             $html .= '<div class="treatment-item"><span>先進医療</span><span '.(in_array('advanced_medical', $categoryTreatment) ? 'class="has-treatment">あり' : '>なし') .'</span></div>';
             $html .= '<div class="treatment-item"><span>特別室</span><span '.(in_array('special_clinic', $categoryTreatment) ? 'class="has-treatment">あり' : '>なし') .'</span></div>';
-            $html .= '<div class="treatment-item"><span>特別な治療法</span><span '.(in_array('advanced_medical', $categoryTreatment) ? 'class="has-treatment">あり' : '>なし') .'</span></div>';
+            $html .= '<div class="treatment-item"><span>特別な治療法</span><span '.($treatment ? 'class="has-treatment">あり' : '>なし') .'</span></div>';
             $html .= '</div>';
             $html .= '</div>';
             $html .= '<div class="card-stats">';
@@ -402,7 +434,7 @@ class f_hospital_ct
             $html .= '</div>';
             $html .= '</div>';
             $html .= '</div>';
-            $html .= '<div class="footer-card"><a target="_bank" href="detail/index.php?id='.$hospital->id.'&cancerId='.$cancers[0].'" class="detail-button">この医療機関の詳細を見る &#8594;</a></div>';
+            $html .= '<div class="footer-card">' .($permVDH ? ('<a target="_bank" href="detail/index.php?id='.$hospital->id.'&cancerId='.$cancers[0].'" class="detail-button">この医療機関の詳細を見る &#8594;</a>') : '') .'</div>';
             $html .= '</div>';
         });
 
@@ -416,6 +448,14 @@ class f_hospital_ct
 
     public function printHospitalList($post)
     {
+        $permPrH = $this->auth_logic->check_permission('print.hospital.pdf');
+        if (!$permPrH) {
+            return [
+                'status' => false,
+                'data' => []
+            ];
+        }
+
         $selectedItems = $_POST['selectedItems'] ?? [];
         $pdfFiles = [];
 
@@ -504,10 +544,7 @@ class f_hospital_ct
             return $value->pivot['cancer_id'] == $cancerId;
         })->firstWhere('hard_name3', 'multi_treatment');
 
-        $treatment = $hospital->categories()
-            ->where('data_type', Category::HOSPITAL_TREATMENT_TYPE)
-            ->pluck('level3')
-            ->implode(' ');
+        $treatment = $hospital->cancers()->where('cancer_id', $cancerId)?->first()?->pivot?->sp_treatment;
 
         $yearSummaryDpc = $hospital->dpcs()
             ->select('year')
@@ -613,8 +650,16 @@ class f_hospital_ct
         ];
     }
 
-    private function createRemark($post)
+    public function createRemark($post)
     {
+        $permAHN = $this->auth_logic->check_permission('add.hospital.note');
+        if (!$permAHN) {
+            return [
+                'status' => false,
+                'data' => []
+            ];
+        }
+
         $data = $post['data'] ?? [];
         $hospitalId = $data['hospitalId'] ?? null;
         $hospital = Hospital::find($hospitalId);
@@ -640,8 +685,16 @@ class f_hospital_ct
         ];
     }
 
-    private function updateRemark($post)
+    public function updateRemark($post)
     {
+        $permAHN = $this->auth_logic->check_permission('add.hospital.note');
+        if (!$permAHN) {
+            return [
+                'status' => false,
+                'data' => []
+            ];
+        }
+
         $data = $post['data'] ?? [];
         $idPivot = $data['id'] ?? null;
         $hospitalId = $data['hospitalId'] ?? null;

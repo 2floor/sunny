@@ -121,6 +121,12 @@ function realtime_validate(check_elem, err_flg){
 					}
 				}
 
+				if(check_elem.hasClass('username')){
+					if(check_elem.val().match(/[^a-zA-Z0-9]/) != null){
+						re_bool = disp_error_msg(check_elem, 'ユーザー名には特殊文字やスペースを含めることはできません');
+					}
+				}
+
 				if(check_elem.hasClass('tel-text')){
 					if (check_elem.val() && !check_elem.val().match(/^-?[\d-]*$/)) {
 						re_bool = disp_error_msg(check_elem, '入力には数値と - のみを使用してください');

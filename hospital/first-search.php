@@ -5,6 +5,15 @@ if (!isset($_SESSION)) {
 
 require_once __DIR__ . "/../required/page_init.php";
 require_once __DIR__ . "/../controller/front/f_hospital_ct.php";
+require_once __DIR__ . "/../logic/front/auth_logic.php";
+
+$auth_logic = new auth_logic();
+$permSFH = $auth_logic->check_permission('search.first.hospital');
+$permPrH = $auth_logic->check_permission('print.hospital.pdf');
+if (!$permSFH) {
+    header("Location: " . BASE_URL . "error/403_page.php");
+    exit();
+}
 
 $page_init = new page_init();
 $pageinfo = $page_init->get_info();
@@ -89,6 +98,7 @@ $category = $initData['category'] ?? [];
                 <div class="search-hospital-pagination">
                     <div id="pagination-container" class="paginationjs paginationjs-theme-blue paginationjs-big"></div>
                 </div>
+                <?php if ($permPrH) { ?>
                 <div class="search-result-header">
                     <div class="checkbox-label">
                         <input type="checkbox" id="printAll" class="m-r-10 checkbox-print-all">
@@ -104,6 +114,7 @@ $category = $initData['category'] ?? [];
                         </a>
                     </div>
                 </div>
+                <?php } ?>
                 <div class="hospital-list">
                     <div class="hospital-no-data">
                         <div class="no-data-message">検索条件を選択してください。</div>

@@ -6,6 +6,18 @@ if (!isset($_SESSION)) {
 require_once __DIR__ . "/../../required/page_init.php";
 require_once __DIR__ . "/../../controller/front/f_hospital_ct.php";
 require_once __DIR__ . "/../../logic/helpers/render_html_helper.php";
+require_once __DIR__ . "/../../logic/front/auth_logic.php";
+
+$auth_logic = new auth_logic();
+$permVDH = $auth_logic->check_permission('view.detail.hospital');
+
+if (!$permVDH) {
+    header("Location: " . BASE_URL . "error/403_page.php");
+    exit();
+}
+
+$permPrH = $auth_logic->check_permission('print.hospital.pdf');
+$permAHN = $auth_logic->check_permission('add.hospital.note');
 
 $page_init = new page_init();
 $pageinfo = $page_init->get_info();
@@ -44,6 +56,7 @@ $remarks = $initData['remarks'] ?? [];
 <main>
     <div class="container">
         <div class="main-detail">
+            <?php if ($permPrH) { ?>
             <div class="search-result-header">
                 <div class="search-result-header-right">
                     <a class="btn btn-edit-memo" id="printButton" style="border-color: #0A74B0">
@@ -51,6 +64,7 @@ $remarks = $initData['remarks'] ?? [];
                     </a>
                 </div>
             </div>
+            <?php } ?>
             <div class="title">
                 <h3 class="text-center"><?php echo $cancerName; ?></h3>
                 <h1 class="text-center"><?php echo $infoHospital['name'] ?? ''; ?></h1>
@@ -68,9 +82,11 @@ $remarks = $initData['remarks'] ?? [];
                 <li class="nav-item">
                     <a class="nav-link" id="results-tab" data-toggle="tab" href="#results" role="tab" aria-controls="results" aria-selected="false"><span>治療実績</span></a>
                 </li>
+                <?php if ($permAHN) { ?>
                 <li class="nav-item">
                     <a class="nav-link" id="notification-tab" data-toggle="tab" href="#notification" role="tab" aria-controls="notification" aria-selected="false"><span>特記事項</span></a>
                 </li>
+                <?php } ?>
             </ul>
             <div class="tab-content mt-3" id="tabContent">
                 <div class="tab-pane fade active in" id="summary" role="tabpanel" aria-labelledby="summary-tab">

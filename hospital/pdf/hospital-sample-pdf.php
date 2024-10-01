@@ -224,7 +224,7 @@
                         <td>
                             <b>
                                 <?php
-                                echo $infoTreatment ? nl2br(e($infoTreatment)) : '<span class="badge bg-warning">なし</span>';
+                                echo $treatment ? nl2br(e($treatment)) : '<span class="badge bg-warning">なし</span>';
                                 ?>
                             </b>
                         </td>

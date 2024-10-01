@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 
 class User extends BaseModel
@@ -10,6 +11,7 @@ class User extends BaseModel
     protected $table = 't_user';
     protected $fillable = [
         'type',
+        'role_id',
         'sno',
         'job',
         'name',
@@ -48,5 +50,10 @@ class User extends BaseModel
         return $this->belongsToMany(Hospital::class, 't_hospital_user')
             ->withPivot('id', 'remarks', 'approved_time', 'updated_at')
             ->wherePivot('del_flg', BaseModel::NOT_DELETED);
+    }
+
+    public function role(): BelongsTo
+    {
+        return $this->belongsTo(Role::class);
     }
 }

@@ -1,6 +1,7 @@
 <?php
 
 use App\Models\User;
+use App\Models\Role;
 
 if (!isset($_SESSION)) {
     session_start();
@@ -22,11 +23,31 @@ class auth_logic
 
         $existedUser = User::where([
             'id' => $user['id'] ?? 0
-        ])->exists();
+        ]);
 
-        if (!$existedUser) {
+        if (!$existedUser->exists()) {
             header("Location: " . BASE_URL . "login.php");
             exit();
         }
+
+        return $existedUser;
+    }
+
+    public function check_permission($perms = null)
+    {
+        $user = $this->check_authentication($perms);
+
+        if (!$perms) {
+            return false;
+        }
+
+        $cloneUser = $user;
+        if ($cloneUser->first()->role?->is_supper_role == Role::IS_SUPER_ADMIN) {
+            return true;
+        }
+
+        return $user->whereHas('role.permissions', function ($query) use ($perms) {
+            $query->where('parse', $perms);
+        })->exists();
     }
 }

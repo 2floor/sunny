@@ -682,7 +682,7 @@ function call_ajax_change_state (post_data){
 		} else if (!result.data.status && result.data.error_code == 0) {
 			// PHP返却エラー
 			alert(result.data.error_msg);
-			location.href = result.data.return_url;
+			// location.href = result.data.return_url;
 		}
 
 	}).fail(function(result) {
