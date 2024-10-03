@@ -19,6 +19,7 @@ a.anchor {
     padding: 25px 0;
     font-size: .8rem;
     font-weight: 700;
+    max-width: 1200px;
 }
 
 .f9 {
@@ -4517,7 +4518,7 @@ td[colspan] {
     margin-top: 120px;
 }
 .faq-list {
-    margin-top: 50px;
+    margin-top: 70px;
 }
 
 .faq-item {

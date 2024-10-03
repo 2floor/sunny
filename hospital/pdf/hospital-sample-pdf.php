@@ -202,6 +202,13 @@
                         </td>
                     </tr>
                     <tr>
+                        <th>学会認定施設</th>
+                        <td>
+                            <?php echo $cancerSocial ? (nl2br(e($cancerSocial)) . '<br>') : '' ?>
+                            <?php echo $commonSocial ? nl2br(e($commonSocial)) : '' ?>
+                        </td>
+                    </tr>
+                    <tr>
                         <th>名医の在籍状況</th>
                         <td>
                             <?php

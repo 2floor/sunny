@@ -209,7 +209,9 @@ class f_hospital_ct
             return $value->pivot['cancer_id'] == $cancerId;
         })->firstWhere('hard_name3', 'multi_treatment');
 
-        $treatment = $hospital->cancers()->where('cancer_id', $cancerId)?->first()?->pivot?->sp_treatment;
+        $hc = $hospital->cancers()->where('cancer_id', $cancerId)?->first();
+        $treatment = $hc?->pivot?->sp_treatment;
+        $cancerSocial = $hc?->pivot?->social_info;
 
         $stages = $hospital->stages()
             ->where('cancer_id', $cancerId)
@@ -251,7 +253,9 @@ class f_hospital_ct
             'advancedMedical' => $advancedMedical?->pivot->content1,
             'famousDoctor' => $famousDoctor ? 1 : 0,
             'multiTreatment' => $multiTreatment ? 1 : 0,
-            'treatment' => $treatment
+            'treatment' => $treatment,
+            'cancerSocial' => $cancerSocial,
+            'commonSocial' => $hospital->social_info
         ];
 
         $remarks = $this->getRemarksList($hospital);
@@ -344,6 +348,7 @@ class f_hospital_ct
                 ->pluck('hard_name3')->toArray();
 
             $treatment = $hospital->cancers()->where('cancer_id', $cancers[0])?->first()?->pivot?->sp_treatment;
+            $social_info = $hospital->cancers()->where('cancer_id', $cancers[0])?->first()?->pivot?->social_info;
 
             $avgData = $hospital->calculateAvgCommonData($cancers[0]);
 
@@ -372,6 +377,9 @@ class f_hospital_ct
             $html .= '<div class="treatment-item"><span>先進医療</span><span '.(in_array('advanced_medical', $categoryTreatment) ? 'class="has-treatment">あり' : '>なし') .'</span></div>';
             $html .= '<div class="treatment-item"><span>特別室</span><span '.(in_array('special_clinic', $categoryTreatment) ? 'class="has-treatment">あり' : '>なし') .'</span></div>';
             $html .= '<div class="treatment-item"><span>特別な治療法</span><span '.($treatment ? 'class="has-treatment">あり' : '>なし') .'</span></div>';
+            $html .= '</div>';
+            $html .= '<div class="treatment-info">';
+            $html .= '<div class="social-info '.($social_info ? '' : 'empty').'"><span>学会認定施設</span><span>'.($social_info ?? '').'</span></div>';
             $html .= '</div>';
             $html .= '</div>';
             $html .= '<div class="card-stats">';
@@ -544,7 +552,9 @@ class f_hospital_ct
             return $value->pivot['cancer_id'] == $cancerId;
         })->firstWhere('hard_name3', 'multi_treatment');
 
-        $treatment = $hospital->cancers()->where('cancer_id', $cancerId)?->first()?->pivot?->sp_treatment;
+        $hc = $hospital->cancers()->where('cancer_id', $cancerId)?->first();
+        $treatment = $hc?->pivot?->sp_treatment;
+        $cancerSocial = $hc?->pivot?->social_info;
 
         $yearSummaryDpc = $hospital->dpcs()
             ->select('year')
@@ -646,7 +656,9 @@ class f_hospital_ct
             'dpcs' => $dpcs,
             'stages' => $stages,
             'survivals' => $survivals,
-            'averageSurv' => $averageSurv
+            'averageSurv' => $averageSurv,
+            'cancerSocial' => $cancerSocial,
+            'commonSocial' => $hospital->social_info,
         ];
     }
 

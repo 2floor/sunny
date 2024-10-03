@@ -61,7 +61,7 @@ $faqs = $initData['faqs'] ?? [];
         align-items: flex-end;
         padding: 10px 15px;
         color: #505468;
-        box-shadow: 2px 2px 0 rgba(0, 0, 0, 0.2) !important;
+        border: 1px solid #E5E5E5;
         position: relative;
     }
 
@@ -153,22 +153,22 @@ $faqs = $initData['faqs'] ?? [];
   <!-- header -->
   <?php print $pageinfo->header; ?>
 
-  <div class="page-titles page-title--red">
-    <div class="page-titles__inner">
-      <div class="page-titles__content">
-        <p class="page-title">よくある質問</p>
-        <span class="page-title--en">FAQ</span>
-      </div>
-    </div>
-  </div><!-- /.page-titles -->
+<!--  <div class="page-titles page-title--red">-->
+<!--    <div class="page-titles__inner">-->
+<!--      <div class="page-titles__content">-->
+<!--        <p class="page-title">よくある質問</p>-->
+<!--        <span class="page-title--en">FAQ</span>-->
+<!--      </div>-->
+<!--    </div>-->
+<!--  </div>-->
 
   <p class="pan"><a href="index.php"><i class="fa fa-home"></i></a>　|　よくある質問</p>
 
   <section class="parts2 faq-section">
     <div class="products__inner l-inner">
-      <p class="t-center mt20 title-header">ソフトウェアに関する具体的なご質問がございましたら、弊社または担当者までお問い合わせください。</p>
       <p class="page__title--jp mt30 h1">FAQ</p>
       <p class="page__title--jp h3">よくある質問</p>
+        <p class="t-center mt20 title-header">ソフトウェアに関する具体的なご質問がございましたら、弊社または担当者までお問い合わせください。</p>
       <div class="faq-list">
           <div class="nav-section">
               <?php foreach (GROUP_FAQ as $key => $group) {?>
