@@ -399,65 +399,65 @@ function disp_ctrl(page_title){
 
 		$('#fileArea').show();
 
-tinymce.init({
-  selector: 'textarea',
-  plugins: 'image code',
-  toolbar: 'undo redo | image code',
-  images_upload_url: 'postAcceptor.php',
-  images_upload_base_path: '../upload_files/items',
-  language: 'ja' ,
-  language_url: '../assets/admin/js/ja.js',
-  
-  
-  images_upload_handler: function (blobInfo, success, failure, progress) {
-/*
-    setTimeout(function() {
-      success('http://moxiecode.cachefly.net/tinymce/v9/images/logo.png');
-    }, 2000);
-*/
-    var xhr;
-
-    xhr = new XMLHttpRequest();
-    xhr.withCredentials = false;
-    xhr.open('POST', 'postAcceptor.php');
-
-    xhr.upload.onprogress = function (e) {
-      progress(e.loaded / e.total * 100);
-    };
-
-    xhr.onload = function() {
-      var json;
-
-      if (xhr.status === 403) {
-        failure('HTTP Error: ' + xhr.status, { remove: true });
-        return;
-      }
-
-      if (xhr.status < 200 || xhr.status >= 300) {
-        failure('HTTP Error: ' + xhr.status);
-        return;
-      }
-
-      json = JSON.parse(xhr.responseText);
-
-      if (!json || typeof json.location != 'string') {
-        failure('Invalid JSON: ' + xhr.responseText);
-        return;
-      }
-
-     success(json.location);
-    };
-
-    xhr.onerror = function () {
-      failure('Image upload failed due to a XHR Transport error. Code: ' + xhr.status);
-    };
-
-  },
-  
-  init_instance_callback: function (ed) {
-    //ed.execCommand('mceImage');
-  }
-});
+// tinymce.init({
+//   selector: 'textarea',
+//   plugins: 'image code',
+//   toolbar: 'undo redo | image code',
+//   images_upload_url: 'postAcceptor.php',
+//   images_upload_base_path: '../upload_files/items',
+//   language: 'ja' ,
+//   language_url: '../assets/admin/js/ja.js',
+//
+//
+//   images_upload_handler: function (blobInfo, success, failure, progress) {
+// /*
+//     setTimeout(function() {
+//       success('http://moxiecode.cachefly.net/tinymce/v9/images/logo.png');
+//     }, 2000);
+// */
+//     var xhr;
+//
+//     xhr = new XMLHttpRequest();
+//     xhr.withCredentials = false;
+//     xhr.open('POST', 'postAcceptor.php');
+//
+//     xhr.upload.onprogress = function (e) {
+//       progress(e.loaded / e.total * 100);
+//     };
+//
+//     xhr.onload = function() {
+//       var json;
+//
+//       if (xhr.status === 403) {
+//         failure('HTTP Error: ' + xhr.status, { remove: true });
+//         return;
+//       }
+//
+//       if (xhr.status < 200 || xhr.status >= 300) {
+//         failure('HTTP Error: ' + xhr.status);
+//         return;
+//       }
+//
+//       json = JSON.parse(xhr.responseText);
+//
+//       if (!json || typeof json.location != 'string') {
+//         failure('Invalid JSON: ' + xhr.responseText);
+//         return;
+//       }
+//
+//      success(json.location);
+//     };
+//
+//     xhr.onerror = function () {
+//       failure('Image upload failed due to a XHR Transport error. Code: ' + xhr.status);
+//     };
+//
+//   },
+//
+//   init_instance_callback: function (ed) {
+//     //ed.execCommand('mceImage');
+//   }
+// });
 
 	} else if (type == 'entry_conf') {
 		$('.list_show').hide();

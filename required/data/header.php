@@ -40,6 +40,7 @@
                                 </div><!-- /.drop -->
                             </li>
                             <li class="pc-nav__list"><a href="#" class="pc-nav__link">名医検索</a></li>
+                            <li class="pc-nav__list"><a href="[path]faq.php" class="pc-nav__link">よくある質問</a></li>
                             <li class="pc-nav__list">
                                 <a href="[path]logout.php" class="pc-nav__link"><img src="[path]img/icons/logout-icon.png" class="logout_img" alt="logout-icon">ログアウト</a>
                             </li>
@@ -60,6 +61,7 @@
                     <li class="drawer-nav__list"><a href="[path]" class="drawer-nav__link">ホーム</a></li>
                     <li class="drawer-nav__list"><a href="[path]hospital" class="drawer-nav__link">病院検索</a></li>
                     <li class="drawer-nav__list"><a href="#" class="drawer-nav__link">名医検索</a></li>
+                    <li class="drawer-nav__list"><a href="[path]faq.php" class="drawer-nav__link">よくある質問</a></li>
                     <li class="drawer-nav__list"><a href="[path]logout.php" class="drawer-nav__link">ログアウト</a>
        </li>
                 </ul><!-- ./drawer-nav__lists -->

@@ -18,6 +18,7 @@ a.anchor {
     margin: 0 auto;
     padding: 25px 0;
     font-size: .8rem;
+    font-weight: 700;
 }
 
 .f9 {
@@ -4574,6 +4575,10 @@ td[colspan] {
 =============================================== */
 .mt20 {
     margin-top: 20px;
+}
+
+.mt30 {
+    margin-top: 30px;
 }
 .small {
     font-size: 12px;

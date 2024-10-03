@@ -120,11 +120,13 @@ a:focus {
 }
 /* Page titles */
 .page-title {
-  font-size: 20px;
-  font-weight: 600;
-  margin-bottom: 0px;
-  margin-top: 0px;
-  line-height: 70px;
+  /*font-size: 20px;*/
+  /*font-weight: 600;*/
+  /*margin-bottom: 0px;*/
+  /*margin-top: 0px;*/
+  /*line-height: 70px;*/
+  -webkit-text-stroke: 1px #84BFED;
+  color: white;
 }
 .page-header {
   border-bottom: 1px solid #DBDDDE;

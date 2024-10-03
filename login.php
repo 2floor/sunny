@@ -50,6 +50,11 @@ $no_msg = 'ログインID、もしくは、パスワードが違います。再�
         .header-margin {
             margin: 0;
         }
+
+        .page-title {
+            -webkit-text-stroke: 1px #84BFED;
+            color: white;
+        }
     </style>
 </head>
 

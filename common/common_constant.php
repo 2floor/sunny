@@ -251,21 +251,7 @@ define ( "TIME_OPTION_HTML", '
 				<option value="2130">21：30</option>
 				<option value="2200">22：00</option>' );
 
-class Constants{
-    static function getNewsType_string($type=null) {
-        $array = array();
-        for ($i=1; $i<10; $i++) {
-            if (defined('NEWS_TYPE'.$i)) {
-                $array[$i] = constant('NEWS_TYPE'.$i);
-            }
-        }
-
-        if ($type == null) {
-            return $array;
-        }else if (isset($array[$type])) {
-            return $array[$type];
-        } else {
-            return '';
-        }
-    }
-}
+define ( "GROUP_FAQ", [
+    1 => '医療専門用語について',
+    2 => '他の',
+]);
