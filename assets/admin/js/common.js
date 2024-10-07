@@ -1557,3 +1557,116 @@ $('#backToTop').on('click', function() {
 	$('html, body').animate({ scrollTop: 0 }, 'smooth');
 });
 
+
+//Upload file js
+$('#file-name-display').click(function () {
+	$('#upload-file').click();
+});
+
+$('#upload-file').on('change', function () {
+	var fileName = $(this).val().split('\\').pop();
+
+	if (fileName) {
+		$('.callUpload').prop('disabled', false);
+		$('#file-name-display').val(fileName);
+	} else {
+		$('.callUpload').prop('disabled', true);
+	}
+});
+
+$('.callUpload').click(function () {
+	var fileInput = $('#upload-file')[0];
+
+	if (fileInput.files.length === 0) {
+		swal({
+			title : "失敗!",
+			text : 'アップロードするファイルを選択してください',
+			type : "error",
+			confirmButtonText : "近い",
+			closeOnConfirm : true
+		});
+		return;
+	}
+
+	var file = fileInput.files[0];
+	var allowedTypes = ['text/csv', 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'];
+	if (!allowedTypes.includes(file.type)) {
+		swal({
+			title : "失敗!",
+			text : 'ファイルの種類を選択してください csv または xlsx',
+			type : "error",
+			confirmButtonText : "近い",
+			closeOnConfirm : true
+		});
+		return;
+	}
+
+	var formData = new FormData();
+	formData.append('upload-file', fileInput.files[0]);
+	formData.append('type', $('#upload_csv_type').val());
+
+	$.ajax({
+		url: $('#upload_csv_ct_url').val(),
+		type: 'POST',
+		data: formData,
+		contentType: false,
+		processData: false,
+		beforeSend: function() {
+			$(".loading").show()
+		},
+		success: function (response) {
+			$(".loading").hide();
+			response = JSON.parse(response);
+
+			swal({
+				title : "通知",
+				text : "正常に追加されたデータの総数: " + (response.data.success || 0) + "\n" + "データ障害の総数: " + (response.data.totalError ? (response.data.totalError - 1) : 0),
+				type : "info",
+				showCancelButton : true,
+				confirmButtonClass : 'btn-info',
+				confirmButtonText : "エラーファイル",
+				cancelButtonText : '近い',
+				closeOnConfirm : false,
+				closeOnCancel : false
+			}, function(isConfirm) {
+				if (isConfirm) {
+					if (response.data.errorFile) {
+						var url = '../upload_files/export_error_data/' + response.data.errorFile;
+						var link = document.createElement('a');
+						link.href = url;
+						link.download = 'error_info.csv';
+						document.body.appendChild(link);
+						link.click();
+						document.body.removeChild(link);
+
+						swal.close();
+						location.reload();
+					} else {
+						swal({
+							title : "失敗!",
+							text : 'エラー情報を含むファイルがありません',
+							type : "error",
+							confirmButtonText : "近い",
+							closeOnConfirm : true
+						});
+						location.reload();
+					}
+				} else {
+					swal.close();
+					location.reload();
+				}
+			});
+		},
+		error: function () {
+			$(".loading").hide();
+			swal({
+				title : "失敗!",
+				text : 'ファイルのアップロードに失敗しました',
+				type : "error",
+				confirmButtonText : "近い",
+				closeOnConfirm : true
+			});
+		}
+	});
+});
+

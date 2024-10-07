@@ -379,7 +379,7 @@ class f_hospital_ct
             $html .= '<div class="treatment-item"><span>特別な治療法</span><span '.($treatment ? 'class="has-treatment">あり' : '>なし') .'</span></div>';
             $html .= '</div>';
             $html .= '<div class="treatment-info">';
-            $html .= '<div class="social-info '.($social_info ? '' : 'empty').'"><span>学会認定施設</span><span>'.($social_info ?? '').'</span></div>';
+            $html .= '<div class="social-info '.($social_info ? '' : 'empty').'"><span>学会認定施設</span><span>'.($social_info ? nl2br(e($social_info)) : '').'</span></div>';
             $html .= '</div>';
             $html .= '</div>';
             $html .= '<div class="card-stats">';

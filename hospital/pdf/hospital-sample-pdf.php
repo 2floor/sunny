@@ -202,7 +202,7 @@
                         </td>
                     </tr>
                     <tr>
-                        <th>学会認定施設</th>
+                        <th>学会認定施設など</th>
                         <td>
                             <?php echo $cancerSocial ? (nl2br(e($cancerSocial)) . '<br>') : '' ?>
                             <?php echo $commonSocial ? nl2br(e($commonSocial)) : '' ?>

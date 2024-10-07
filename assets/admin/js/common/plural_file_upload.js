@@ -33,8 +33,8 @@ $(function() {
 	$('.img_btn').show();
 
 	var imgName = "";
-	$('input[type=file]').off();
-	$('input[type=file]').bind('change', function() {
+	$('input[type=file]:not(.upload-csv)').off();
+	$('input[type=file]:not(.upload-csv)').bind('change', function() {
 		//対象ファイル識別ID取得
 		target_no = $(this).attr('jq_id');
 

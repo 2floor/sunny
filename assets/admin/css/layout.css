@@ -881,6 +881,43 @@ select {
 	padding: 0 5px;
 }
 
+.searchBoxRight {
+	gap: 12px;
+}
+
+.waves-light {
+	padding: 8px 12px;
+}
+
+#file-name-display {
+	cursor: pointer;
+}
+
+.upload-file-hidden {
+	display: none !important;
+}
+
+.input-group input#file-name-display {
+	background-color: #f9f9f9;
+	border: 1px solid #ccc;
+	padding: 10px;
+	cursor: pointer;
+	width: 230px;
+	background-size: 20px 20px;
+	background-image: url('../../../img/icons/upload-icon.png');
+	background-repeat: no-repeat;
+	background-position: right 10px center;
+	padding-right: 40px;
+}
+
+.input-group-btn button {
+	padding: 10px 20px;
+	background-color: #007bff;
+	border: none;
+	color: white;
+	cursor: pointer;
+	border-radius: unset;
+}
 @media screen and (max-width: 1199px) {
 
 }

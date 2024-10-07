@@ -880,6 +880,7 @@ button.clear-data {
     border-top-right-radius: 12px;
     border-bottom-right-radius: 12px;
     flex-grow: 1;
+    text-align: left;
 }
 
 .card-info .social-info span:nth-of-type(1) {

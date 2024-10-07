@@ -10,8 +10,8 @@
     }
   ],
   "require": {
-    "illuminate/database": "^8.0",
-    "illuminate/pagination": "^8.83",
-    "dompdf/dompdf": "^3.0"
+    "dompdf/dompdf": "^3.0",
+    "laravel/framework": "^8.83",
+    "maatwebsite/excel": "^3.1"
   }
 }

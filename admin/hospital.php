@@ -157,6 +157,13 @@ foreach ($areas as $area) {
                             </div>
                         </div>
                         <div class="searchBoxRight">
+                            <div class="input-group">
+                                <input type="text" id="file-name-display" class="form-control" placeholder="ファイルを選択" readonly>
+                                <span class="input-group-btn">
+                                    <button type="button" class="btn waves-effect waves-light btn-primary callUpload" disabled>アップロード</button>
+                                </span>
+                                <input type="file" id="upload-file" name="upload-file" class="form-control upload-file-hidden upload-csv" accept=".csv,.xlsx,.xls">
+                            </div>
                             <div class="serachW110">
                                 <button type="button" name="new_entry" class="btn btn-primary waves-effect w-md waves-light m-b-5">新規登録</button>
                             </div>
@@ -508,6 +515,8 @@ foreach ($areas as $area) {
 <input type="hidden" id="page_num" value="1">
 <!-- 1ページに表示する件数 -->
 <input type="hidden" id="page_disp_cnt" value="10">
+<input type="hidden" id="upload_csv_ct_url" value="../controller/admin/upload_csv_ct.php">
+<input type="hidden" id="upload_csv_type" value="hospital">
 
 <!-- End Personal Input -->
 

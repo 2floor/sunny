@@ -25,7 +25,7 @@ if (!isset($infoTreatment)) {
         </tr>
 
         <tr>
-            <th class="alg-center">学会認定施設</th>
+            <th class="alg-center">学会認定施設など</th>
             <td>
                 <?php echo $infoTreatment['cancerSocial'] ? (nl2br(e($infoTreatment['cancerSocial'])) . '<br>') : '' ?>
                 <?php echo $infoTreatment['commonSocial'] ? nl2br(e($infoTreatment['commonSocial'])) : '' ?>
