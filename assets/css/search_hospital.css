@@ -867,31 +867,16 @@ button.clear-data {
     border: 1px solid #197DB5;
     border-radius: 12px;
     font-size: 16px;
-    color: #0b0b0b;
-    text-align: center;
-    display: flex;
-    flex-direction: row;
+    color: #0A74B0;
 }
 
-.card-info .social-info span:nth-of-type(2) {
+.card-info .social-info span {
     padding: 5px 10px;
     background-color: #E4F6FF;
-    color: #0A74B0;
-    border-top-right-radius: 12px;
-    border-bottom-right-radius: 12px;
-    flex-grow: 1;
-    text-align: left;
-}
-
-.card-info .social-info span:nth-of-type(1) {
-    padding: 5px 10px;
-    flex-basis: 135px;
-    border-right: 1px solid #197DB5;
-    border-top-left-radius: 12px;
-    border-bottom-left-radius: 12px;
     text-align: left;
     display: flex;
     align-items: center;
+    border-radius: 12px;
 }
 
 .card-info .social-info.empty {
@@ -1109,9 +1094,5 @@ button.clear-data {
 
     .card-info .social-info.empty {
         max-width: unset;
-    }
-
-    .card-info .social-info span:nth-of-type(1) {
-        flex-basis: 224px;
     }
 }

@@ -24,6 +24,14 @@ if (!isset($infoHospital)) {
             <td><a target="_blank" href="<?php echo $infoHospital['hpUrl'] ?? '#' ?>"><?php echo $infoHospital['hpUrl'] ?? '' ?></a></td>
         </tr>
         <tr>
+            <th class="alg-center">緩和ケア</th>
+            <td>
+                <?php
+                echo $infoHospital['lightCare'] ? '<span class="badge bg-secondary">あり</span>' : '<span class="badge bg-warning">なし</span>';
+                ?>
+            </td>
+        </tr>
+        <tr>
             <th class="alg-center">がん相談支援センターURL</th>
             <td><a target="_blank" href="<?php echo $infoHospital['supportUrl'] ?? '#' ?>"><?php echo $infoHospital['supportUrl'] ?? '' ?></a></td>
         </tr>

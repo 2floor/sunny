@@ -196,6 +196,7 @@ class f_hospital_ct
         $hospitalType = $categories->firstWhere('hard_name2', 'hospital_type');
         $hospitalGen = $categories->firstWhere('hard_name2', 'hospital_gen');
         $specialClinic = $categories->firstWhere('hard_name3', 'special_clinic');
+        $lightCare = $categories->firstWhere('hard_name3', 'light_care');
 
         $advancedMedical = $categories->filter(function ($value) use ($cancerId) {
             return $value->pivot['cancer_id'] == $cancerId;
@@ -243,7 +244,8 @@ class f_hospital_ct
             'address' => $hospital->addr,
             'hpUrl' => $hospital->hp_url,
             'supportUrl' => $hospital->support_url,
-            'specialClinicUrl' => $specialClinic?->pivot->content1
+            'specialClinicUrl' => $specialClinic?->pivot->content1,
+            'lightCare' => $lightCare?->exists()
         ];
 
         $infoTreatment = [
@@ -379,7 +381,7 @@ class f_hospital_ct
             $html .= '<div class="treatment-item"><span>特別な治療法</span><span '.($treatment ? 'class="has-treatment">あり' : '>なし') .'</span></div>';
             $html .= '</div>';
             $html .= '<div class="treatment-info">';
-            $html .= '<div class="social-info '.($social_info ? '' : 'empty').'"><span>学会認定施設</span><span>'.($social_info ? nl2br(e($social_info)) : '').'</span></div>';
+            $html .= '<div class="social-info '.($social_info ? '' : 'empty').'"><span>'.($social_info ? nl2br(e($social_info)) : '').'</span></div>';
             $html .= '</div>';
             $html .= '</div>';
             $html .= '<div class="card-stats">';
@@ -539,6 +541,7 @@ class f_hospital_ct
         $hospitalType = $categories->firstWhere('hard_name2', 'hospital_type');
         $hospitalGen = $categories->firstWhere('hard_name2', 'hospital_gen');
         $specialClinic = $categories->firstWhere('hard_name3', 'special_clinic');
+        $lightCare = $categories->firstWhere('hard_name3', 'light_care');
 
         $advancedMedical = $categories->filter(function ($value) use ($cancerId) {
             return $value->pivot['cancer_id'] == $cancerId;
@@ -646,6 +649,7 @@ class f_hospital_ct
             'hospitalUrl' => $hospital->hp_url,
             'hospitalSpUrl' => $hospital->support_url,
             'hospitalScUrl' => $specialClinic?->pivot->content1,
+            'lightCare' => $lightCare?->exists(),
             'hospitalType' => $hospitalType?->level3,
             'hospitalGen' => $hospitalGen?->level3,
             'hasAdvancedMedical' => $advancedMedical ? 1 : 0,

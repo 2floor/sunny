@@ -174,6 +174,14 @@
                         <td><a target="_blank" href="#"><?php echo $hospitalUrl ?? '' ?></a></td>
                     </tr>
                     <tr>
+                        <th>緩和ケア</th>
+                        <td>
+                            <?php
+                            echo $lightCare ? '<span class="badge bg-secondary">あり</span>' : '<span class="badge bg-warning">なし</span>';
+                            ?>
+                        </td>
+                    </tr>
+                    <tr>
                         <th>がん相談支援センターURL</th>
                         <td><a target="_blank" href="#"><?php echo $hospitalSpUrl ?? '' ?></a></td>
                     </tr>
