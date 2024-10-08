@@ -253,5 +253,5 @@ define ( "TIME_OPTION_HTML", '
 
 define ( "GROUP_FAQ", [
     1 => '医療専門用語について',
-    2 => '他の',
+    2 => 'その他',
 ]);
