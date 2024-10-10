@@ -918,6 +918,10 @@ select {
 	cursor: pointer;
 	border-radius: unset;
 }
+
+.sweet-alert h2 {
+	margin-top: 30px;
+}
 @media screen and (max-width: 1199px) {
 
 }

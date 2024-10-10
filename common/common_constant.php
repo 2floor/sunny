@@ -8,6 +8,7 @@
  *
  * @var unknown
  */
+
 define ( "HTTP_TYPE", (empty ( $_SERVER ["HTTPS"] ) ? "http://" : "https://") . $_SERVER ["HTTP_HOST"] ) . "/";
 
 /**
@@ -254,4 +255,16 @@ define ( "TIME_OPTION_HTML", '
 define ( "GROUP_FAQ", [
     1 => '医療専門用語について',
     2 => 'その他',
+]);
+
+define ( "IMPORT_DATA_TYPE", [
+    1 => '病院',
+]);
+
+define ( "IMPORT_STATUS", [
+    1 => '進行中',
+    2 => '成功した',
+    3 => 'エラー',
+    4 => 'タイムアウト',
+    5 => '再度インポートする'
 ]);

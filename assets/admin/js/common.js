@@ -1574,6 +1574,25 @@ $('#upload-file').on('change', function () {
 	}
 });
 
+var callAjaxImport = function (import_id)
+{
+	var formData = new FormData();
+	formData.append('import_id',import_id);
+	formData.append('type', $('#upload_csv_type').val());
+	formData.append('method', 'import');
+
+	$.ajax({
+		url: $('#upload_csv_ct_url').val(),
+		type: 'POST',
+		data: formData,
+		contentType: false,
+		processData: false,
+		async: true
+	});
+
+
+};
+
 $('.callUpload').click(function () {
 	var fileInput = $('#upload-file')[0];
 
@@ -1604,6 +1623,7 @@ $('.callUpload').click(function () {
 	var formData = new FormData();
 	formData.append('upload-file', fileInput.files[0]);
 	formData.append('type', $('#upload_csv_type').val());
+	formData.append('method', 'check');
 
 	$.ajax({
 		url: $('#upload_csv_ct_url').val(),
@@ -1612,50 +1632,41 @@ $('.callUpload').click(function () {
 		contentType: false,
 		processData: false,
 		beforeSend: function() {
-			$(".loading").show()
+			$(".loading").show();
 		},
 		success: function (response) {
-			$(".loading").hide();
 			response = JSON.parse(response);
+			let message = response.data.message || '';
 
-			swal({
-				title : "通知",
-				text : "正常に追加されたデータの総数: " + (response.data.success || 0) + "\n" + "データ障害の総数: " + (response.data.totalError ? (response.data.totalError - 1) : 0),
-				type : "info",
-				showCancelButton : true,
-				confirmButtonClass : 'btn-info',
-				confirmButtonText : "エラーファイル",
-				cancelButtonText : '近い',
-				closeOnConfirm : false,
-				closeOnCancel : false
-			}, function(isConfirm) {
-				if (isConfirm) {
-					if (response.data.errorFile) {
-						var url = '../upload_files/export_error_data/' + response.data.errorFile;
-						var link = document.createElement('a');
-						link.href = url;
-						link.download = 'error_info.csv';
-						document.body.appendChild(link);
-						link.click();
-						document.body.removeChild(link);
+			if (response.data.status) {
+				callAjaxImport(response.data.import_id);
 
-						swal.close();
-						location.reload();
-					} else {
-						swal({
-							title : "失敗!",
-							text : 'エラー情報を含むファイルがありません',
-							type : "error",
-							confirmButtonText : "近い",
-							closeOnConfirm : true
-						});
-						location.reload();
-					}
-				} else {
-					swal.close();
-					location.reload();
-				}
-			});
+				setTimeout(function() {
+					$(".loading").hide();
+					swal({
+						title: "成功!",
+						text: message,
+						type: "success",
+						confirmButtonText: "近い",
+						closeOnConfirm: true
+					}, function(isConfirm) {
+						if (isConfirm) {
+							window.location.href = "import.php";
+						} else {
+							swal.close();
+						}
+					});
+				}, 1000);
+			} else {
+				$(".loading").hide();
+				swal({
+					title : "失敗!",
+					text : message,
+					type : "error",
+					confirmButtonText : "近い",
+					closeOnConfirm : true
+				});
+			}
 		},
 		error: function () {
 			$(".loading").hide();
