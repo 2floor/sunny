@@ -67,20 +67,25 @@ class import_logic extends base_logic
             $status = $status_import[$row['status']] ?? '';
 
             $back_color_html = match ($row['status']) {
-                Import::STATUS_IN_PROCESSING => "style='background: #4CA4E5; color: #ffffff'",
-                Import::STATUS_COMPLETED => "style='background: #35C77A; color: #ffffff'",
-                Import::STATUS_ERROR_PROCESSING => "style='background: #DC3545; color: #ffffff'",
-                Import::STATUS_TIMEOUT => "style='background: #b8b8c2; color: #ffffff'",
-                Import::STATUS_REIMPORT => "style='background: #FF9674; color: #ffffff'",
+                Import::STATUS_IN_PROCESSING => "class='bg-processing'",
+                Import::STATUS_COMPLETED => "class='bg-completed'",
+                Import::STATUS_ERROR_PROCESSING => "class='bg-error'",
+                Import::STATUS_TIMEOUT => "class='bg-timeout'",
+                Import::STATUS_REIMPORT => "class='bg-reimport'",
                 default => '',
             };
+
+            $file_name = $row['file_name'];
+            if (mb_strlen($row['file_name'], "UTF-8") > 30) {
+                $file_name = mb_substr($row['file_name'], 0, 30, "UTF-8") . '…';
+            }
 
             $return_html .= "
 					<tr " . $back_color_html . ">
 						<td class='count_no'>" . $cnt . "</td>
 						<td>" . $row['id'] . "</td>
 						<td>" . $data_type . "</td>
-						<td>" . $row['file_name'] . "</td>
+						<td>" . $file_name . "</td>
 						<td>" . $status . "</td>
 						<td>" . $row['success'] . "</td>
 						<td>" . $row['error'] . "</td>

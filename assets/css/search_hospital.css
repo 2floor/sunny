@@ -870,6 +870,10 @@ button.clear-data {
     color: #0A74B0;
 }
 
+.social-info.empty {
+    display: none;
+}
+
 .card-info .social-info span {
     padding: 5px 10px;
     background-color: #E4F6FF;

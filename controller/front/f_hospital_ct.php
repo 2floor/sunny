@@ -245,7 +245,7 @@ class f_hospital_ct
             'hpUrl' => $hospital->hp_url,
             'supportUrl' => $hospital->support_url,
             'specialClinicUrl' => $specialClinic?->pivot->content1,
-            'lightCare' => $lightCare?->exists()
+            'lightCare' => $lightCare?->pivot->content1,
         ];
 
         $infoTreatment = [
@@ -649,7 +649,7 @@ class f_hospital_ct
             'hospitalUrl' => $hospital->hp_url,
             'hospitalSpUrl' => $hospital->support_url,
             'hospitalScUrl' => $specialClinic?->pivot->content1,
-            'lightCare' => $lightCare?->exists(),
+            'lightCare' => $lightCare?->pivot->content1,
             'hospitalType' => $hospitalType?->level3,
             'hospitalGen' => $hospitalGen?->level3,
             'hasAdvancedMedical' => $advancedMedical ? 1 : 0,

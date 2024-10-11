@@ -95,16 +95,22 @@ class upload_csv_ct {
 
     private function check_import_hospital_data($post)
     {
-        $processing_data = $this->insert_processing_import($post['type']);
+        $check_processing_data = $this->check_processing_data($post['parent_id'] ?? null);
 
-        if (!$processing_data['status']) {
-            return $processing_data;
+        if (!$check_processing_data['status']) {
+            return $check_processing_data;
         }
 
         $fileData = $this->validate_uploaded_file($post['type']);
 
         if (!$fileData['status']) {
             return $fileData;
+        }
+
+        $processing_data = $this->insert_processing_import($post['type'], $post['parent_id'] ?? null);
+
+        if (!$processing_data['status']) {
+            return $processing_data;
         }
 
         Import::find($processing_data['import_id'])->update([
@@ -128,7 +134,7 @@ class upload_csv_ct {
             $import = new hospital_import();
             Excel::import($import, $file_path);
 
-            $this->complete_import($import, $processing_import->id, $post['type']);
+            $this->complete_import($import, $processing_import->id, $post['type'], $post['parent_id'] ?? null);
         }
 
         return [
@@ -137,7 +143,7 @@ class upload_csv_ct {
         ];
     }
 
-    private function complete_import($import, $import_id, $type)
+    private function complete_import($import, $import_id, $type, $parent_id = null)
     {
         $totalError = 0;
         $errorFile = '';
@@ -159,9 +165,31 @@ class upload_csv_ct {
             'completed_time' => now(),
             'error_file' => $errorFile,
         ]);
+
+        if ($parent_id) {
+            $existingImport = Import::find($parent_id);
+
+            if ($existingImport && ($existingImport->status == Import::STATUS_REIMPORT)) {
+                $status =  $totalError ? Import::STATUS_ERROR_PROCESSING : Import::STATUS_COMPLETED;
+
+                if ($status == Import::STATUS_COMPLETED) {
+                    $parentSuccess = $existingImport->success + $success;
+                    $parentError = 0;
+                } else {
+                    $parentSuccess = $existingImport->success + $success;
+                    $parentError =  ($existingImport->error - $success) > 0 ? ($existingImport->error - $success) : $totalError;
+                }
+
+                $existingImport->update([
+                    'status' => $status,
+                    'success' => $parentSuccess,
+                    'error' => $parentError,
+                ]);
+            }
+        }
     }
 
-    private function insert_processing_import($type) {
+    private function check_processing_data($parent_id = null) {
         $processing_import = Import::where('status', Import::STATUS_IN_PROCESSING)->get();
 
         if (!empty($processing_import)) {
@@ -187,6 +215,30 @@ class upload_csv_ct {
             }
         }
 
+        if ($parent_id) {
+            $existingImport = Import::where('id', $parent_id)
+                ->where(function ($query) {
+                    $query->where('status', Import::STATUS_ERROR_PROCESSING);
+                    $query->orWhere('status', Import::STATUS_TIMEOUT);
+                })
+                ->exists();
+
+            if (!$existingImport) {
+                return [
+                    'status' => false,
+                    'message' => 'エラーのないデータを再インポートできません'
+                ];
+            }
+        }
+
+        return [
+            'status' => true,
+            'message' => '有効なプロセス'
+        ];
+    }
+
+    private function insert_processing_import($type, $parent_id = null) {
+
         $data_type = match ($type) {
             'hospital' => Import::DATA_TYPE_HOSPITAL,
             default => null,
@@ -199,13 +251,28 @@ class upload_csv_ct {
             ];
         }
 
-        $new_import = Import::create([
-            'status' => Import::STATUS_IN_PROCESSING,
-            'import_type' => Import::IMPORT_TYPE_MAIN,
-            'success' => 0,
-            'error' => 0,
-            'data_type' =>  $data_type
-        ]);
+        if ($parent_id) {
+            $new_import = Import::create([
+                'status' => Import::STATUS_IN_PROCESSING,
+                'import_type' => Import::IMPORT_TYPE_REIMPORT,
+                'parent_id' => $parent_id,
+                'success' => 0,
+                'error' => 0,
+                'data_type' =>  $data_type
+            ]);
+
+            Import::find($parent_id)->update([
+                'status' => Import::STATUS_REIMPORT,
+            ]);
+        } else {
+            $new_import = Import::create([
+                'status' => Import::STATUS_IN_PROCESSING,
+                'import_type' => Import::IMPORT_TYPE_MAIN,
+                'success' => 0,
+                'error' => 0,
+                'data_type' =>  $data_type
+            ]);
+        }
 
         if ($new_import) {
             return [

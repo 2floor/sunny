@@ -27,7 +27,8 @@ if (!isset($infoHospital)) {
             <th class="alg-center">緩和ケア</th>
             <td>
                 <?php
-                echo $infoHospital['lightCare'] ? '<span class="badge bg-secondary">あり</span>' : '<span class="badge bg-warning">なし</span>';
+                echo $infoHospital['lightCare'] ? '<span class="badge bg-secondary">あり</span><br><a target="_blank" href="'.$infoHospital['lightCare'].'">'.$infoHospital['lightCare'].'</a>'
+                    : '<span class="badge bg-warning">なし</span>';
                 ?>
             </td>
         </tr>

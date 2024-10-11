@@ -1576,10 +1576,17 @@ $('#upload-file').on('change', function () {
 
 var callAjaxImport = function (import_id)
 {
+	var type = $('#upload-file').data('type');
+	var parent = $('#upload-file').data('parent');
+
 	var formData = new FormData();
 	formData.append('import_id',import_id);
-	formData.append('type', $('#upload_csv_type').val());
+	formData.append('type', type);
 	formData.append('method', 'import');
+
+	if (parent) {
+		formData.append('parent_id', parent);
+	}
 
 	$.ajax({
 		url: $('#upload_csv_ct_url').val(),
@@ -1620,10 +1627,17 @@ $('.callUpload').click(function () {
 		return;
 	}
 
+	var type = $('#upload-file').data('type');
+	var parent = $('#upload-file').data('parent');
+
 	var formData = new FormData();
 	formData.append('upload-file', fileInput.files[0]);
-	formData.append('type', $('#upload_csv_type').val());
+	formData.append('type', type);
 	formData.append('method', 'check');
+
+	if (parent) {
+		formData.append('parent_id', parent);
+	}
 
 	$.ajax({
 		url: $('#upload_csv_ct_url').val(),

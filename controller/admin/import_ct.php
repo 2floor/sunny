@@ -1,5 +1,6 @@
 <?php
 
+use App\Models\Import;
 use Carbon\Carbon;
 
 session_start();
@@ -116,11 +117,56 @@ class import_ct
     private function get_detail($id)
     {
         $detail = $this->import_logic->getDetailById($id);
+        $children = $detail->children()->get();
+
+        $html_child = '';
+        foreach ($children as $key => $child) {
+            $create_at = Carbon::parse($child->created_at)->format('Y-m-d H:i:s');
+            $completed_time = '';
+            $error_file = '';
+
+            if ($child->completed_time) {
+                $completed_time = Carbon::parse($child->completed_time)->format('Y-m-d H:i:s');
+            }
+
+            if ($child->error_file) {
+                $error_file = '<a href="'.BASE_URL.'upload_files/export_error_data/'.$child->error_file.'">エラー情報</a>';
+            }
+
+
+            $file_name = $child->file_name;
+            if (mb_strlen($child->file_name, "UTF-8") > 30) {
+                $file_name = mb_substr($child->file_name, 0, 30, "UTF-8") . '…';
+            }
+
+            $back_color_html = match ($child->status) {
+                Import::STATUS_IN_PROCESSING => "class='bg-processing'",
+                Import::STATUS_COMPLETED => "class='bg-completed'",
+                Import::STATUS_ERROR_PROCESSING => "class='bg-error'",
+                Import::STATUS_TIMEOUT => "class='bg-timeout'",
+                Import::STATUS_REIMPORT => "class='bg-reimport'",
+                default => '',
+            };
+
+            $html_child .= '<tr '.$back_color_html.'>';
+            $html_child .= '<td>'.($key + 1).'</td>';
+            $html_child .= '<td>'.$file_name.'</td>';
+            $html_child .= '<td>'.(IMPORT_STATUS[$child->status] ?? '').'</td>';
+            $html_child .= '<td>'.$child->success.'</td>';
+            $html_child .= '<td>'.$child->error.'</td>';
+            $html_child .= '<td>'.$create_at.'</td>';
+            $html_child .= '<td>'.$completed_time.'</td>';
+            $html_child .= '<td>'.$error_file.'</td>';
+            $html_child .= '</tr>';
+        }
+
         // AJAX返却用データ成型
         return [
             'status' => true,
             'data' => [
+                'id' => $detail['id'],
                 'data_type' => IMPORT_DATA_TYPE[$detail['data_type']] ?? '',
+                'data_type_code' => $detail['data_type'] ?? null,
                 'file_name' => $detail['file_name'] ?? '',
                 'status' => IMPORT_STATUS[$detail['status']] ?? '',
                 'status_code' => $detail['status'] ?? null,
@@ -129,6 +175,7 @@ class import_ct
                 'error_file' => $detail['error_file'] ?? '',
                 'created_at' => $detail['created_at'] ?  Carbon::parse($detail['created_at'])->format('Y-m-d H:i:s') : '',
                 'completed_time' => $detail['completed_time'] ?  Carbon::parse($detail['completed_time'])->format('Y-m-d H:i:s') : '',
+                'html_child' => $html_child,
             ]
         ];
     }

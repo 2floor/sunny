@@ -162,7 +162,7 @@ foreach ($areas as $area) {
                                 <span class="input-group-btn">
                                     <button type="button" class="btn waves-effect waves-light btn-primary callUpload" disabled>アップロード</button>
                                 </span>
-                                <input type="file" id="upload-file" name="upload-file" class="form-control upload-file-hidden upload-csv" accept=".csv,.xlsx,.xls">
+                                <input type="file" id="upload-file" data-type="hospital" name="upload-file" class="form-control upload-file-hidden upload-csv" accept=".csv,.xlsx,.xls">
                             </div>
                             <div class="serachW110">
                                 <button type="button" name="new_entry" class="btn btn-primary waves-effect w-md waves-light m-b-5">新規登録</button>

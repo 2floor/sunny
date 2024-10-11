@@ -1,6 +1,7 @@
 <?php
 
 namespace App\Models;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class Import extends BaseModel
 {
@@ -27,4 +28,9 @@ class Import extends BaseModel
         'completed_time',
         'status'
     ];
+
+    public function children() : HasMany
+    {
+        return $this->hasMany(Import::class, 'parent_id');
+    }
 }
