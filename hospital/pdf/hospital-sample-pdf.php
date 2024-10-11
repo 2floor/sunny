@@ -177,7 +177,8 @@
                         <th>緩和ケア</th>
                         <td>
                             <?php
-                            echo $lightCare ? '<span class="badge bg-secondary">あり</span>' : '<span class="badge bg-warning">なし</span>';
+                            echo $lightCare ? '<span class="badge bg-secondary">あり</span><br><a target="_blank" href="'.$lightCare.'">'.$lightCare.'</a>'
+                                : '<span class="badge bg-warning">なし</span>';
                             ?>
                         </td>
                     </tr>
