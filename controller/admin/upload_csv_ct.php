@@ -83,9 +83,9 @@ class upload_csv_ct {
             'data' => [],
         ];
 
-        if ($post['type'] == 'hospital' && $post['method'] == 'check') {
+        if ($post['method'] == 'check') {
             // 初期処理　HTML生成処理呼び出し
-            $data = $this->check_import_hospital_data($post);
+            $data = $this->check_import_data($post);
         } else if ($post['type'] == 'hospital' && $post['method'] == 'import') {
             $data = $this->import_hospital_data($post);
         }
@@ -93,7 +93,7 @@ class upload_csv_ct {
         return $data;
     }
 
-    private function check_import_hospital_data($post)
+    private function check_import_data($post)
     {
         $check_processing_data = $this->check_processing_data($post['parent_id'] ?? null);
 
@@ -288,6 +288,14 @@ class upload_csv_ct {
     }
 
     private function validate_uploaded_file($type) {
+
+        if (!$type) {
+            return [
+                'status' => false,
+                'message' => 'インポートデータタイプを認識できません'
+            ];
+        }
+
         if (isset($_FILES['upload-file']) && $_FILES['upload-file']['error'] == UPLOAD_ERR_OK) {
             $fileTmpPath = $_FILES['upload-file']['tmp_name'];
             $fileName = $_FILES['upload-file']['name'];

@@ -1627,12 +1627,10 @@ $('.callUpload').click(function () {
 		return;
 	}
 
-	var type = $('#upload-file').data('type');
 	var parent = $('#upload-file').data('parent');
 
 	var formData = new FormData();
 	formData.append('upload-file', fileInput.files[0]);
-	formData.append('type', type);
 	formData.append('method', 'check');
 
 	if (parent) {
