@@ -65,8 +65,8 @@ class hospital_import implements OnEachRow, WithBatchInserts, WithChunkReading, 
             return null;
         }
 
-        $this->success += 1;
         $this->updateCategories($hospital, $row);
+        $this->success += 1;
     }
 
     private function updateCategories(Hospital $hospital, array $row)

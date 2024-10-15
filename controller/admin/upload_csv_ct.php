@@ -6,6 +6,7 @@ if (!isset($_SESSION)) {
 require_once __DIR__ . '/../../logic/common/common_logic.php';
 require_once __DIR__ . '/../../common/security_common_logic.php';
 require_once __DIR__ . '/../../logic/import/hospital_import.php';
+require_once __DIR__ . '/../../logic/import/hospital_cancer_import.php';
 require_once __DIR__ . '/../../logic/export/error_data_import.php';
 require_once __DIR__ . '/../../third_party/bootstrap.php';
 
@@ -86,8 +87,8 @@ class upload_csv_ct {
         if ($post['method'] == 'check') {
             // 初期処理　HTML生成処理呼び出し
             $data = $this->check_import_data($post);
-        } else if ($post['type'] == 'hospital' && $post['method'] == 'import') {
-            $data = $this->import_hospital_data($post);
+        } else if ($post['method'] == 'import') {
+            $data = $this->import_data($post);
         }
 
         return $data;
@@ -124,17 +125,42 @@ class upload_csv_ct {
         ];
     }
 
-    private function import_hospital_data($post) {
+    private function import_data($post) {
         session_write_close();
         $processing_import = Import::find($post['import_id']);
 
         if ($processing_import && $processing_import->status == Import::STATUS_IN_PROCESSING) {
             $uploadFileDir = '../../upload_files/import_data/'.$post['type'].'/';
             $file_path = $uploadFileDir . $processing_import->file_name;
-            $import = new hospital_import();
-            Excel::import($import, $file_path);
 
-            $this->complete_import($import, $processing_import->id, $post['type'], $post['parent_id'] ?? null);
+            if (file_exists($file_path)) {
+                if ($post['type' == 'hospital']) {
+                    $import = new hospital_import();
+                } elseif ($post['type'] == 'hospital_cancer') {
+                    $import = new hospital_cancer_import();
+                } else {
+                    return [
+                        'status' => false,
+                        'message' => '正しく定義されていない無効なインポート',
+                    ];
+                }
+
+
+
+                Excel::import($import, $file_path);
+                $this->complete_import($import, $processing_import->id, $post['type'], $post['parent_id'] ?? null);
+            } else {
+                $processing_import->update([
+                    'status' => Import::STATUS_TIMEOUT,
+                    'success' => 0,
+                    'error' => 0
+                ]);
+
+                return [
+                    'status' => false,
+                    'message' => 'インポートファイルが見つかりません',
+                ];
+            }
         }
 
         return [
@@ -241,6 +267,7 @@ class upload_csv_ct {
 
         $data_type = match ($type) {
             'hospital' => Import::DATA_TYPE_HOSPITAL,
+            'hospital_cancer' => Import::DATA_TYPE_HOSPITAL_CANCER,
             default => null,
         };
 

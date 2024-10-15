@@ -259,6 +259,7 @@ define ( "GROUP_FAQ", [
 
 define ( "IMPORT_DATA_TYPE", [
     1 => '病院',
+    2 => '病院 がん',
 ]);
 
 define ( "IMPORT_STATUS", [
