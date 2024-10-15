@@ -7,6 +7,7 @@ class Import extends BaseModel
 {
     const DATA_TYPE_HOSPITAL = 1;
     const DATA_TYPE_HOSPITAL_CANCER = 2;
+    const DATA_TYPE_DPC = 3;
     const IMPORT_TYPE_MAIN = 1;
     const IMPORT_TYPE_REIMPORT = 2;
     const STATUS_PENDING = 0;

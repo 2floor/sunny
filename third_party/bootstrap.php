@@ -10,6 +10,8 @@ use Illuminate\Filesystem\Filesystem;
 use Illuminate\Bus\BusServiceProvider;
 use Maatwebsite\Excel\ExcelServiceProvider;
 use Maatwebsite\Excel\Facades\Excel as ExcelFacade;
+use Illuminate\Validation\ValidationServiceProvider;
+use Illuminate\Support\Facades\Validator;
 
 $app = new Application();
 
@@ -41,10 +43,15 @@ $app->singleton('translator', function ($app) {
     return new Translator($loader, 'en');
 });
 
+$app->singleton('validator', function ($app) {
+    return $app->make('Illuminate\Validation\Factory');
+});
+
 $app->instance('path.storage', __DIR__ . '/storage');
 
 $app->register(ExcelServiceProvider::class);
 $app->register(BusServiceProvider::class);
+$app->register(ValidationServiceProvider::class);
 
 $ini_array = parse_ini_file(__DIR__ . '/../common/config.ini', true);
 $dbname = $ini_array['db_setting']['dbname'];

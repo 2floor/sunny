@@ -250,6 +250,12 @@ $(function() {
                         case 1:
                             type = 'hospital';
                             break;
+                        case 2:
+                            type = 'hospital_cancer';
+                            break;
+                        case 3:
+                            type = 'dpc';
+                            break;
                         default:
                             type = '';
                     }

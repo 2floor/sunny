@@ -7,6 +7,7 @@ require_once __DIR__ . '/../../logic/common/common_logic.php';
 require_once __DIR__ . '/../../common/security_common_logic.php';
 require_once __DIR__ . '/../../logic/import/hospital_import.php';
 require_once __DIR__ . '/../../logic/import/hospital_cancer_import.php';
+require_once __DIR__ . '/../../logic/import/dpc_import.php';
 require_once __DIR__ . '/../../logic/export/error_data_import.php';
 require_once __DIR__ . '/../../third_party/bootstrap.php';
 
@@ -134,10 +135,12 @@ class upload_csv_ct {
             $file_path = $uploadFileDir . $processing_import->file_name;
 
             if (file_exists($file_path)) {
-                if ($post['type' == 'hospital']) {
+                if ($post['type'] == 'hospital') {
                     $import = new hospital_import();
                 } elseif ($post['type'] == 'hospital_cancer') {
                     $import = new hospital_cancer_import();
+                } elseif ($post['type'] == 'dpc') {
+                    $import = new dpc_import();
                 } else {
                     return [
                         'status' => false,
@@ -179,7 +182,7 @@ class upload_csv_ct {
 
 
         if (!empty($errors)) {
-            $totalError = count($errors);
+            $totalError = count($errors) - 1;
             Excel::store(new error_data_import($errors), $randomFileName . '.csv', 'export_error');
             $errorFile = $randomFileName . '.csv';
         }
@@ -268,6 +271,7 @@ class upload_csv_ct {
         $data_type = match ($type) {
             'hospital' => Import::DATA_TYPE_HOSPITAL,
             'hospital_cancer' => Import::DATA_TYPE_HOSPITAL_CANCER,
+            'dpc' => Import::DATA_TYPE_DPC,
             default => null,
         };
 
