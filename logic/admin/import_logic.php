@@ -21,13 +21,14 @@ class import_logic extends base_logic
         $back_color = 1;
         $cnt = ($params[0] * ($params[1] - 1));
 
+        date_default_timezone_set('Asia/Tokyo');
+
         for($i = 0; $i < count ($list ?? []); $i ++) {
             $row = $list[$i];
             $cnt ++;
 
             //削除フラグ
             $edit_html_a = "<a herf='javascript:void(0);' class='edit clr1' name='edit_" . $row ['id'] . "' value='" . $row ['id'] . "'><i class=\"fa fa-pencil\" aria-hidden=\"true\"></i></a><br>";
-
 
             $create_at = Carbon::parse($row['created_at'])->format('Y-m-d H:i:s');
             $diff = strtotime(date('YmdHis')) - strtotime($create_at);
