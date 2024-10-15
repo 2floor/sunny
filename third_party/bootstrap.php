@@ -11,7 +11,6 @@ use Illuminate\Bus\BusServiceProvider;
 use Maatwebsite\Excel\ExcelServiceProvider;
 use Maatwebsite\Excel\Facades\Excel as ExcelFacade;
 use Illuminate\Validation\ValidationServiceProvider;
-use Illuminate\Support\Facades\Validator;
 
 $app = new Application();
 

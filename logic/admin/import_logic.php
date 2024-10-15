@@ -58,6 +58,7 @@ class import_logic extends base_logic
                     $time = round($diff / 3600);
                     $completed_time = $time . '時間前';
                 }
+
             }
 
             $data_type_import = IMPORT_DATA_TYPE;

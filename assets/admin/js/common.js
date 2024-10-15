@@ -1661,7 +1661,7 @@ $('.callUpload').click(function () {
 						title: "成功!",
 						text: message,
 						type: "success",
-						confirmButtonText: "近い",
+						confirmButtonText: "処理状況を確認",
 						closeOnConfirm: true
 					}, function(isConfirm) {
 						if (isConfirm) {

@@ -121,7 +121,7 @@ class upload_csv_ct {
 
         return [
             'status' => true,
-            'message' => "ファイルは正常に更新されました。インポートを処理しています...",
+            'message' => "CSVファイルのアップロードと処理が行われています。この間、他のファイルのアップロードはできませんが、他の作業は継続できます。",
             'import_id' => $processing_data['import_id'],
         ];
     }
@@ -239,7 +239,7 @@ class upload_csv_ct {
             if ($hasProcessingImport) {
                 return [
                     'status' => false,
-                    'message' => '別のアップロード プロセスが実行中です。アップロードプロセスが完了するまでお待ちください'
+                    'message' => 'CSVファイルのアップロードと処理が行われています。この間、他のファイルのアップロードはできませんが、他の作業は継続できます。'
                 ];
             }
         }
