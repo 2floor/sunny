@@ -241,7 +241,7 @@ require_once __DIR__ . '/../required/view_common_include.php';
 <!-- 1ページに表示する件数 -->
 <input type="hidden" id="page_disp_cnt" value="10">
 <input type="hidden" id="upload_csv_ct_url" value="../controller/admin/upload_csv_ct.php">
-<input type="hidden" id="upload_csv_type" value="hospital_cancer">
+<input type="hidden" id="upload_csv_type" value="cancer">
 
 <!-- End Personal Input -->
 

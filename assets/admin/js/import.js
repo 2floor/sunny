@@ -256,6 +256,9 @@ $(function() {
                         case 3:
                             type = 'dpc';
                             break;
+                        case 4:
+                            type = 'stage';
+                            break;
                         default:
                             type = '';
                     }

@@ -8,6 +8,7 @@ require_once __DIR__ . '/../../common/security_common_logic.php';
 require_once __DIR__ . '/../../logic/import/hospital_import.php';
 require_once __DIR__ . '/../../logic/import/hospital_cancer_import.php';
 require_once __DIR__ . '/../../logic/import/dpc_import.php';
+require_once __DIR__ . '/../../logic/import/stage_import.php';
 require_once __DIR__ . '/../../logic/export/error_data_import.php';
 require_once __DIR__ . '/../../third_party/bootstrap.php';
 
@@ -141,6 +142,8 @@ class upload_csv_ct {
                     $import = new hospital_cancer_import();
                 } elseif ($post['type'] == 'dpc') {
                     $import = new dpc_import();
+                } elseif ($post['type'] == 'stage') {
+                    $import = new stage_import();
                 } else {
                     return [
                         'status' => false,
@@ -272,6 +275,7 @@ class upload_csv_ct {
             'hospital' => Import::DATA_TYPE_HOSPITAL,
             'hospital_cancer' => Import::DATA_TYPE_HOSPITAL_CANCER,
             'dpc' => Import::DATA_TYPE_DPC,
+            'stage' => Import::DATA_TYPE_STAGE,
             default => null,
         };
 
