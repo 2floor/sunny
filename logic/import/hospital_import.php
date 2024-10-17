@@ -131,7 +131,7 @@ class hospital_import implements OnEachRow, WithBatchInserts, WithChunkReading, 
     {
         if (!empty($this->errors)) {
             $header = [
-                'row' =>  json_encode(["","都道府県","","SHデータベース登録名称","病院ID","住所","代表電話番号","URL","がん拠点病院","ゲノム拠点病院","学会認定施設情報","特別室/個室","特別室/個室URL","がん相談支援センター","患者紹介方法","緩和ケア","緩和ケアURL","備考","情報更新日","公開フラグ", "エラー"], JSON_UNESCAPED_UNICODE),
+                'row' =>  json_encode(["","都道府県","","SHデータベース登録名称","病院ID","住所","代表電話番号","URL","がん拠点病院","ゲノム拠点病院","学会認定施設情報","特別室/個室","特別室/個室URL","がん相談支援センター","患者紹介方法","緩和ケア","緩和ケアURL","備考","情報更新日","公開フラグ"], JSON_UNESCAPED_UNICODE),
                 'error' => '',
             ];
 

@@ -89,7 +89,7 @@ class stage_import implements ToModel, WithBatchInserts, WithChunkReading, WithS
     {
         if (!empty($this->errors)) {
             $header = [
-                'row' =>  json_encode(["病院ID", "施設", "Ⅰ期", "Ⅱ期", "Ⅲ期", "Ⅳ期", "総数", "がん種", "年", "エラー"], JSON_UNESCAPED_UNICODE),
+                'row' =>  json_encode(["病院ID", "施設", "Ⅰ期", "Ⅱ期", "Ⅲ期", "Ⅳ期", "総数", "がん種", "年"], JSON_UNESCAPED_UNICODE),
                 'error' => '',
             ];
 

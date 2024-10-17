@@ -94,7 +94,7 @@ class dpc_import implements ToModel, WithStartRow, WithBatchInserts, WithChunkRe
     {
         if (!empty($this->errors)) {
             $header = [
-                'row' =>  json_encode(["病院ID", "病院名", "退院患者数", "がん種", "年", "エラー"], JSON_UNESCAPED_UNICODE),
+                'row' =>  json_encode(["病院ID", "病院名", "退院患者数", "がん種", "年"], JSON_UNESCAPED_UNICODE),
                 'error' => '',
             ];
 
