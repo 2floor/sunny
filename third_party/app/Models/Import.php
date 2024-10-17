@@ -9,6 +9,7 @@ class Import extends BaseModel
     const DATA_TYPE_HOSPITAL_CANCER = 2;
     const DATA_TYPE_DPC = 3;
     const DATA_TYPE_STAGE = 4;
+    const DATA_TYPE_SURVIVAL = 5;
     const IMPORT_TYPE_MAIN = 1;
     const IMPORT_TYPE_REIMPORT = 2;
     const STATUS_PENDING = 0;
@@ -27,6 +28,7 @@ class Import extends BaseModel
         'file_name',
         'success',
         'error',
+        'error_message',
         'error_file',
         'completed_time',
         'status'

@@ -108,4 +108,9 @@ class dpc_import implements ToModel, WithStartRow, WithBatchInserts, WithChunkRe
     {
         return $this->success;
     }
+
+    public function getCountError(): int
+    {
+        return count($this->errors);
+    }
 }

@@ -67,7 +67,7 @@ class stage_import implements ToModel, WithBatchInserts, WithChunkReading, WithS
 
     public function startRow(): int
     {
-        return 3;
+        return 2;
     }
 
     public function batchSize(): int
@@ -102,5 +102,10 @@ class stage_import implements ToModel, WithBatchInserts, WithChunkReading, WithS
     public function getSuccess()
     {
         return $this->success;
+    }
+
+    public function getCountError(): int
+    {
+        return count($this->errors);
     }
 }

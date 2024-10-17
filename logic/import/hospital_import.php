@@ -23,7 +23,7 @@ class hospital_import implements OnEachRow, WithBatchInserts, WithChunkReading, 
             $row[] = '';
         }
 
-        if (empty($row[4]) || !is_numeric($row[4])) {
+        if (empty($row[3]) || !is_numeric($row[3])) {
             $this->errors[] = [
                 'row' => json_encode($row, JSON_UNESCAPED_UNICODE),
                 'error' => '病院IDが空か数字ではありません'
@@ -32,7 +32,7 @@ class hospital_import implements OnEachRow, WithBatchInserts, WithChunkReading, 
             return null;
         }
 
-        if (empty($row[2]) || !Area::where('id', $row[2])->exists()) {
+        if (empty($row[1]) || !Area::where('id', $row[1])->exists()) {
             $this->errors[] = [
                 'row' => json_encode($row, JSON_UNESCAPED_UNICODE),
                 'error' => 'エリア情報が間違っています'
@@ -42,17 +42,17 @@ class hospital_import implements OnEachRow, WithBatchInserts, WithChunkReading, 
         }
 
         $hospital = Hospital::updateOrCreate([
-            'hospital_code' => $row[4],
+            'hospital_code' => $row[3],
         ], [
-            'area_id' => $row[2] ?? null,
-            'hospital_name' => $row[3] ?? null,
-            'addr' => $row[5] ?? null,
-            'tel' => $row[6] ?? null,
-            'hp_url' => $row[7] ?? null,
-            'social_info' => $row[10] ?? null,
-            'support_url' => $row[13] ?? null,
-            'introduction_url' => $row[14] ?? null,
-            'remarks' => $row[17] ?? null,
+            'area_id' => $row[1] ?? null,
+            'hospital_name' => $row[2] ?? null,
+            'addr' => $row[4] ?? null,
+            'tel' => $row[5] ?? null,
+            'hp_url' => $row[6] ?? null,
+            'social_info' => $row[9] ?? null,
+            'support_url' => $row[12] ?? null,
+            'introduction_url' => $row[13] ?? null,
+            'remarks' => $row[16] ?? null,
             'public_flg' => 0,
         ]);
 
@@ -74,10 +74,10 @@ class hospital_import implements OnEachRow, WithBatchInserts, WithChunkReading, 
         $categoryIds = $hospital->categories()->where('is_whole_cancer', Category::FOR_ALL_CANCER)->pluck('t_category.id')->unique()->toArray();
         $hospital->categories()->detach($categoryIds);
 
-        $this->attachCategory($hospital, $row[8], '病院区分', 2, 'hospital_type');
-        $this->attachCategory($hospital, $row[9], 'ゲノム拠点病院区分', 3, 'hospital_gen');
-        $this->attachCategoryWithContent($hospital, $row[11], $row[12], 'special_clinic');
-        $this->attachCategoryWithContent($hospital, $row[15], $row[16], 'light_care');
+        $this->attachCategory($hospital, $row[7], '病院区分', 2, 'hospital_type');
+        $this->attachCategory($hospital, $row[8], 'ゲノム拠点病院区分', 3, 'hospital_gen');
+        $this->attachCategoryWithContent($hospital, $row[10], $row[11], 'special_clinic');
+        $this->attachCategoryWithContent($hospital, $row[14], $row[15], 'light_care');
     }
 
     private function attachCategory(Hospital $hospital, $level3, $level2, $orderNum, $hard_name2)
@@ -114,7 +114,7 @@ class hospital_import implements OnEachRow, WithBatchInserts, WithChunkReading, 
 
     public function startRow(): int
     {
-        return 3;
+        return 2;
     }
 
     public function batchSize(): int
@@ -144,5 +144,10 @@ class hospital_import implements OnEachRow, WithBatchInserts, WithChunkReading, 
     public function getSuccess()
     {
         return $this->success;
+    }
+
+    public function getCountError(): int
+    {
+        return count($this->errors);
     }
 }

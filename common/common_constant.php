@@ -261,7 +261,8 @@ define ( "IMPORT_DATA_TYPE", [
     1 => '病院',
     2 => '病院 がん',
     3 => 'DPC',
-    4 => 'Stage'
+    4 => 'Stage',
+    5 => 'Survival'
 ]);
 
 define ( "IMPORT_STATUS", [

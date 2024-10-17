@@ -9,6 +9,7 @@ require_once __DIR__ . '/../../logic/import/hospital_import.php';
 require_once __DIR__ . '/../../logic/import/hospital_cancer_import.php';
 require_once __DIR__ . '/../../logic/import/dpc_import.php';
 require_once __DIR__ . '/../../logic/import/stage_import.php';
+require_once __DIR__ . '/../../logic/import/survival_import.php';
 require_once __DIR__ . '/../../logic/export/error_data_import.php';
 require_once __DIR__ . '/../../third_party/bootstrap.php';
 
@@ -144,6 +145,8 @@ class upload_csv_ct {
                     $import = new dpc_import();
                 } elseif ($post['type'] == 'stage') {
                     $import = new stage_import();
+                } elseif ($post['type'] == 'survival') {
+                    $import = new survival_import();
                 } else {
                     return [
                         'status' => false,
@@ -151,10 +154,12 @@ class upload_csv_ct {
                     ];
                 }
 
-
-
-                Excel::import($import, $file_path);
-                $this->complete_import($import, $processing_import->id, $post['type'], $post['parent_id'] ?? null);
+                try {
+                    Excel::import($import, $file_path);
+                    $this->complete_import($import, $processing_import->id, $post['type'], $post['parent_id'] ?? null);
+                } catch (\Exception $e) {
+                    $this->exception_import($processing_import->id, $e->getMessage(), $post['parent_id'] ?? null);
+                }
             } else {
                 $processing_import->update([
                     'status' => Import::STATUS_TIMEOUT,
@@ -175,17 +180,36 @@ class upload_csv_ct {
         ];
     }
 
+    private function exception_import($import_id, $message, $parent_id = null)
+    {
+        Import::find($import_id)->update([
+            'status' => Import::STATUS_TIMEOUT,
+            'success' => 0,
+            'error' => 0,
+            'error_message' => $message
+        ]);
+
+        if ($parent_id) {
+            $existingImport = Import::find($parent_id);
+
+            if ($existingImport && ($existingImport->status == Import::STATUS_REIMPORT)) {
+                $existingImport->update([
+                    'status' => Import::STATUS_ERROR_PROCESSING,
+                ]);
+            }
+        }
+    }
+
     private function complete_import($import, $import_id, $type, $parent_id = null)
     {
-        $totalError = 0;
         $errorFile = '';
         $success = $import->getSuccess();
+        $totalError = $import->getCountError();
         $errors = $import->getErrors();
         $randomFileName = $type . '_error_file_' .uniqid(time() . '_' . mt_rand(1, 9), false);
 
 
-        if (!empty($errors)) {
-            $totalError = count($errors) - 1;
+        if ($totalError > 0) {
             Excel::store(new error_data_import($errors), $randomFileName . '.csv', 'export_error');
             $errorFile = $randomFileName . '.csv';
         }
@@ -276,6 +300,7 @@ class upload_csv_ct {
             'hospital_cancer' => Import::DATA_TYPE_HOSPITAL_CANCER,
             'dpc' => Import::DATA_TYPE_DPC,
             'stage' => Import::DATA_TYPE_STAGE,
+            'survival' => Import::DATA_TYPE_SURVIVAL,
             default => null,
         };
 

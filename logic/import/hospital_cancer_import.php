@@ -115,7 +115,7 @@ class hospital_cancer_import implements OnEachRow, WithBatchInserts, WithChunkRe
 
     public function startRow(): int
     {
-        return 3;
+        return 2;
     }
 
     public function batchSize(): int
@@ -145,6 +145,11 @@ class hospital_cancer_import implements OnEachRow, WithBatchInserts, WithChunkRe
     public function getSuccess()
     {
         return $this->success;
+    }
+
+    public function getCountError(): int
+    {
+        return count($this->errors);
     }
 
     private function updateHospitalPolicy($value, $hardName3, $hospital, $cancerId)

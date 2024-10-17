@@ -259,6 +259,9 @@ $(function() {
                         case 4:
                             type = 'stage';
                             break;
+                        case 5:
+                            type = 'survival';
+                            break;
                         default:
                             type = '';
                     }
