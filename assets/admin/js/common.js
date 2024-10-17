@@ -1658,7 +1658,7 @@ $('.callUpload').click(function () {
 				setTimeout(function() {
 					$(".loading").hide();
 					swal({
-						title: "成功!",
+						title: "処理中!",
 						text: message,
 						type: "success",
 						confirmButtonText: "処理状況を確認",
