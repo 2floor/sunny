@@ -31,11 +31,14 @@ class Import extends BaseModel
         'error_message',
         'error_file',
         'completed_time',
-        'status'
+        'status',
+        'created_at'
     ];
 
     public function children() : HasMany
     {
         return $this->hasMany(Import::class, 'parent_id');
     }
+
+    public $timestamps = false;
 }

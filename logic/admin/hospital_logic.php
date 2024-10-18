@@ -23,8 +23,6 @@ class hospital_logic extends base_logic
         $back_color = 1;
         $cnt = ($params[0] * ($params[1] - 1));
 
-        date_default_timezone_set('Asia/Tokyo');
-
         for($i = 0; $i < count ($list ?? []); $i ++) {
             $row = $list[$i];
             $cnt ++;

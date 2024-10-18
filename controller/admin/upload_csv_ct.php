@@ -318,7 +318,8 @@ class upload_csv_ct {
                 'parent_id' => $parent_id,
                 'success' => 0,
                 'error' => 0,
-                'data_type' =>  $data_type
+                'data_type' =>  $data_type,
+                'created_at' => now()
             ]);
 
             Import::find($parent_id)->update([
@@ -330,7 +331,8 @@ class upload_csv_ct {
                 'import_type' => Import::IMPORT_TYPE_MAIN,
                 'success' => 0,
                 'error' => 0,
-                'data_type' =>  $data_type
+                'data_type' =>  $data_type,
+                'created_at' => now()
             ]);
         }
 

@@ -29,7 +29,6 @@ $app->singleton('config', function () {
     ]);
     $config->set('excel.exports.temp_path', __DIR__ . '/storage/framework/cache/laravel-excel');
 
-
     return $config;
 });
 
