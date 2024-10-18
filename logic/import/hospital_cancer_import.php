@@ -20,9 +20,9 @@ class hospital_cancer_import implements OnEachRow, WithBatchInserts, WithChunkRe
     {
         $row = $row->toArray();
 
-        $cancer = Cancer::where('cancer_type', ($row[4] ?? null))->first();
+        $cancer = Cancer::withoutGlobalScope('unpublish')->where('cancer_type', ($row[4] ?? null))->first();
 
-        $hospital = Hospital::where('hospital_code', ($row[2] ?? null))->first();
+        $hospital = Hospital::withoutGlobalScope('unpublish')->where('hospital_code', ($row[2] ?? null))->first();
 
         if (!$cancer) {
             $this->errors[] = [

@@ -17,8 +17,8 @@ class dpc_import implements ToModel, WithStartRow, WithBatchInserts, WithChunkRe
 
     public function model(array $row): Model|null
     {
-        $hospital = Hospital::where('hospital_code', ($row[0] ?? null))->first();
-        $cancer = Cancer::where('cancer_type', ($row[3] ?? null))
+        $hospital = Hospital::withoutGlobalScope('unpublish')->where('hospital_code', ($row[0] ?? null))->first();
+        $cancer = Cancer::withoutGlobalScope('unpublish')->where('cancer_type', ($row[3] ?? null))
             ->orWhere('cancer_type_dpc', ($row[3] ?? null))->first();
 
         if (!$cancer) {

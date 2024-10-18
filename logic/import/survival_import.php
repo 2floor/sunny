@@ -24,9 +24,9 @@ class survival_import implements OnEachRow, WithBatchInserts, WithChunkReading
 
         $row = $row->toArray();
 
-        $cancers = Cancer::where('cancer_type', ($row[3] ? trim($row[3]) : null))
+        $cancers = Cancer::withoutGlobalScope('unpublish')->where('cancer_type', ($row[3] ? trim($row[3]) : null))
             ->orWhere('cancer_type_surv', ($row[3] ? trim($row[3]) : null))->get();
-        $hospital = Hospital::where('hospital_code', ($row[1] ? trim($row[1]) : null))->first();
+        $hospital = Hospital::withoutGlobalScope('unpublish')->where('hospital_code', ($row[1] ? trim($row[1]) : null))->first();
 
         if (empty($cancers)) {
             $this->errors[] = [
@@ -199,7 +199,7 @@ class survival_import implements OnEachRow, WithBatchInserts, WithChunkReading
         $avg4 =  $row27 ? (round($row27, 4) * 100): null;
 
         foreach ($cancers as $cancer) {
-            SurvHospital::updateOrCreate([
+            SurvHospital::withoutGlobalScope('unpublish')->updateOrCreate([
                 'hospital_id' => $hospital->id,
                 'cancer_id' => $cancer->id,
                 'year' => $row[0],

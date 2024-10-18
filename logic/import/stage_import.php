@@ -17,8 +17,8 @@ class stage_import implements ToModel, WithBatchInserts, WithChunkReading, WithS
 
     public function model(array $row): Model|null
     {
-        $hospital = Hospital::where('hospital_code', ($row[0] ?? null))->first();
-        $cancer = Cancer::where('cancer_type', ($row[7] ?? null))
+        $hospital = Hospital::withoutGlobalScope('unpublish')->where('hospital_code', ($row[0] ?? null))->first();
+        $cancer = Cancer::withoutGlobalScope('unpublish')->where('cancer_type', ($row[7] ?? null))
             ->orWhere('cancer_type_stage', ($row[7] ?? null))->first();
 
         if (!$cancer) {

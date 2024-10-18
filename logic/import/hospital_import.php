@@ -41,7 +41,7 @@ class hospital_import implements OnEachRow, WithBatchInserts, WithChunkReading, 
             return null;
         }
 
-        $hospital = Hospital::updateOrCreate([
+        $hospital = Hospital::withoutGlobalScope('unpublish')->updateOrCreate([
             'hospital_code' => $row[3],
         ], [
             'area_id' => $row[1] ?? null,
