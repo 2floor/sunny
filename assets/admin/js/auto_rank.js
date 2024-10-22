@@ -15,7 +15,7 @@
 var query = getUrlVars();
 
 //ページタイトル
-var page_title = 'インポート';
+var page_title = '自動処理';
 
 //画像input用配列
 var input_file_name = {};
@@ -31,12 +31,20 @@ var search_select = {
             tableOrder 	: 1,
             type 		: 'bigint',
         },
-
-        'ファイル名' : {
+        'がん種名' : {
             search 		: true,
             order		: true,
-            ColName 	: 'file_name',
-            tableOrder 	: 3,
+            ColName 	: 'cancer_type',
+            tableOrder 	: 4,
+            type 		: 'text',
+            foreignRelation : 'cancer',
+        },
+
+        '年' : {
+            search 		: true,
+            order		: true,
+            ColName 	: 'year',
+            tableOrder 	: 5,
             type 		: 'text',
         },
 
@@ -232,46 +240,7 @@ $(function() {
             // 正常終了
             if (result.data.status) {
                 //更新情報自動入力
-                insert_edit_data(result.data.data, 'frm', null);
-                $('#tbodyReImport').append(result.data.data.html_child);
-
-                $('#upload-file').attr('data-type', '');
-                $('#upload-file').attr('data-parent', '');
-
-                if (result.data.data.error_file) {
-                    $('#linkErrorFile').attr('href', '../upload_files/export_error_data/' + result.data.data.error_file);
-                }
-
-                if(result.data.data.status_code != 3 && result.data.data.status_code != 4) {
-                    $('#file-name-display').prop('disabled', true);
-                } else {
-                    let type = '';
-                    switch(result.data.data.data_type_code) {
-                        case 1:
-                            type = 'hospital';
-                            break;
-                        case 2:
-                            type = 'hospital_cancer';
-                            break;
-                        case 3:
-                            type = 'dpc';
-                            break;
-                        case 4:
-                            type = 'stage';
-                            break;
-                        case 5:
-                            type = 'survival';
-                            break;
-                        case 6:
-                            type = 'cancer';
-                            break;
-                        default:
-                            type = '';
-                    }
-
-                    $('#upload-file').attr('data-type', type);
-                    $('#upload-file').attr('data-parent', result.data.data.id);
-                }
+                insert_edit_data(result.data, 'frm', null);
                 //ロード終了
                 loaded();
 

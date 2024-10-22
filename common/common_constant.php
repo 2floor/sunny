@@ -262,7 +262,8 @@ define ( "IMPORT_DATA_TYPE", [
     2 => '病院 がん',
     3 => 'DPC',
     4 => 'Stage',
-    5 => 'Survival'
+    5 => 'Survival',
+    6 => '癌',
 ]);
 
 define ( "IMPORT_STATUS", [
@@ -271,4 +272,27 @@ define ( "IMPORT_STATUS", [
     3 => 'エラー',
     4 => 'タイムアウト',
     5 => '再度インポートする'
+]);
+
+define ( "RANK_DATA_TYPE", [
+    1 => 'DPC',
+    2 => 'Stage',
+    3 => 'Survival'
+]);
+
+define ( "AVG_RANK_DATA_TYPE", [
+    1 => 'DPC',
+    2 => 'Stage',
+    3 => 'Survival'
+]);
+
+define ( "AUTO_RANK_TYPE", [
+    1 => '自動ランキングを作成',
+    2 => '平均データの自動生成',
+]);
+
+define ( "AUTO_RANK_STATUS", [
+    1 => '進行中',
+    2 => '成功した',
+    3 => 'タイムアウト',
 ]);

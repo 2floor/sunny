@@ -58,7 +58,7 @@ require_once __DIR__ . '/../required/view_common_include.php';
                             <div class="input-group">
                                 <input type="text" id="file-name-display" class="form-control" placeholder="ファイルを選択" readonly>
                                 <span class="input-group-btn">
-                                    <button type="button" class="btn waves-effect waves-light btn-primary callUpload" disabled>アップロード</button>
+                                    <button type="button" class="btn waves-effect waves-light btn-primary callMultiUpload" disabled>アップロード</button>
                                 </span>
                                 <input type="file" id="upload-file" data-type="hospital_cancer" name="upload-file" class="form-control upload-file-hidden upload-csv" accept=".csv,.xlsx,.xls">
                             </div>
@@ -241,10 +241,67 @@ require_once __DIR__ . '/../required/view_common_include.php';
 <!-- 1ページに表示する件数 -->
 <input type="hidden" id="page_disp_cnt" value="10">
 <input type="hidden" id="upload_csv_ct_url" value="../controller/admin/upload_csv_ct.php">
-<input type="hidden" id="upload_csv_type" value="cancer">
+<input type="hidden" id="upload_csv_type" value="cancer,hospital_cancer">
 
 <!-- End Personal Input -->
 
 </body>
+<script>
+    $( document ).ready(function() {
+        $('.callMultiUpload').click(function () {
+            swal({
+                title: '',
+                text: "インポートするデータの種類を選択してください",
+                type : "info",
+                showCancelButton : true,
+                confirmButtonClass : 'btn-info',
+                confirmButtonText : "病院のがんデータ",
 
+                cancelButtonText : 'がんデータ',
+                closeOnConfirm : false,
+                closeOnCancel : false
+            }, function(isConfirm) {
+                if (isConfirm) {
+                    swal({
+                        title: '',
+                        text: '病院がんデータ タイプのデータをインポートしてもよろしいですか?',
+                        type : "warning",
+                        showCancelButton : true,
+                        confirmButtonClass : 'btn-warning',
+                        confirmButtonText : "同意する",
+                        cancelButtonText : '近い',
+                        closeOnConfirm : false,
+                        closeOnCancel : false
+                    }, function(isConfirm) {
+                        if (isConfirm) {
+                            $('#upload-file').attr('data-type', 'hospital_cancer')
+                            callAjaxCheckImport();
+                        } else {
+                            swal.close();
+                        }
+                    });
+                } else {
+                    swal({
+                        title: '',
+                        text: 'がんデータ タイプのデータをインポートしてもよろしいですか?',
+                        type : "warning",
+                        showCancelButton : true,
+                        confirmButtonClass : 'btn-warning',
+                        confirmButtonText : "同意する",
+                        cancelButtonText : '近い',
+                        closeOnConfirm : false,
+                        closeOnCancel : false
+                    }, function(isConfirm) {
+                        if (isConfirm) {
+                            $('#upload-file').attr('data-type', 'cancer')
+                            callAjaxCheckImport();
+                        } else {
+                            swal.close();
+                        }
+                    });
+                }
+            });
+        });
+    });
+</script>
 </html>

@@ -10,12 +10,14 @@ require_once __DIR__ . '/../../logic/import/hospital_cancer_import.php';
 require_once __DIR__ . '/../../logic/import/dpc_import.php';
 require_once __DIR__ . '/../../logic/import/stage_import.php';
 require_once __DIR__ . '/../../logic/import/survival_import.php';
+require_once __DIR__ . '/../../logic/import/cancer_import.php';
 require_once __DIR__ . '/../../logic/export/error_data_import.php';
 require_once __DIR__ . '/../../third_party/bootstrap.php';
 
 
 use Maatwebsite\Excel\Facades\Excel;
 use App\Models\Import;
+use Carbon\Carbon;
 
 
 /**
@@ -147,6 +149,8 @@ class upload_csv_ct {
                     $import = new stage_import();
                 } elseif ($post['type'] == 'survival') {
                     $import = new survival_import();
+                } elseif ($post['type'] == 'cancer') {
+                    $import = new cancer_import();
                 } else {
                     return [
                         'status' => false,
@@ -252,7 +256,8 @@ class upload_csv_ct {
 
             $hasProcessingImport = false;
             foreach ($processing_import as $import) {
-                if ($import->created_at && $import->created_at->diffInHours(now()) > 1) {
+                $created = $import->created_at ? Carbon::parse($import->created_at) : null;
+                if ($created && $created->diffInHours(Carbon::now()) > 1) {
                     $import->update([
                         'status' => Import::STATUS_TIMEOUT,
                         'success' => 0,
@@ -301,6 +306,7 @@ class upload_csv_ct {
             'dpc' => Import::DATA_TYPE_DPC,
             'stage' => Import::DATA_TYPE_STAGE,
             'survival' => Import::DATA_TYPE_SURVIVAL,
+            'cancer' => Import::DATA_TYPE_CANCER,
             default => null,
         };
 
@@ -319,7 +325,7 @@ class upload_csv_ct {
                 'success' => 0,
                 'error' => 0,
                 'data_type' =>  $data_type,
-                'created_at' => now()
+                'created_at' => Carbon::now()
             ]);
 
             Import::find($parent_id)->update([
@@ -332,7 +338,7 @@ class upload_csv_ct {
                 'success' => 0,
                 'error' => 0,
                 'data_type' =>  $data_type,
-                'created_at' => now()
+                'created_at' => Carbon::now()
             ]);
         }
 

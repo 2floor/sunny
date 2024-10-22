@@ -1568,9 +1568,11 @@ $('#upload-file').on('change', function () {
 
 	if (fileName) {
 		$('.callUpload').prop('disabled', false);
+		$('.callMultiUpload').prop('disabled', false);
 		$('#file-name-display').val(fileName);
 	} else {
 		$('.callUpload').prop('disabled', true);
+		$('.callMultiUpload').prop('disabled', false);
 	}
 });
 
@@ -1600,7 +1602,7 @@ var callAjaxImport = function (import_id)
 
 };
 
-$('.callUpload').click(function () {
+var callAjaxCheckImport = function () {
 	var fileInput = $('#upload-file')[0];
 
 	if (fileInput.files.length === 0) {
@@ -1693,5 +1695,9 @@ $('.callUpload').click(function () {
 			});
 		}
 	});
+};
+
+$('.callUpload').click(function () {
+	callAjaxCheckImport();
 });
 

@@ -10,6 +10,7 @@ class Import extends BaseModel
     const DATA_TYPE_DPC = 3;
     const DATA_TYPE_STAGE = 4;
     const DATA_TYPE_SURVIVAL = 5;
+    const DATA_TYPE_CANCER = 6;
     const IMPORT_TYPE_MAIN = 1;
     const IMPORT_TYPE_REIMPORT = 2;
     const STATUS_PENDING = 0;
