@@ -108,6 +108,17 @@ foreach ($cancers as $cancer) {
              margin-bottom: 0;
         }
 
+        .content-page .content {
+            margin-top: 73px;
+        }
+
+        .navbar-default {
+            height: 60px;
+        }
+
+        .navbar-right {
+            margin-top: 22px;
+        }
     </style>
 </head>
 
