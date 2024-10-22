@@ -1568,11 +1568,9 @@ $('#upload-file').on('change', function () {
 
 	if (fileName) {
 		$('.callUpload').prop('disabled', false);
-		$('.callMultiUpload').prop('disabled', false);
 		$('#file-name-display').val(fileName);
 	} else {
 		$('.callUpload').prop('disabled', true);
-		$('.callMultiUpload').prop('disabled', false);
 	}
 });
 

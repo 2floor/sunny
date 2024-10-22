@@ -58,7 +58,7 @@ require_once __DIR__ . '/../required/view_common_include.php';
                             <div class="input-group">
                                 <input type="text" id="file-name-display" class="form-control" placeholder="ファイルを選択" readonly>
                                 <span class="input-group-btn">
-                                    <button type="button" class="btn waves-effect waves-light btn-primary callMultiUpload" disabled>アップロード</button>
+                                    <button type="button" class="btn waves-effect waves-light btn-primary callUpload" disabled>アップロード</button>
                                 </span>
                                 <input type="file" id="upload-file" data-type="hospital_cancer" name="upload-file" class="form-control upload-file-hidden upload-csv" accept=".csv,.xlsx,.xls">
                             </div>
@@ -248,7 +248,10 @@ require_once __DIR__ . '/../required/view_common_include.php';
 </body>
 <script>
     $( document ).ready(function() {
-        $('.callMultiUpload').click(function () {
+        $('#file-name-display').off('click');
+        $('#file-name-display').on('click', function (event) {
+            event.preventDefault();
+
             swal({
                 title: '',
                 text: "インポートするデータの種類を選択してください",
@@ -275,7 +278,8 @@ require_once __DIR__ . '/../required/view_common_include.php';
                     }, function(isConfirm) {
                         if (isConfirm) {
                             $('#upload-file').attr('data-type', 'hospital_cancer')
-                            callAjaxCheckImport();
+                            $('#upload-file').click();
+                            swal.close();
                         } else {
                             swal.close();
                         }
@@ -294,14 +298,15 @@ require_once __DIR__ . '/../required/view_common_include.php';
                     }, function(isConfirm) {
                         if (isConfirm) {
                             $('#upload-file').attr('data-type', 'cancer')
-                            callAjaxCheckImport();
+                            $('#upload-file').click();
+                            swal.close();
                         } else {
                             swal.close();
                         }
                     });
                 }
             });
-        });
+        })
     });
 </script>
 </html>
