@@ -40,7 +40,7 @@ require_once __DIR__ . '/../required/view_common_include.php';
             background-color: #f9f9f9;
         }
 
-        a:not([href]) {
+        a:not([href]):not(.edit) {
             cursor: not-allowed;
         }
 

@@ -4,9 +4,9 @@ if (!isset($_SESSION)) {
 }
 
 require_once __DIR__ . '/../../logic/common/common_logic.php';
-require_once __DIR__ . '/../../logic/admin/auto_rank_logic.php';
 require_once __DIR__ . '/../../common/security_common_logic.php';
 require_once __DIR__ . '/../../logic/command/dpc_ranking_command.php';
+require_once __DIR__ . '/../../third_party/bootstrap.php';
 
 use App\Models\AutoRank;
 use App\Models\DPC;
@@ -67,12 +67,10 @@ class auto_rank_ct
     /**
      * コンストラクタ
      */
-    protected $auto_rank_logic;
 
     public function __construct()
     {
         // 管理画面ユーザーロジックインスタンス
-        $this->auto_rank_logic = new auto_rank_logic();
     }
 
     /**
@@ -83,25 +81,13 @@ class auto_rank_ct
      */
     public function main_control($post)
     {
-        if ($post['method'] == 'init') {
-            // 初期処理　HTML生成処理呼び出し
-            $data = $this->create_data_list($post);
-        } else if ($post['method'] == 'check_auto_rank') {
+       if ($post['method'] == 'check_auto_rank') {
             $data = $this->check_auto_rank($post);
         } else if ($post['method'] == 'handle_auto_rank') {
             $data = $this->handle_auto_rank($post);
         }
 
         return $data;
-    }
-
-    public function init_entry_new()
-    {
-        $cancers = $this->auto_rank_logic->get_cancer_list();
-
-        return [
-            'cancers' => $cancers,
-        ];
     }
 
     private function check_auto_rank($post) {
@@ -131,12 +117,16 @@ class auto_rank_ct
         if ($processing && $processing->status == AutoRank::STATUS_IN_PROCESSING) {
 
             try {
+                $recordCnt = 0;
                 if ($processing->auto_type == AutoRank::AUTO_TYPE_RANK && $processing->data_type == AutoRank::DATA_TYPE_DPC) {
                     $command = new dpc_ranking_command();
                     $command->handle($processing->cancer_id, $processing->year);
+                    $recordCnt = DPC::where(['cancer_id' => $processing->cancer_id, 'year' => $processing->year])->count();
                 }
 
+
                 $processing->update([
+                    'total_affect' => $recordCnt,
                     'status' => AutoRank::STATUS_COMPLETED,
                     'completed_time' => now()
                 ]);
@@ -227,7 +217,8 @@ class auto_rank_ct
             'data_type' => $data_type,
             'cancer_id' => $cancer_id,
             'year' => $year,
-            'created_at' => Carbon::now()
+            'created_at' => Carbon::now(),
+            'updated_at' => Carbon::now()
         ]);
 
         if ($new_auto) {
@@ -241,25 +232,5 @@ class auto_rank_ct
                 'message' => '失敗したプロセスを作成する'
             ];
         }
-    }
-
-    /**
-     * 初期処理(一覧HTML生成)
-     */
-    private function create_data_list($post)
-    {
-        $list_html = $this->auto_rank_logic->create_data_list([
-            $post['pageSize'],
-            $post['pageNumber']
-        ],  $post['search_select']);
-
-        // AJAX返却用データ成型
-        return [
-            'status' => true,
-            'html' => [
-                $list_html['list_html'],
-                $list_html['all_cnt']
-            ],
-        ];
     }
 }

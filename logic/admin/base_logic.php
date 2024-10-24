@@ -3,6 +3,7 @@
 require_once __DIR__ . '/../../third_party/bootstrap.php';
 
 use \App\Models\BaseModel;
+use Illuminate\Support\Facades\DB;
 
 abstract class base_logic {
     protected $model;
@@ -40,6 +41,18 @@ abstract class base_logic {
 
         $count = $query->count();
         $data = $query->with($withRelation)->paginate($params[0], ['*'], 'page', $params[1])->toArray();
+
+        return [
+            'total' => $count,
+            'data' => $data['data'] ?? []
+        ];
+    }
+
+    public function getListAutoRankData($params, $data_type, $auto_type, $searchSelect = null) {
+        $query = $this->createSearchAutoRankingQuery($searchSelect, $data_type, $auto_type);
+
+        $count = $query->count();
+        $data = $query->paginate($params[0], ['*'], 'page', $params[1])->toArray();
 
         return [
             'total' => $count,
@@ -127,5 +140,64 @@ abstract class base_logic {
         }
 
         return $query;
+    }
+
+    protected function createSearchAutoRankingQuery($searchSelect, $data_type, $auto_type)
+    {
+        $searchSelect = json_decode(htmlspecialchars_decode($searchSelect), true);
+        $query = $this->getQueryWithoutGlobalScopes();
+
+        $subQuery = $query->select('cancer_id', 'year', DB::raw('COUNT(*) as total_records'))
+            ->groupBy('cancer_id', 'year');
+
+        $mainQuery = $this->model->newQuery()->fromSub($subQuery, 'tb_grouped')
+            ->join('m_cancer', 'tb_grouped.cancer_id', '=', 'm_cancer.id')
+            ->leftJoin('t_auto_rank', function ($join) use ($data_type, $auto_type) {
+                $join->on('tb_grouped.cancer_id', '=', 't_auto_rank.cancer_id')
+                    ->on('tb_grouped.year', '=', 't_auto_rank.year')
+                    ->where('t_auto_rank.data_type', '=', $data_type)
+                    ->where('t_auto_rank.auto_type', '=', $auto_type);
+            })
+            ->selectRaw('
+                tb_grouped.cancer_id,
+                tb_grouped.year,
+                m_cancer.cancer_type,
+                (CASE
+                    WHEN t_auto_rank.status = 1 THEN 1
+                    WHEN t_auto_rank.status = 3 THEN 2
+                    WHEN t_auto_rank.status IS NULL THEN 3
+                    WHEN t_auto_rank.status = 2 
+                        AND tb_grouped.total_records > COALESCE(t_auto_rank.total_affect, 0) 
+                        AND t_auto_rank.total_affect IS NOT NULL THEN 4
+                    ELSE 5 END) as status,
+                t_auto_rank.updated_at,
+                t_auto_rank.completed_time,
+                tb_grouped.total_records,
+                t_auto_rank.total_affect
+            ');
+
+        if (!empty($searchSelect['value'])) {
+            $search = $searchSelect['value'];
+            $keySearch = preg_replace('/\A[\p{C}\p{Z}]++|[\p{C}\p{Z}]++\z/u', '', $search['value']);
+
+            $mainQuery->where($search['target'], 'like', '%'.$keySearch.'%');
+        }
+
+        if (!empty($searchSelect['order'])) {
+            $order = $searchSelect['order'];
+            $name = $searchSelect['order']['name'];
+            $orderObj = $searchSelect['selectArea'][$name];
+            $type = $orderObj['type'] ?? null;
+
+            if ($type === 'int' || $type === 'bigint') {
+                $mainQuery->orderByRaw("CAST({$order['target']} AS SIGNED) {$order['order']}");
+            } else {
+                $mainQuery->orderBy($order['target'], $order['order']);
+            }
+        } else {
+            $mainQuery->orderBy('status')->orderBy('tb_grouped.year', 'desc');
+        }
+
+        return $mainQuery;
     }
 }

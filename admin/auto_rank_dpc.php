@@ -18,43 +18,6 @@ require_once __DIR__ . '/../required/view_common_include.php';
             border-top: 1px solid #ddd;
         }
 
-        .form-control:focus:read-only {
-            background-color: #eee;
-            opacity: 1;
-        }
-
-        .form-control:read-only {
-            cursor: not-allowed;
-        }
-
-        .input-group input#file-name-display {
-            background-color: #ffffff;
-        }
-
-        .dsp-block {
-            display: block;
-        }
-
-        .input-group input#file-name-display:disabled {
-            cursor: not-allowed;
-            background-color: #f9f9f9;
-        }
-
-        a:not([href]) {
-            cursor: not-allowed;
-        }
-
-        .table-responsive {
-            width: 100%;
-        }
-
-        .table-header {
-            font-size: 14px;
-            color: #333333;
-            font-weight: bold;
-            margin-bottom: 10px;
-        }
-
         .bg-processing {
             background: #4CA4E5; color: #ffffff
         }
@@ -65,6 +28,34 @@ require_once __DIR__ . '/../required/view_common_include.php';
 
         .bg-timeout {
             background: #b8b8c2; color: #ffffff
+        }
+
+        .bg-error {
+            background: #DC3545; color: #ffffff
+        }
+
+        .bg-reAuto {
+            background: #FF9674; color: #ffffff
+        }
+
+        .searchBoxRight {
+            align-items: center;
+        }
+
+        .option-radio {
+            display: flex;
+            gap: 30px;
+        }
+
+        .option-radio-item {
+            padding: 10px;
+            border: 1px solid #289DEB;
+            background-color: #ffffff;
+            color: #289DEB;
+        }
+
+        .option-radio-item label{
+            margin-bottom: 0;
         }
     </style>
 </head>
@@ -117,9 +108,16 @@ require_once __DIR__ . '/../required/view_common_include.php';
                             </div>
                         </div>
                         <div class="searchBoxRight">
-                            <!--                            <div class="serachW110">-->
-                            <!--                                <button type="button" name="new_entry" class="btn btn-primary waves-effect w-md waves-light m-b-5">新規登録</button>-->
-                            <!--                            </div>-->
+                            <div class="option-radio">
+                                <div class="option-radio-item">
+                                    <input type="radio" id="html" name="auto_type" value="1" checked>
+                                    <label for="html">ランクを自動作成</label>
+                                </div>
+                                <div class="option-radio-item">
+                                    <input type="radio" id="css" name="auto_type" value="2">
+                                    <label for="css">平均データを自動生成</label>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -161,14 +159,15 @@ require_once __DIR__ . '/../required/view_common_include.php';
                                             <thead class="tableHeadArea">
                                             <tr>
                                                 <th>No</th>
-                                                <th>ID</th>
-                                                <th>自動タイプ</th>
-                                                <th>データ型</th>
+                                                <th>がんID</th>
                                                 <th>がん種名</th>
-                                                <th>年</th>
-                                                <th>地位</th>
+                                                <th>年度</th>
+                                                <th>データ量</th>
+                                                <th>生成データ量</th>
+                                                <th>ステータス</th>
                                                 <th>作成日時</th>
                                                 <th>完了日時</th>
+                                                <th>操作</th>
                                             </tr>
                                             </thead>
                                             <tbody id="list_html_area" class="tableBodyArea">
@@ -201,10 +200,12 @@ require_once __DIR__ . '/../required/view_common_include.php';
 
 <!-- End Personal script -->
 <!-- Start Personal Input -->
-<input type="hidden" id="ct_url" value="../controller/admin/auto_rank_ct.php">
+<input type="hidden" id="ct_url" value="../controller/admin/auto_rank_dpc_ct.php">
 <input type="hidden" id="id" value="">
 <input type="hidden" id="page_type" value="">
 <input type="hidden" id="common_ct_url" value="../controller/admin/common_ct.php">
+<input type="hidden" id="page_title_js" value="DPC自動処理">
+<input type="hidden" id="data_type" value="1">
 <!-- 現在のページ位置 -->
 <input type="hidden" id="now_page_num" value="1">
 <!-- 1ページに表示する件数 -->

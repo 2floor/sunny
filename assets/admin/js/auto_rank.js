@@ -14,44 +14,48 @@
 //パラメータ取得
 var query = getUrlVars();
 
-//ページタイトル
-var page_title = '自動処理';
-
 //画像input用配列
 var input_file_name = {};
 
 var search_select = {
     selectArea : {
         //検索項目生成用
-        'ID' : {
+        'がんID' : {
             search 		: true,
             order		: true,
-            orderInit	: false,
-            ColName 	: 'id',
+            ColName 	: 'tb_grouped.cancer_id',
             tableOrder 	: 1,
             type 		: 'bigint',
         },
+
         'がん種名' : {
             search 		: true,
-            order		: true,
-            ColName 	: 'cancer_type',
-            tableOrder 	: 4,
+            order		: false,
+            ColName 	: 'm_cancer.cancer_type',
+            tableOrder 	: 2,
             type 		: 'text',
-            foreignRelation : 'cancer',
         },
 
-        '年' : {
+        '年度' : {
             search 		: true,
             order		: true,
-            ColName 	: 'year',
-            tableOrder 	: 5,
-            type 		: 'text',
+            ColName 	: 'tb_grouped.year',
+            tableOrder 	: 3,
+            type 		: 'int',
+        },
+
+        'ステータス' : {
+            search 		: false,
+            order		: true,
+            ColName 	: 'status',
+            tableOrder 	: 6,
+            type 		: 'int',
         },
 
         '作成日時' : {
             search 		: false,
             order		: true,
-            ColName 	: 'created_at',
+            ColName 	: 't_auto_rank.updated_at',
             tableOrder 	: 7,
             type 		: 'date',
         },
@@ -59,7 +63,7 @@ var search_select = {
         '完了日時' : {
             search 		: false,
             order		: true,
-            ColName 	: 'completed_time',
+            ColName 	: 't_auto_rank.completed_time',
             tableOrder 	: 8,
             type 		: 'date',
         },
@@ -130,12 +134,13 @@ $(window).on('popstate.bb',function(e) {
 });
 
 $(function() {
-
+    let page_title = $('#page_title_js').val();
     /**
      * 初期処理AJAX
      */
     call_ajax_init = function (post_data, startPage = 1, afterChange = false){
         let uri = new URLSearchParams(post_data).toString();
+        uri += ('&auto_type='+ $('[name="auto_type"]:checked').val());
         $('#pagination-container').pagination({
             dataSource: $('#ct_url').val() + '?' + uri,
             locator: 'data.html',
@@ -156,6 +161,7 @@ $(function() {
                 list_disp_exection(data[0]);
                 edit_init_exection();
                 common_func_bind();
+                custom_bind();
                 validate_start();
                 tableColDispChange();
                 searchMain();
@@ -270,6 +276,49 @@ $(function() {
         $('#list_html_area').html(data);
 
     }
+
+    $('[name="auto_type"]').on('click', function () {
+        page_init();
+    });
+
+    function custom_bind() {
+        $('.auto_rank').off();
+        $('.auto_rank').on('click',function(){
+            let value = $(this).attr('value');
+            let cancerYearArr = value.split(",");
+            let cancer_id = cancerYearArr[0] || null;
+            let year = cancerYearArr[1] || null;
+            let cancer_name = $(this).parent().prevAll('.cancer_type').first().text();
+            let data_type = $('#data_type').val();
+            let auto_type = $('[name="auto_type"]:checked').val();
+            let auto_type_text = (auto_type == 1) ? '評価' : '平均データ';
+
+            swal({
+                title : '',
+                text : year + '年の' + cancer_name + auto_type_text + '年のデータを自動的に生成しますか',
+                type : "warning",
+                showCancelButton : true,
+                confirmButtonClass : 'btn-warning',
+                confirmButtonText : "同意する",
+                cancelButtonText : '戻る',
+                closeOnConfirm : false,
+                closeOnCancel : false
+            }, function(isConfirm) {
+                if (isConfirm) {
+                    var formData = new FormData();
+                    formData.append('data_type', data_type);
+                    formData.append('auto_type', auto_type);
+                    formData.append('cancer_id', cancer_id);
+                    formData.append('year', year);
+                    formData.append('method', 'check_auto_rank');
+
+                    sendAjaxToRanking(formData);
+                } else {
+                    swal("Cancelled", "キャンセルしました。", "error");
+                }
+            });
+        });
+    }
 });
 
 
@@ -284,4 +333,79 @@ function disp_change_func(type){
  */
 function fd_add(fd){
     return fd;
+}
+
+let callAjaxAutoRank = function (auto_rank_id)
+{
+    let formData = new FormData();
+    formData.append('auto_rank_id', auto_rank_id);
+    formData.append('method', 'handle_auto_rank');
+
+
+    $.ajax({
+        url: '../controller/admin/auto_rank_ct.php',
+        type: 'POST',
+        data: formData,
+        contentType: false,
+        processData: false,
+        async: true
+    });
+};
+
+function sendAjaxToRanking(formData)
+{
+    $.ajax({
+        url: '../controller/admin/auto_rank_ct.php',
+        type: 'POST',
+        data: formData,
+        contentType: false,
+        processData: false,
+        beforeSend: function() {
+            $(".loading").show();
+        },
+        success: function (response) {
+            response = JSON.parse(response);
+            let message = response.data.message || '';
+
+            if (response.data.status) {
+                callAjaxAutoRank(response.data.auto_rank_id);
+
+                setTimeout(function() {
+                    $(".loading").hide();
+                    swal({
+                        title: "処理中!",
+                        text: message,
+                        type: "success",
+                        confirmButtonText: "処理状況を確認",
+                        closeOnConfirm: true
+                    }, function(isConfirm) {
+                        if (isConfirm) {
+                            location.reload();
+                        } else {
+                            swal.close();
+                        }
+                    });
+                }, 1000);
+            } else {
+                $(".loading").hide();
+                swal({
+                    title : "失敗!",
+                    text : message,
+                    type : "error",
+                    confirmButtonText : "近い",
+                    closeOnConfirm : true
+                });
+            }
+        },
+        error: function () {
+            $(".loading").hide();
+            swal({
+                title : "失敗!",
+                text : 'リクエストは成功しませんでした',
+                type : "error",
+                confirmButtonText : "近い",
+                closeOnConfirm : true
+            });
+        }
+    });
 }
