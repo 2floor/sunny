@@ -103,6 +103,16 @@ class hospital_cancer_import implements OnEachRow, WithBatchInserts, WithChunkRe
             $hospital->categories()->attach($category->id, ['content1' => ($row[13] ?? null), 'cancer_id' => $cancer->id]);
         }
 
+        if (!empty($row[14]) && $row[14] !== 0) {
+
+            $category = Category::where([
+                'data_type' => Category::HOSPITAL_DETAIL_TYPE,
+                'hard_name3' => 'advanced_treatment',
+            ])->first();
+
+            $hospital->categories()->attach($category->id, ['content1' => ($row[14] ?? null), 'cancer_id' => $cancer->id]);
+        }
+
         $this->updateHospitalPolicy($row[15] ?? null, 'avoid_drug', $hospital, $cancer->id);
         $this->updateHospitalPolicy($row[16] ?? null, 'avoid_surgery', $hospital, $cancer->id);
         $this->updateHospitalPolicy($row[17] ?? null, 'avoid_radiation_therapy', $hospital, $cancer->id);
