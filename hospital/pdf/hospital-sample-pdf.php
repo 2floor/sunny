@@ -274,7 +274,9 @@
                 </table>
             </div>
             <div class="footer" style="page-break-after: always;">
-                <div class="watermark"><img src="<?php echo $baseUrl; ?>assets/images/common/logo.png" width="160px" height="60px"></div>
+                <div class="watermark">
+<!--                    <img src="--><?php //echo $baseUrl; ?><!--assets/images/common/logo.png" width="160px" height="60px">-->
+                </div>
                 <div class="info-file">
                     <p class="text-center"><?php echo $hospitalName; ?></p>
                     <p class="text-center"><?php echo $cancerName; ?></p>
@@ -522,7 +524,9 @@
                 </table>
             </div>
             <div class="footer" style="page-break-before: avoid; page-break-after: avoid;">
-                <div class="watermark"><img src="<?php echo $baseUrl; ?>assets/images/common/logo.png" width="160px" height="60px"></div>
+                <div class="watermark">
+<!--                    <img src="--><?php //echo $baseUrl; ?><!--assets/images/common/logo.png" width="160px" height="60px">-->
+                </div>
                 <div class="info-file">
                     <p class="text-center"><?php echo $hospitalName; ?></p>
                     <p class="text-center"><?php echo $cancerName; ?></p>
