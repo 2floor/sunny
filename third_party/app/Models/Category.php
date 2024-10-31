@@ -10,7 +10,7 @@ class Category extends BaseModel
     const OTHER_TYPE = 0;
     const HOSPITAL_DETAIL_TYPE = 1;
     const HOSPITAL_TREATMENT_TYPE = 2;
-    const HOSPITAL_POLICY_TYPE = 2;
+    const HOSPITAL_POLICY_TYPE = 3;
 
     const HOSPITAL_GROUP = 1;
     const DOCTOR_GROUP = 2;
