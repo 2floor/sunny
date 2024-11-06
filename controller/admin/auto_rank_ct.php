@@ -6,10 +6,14 @@ if (!isset($_SESSION)) {
 require_once __DIR__ . '/../../logic/common/common_logic.php';
 require_once __DIR__ . '/../../common/security_common_logic.php';
 require_once __DIR__ . '/../../logic/command/dpc_ranking_command.php';
+require_once __DIR__ . '/../../logic/command/stage_ranking_command.php';
+require_once __DIR__ . '/../../logic/command/survival_ranking_command.php';
 require_once __DIR__ . '/../../third_party/bootstrap.php';
 
 use App\Models\AutoRank;
 use App\Models\DPC;
+use App\Models\Stage;
+use App\Models\SurvHospital;
 use Carbon\Carbon;
 
 /**
@@ -121,9 +125,20 @@ class auto_rank_ct
                 if ($processing->auto_type == AutoRank::AUTO_TYPE_RANK && $processing->data_type == AutoRank::DATA_TYPE_DPC) {
                     $command = new dpc_ranking_command();
                     $command->handle($processing->cancer_id, $processing->year);
-                    $recordCnt = DPC::where(['cancer_id' => $processing->cancer_id, 'year' => $processing->year])->count();
+                    $recordCnt = DPC::withoutGlobalScopes()->where(['cancer_id' => $processing->cancer_id, 'year' => $processing->year])->count();
                 }
 
+                if ($processing->auto_type == AutoRank::AUTO_TYPE_RANK && $processing->data_type == AutoRank::DATA_TYPE_STAGE) {
+                    $command = new stage_ranking_command();
+                    $command->handle($processing->cancer_id, $processing->year);
+                    $recordCnt = Stage::withoutGlobalScopes()->where(['cancer_id' => $processing->cancer_id, 'year' => $processing->year])->count();
+                }
+
+                if ($processing->auto_type == AutoRank::AUTO_TYPE_RANK && $processing->data_type == AutoRank::DATA_TYPE_SURVIVAL) {
+                    $command = new survival_ranking_command();
+                    $command->handle($processing->cancer_id, $processing->year);
+                    $recordCnt = SurvHospital::withoutGlobalScopes()->where(['cancer_id' => $processing->cancer_id, 'year' => $processing->year])->count();
+                }
 
                 $processing->update([
                     'total_affect' => $recordCnt,
@@ -184,6 +199,8 @@ class auto_rank_ct
     private function insert_processing_data($data_type, $auto_type, $cancer_id, $year) {
         $data_type = match ($data_type) {
             '1' => AutoRank::DATA_TYPE_DPC,
+            '2' => AutoRank::DATA_TYPE_STAGE,
+            '3' => AutoRank::DATA_TYPE_SURVIVAL,
             default => null,
         };
 
@@ -202,6 +219,14 @@ class auto_rank_ct
         $existedData = false;
         if ($auto_type == AutoRank::AUTO_TYPE_RANK && $data_type == AutoRank::DATA_TYPE_DPC) {
             $existedData = DPC::where(['cancer_id' => $cancer_id, 'year' => $year])->exists();
+        }
+
+        if ($auto_type == AutoRank::AUTO_TYPE_RANK && $data_type == AutoRank::DATA_TYPE_STAGE) {
+            $existedData = Stage::where(['cancer_id' => $cancer_id, 'year' => $year])->exists();
+        }
+
+        if ($auto_type == AutoRank::AUTO_TYPE_RANK && $data_type == AutoRank::DATA_TYPE_SURVIVAL) {
+            $existedData = SurvHospital::where(['cancer_id' => $cancer_id, 'year' => $year])->exists();
         }
 
         if (!$existedData) {

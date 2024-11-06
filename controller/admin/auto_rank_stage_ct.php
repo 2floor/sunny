@@ -4,7 +4,7 @@ if (!isset($_SESSION)) {
 }
 
 require_once __DIR__ . '/../../logic/common/common_logic.php';
-require_once __DIR__ . '/../../logic/admin/auto_rank_dpc_logic.php';
+require_once __DIR__ . '/../../logic/admin/auto_rank_stage_logic.php';
 require_once __DIR__ . '/../../common/security_common_logic.php';
 
 /**
@@ -28,11 +28,11 @@ if ($data['status']) {
     // 正常処理 コントローラー呼び出し
 
     // インスタンス生成
-    $auto_rank_dpc_ct = new auto_rank_dpc_ct();
+    $auto_rank_stage_ct = new auto_rank_stage_ct();
     $post_data = $_SERVER['REQUEST_METHOD'] == 'POST' ? $_POST : $_GET;
 
     // コントローラー呼び出し
-    $data = $auto_rank_dpc_ct->main_control($post_data);
+    $data = $auto_rank_stage_ct->main_control($post_data);
 } else {
     // パラメータに不正があった場合
     // AJAX返却用データ成型
@@ -57,17 +57,17 @@ echo json_encode(compact('data'));
  * @author Seidou
  *
  */
-class auto_rank_dpc_ct
+class auto_rank_stage_ct
 {
     /**
      * コンストラクタ
      */
-    protected $auto_rank_dpc_logic;
+    protected $auto_rank_stage_logic;
 
     public function __construct()
     {
         // 管理画面ユーザーロジックインスタンス
-        $this->auto_rank_dpc_logic = new auto_rank_dpc_logic();
+        $this->auto_rank_stage_logic = new auto_rank_stage_logic();
     }
 
     /**
@@ -85,14 +85,14 @@ class auto_rank_dpc_ct
 
         return $data;
     }
-    
+
 
     /**
      * 初期処理(一覧HTML生成)
      */
     private function create_data_list($post)
     {
-        $list_html = $this->auto_rank_dpc_logic->create_data_list([
+        $list_html = $this->auto_rank_stage_logic->create_data_list([
             $post['pageSize'],
             $post['pageNumber']
         ],  $post['search_select'], $post['auto_type']);

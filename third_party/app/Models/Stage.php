@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class Stage extends BaseModel
@@ -41,6 +42,14 @@ class Stage extends BaseModel
         'local_num_rank_stage4',
         'pref_num_rank_stage4',
     ];
+
+    protected static function boot()
+    {
+        parent::boot();
+
+        static::addGlobalScope('deleted', fn(Builder $builder) => $builder->where('t_stage.del_flg', '!=' , BaseModel::DELETED));
+        static::addGlobalScope('unpublish', fn(Builder $builder) => $builder->where('t_stage.public_flg', '!=' , BaseModel::UNPUBLISHED));
+    }
 
     public function area(): BelongsTo
     {

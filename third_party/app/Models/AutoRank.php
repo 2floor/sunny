@@ -7,6 +7,8 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 class AutoRank extends BaseModel
 {
     const DATA_TYPE_DPC = 1;
+    const DATA_TYPE_STAGE = 2;
+    const DATA_TYPE_SURVIVAL = 3;
     const AUTO_TYPE_RANK = 1;
     const AUTO_TYPE_AVG = 2;
     const STATUS_PENDING = 0;

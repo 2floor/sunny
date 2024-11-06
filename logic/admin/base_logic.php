@@ -150,7 +150,7 @@ abstract class base_logic {
         $subQuery = $query->select('cancer_id', 'year', DB::raw('COUNT(*) as total_records'))
             ->groupBy('cancer_id', 'year');
 
-        $mainQuery = $this->model->newQuery()->fromSub($subQuery, 'tb_grouped')
+        $mainQuery = $this->model->newQuery()->withoutGlobalScopes()->fromSub($subQuery, 'tb_grouped')
             ->join('m_cancer', 'tb_grouped.cancer_id', '=', 'm_cancer.id')
             ->leftJoin('t_auto_rank', function ($join) use ($data_type, $auto_type) {
                 $join->on('tb_grouped.cancer_id', '=', 't_auto_rank.cancer_id')

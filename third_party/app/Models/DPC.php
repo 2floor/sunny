@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class DPC extends BaseModel
@@ -20,6 +21,14 @@ class DPC extends BaseModel
         'rank_area_dpc',
         'rank_pref_dpc',
     ];
+
+    protected static function boot()
+    {
+        parent::boot();
+
+        static::addGlobalScope('deleted', fn(Builder $builder) => $builder->where('t_dpc.del_flg', '!=' , BaseModel::DELETED));
+        static::addGlobalScope('unpublish', fn(Builder $builder) => $builder->where('t_dpc.public_flg', '!=' , BaseModel::UNPUBLISHED));
+    }
 
     public function cancer(): BelongsTo
     {
