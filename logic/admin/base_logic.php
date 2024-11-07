@@ -4,6 +4,7 @@ require_once __DIR__ . '/../../third_party/bootstrap.php';
 
 use \App\Models\BaseModel;
 use Illuminate\Support\Facades\DB;
+use App\Models\AutoRank;
 
 abstract class base_logic {
     protected $model;
@@ -147,8 +148,20 @@ abstract class base_logic {
         $searchSelect = json_decode(htmlspecialchars_decode($searchSelect), true);
         $query = $this->getQueryWithoutGlobalScopes();
 
-        $subQuery = $query->select('cancer_id', 'year', DB::raw('COUNT(*) as total_records'))
-            ->groupBy('cancer_id', 'year');
+        if ($auto_type === AutoRank::AUTO_TYPE_RANK) {
+            $subQuery = $query->select('cancer_id', 'year', DB::raw('COUNT(`hospital_id`) as total_records'))
+                ->groupBy('cancer_id', 'year');
+        } else {
+            $subQuery1 = $query->select('cancer_id', DB::raw('year as sub_year'), DB::raw('COUNT(`hospital_id`) as total_hospitals'))
+                ->groupBy('cancer_id', 'year');
+
+            $subQuery = $this->model->newQuery()->withoutGlobalScopes()
+                ->select('cancer_id', DB::raw('GROUP_CONCAT(`sub_year` ORDER BY `sub_year` DESC) AS year'), DB::raw('SUM(total_hospitals) AS total_records'))
+                ->fromSub($subQuery1, 'subquery')
+                ->groupBy('cancer_id')
+                ->havingRaw('COUNT(*) <= 3');
+        }
+
 
         $mainQuery = $this->model->newQuery()->withoutGlobalScopes()->fromSub($subQuery, 'tb_grouped')
             ->join('m_cancer', 'tb_grouped.cancer_id', '=', 'm_cancer.id')
