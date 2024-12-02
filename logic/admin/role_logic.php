@@ -71,8 +71,8 @@ class role_logic extends base_logic
             }
 
             $description = $row['description'];
-            if (mb_strlen($row['description'], "UTF-8") > 20) {
-                $description = mb_substr($row['title'], 0, 20, "UTF-8") . '…';
+            if (mb_strlen($row['description'], "UTF-8") > 50) {
+                $description = mb_substr($row['title'], 0, 50, "UTF-8") . '…';
             }
 
             $return_html .= "
@@ -80,7 +80,7 @@ class role_logic extends base_logic
 						<td class='count_no'>" . $cnt . "</td>
 						<td>" . $row['id'] . "</td>
 						<td>" . $row['role_name'] . "</td>
-						<td>" . $description . "</td>
+						<td>" . nl2br(htmlspecialchars($description)) . "</td>
 						<td>" . ($row['is_supper_role'] ? 'はい' : 'いいえ') . "</td>
 						<td>" . $create_at . "</td>
 						<td>" . $update_at . "</td>

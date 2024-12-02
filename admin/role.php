@@ -253,21 +253,21 @@ $perms = $initData['perms'] ?? [];
                                     </div>
                                     <div class="formTxt">
                                         <div class="formIn50">
-                                            <input type="text" class="form-control" name="description" id="description" value="">
+                                            <textarea name="description" id="description"  class="form-control"></textarea>
                                         </div>
                                     </div>
                                 </div>
 
                                 <div class="formRow">
                                     <div class="formItem">
-                                        スーパールール
+                                        権限設定
                                         <span class="label01 require_text">必須</span>
                                     </div>
                                     <div class="formTxt">
                                         <div class="formIn50">
                                             <select class="selection2 supper-selection validate required" name="is_supper_role">
-                                                <option value="0" selected>いいえ</option>
-                                                <option value="1">はい</option>
+                                                <option value="0" selected>基本会員</option>
+                                                <option value="1">プレミアム会</option>
                                             </select>
                                         </div>
                                     </div>
@@ -275,14 +275,14 @@ $perms = $initData['perms'] ?? [];
 
                                 <div class="formRow">
                                     <div class="formItem">
-                                        ツールチップを許可
+                                        <i style="font-size: 18px; margin-right: 5px" class="fa fa-question-circle-o" aria-hidden="true"></i>説明書の表示
                                         <span class="label01 require_text">必須</span>
                                     </div>
                                     <div class="formTxt">
                                         <div class="formIn50">
                                             <select class="selection2 supper-selection validate required" name="is_show_tooltip">
-                                                <option value="1" selected>許可する</option>
-                                                <option value="0">許可されていません</option>
+                                                <option value="1" selected>表示</option>
+                                                <option value="0">非表示</option>
                                             </select>
                                         </div>
                                     </div>
