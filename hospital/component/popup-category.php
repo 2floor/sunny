@@ -15,6 +15,9 @@ foreach ($category as $key1 => $value1) {
     foreach ($value1 as $key2 => $value2) {
         if ($index == 0) {
             $html .= '<div class="popup-header category-popup-header"><h2>'.$key2.'<span class="badge bg-info">任意</span></h2><span class="popup-close">✖</span></div>';
+            if ($isTooltip ?? 0) {
+                $html .= '<a target="_blank" href="../faq.php"><span class="info-icon" style="color: #0A74B0; text-decoration: underline"><img src="../img/icons/icon-go-home.png" alt="icon-home">専門用語の意味確認はこちら</span></a>';
+            }
         } else {
             $html .= '<div class="popup-header category-popup-header"><h3>'.$key2.'</h3></div>';
         }

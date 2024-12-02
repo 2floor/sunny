@@ -10,6 +10,8 @@ require_once __DIR__ . "/../logic/front/auth_logic.php";
 $auth_logic = new auth_logic();
 $permSFH = $auth_logic->check_permission('search.first.hospital');
 $permPrH = $auth_logic->check_permission('print.hospital.pdf');
+$isTooltip = $auth_logic->check_is_show_tooltip();
+
 if (!$permSFH) {
     header("Location: " . BASE_URL . "error/403_page.php");
     exit();

@@ -275,6 +275,21 @@ $perms = $initData['perms'] ?? [];
 
                                 <div class="formRow">
                                     <div class="formItem">
+                                        ツールチップを許可
+                                        <span class="label01 require_text">必須</span>
+                                    </div>
+                                    <div class="formTxt">
+                                        <div class="formIn50">
+                                            <select class="selection2 supper-selection validate required" name="is_show_tooltip">
+                                                <option value="1" selected>許可する</option>
+                                                <option value="0">許可されていません</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="formRow">
+                                    <div class="formItem">
                                         許可
                                         <span class="label01 require_text">必須</span>
                                     </div>

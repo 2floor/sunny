@@ -142,6 +142,7 @@ class role_ct
         // 登録ロジック呼び出し
         $role = $this->role_logic->createData([
             'role_name' => $post['role_name'] ?? null,
+            'is_show_tooltip' =>  $post['is_show_tooltip'] ?? 0,
             'description' => $post['description'] ?? null,
             'group_role' => \App\Models\Role::GROUP_USER,
             'is_supper_role' => $post['is_supper_role'] ?? 0,
@@ -199,6 +200,7 @@ class role_ct
 
         $updatedData = [
             'role_name' => $post['role_name'] ?? null,
+            'is_show_tooltip' =>  $post['is_show_tooltip'] ?? 0,
             'description' => $post['description'] ?? null,
             'is_supper_role' => $post['is_supper_role'] ?? 0,
         ];

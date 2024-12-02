@@ -12,7 +12,7 @@ require_once __DIR__ .  '/../../common/common_constant.php';
 
 class auth_logic
 {
-    public function check_authentication($perms = null)
+    public function check_authentication()
     {
         $user = $_SESSION['authentication']['login_user'];
 
@@ -35,7 +35,7 @@ class auth_logic
 
     public function check_permission($perms = null)
     {
-        $user = $this->check_authentication($perms);
+        $user = $this->check_authentication();
 
         if (!$perms) {
             return false;
@@ -49,5 +49,10 @@ class auth_logic
         return $user->whereHas('role.permissions', function ($query) use ($perms) {
             $query->where('parse', $perms);
         })->exists();
+    }
+
+    public function check_is_show_tooltip() {
+        $user = $this->check_authentication();
+        return $user->first()->role?->is_show_tooltip;
     }
 }

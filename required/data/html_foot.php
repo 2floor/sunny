@@ -23,3 +23,4 @@
 <script src="[path]assets/admin/js/common/plural_file_upload.js"></script>
 <script src="[path]assets/admin/js/common/validate.js"></script>
 <script src="[path]assets/admin/js/common.js"></script>
+<script src="[path]assets/js/common.js"></script>

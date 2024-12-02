@@ -12,6 +12,7 @@ class Role extends BaseModel
     const GROUP_ADMIN = 2;
     const IS_NOT_SUPER_ADMIN = 0;
     const IS_SUPER_ADMIN = 1;
+    const ROLE_KEY_DOCTOR = 'doctor';
 
     protected $table = 't_role';
     protected $fillable = [
@@ -19,6 +20,7 @@ class Role extends BaseModel
         'description',
         'group_role',
         'is_supper_role',
+        'is_show_tooltip',
         'del_flg'
     ];
 

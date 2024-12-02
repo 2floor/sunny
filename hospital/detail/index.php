@@ -18,6 +18,7 @@ if (!$permVDH) {
 
 $permPrH = $auth_logic->check_permission('print.hospital.pdf');
 $permAHN = $auth_logic->check_permission('add.hospital.note');
+$isTooltip = $auth_logic->check_is_show_tooltip();
 
 $page_init = new page_init();
 $pageinfo = $page_init->get_info();
@@ -118,14 +119,38 @@ $remarks = $initData['remarks'] ?? [];
                         </div>
                         <section id="dpc-table" class="table-sec">
                             <div class="header">
-                                <h4>年間入院患者数 ・ <?= ($cancerNameDPC ? $cancerNameDPC : $cancerName) ?></h4>
+                                <h4>年間入院患者数 ・ <?= ($cancerNameDPC ? $cancerNameDPC : $cancerName) ?>
+                                    <?php if ($isTooltip) {?>
+                                    <div class="custom-tooltip-container">
+                                        <i style="font-size: 20px" class="fa fa-question-circle-o" aria-hidden="true"></i>
+                                        <div class="custom-tooltip">
+                                            <div class="custom-tooltip-content">
+                                                厚生労働省の指導による包括評価制度（DPC）導入の影響評価に関する調査「退院患者調査」に報告されている、当該施設における特定のがんに対しての1年間の退院（≒入院）した患者数です。年間入院患者数が多い施設ほど、そのがんに対する治療実績が豊富であると考えられます。
+                                            </div>
+                                            <a target="_blank" href="../../faq.php" class="custom-tooltip-more">もっと見る →</a>
+                                        </div>
+                                    </div>
+                                    <?php }?>
+                                </h4>
                             </div>
                             <?php include 'component/dpc-content-table.php'; ?>
                         </section>
 
                         <section id="stage-table" class="table-sec">
                             <div class="header">
-                                <h4>年間新規患者数・ <?= ($cancerNameStage ?  $cancerNameStage : $cancerName) ?></h4>
+                                <h4>年間新規患者数・ <?= ($cancerNameStage ?  $cancerNameStage : $cancerName) ?>
+                                    <?php if ($isTooltip) {?>
+                                    <div class="custom-tooltip-container">
+                                        <i style="font-size: 20px" class="fa fa-question-circle-o" aria-hidden="true"></i>
+                                        <div class="custom-tooltip">
+                                            <div class="custom-tooltip-content">
+                                                国立がん研究センターでは、がん登録等の推進に関する法律及び院内がん登録の実施に係る指針(厚生労働省告示470号)に基づいてデータ収集をされている、協力している病院における各がん種における病期（ステージ）別の新規の患者数です。どの病期の新規の患者を受け入れているか、などが分かります。
+                                            </div>
+                                            <a target="_blank" href="../../faq.php" class="custom-tooltip-more">もっと見る →</a>
+                                        </div>
+                                    </div>
+                                    <?php }?>
+                                </h4>
                             </div>
                             <?php include 'component/stage-content-table.php'; ?>
                             <?php include 'component/stage-detail-content-table.php'; ?>
@@ -133,7 +158,19 @@ $remarks = $initData['remarks'] ?? [];
 
                         <section id="survival-table" class="table-sec">
                             <div class="header">
-                                <h4>生存率係数・ステージ別5年実測生存率・ <?= ($cancerNameSurv ? $cancerNameSurv : $cancerName) ?></h4>
+                                <h4>生存率係数・ステージ別5年実測生存率・ <?= ($cancerNameSurv ? $cancerNameSurv : $cancerName) ?>
+                                    <?php if ($isTooltip) {?>
+                                    <div class="custom-tooltip-container">
+                                        <i style="font-size: 20px" class="fa fa-question-circle-o" aria-hidden="true"></i>
+                                        <div class="custom-tooltip">
+                                            <div class="custom-tooltip-content">
+                                                国立がん研究センターが全国のがん診療連携拠点病院から院内がん登録情報 を収集しており、5年生存率報告書では、がん診療連携拠点病院等全体での病期、 治療の実施別に生存率を推定するだけでなく、都道府県、施設別の生存率集計にお いても、がんの病期別に生存率を推定しています。 この5年生存率データを基に、日本経済新聞社が算出した係数で、全国平均を100とし、数字が大きいほど生存率が高い病院と考えられる指標です。
+                                            </div>
+                                            <a target="_blank" href="../../faq.php" class="custom-tooltip-more">もっと見る →</a>
+                                        </div>
+                                    </div>
+                                    <?php }?>
+                                </h4>
                             </div>
                             <div class="note-sec">
                                 <h5>集計対象者数</h5>
