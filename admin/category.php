@@ -101,12 +101,15 @@ require_once __DIR__ . '/../required/view_common_include.php';
 												<thead class="tableHeadArea">
 													<tr>
 														<th>No</th>
-														<th>貨物の重量</th>
-														<th>貨物の重量</th>
-														<th>作成日時</th>
-														<th>更新日時</th>
-														<th>操作</th>
-														<th>公開</th>
+														<th>分類</th>
+														<th>見出し</th>
+														<th>⼤分類</th>
+														<th>アイテム名</th>
+														<th>詳細</th>
+														<th>登録⽇時</th>
+														<th>更新⽇時</th>
+														<th></th>
+														<th></th>
 													</tr>
 												</thead>
 												<tbody id="list_html_area" class="tableBodyArea">

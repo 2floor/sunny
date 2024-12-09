@@ -3,6 +3,7 @@ require_once __DIR__ . '/../../logic/admin/base_logic.php';
 
 use App\Models\Category;
 use Illuminate\Support\Facades\DB;
+use Carbon\Carbon;
 
 class category_logic extends base_logic
 {
@@ -44,28 +45,30 @@ class category_logic extends base_logic
 	 */
 	public function create_data_list($params, $search_select = [])
 	{
-		$data = $this->getListDataCustomJoin(
-			$params,
-			$search_select,
-			[],
-			[],
-			function (&$query) {
-				$query->select(
-					'level1',
-					DB::raw('MIN(id) as id'),
-					// DB::raw('MIN(data_type) as data_type'),
-					DB::raw('MIN(category_group) as category_group'),
-					DB::raw('MIN(is_whole_cancer) as is_whole_cancer'),
-					DB::raw('MIN(created_at) as created_at'),
-					DB::raw('MAX(updated_at) as updated_at'),
-				)
-					->distinct('level1');
-			},
-			[],
-			function ($query) {
-				$query->groupBy('level1');
-			}
-		);
+		// $data = $this->getListDataCustomJoin(
+		// 	$params,
+		// 	$search_select,
+		// 	[],
+		// 	[],
+		// 	function (&$query) {
+		// 		$query->select(
+		// 			'level1',
+		// 			DB::raw('MIN(id) as id'),
+		// 			// DB::raw('MIN(data_type) as data_type'),
+		// 			DB::raw('MIN(category_group) as category_group'),
+		// 			DB::raw('MIN(is_whole_cancer) as is_whole_cancer'),
+		// 			DB::raw('MIN(created_at) as created_at'),
+		// 			DB::raw('MAX(updated_at) as updated_at'),
+		// 		)
+		// 			->distinct('level1');
+		// 	},
+		// 	[],
+		// 	function ($query) {
+		// 		$query->groupBy('level1');
+		// 	}
+		// );
+
+		$data = $this->getListData($params, $search_select);
 
 		$all_cnt = $data['total'];
 		$list = $data['data'];
@@ -97,10 +100,12 @@ class category_logic extends base_logic
 			$return_html .= "
 			<tr " . $back_color_html . ">
 				<td class='count_no'>" . $cnt . "</td>
+				<td>" . Category::LIST_CANCER[$row['is_whole_cancer']] . "</td>
+				<td>" . Category::LIST_GROUP[$row['category_group']] . "</td>
+
 				<td>" . $row['level1'] . "</td>
-				<td>" . $row['data_type'] . "</td>
-				<td>" . $row['category_group'] . "</td>
-				<td>" . $row['is_whole_cancer'] . "</td>
+				<td>" . $row['level2'] . "</td>
+				<td>" . $row['level3'] . "</td>
 				<td>" . $created_at . "</td>
 				<td>" . $updated_at . "</td>
 				<td>
@@ -110,6 +115,7 @@ class category_logic extends base_logic
 					$edit_html_b
 				</td>
 			</tr>";
+			// <td>" . Category::LIST_TYPE[$row['data_type']] . "</td>
 			$back_color = $back_color >= 3 ? 1 : $back_color + 1;
 		}
 		return $return_html;
@@ -136,6 +142,10 @@ class category_logic extends base_logic
 	}
 
 	private function format_time($time)
+	{
+		return Carbon::parse($time)->format('Y-m-d H:i:s');
+	}
+	private function format_diff_time($time)
 	{
 		$diff = strtotime(date('YmdHis')) - strtotime($time);
 		if ($diff < 60) {
