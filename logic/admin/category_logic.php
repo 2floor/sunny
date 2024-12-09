@@ -2,7 +2,6 @@
 require_once __DIR__ . '/../../logic/admin/base_logic.php';
 
 use App\Models\Category;
-use Illuminate\Support\Facades\DB;
 use Carbon\Carbon;
 
 class category_logic extends base_logic
@@ -69,6 +68,7 @@ class category_logic extends base_logic
 		// );
 
 		$data = $this->getListData($params, $search_select);
+
 
 		$all_cnt = $data['total'];
 		$list = $data['data'];

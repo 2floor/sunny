@@ -3,7 +3,6 @@ session_start();
 // header('Content-Type: applisampleion/json');
 
 require_once __DIR__ . '/../../logic/common/common_logic.php';
-require_once __DIR__ . '/../../logic/common/common_string_logic.php';
 require_once __DIR__ . '/../../logic/admin/category_logic.php';
 require_once __DIR__ . '/../../common/security_common_logic.php';
 
@@ -29,9 +28,10 @@ if ($data['status']) {
 
 	// インスタンス生成
 	$category_ct = new category_ct();
+	$post_data = $_SERVER['REQUEST_METHOD'] == 'POST' ? $_POST : $_GET;
 
 	// コントローラー呼び出し
-	$data = $category_ct->main_control($_POST);
+	$data = $category_ct->main_control($post_data);
 } else {
 	// パラメータに不正があった場合
 	// AJAX返却用データ成型
@@ -58,9 +58,8 @@ echo json_encode(compact('data'));
  */
 class category_ct
 {
-	private $member_ct;
 	private $category_logic;
-	private $common_string_logic;
+	private $common_logic;
 
 	/**
 	 * コンストラクタ
@@ -69,7 +68,7 @@ class category_ct
 	{
 		// 管理画面ユーザーロジックインスタンス
 		$this->category_logic = new category_logic();
-		$this->common_string_logic = new common_string_logic();
+		$this->common_logic = new common_logic();
 	}
 
 	/**
@@ -80,31 +79,30 @@ class category_ct
 	 */
 	public function main_control($post)
 	{
-		$category_ct = new category_ct();
 		if ($post['method'] == 'init') {
 			// 初期処理　HTML生成処理呼び出し
-			$data = $category_ct->create_data_list($post);
+			$data = $this->create_data_list($post);
 		} else if ($post['method'] == 'entry') {
 			// 新規登録処理
-			$data = $category_ct->entry_new_data($post);
+			$data = $this->entry_new_data($post);
 		} else if ($post['method'] == 'edit_init') {
 			// 編集初期処理
-			$data = $category_ct->get_detail($post['edit_del_id']);
+			$data = $this->get_detail($post['edit_del_id']);
 		} else if ($post['method'] == 'edit') {
 			// 編集更新処理
-			$data = $category_ct->update_detail($post);
+			$data = $this->update_detail($post);
 		} else if ($post['method'] == 'delete') {
 			// 削除処理
-			$data = $category_ct->delete($post['id']);
+			$data = $this->delete($post['id']);
 		} else if ($post['method'] == 'recovery') {
 			// 有効化処理
-			$data = $category_ct->recovery($post['id']);
+			$data = $this->recovery($post['id']);
 		} else if ($post['method'] == 'private') {
 			// 非公開化処理
-			$data = $category_ct->private_func($post['id']);
+			$data = $this->private_func($post['id']);
 		} else if ($post['method'] == 'release') {
 			// 公開化処理
-			$data = $category_ct->release($post['id']);
+			$data = $this->release($post['id']);
 		}
 
 		return $data;
@@ -115,7 +113,6 @@ class category_ct
 	 */
 	private function create_data_list($post)
 	{
-
 		$list_html = $this->category_logic->create_data_list([
 			$post['pageSize'],
 			$post['pageNumber']

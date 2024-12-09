@@ -1,7 +1,15 @@
 <?php
 session_start();
 require_once __DIR__ . '/../required/view_common_include.php';
+require_once __DIR__ . '/../logic/common/common_logic.php';
 
+$common_logic = new common_logic();
+
+$data_type = $common_logic->select_logic_no_param("SELECT DISTINCT(level1), data_type FROM t_category", []);
+$data_type_option = '';
+foreach ($data_type as $dto_row) {
+	$data_type_option .= '<option value="' . $dto_row['level1'] . '">' . $dto_row['level1'] . '</option>';
+}
 
 
 
@@ -29,7 +37,7 @@ require_once __DIR__ . '/../required/view_common_include.php';
 						<div class="col-xs-12">
 							<h2 class="pageTitle" id="page_title">
 								<i class="fa fa-list" aria-hidden="true"></i>
-								契約一覧
+								カテゴリ⼀覧
 							</h2>
 						</div>
 					</div>
@@ -69,13 +77,11 @@ require_once __DIR__ . '/../required/view_common_include.php';
 
 					<!-- pager -->
 					<div class="container">
-						<div class="listPagerBox">
-							<div class="listPagerTxt now_disp_cnt_str">
+						<div class="pagination-info">
+							<div class="total-result" style="display: block;">
+								<span class="badge bg-secondary"></span>
 							</div>
-							<div class="listPager">
-								<ul class="pagination pager_area">
-								</ul>
-							</div>
+							<div id="pagination-container" class="paginationjs paginationjs-theme-blue paginationjs-big"></div>
 						</div>
 					</div>
 					<!-- /pager -->
@@ -159,176 +165,73 @@ require_once __DIR__ . '/../required/view_common_include.php';
 						<div class="row">
 							<div class="col-xs-12" id="frm">
 								<div class="contentBox">
+
 									<div class="formRow">
 										<div class="formItem">
-											フォームなし
-										</div>
-										<div class="formTxt">
-											<div class="formIn50">
-												12345
-											</div>
-										</div>
-									</div>
-									<div class="formRow">
-										<div class="formItem">
-											input text
-											<span class="label01 require_text">必須</span>
-										</div>
-										<div class="formTxt">
-											<div class="formIn50">
-												<input type="text" class="form-control validate required" name="etc1" id="etc1" value="">
-											</div>
-										</div>
-									</div>
-									<div class="formRow">
-										<div class="formItem">
-											input tel
-											<span class="label01 require_text">必須</span>
-										</div>
-										<div class="formTxt">
-											<div class="formIn50">
-												<input type="tel" class="form-control validate required" name="etc2" id="etc2" value="">
-											</div>
-										</div>
-									</div>
-									<div class="formRow">
-										<div class="formItem">
-											input mail
-											<span class="label01 require_text">必須</span>
-										</div>
-										<div class="formTxt">
-											<div class="formIn50">
-												<input type="email" class="form-control validate required mail" name="etc3" id="etc3" value="">
-											</div>
-										</div>
-									</div>
-									<div class="formRow">
-										<div class="formItem">
-											input radio
-											<span class="label01 require_text">必須</span>
-										</div>
-										<div class="formTxt">
-											<div class="formIn50">
-												<div class="radio radio-primary radioBox">
-													<input type="radio" name="etc4" id="radio1" value="option1" checked="checked">
-													<label for="radio1"> Primary </label>
-												</div>
-												<div class="radio radio-primary radioBox">
-													<input type="radio" name="etc4" id="radio2" value="option2">
-													<label for="radio2"> Primary </label>
-												</div>
-												<div class="radio radio-primary radioBox">
-													<input type="radio" name="etc4" id="radio3" value="option3">
-													<label for="radio3"> Primary </label>
-												</div>
-												<div class="radio radio-primary radioBox">
-													<input type="radio" name="etc4" id="radio4" value="option4">
-													<label for="radio4"> Primary </label>
-												</div>
-											</div>
-										</div>
-									</div>
-									<div class="formRow">
-										<div class="formItem">
-											input checkbox
+											分類
 											<span class="label01">必須</span>
 										</div>
 										<div class="formTxt">
-											<div class="formIn50">
-												<div class="checkbox checkbox-primary radioBox">
-													<input id="checkbox1" type="checkbox" class="validate checkboxRequired" name="etc5" value="a">
-													<label for="checkbox1"> Primary </label>
-												</div>
-												<div class="checkbox checkbox-primary radioBox">
-													<input id="checkbox2" type="checkbox" class="validate checkboxRequired" name="etc5" value="b">
-													<label for="checkbox2"> Primary </label>
-												</div>
-												<div class="checkbox checkbox-primary radioBox">
-													<input id="checkbox3" type="checkbox" class="validate checkboxRequired" name="etc5" value="c">
-													<label for="checkbox3"> Primary </label>
-												</div>
-												<div class="checkbox checkbox-primary radioBox">
-													<input id="checkbox4" type="checkbox" class="validate checkboxRequired" name="etc5" value="d">
-													<label for="checkbox4"> Primary </label>
-												</div>
-											</div>
-										</div>
-									</div>
-									<div class="formRow">
-										<div class="formItem">
-											input file
-											<span class="label01">必須</span>
-										</div>
-										<div class="formTxt">
-											<div class="formIn50">
-												<div class="fileupload btn btn-primary btn-bordred waves-effect w-md waves-light">
-													<span>
-														ファイルを選択
-													</span>
-													<input type="file" class="upload" name="file1" id="file1" jq_id="1" multiple="multiple">
-												</div>
-												<button type="button" class="btn btn-info btn-bordred waves-effect w-md waves-light fileSort" jq_id="1" style="display: none;">並び替え</button>
-												<!-- Modal -->
-												<div id="custom-modal" class="modal-demo">
-													<button type="button" class="close" onclick="Custombox.close();">
-														<span>&times;</span>
-														<span class="sr-only">Close</span>
-													</button>
-													<h4 class="custom-modal-title">画像並び替え</h4>
-													<div class="custom-modal-text">
-														<p>ドラッグ&ドロップで並び替えができます。</p>
-														<div id="imgSortArea1"></div>
-														<button type="button" class="btn btn-info btn-bordred waves-effect w-md waves-light fileSortExe" jq_id="1">並び替えを実行</button>
-													</div>
-												</div>
-												<h4 id="status1"></h4>
-												<div id="img_area1" class="prevImgArea"></div>
-											</div>
-										</div>
-									</div>
-									<div class="formRow">
-										<div class="formItem">
-											textarea
-											<span class="label01">必須</span>
-										</div>
-										<div class="formTxt">
-											<div class="formIn50">
-												<textarea type="text" class="form-control validate required" name="etc7" id="etc7"></textarea>
-											</div>
-										</div>
-									</div>
-									<div class="formRow">
-										<div class="formItem">
-											Select
-											<span class="label01">必須</span>
-										</div>
-										<div class="formTxt">
-											<div class="formIn50">
-												<select class="form-control" name="etc8" id="etc8">
-													<option value="1">1</option>
-													<option value="2">2</option>
-													<option value="3">3</option>
-													<option value="4">4</option>
-													<option value="5">5</option>
+											<div class="formIn30">
+												<select class="form-control" name="is_whole_cancer" id="is_whole_cancer">
+													<option value="0">医療機関基本</option>
+													<option value="1">医療機関がん種</option>
 												</select>
 											</div>
 										</div>
 									</div>
 									<div class="formRow">
 										<div class="formItem">
-											Calendar
+											⼤分類
+											<span class="label01">必須</span>
 										</div>
 										<div class="formTxt">
-											<div class="formIn50">
-												<div class="input-group">
-													<input type="text" class="form-control" placeholder="yyyy-mm-dd" name="etc9">
-													<span class="input-group-addon bg-primary b-0 text-white">
-														<i class="ti-calendar"></i>
-													</span>
-												</div>
+											<div class="formIn30">
+												<select class="form-control" name="level1" id="level1">
+													<?= $data_type_option ?>
+												</select>
 											</div>
 										</div>
 									</div>
+
+									<div class="formRow">
+										<div class="formItem">
+											カテゴリ名
+											<span class="label01">必須</span>
+										</div>
+										<div class="formTxt">
+											<div class="formIn50">
+												<input type="text" class="form-control validate required" name="level2" id="level2" value="">
+											</div>
+										</div>
+									</div>
+									<div class="formRow">
+										<div class="formItem">
+											カテゴリ詳細
+											<span class="label01">必須</span>
+										</div>
+										<div class="formTxt">
+											<div class="formIn50">
+												<textarea type="text" class="form-control validate required" name="level3" id="level3"></textarea>
+											</div>
+										</div>
+									</div>
+
+									<div class="formRow">
+										<div class="formItem">
+											有効状態
+											<span class="label01">必須</span>
+										</div>
+										<div class="formTxt">
+											<div class="formIn50">
+												<select class="form-control" name="public_flg" id="public_flg">
+													<option value="0">有効</option>
+													<option value="1">無効</option>
+												</select>
+											</div>
+										</div>
+									</div>
+
 									<button type="button" class="btn btn-primary waves-effect w-md waves-light m-b-5 button_input button_form" name='conf' id="conf">確認する</button>
 									<button type="button" class="btn btn-inverse waves-effect w-md waves-light m-b-5 button_conf button_form" name='return' id="return">戻る</button>
 									<button type="button" class="btn btn-info waves-effect w-md waves-light m-b-5 button_conf button_form" name='submit' id="submit">登録する</button>
