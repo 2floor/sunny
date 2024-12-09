@@ -288,6 +288,8 @@ $(function() {
             let cancerYearArr = value.split(",");
             let cancer_id = cancerYearArr[0] || null;
             let year = cancerYearArr[1] || null;
+            let year2 = cancerYearArr[2] || '';
+            let year3 = cancerYearArr[3] || '';
             let cancer_name = $(this).parent().prevAll('.cancer_type').first().text();
             let data_type = $('#data_type').val();
             let auto_type = $('[name="auto_type"]:checked').val();
@@ -295,7 +297,7 @@ $(function() {
 
             swal({
                 title : '',
-                text : year + '年の' + cancer_name + auto_type_text + '年のデータを自動的に生成しますか',
+                text : year + (year2 ? (',' +year2) : '') + (year3 ? (',' +year3) : '') + '年の' + cancer_name + auto_type_text + '年のデータを自動的に生成しますか',
                 type : "warning",
                 showCancelButton : true,
                 confirmButtonClass : 'btn-warning',
