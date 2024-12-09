@@ -18,8 +18,8 @@ define("HTTP_TYPE", (empty($_SERVER["HTTPS"]) ? "http://" : "https://") . $_SERV
  * @var unknown
  */
 // ビューリンク用path
-define("MEDICALNET_ADMIN_PATH", HTTP_TYPE . "/sunny-health/admin/");
-// define("MEDICALNET_ADMIN_PATH", HTTP_TYPE . "/admin/");
+// define ( "MEDICALNET_ADMIN_PATH", HTTP_TYPE . "/sunny-health/admin/" );
+define("MEDICALNET_ADMIN_PATH", HTTP_TYPE . "/admin/");
 
 /**
  * ini_path
@@ -31,8 +31,8 @@ define("INI_PATH", __DIR__ . '/../common/config.ini');
 /**
  * BaseUrl
  */
-$path = '/sunny-health/';
-// $path = '';
+// $path = '/sunny-health/';
+$path = '';
 $protocol = (!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off' || $_SERVER['SERVER_PORT'] == 443) ? "https://" : "http://";
 $host = $_SERVER['HTTP_HOST'];
 $baseUrl = $protocol . $host . $path;
