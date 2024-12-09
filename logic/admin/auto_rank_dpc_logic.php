@@ -8,7 +8,8 @@ use Carbon\Carbon;
 
 class auto_rank_dpc_logic extends base_logic
 {
-    public function getModel() {
+    public function getModel()
+    {
         return DPC::class;
     }
 
@@ -27,26 +28,26 @@ class auto_rank_dpc_logic extends base_logic
         $back_color = 1;
         $cnt = ($params[0] * ($params[1] - 1));
 
-        for($i = 0; $i < count ($list ?? []); $i ++) {
+        for ($i = 0; $i < count($list ?? []); $i++) {
             $row = $list[$i];
-            $cnt ++;
+            $cnt++;
 
             //削除フラグ
-            $edit_html_a = "<a herf='javascript:void(0);' class='auto_rank clr1' value='" . $row ['cancer_id'] .','.$row ['year'] . "'><i class=\"fa fa-circle-o-notch\" aria-hidden=\"true\"></i></a><br>";
+            $edit_html_a = "<a herf='javascript:void(0);' class='auto_rank clr1' value='" . $row['cancer_id'] . ',' . $row['year'] . "'><i class=\"fa fa-circle-o-notch\" aria-hidden=\"true\"></i></a><br>";
 
-            $update_at = '';
-            if ($row ['updated_at']) {
-                $update_at = Carbon::parse($row['updated_at'])->format('Y-m-d H:i:s');
-                $diff = strtotime(date('YmdHis')) - strtotime($update_at);
-                if($diff < 60){
+            $updated_at = '';
+            if ($row['updated_at']) {
+                $updated_at = Carbon::parse($row['updated_at'])->format('Y-m-d H:i:s');
+                $diff = strtotime(date('YmdHis')) - strtotime($updated_at);
+                if ($diff < 60) {
                     $time = $diff;
-                    $update_at = $time . '秒前';
-                }elseif($diff < 60 * 60){
+                    $updated_at = $time . '秒前';
+                } elseif ($diff < 60 * 60) {
                     $time = round($diff / 60);
-                    $update_at = $time . '分前';
-                }elseif($diff < 60 * 60 * 24){
+                    $updated_at = $time . '分前';
+                } elseif ($diff < 60 * 60 * 24) {
                     $time = round($diff / 3600);
-                    $update_at = $time . '時間前';
+                    $updated_at = $time . '時間前';
                 }
             }
 
@@ -55,17 +56,16 @@ class auto_rank_dpc_logic extends base_logic
             if ($row['completed_time']) {
                 $completed_time = Carbon::parse($row['completed_time'])->format('Y-m-d H:i:s');
                 $diff = strtotime(date('YmdHis')) - strtotime($completed_time);
-                if($diff < 60){
+                if ($diff < 60) {
                     $time = $diff;
                     $completed_time = $time . '秒前';
-                }elseif($diff < 60 * 60){
+                } elseif ($diff < 60 * 60) {
                     $time = round($diff / 60);
                     $completed_time = $time . '分前';
-                }elseif($diff < 60 * 60 * 24){
+                } elseif ($diff < 60 * 60 * 24) {
                     $time = round($diff / 3600);
                     $completed_time = $time . '時間前';
                 }
-
             }
 
             $status = AUTO_RANK_STATUS[$row['status']] ?? '';
@@ -87,21 +87,21 @@ class auto_rank_dpc_logic extends base_logic
 						<td>" . $row['total_records'] . "</td>
 						<td>" . ($row['total_affect'] ?? 0) . "</td>
 						<td>" . $status . "</td>
-						<td>" . $update_at . "</td>
+						<td>" . $updated_at . "</td>
 						<td>" . $completed_time . "</td>
 						<td>
 							$edit_html_a
 						</td>
 					</tr>
 					";
-            $back_color ++;
+            $back_color++;
 
             if ($back_color >= 3) {
                 $back_color = 1;
             }
         }
 
-        return array (
+        return array(
             "list_html" => $return_html,
             'all_cnt' => $all_cnt
         );

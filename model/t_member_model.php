@@ -45,7 +45,7 @@ class t_member_model
 	 */
 	public function search_member()
 	{
-		return $this->common_logic->select_logic_no_param('select member_id from t_member order by create_at desc limit 1');
+		return $this->common_logic->select_logic_no_param('select member_id from t_member order by created_at desc limit 1');
 	}
 
 	/**

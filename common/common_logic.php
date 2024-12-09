@@ -2,18 +2,20 @@
 // 設定ファイル読込
 require_once __DIR__ . '/../common/db_access.php';
 require_once 'common_constant.php';
-class common_logic {
+class common_logic
+{
 	private $befor;
 	private $after;
 
 	/**
 	 * コンストラクタ
 	 */
-	public function __construct() {
+	public function __construct()
+	{
 		// 設定ファイル読込
-		$ini_array = parse_ini_file ( __DIR__ . '/../common/config.ini', true );
-		$this->befor = $ini_array ['password_key'] ['befor'];
-		$this->after = $ini_array ['password_key'] ['after'];
+		$ini_array = parse_ini_file(__DIR__ . '/../common/config.ini', true);
+		$this->befor = $ini_array['password_key']['befor'];
+		$this->after = $ini_array['password_key']['after'];
 	}
 
 	/**
@@ -22,8 +24,9 @@ class common_logic {
 	 * @param unknown $value
 	 * @return string
 	 */
-	public function h($value) {
-		return htmlspecialchars ( $value, ENT_QUOTES );
+	public function h($value)
+	{
+		return htmlspecialchars($value, ENT_QUOTES);
 	}
 
 	/**
@@ -34,14 +37,15 @@ class common_logic {
 	 * @param unknown $subject
 	 * @param unknown $body1
 	 */
-	public function mail_send($to, $subject, $body1, $header) {
-		mb_language ( "Japanese" );
-		mb_internal_encoding ( "UTF-8" );
-		$order_no = str_pad ( $order_no, 8, "0", STR_PAD_LEFT );
+	public function mail_send($to, $subject, $body1, $header)
+	{
+		mb_language("Japanese");
+		mb_internal_encoding("UTF-8");
+		$order_no = str_pad($order_no, 8, "0", STR_PAD_LEFT);
 
 		$header = "From: " . $header;
 
-		mb_send_mail ( $to, $subject, $body1, $header );
+		mb_send_mail($to, $subject, $body1, $header);
 	}
 
 	/**
@@ -50,9 +54,10 @@ class common_logic {
 	 * @param クエリ $sql
 	 * @return Ambigous <結果(array), mixed>
 	 */
-	public function select_logic($sql, $param) {
-		$db = new db_access ();
-		return $db->select_executed_param ( $sql, $param );
+	public function select_logic($sql, $param)
+	{
+		$db = new db_access();
+		return $db->select_executed_param($sql, $param);
 	}
 
 	/**
@@ -61,9 +66,10 @@ class common_logic {
 	 * @param クエリ $sql
 	 * @return Ambigous <結果(array), mixed>
 	 */
-	public function select_logic_no_param($sql) {
-		$db = new db_access ();
-		return $db->select_executed ( $sql );
+	public function select_logic_no_param($sql)
+	{
+		$db = new db_access();
+		return $db->select_executed($sql);
 	}
 
 	/**
@@ -72,9 +78,10 @@ class common_logic {
 	 * @param クエリ $sql
 	 * @return Ambigous <結果(boolean), boolean>
 	 */
-	public function delete_row_logic_no_param($sql) {
-		$db = new db_access ();
-		$result = $db->delete_executed_no_param ( $sql );
+	public function delete_row_logic_no_param($sql)
+	{
+		$db = new db_access();
+		$result = $db->delete_executed_no_param($sql);
 
 		return $result;
 	}
@@ -85,9 +92,10 @@ class common_logic {
 	 * @param クエリ $sql
 	 * @return Ambigous <結果(boolean), boolean>
 	 */
-	public function delete_row_logic($sql, $param) {
-		$db = new db_access ();
-		$result = $db->delete_executed ( $sql, $param );
+	public function delete_row_logic($sql, $param)
+	{
+		$db = new db_access();
+		$result = $db->delete_executed($sql, $param);
 
 		return $result;
 	}
@@ -99,37 +107,38 @@ class common_logic {
 	 * @param unknown $param_array(array)
 	 * @return 結果(boolean)
 	 */
-	public function insert_logic($tb_name, $param_array) {
-		$common_logic = new common_logic ();
+	public function insert_logic($tb_name, $param_array)
+	{
+		$common_logic = new common_logic();
 		$query = "";
 
 		// $tb_nameで指定されたテーブルのフィールドを取得
-		$rows = $common_logic->select_logic_no_param ( 'SHOW COLUMNS FROM ' . $tb_name );
+		$rows = $common_logic->select_logic_no_param('SHOW COLUMNS FROM ' . $tb_name);
 		$set_value = "";
 
 		// query生成
-		for($i = 0; $i < count ( $rows ); $i ++) {
+		for ($i = 0; $i < count($rows); $i++) {
 
 			// PrimaryKeyを除外
 			if ($i != 0) {
-				if (($rows [$i] ['Field'] == "create_at" || $rows [$i] ['Field'] == "update_at")) {
-					$set_value .= ", " . $rows [$i] ['Field'] . " = now()";
+				if (($rows[$i]['Field'] == "created_at" || $rows[$i]['Field'] == "updated_at")) {
+					$set_value .= ", " . $rows[$i]['Field'] . " = now()";
 				} else {
-					$set_value .= ", " . $rows [$i] ['Field'] . " = ?";
+					$set_value .= ", " . $rows[$i]['Field'] . " = ?";
 				}
 			}
 		}
 
 		// 不要カンマ削除
-		$set_value = preg_replace ( "/,/", "", $set_value . "\n", 1 );
+		$set_value = preg_replace("/,/", "", $set_value . "\n", 1);
 
 		$query = "insert into " . $tb_name . " set " . $set_value;
 		// echo $query;
 		// exit();
 
 		// query実行
-		$db = new db_access ();
-		$result = $db->insert_update_executed ( $query, $param_array );
+		$db = new db_access();
+		$result = $db->insert_update_executed($query, $param_array);
 		return $result;
 	}
 
@@ -142,29 +151,30 @@ class common_logic {
 	 * @param unknown $param_array(配列,updateパラメータ7)
 	 * @return unknown 結果(boolean)
 	 */
-	public function update_logic($tb_name, $where_query, $up_field_list, $param_array) {
-		$common_logic = new common_logic ();
+	public function update_logic($tb_name, $where_query, $up_field_list, $param_array)
+	{
+		$common_logic = new common_logic();
 
 		// $tb_nameで指定されたテーブルのフィールドを取得
-		$rows = $common_logic->select_logic_no_param ( 'SHOW COLUMNS FROM ' . $tb_name );
+		$rows = $common_logic->select_logic_no_param('SHOW COLUMNS FROM ' . $tb_name);
 		$set_value = "";
 
 		// query生成
-		for($i = 0; $i < count ( $rows ); $i ++) {
-			if ($rows [$i] ['Field'] == "update_at") {
-				$set_value .= ", " . $rows [$i] ['Field'] . " = now()";
+		for ($i = 0; $i < count($rows); $i++) {
+			if ($rows[$i]['Field'] == "updated_at") {
+				$set_value .= ", " . $rows[$i]['Field'] . " = now()";
 			} else {
-				for($n = 0; $n < count ( $up_field_list ); $n ++) {
+				for ($n = 0; $n < count($up_field_list); $n++) {
 					// PrimaryKeyを除外
-					if ($i != 0 && $up_field_list [$n] == $rows [$i] ['Field']) {
-						$set_value .= ", " . $rows [$i] ['Field'] . " = ?";
+					if ($i != 0 && $up_field_list[$n] == $rows[$i]['Field']) {
+						$set_value .= ", " . $rows[$i]['Field'] . " = ?";
 					}
 				}
 			}
 		}
 
 		// 不要カンマ削除
-		$set_value = preg_replace ( "/,/", "", $set_value . "", 1 );
+		$set_value = preg_replace("/,/", "", $set_value . "", 1);
 
 		$query = "update " . $tb_name . " set " . $set_value . " " . $where_query;
 
@@ -172,8 +182,8 @@ class common_logic {
 		// exit();
 
 		// query実行
-		$db = new db_access ();
-		$result = $db->insert_update_executed ( $query, $param_array );
+		$db = new db_access();
+		$result = $db->insert_update_executed($query, $param_array);
 
 		// echo $result;
 		// exit();
@@ -189,8 +199,9 @@ class common_logic {
 	 * @param number $length
 	 *        	桁数
 	 */
-	public function zero_padding($val, $length = 11) {
-		return sprintf ( '%0' . $length . 'd', $val );
+	public function zero_padding($val, $length = 11)
+	{
+		return sprintf('%0' . $length . 'd', $val);
 	}
 
 	/**
@@ -201,10 +212,11 @@ class common_logic {
 	 * @param unknown $sel
 	 * @return string
 	 */
-	public function createIntListBoxRetInt($strInt, $endInt, $sel) {
+	public function createIntListBoxRetInt($strInt, $endInt, $sel)
+	{
 		$a = "";
 
-		for($i = $strInt; $i < $endInt; $i ++) {
+		for ($i = $strInt; $i < $endInt; $i++) {
 			if ($i == $sel) {
 				$b = ' selected';
 			} else {
@@ -226,10 +238,11 @@ class common_logic {
 	 * @param 選択値 $sel
 	 * @return string
 	 */
-	public function createStrListBoxRetInt($strList, $sel) {
+	public function createStrListBoxRetInt($strList, $sel)
+	{
 		$a = "";
 
-		for($i = 0; $i < count ( $strList ); $i ++) {
+		for ($i = 0; $i < count($strList); $i++) {
 			if ($i == $sel) {
 				$b = ' selected';
 			} else {
@@ -247,10 +260,11 @@ class common_logic {
 	 * @param 選択値 $sel
 	 * @return string
 	 */
-	public function createStrListBoxRetStr($strList, $sel) {
+	public function createStrListBoxRetStr($strList, $sel)
+	{
 		$a = "";
 
-		for($i = 0; $i < count ( $strList ); $i ++) {
+		for ($i = 0; $i < count($strList); $i++) {
 			if ($i == $sel) {
 				$b = ' selected';
 			} else {
@@ -268,11 +282,12 @@ class common_logic {
 	 * @param 選択値 $sel
 	 * @return string
 	 */
-	public function createStrListBoxEqStrRetStr($strList, $sel) {
+	public function createStrListBoxEqStrRetStr($strList, $sel)
+	{
 		$a = "";
 
-		for($i = 0; $i < count ( $strList ); $i ++) {
-			if ($strList [$i] == $sel) {
+		for ($i = 0; $i < count($strList); $i++) {
+			if ($strList[$i] == $sel) {
 				$b = ' selected';
 			} else {
 				$b = "";
@@ -289,11 +304,12 @@ class common_logic {
 	 * @param value文字列配列 $valueList
 	 * @return string
 	 */
-	public function createStrListBoxValueList($strList, $valueList, $sel) {
+	public function createStrListBoxValueList($strList, $valueList, $sel)
+	{
 		$a = "";
 
-		for($i = 0; $i < count ( $strList ); $i ++) {
-			if ($strList [$i] == $sel) {
+		for ($i = 0; $i < count($strList); $i++) {
+			if ($strList[$i] == $sel) {
 				$b = ' selected';
 			} else {
 				$b = "";
@@ -309,10 +325,11 @@ class common_logic {
 	 * @param unknown $array
 	 * @return multitype:
 	 */
-	public function sort_implode_aray($array) {
-		$array = array_filter ( $array, "strlen" );
-		$array = array_values ( $array );
-		$str = implode ( ",", $array );
+	public function sort_implode_aray($array)
+	{
+		$array = array_filter($array, "strlen");
+		$array = array_values($array);
+		$str = implode(",", $array);
 		return $str;
 	}
 
@@ -324,8 +341,9 @@ class common_logic {
 	 * @param unknown $img_pass
 	 * @return multitype:number |multitype:unknown multitype: |multitype:number unknown
 	 */
-	public function wh_resize($in_widht, $in_height, $img_pass) {
-		list ( $width, $height, $type, $attr ) = getimagesize ( $img_pass );
+	public function wh_resize($in_widht, $in_height, $img_pass)
+	{
+		list($width, $height, $type, $attr) = getimagesize($img_pass);
 
 		$newwidth = 0; // 新しい横幅
 		$newheight = 0; // 新しい縦幅
@@ -339,90 +357,92 @@ class common_logic {
 			if ($width * $widthPercent <= $w && $height * $widthPercent <= $h) {
 				$newwidth = $width * $widthPercent;
 				$newheight = $height * $widthPercent;
-				return array (
-						$newwidth,
-						$newheight
+				return array(
+					$newwidth,
+					$newheight
 				);
 			} else {
 				$newwidth = $width * $heightPercent;
 				$newheight = $height * $heightPercent;
-				return array (
-						$newwidth,
-						$newheight
+				return array(
+					$newwidth,
+					$newheight
 				);
 			}
 		} else if ($height < $h && $width < $w) { // 両方オーバーしていない場合
 			$newwidth = $width;
 			$newheight = $height;
-			return array (
-					$newwidth,
-					$newheight
+			return array(
+				$newwidth,
+				$newheight
 			);
 		} else if ($h < $height && $width <= $w) {
 			// 縦がオーバー、横は新しい横より短い場合
 			// 縦がオーバー、横は同じ長さの場合
 			$newwidth = $width * ($h / $height);
 			$newheight = $h;
-			return array (
-					$newwidth,
-					$newheight
+			return array(
+				$newwidth,
+				$newheight
 			);
 		} else if ($height <= $h && $w < $width) {
 			// 縦が新しい縦より短く、横はオーバーしている場合
 			// 縦は同じ長さ、横はオーバーしている場合
 			$newwidth = $w;
 			$newheight = $height * ($w / $width);
-			return array (
-					$newwidth,
-					$newheight
+			return array(
+				$newwidth,
+				$newheight
 			);
 		} else if ($height == $h && $width < $w) {
 			// 横が新しい横より短く、縦は同じ長さの場合
 			$newwidth = $width * ($h / $height);
 			$newheight = $h;
-			return array (
-					$newwidth,
-					$newheight
+			return array(
+				$newwidth,
+				$newheight
 			);
 		} else if ($height < $h && $width == $w) {
 			// 縦が新しい縦より短く、横は同じ長さの場合
 			$newwidth = $w;
 			$newheight = $height * ($w / $width);
-			return array (
-					$newwidth,
-					$newheight
+			return array(
+				$newwidth,
+				$newheight
 			);
 		} else {
 			// 縦も横も、新しい長さと同じ長さの場合
 			// または、縦と横が同じ長さで、かつ最大サイズを超えない場合
 			$newwidth = $width;
 			$newheight = $height;
-			return array (
-					$newwidth,
-					$newheight
+			return array(
+				$newwidth,
+				$newheight
 			);
 		}
 	}
-	public function get_files($path) {
-		if ($dir = opendir ( $path )) {
-			while ( ($file = readdir ( $dir )) !== false ) {
+	public function get_files($path)
+	{
+		if ($dir = opendir($path)) {
+			while (($file = readdir($dir)) !== false) {
 				if ($file != "." && $file != "..") {
-					$aaa [] = $file;
+					$aaa[] = $file;
 				}
 			}
-			closedir ( $dir );
+			closedir($dir);
 		}
 
 		return $aaa;
 	}
-	function getFileList($dir) {
-		$iterator = new RecursiveDirectoryIterator ( $dir );
-		$iterator = new RecursiveIteratorIterator ( $iterator );
+	function getFileList($dir)
+	{
+		$iterator = new RecursiveDirectoryIterator($dir);
+		$iterator = new RecursiveIteratorIterator($iterator);
 
-		$list = array ();
-		foreach ( $iterator as $fileinfo ) { // $fileinfoはSplFiIeInfoオブジェクト
-			if ($fileinfo->isFile ()) {
-				$list [] = $fileinfo->getPathname ();
+		$list = array();
+		foreach ($iterator as $fileinfo) { // $fileinfoはSplFiIeInfoオブジェクト
+			if ($fileinfo->isFile()) {
+				$list[] = $fileinfo->getPathname();
 			}
 		}
 
@@ -435,32 +455,34 @@ class common_logic {
 	 * @param unknown $nLengthRequired
 	 * @return string
 	 */
-	public function getRandomString($nLengthRequired) {
+	public function getRandomString($nLengthRequired)
+	{
 		$sCharList = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789_";
-		mt_srand ();
+		mt_srand();
 		$sRes = "";
-		for($i = 0; $i < $nLengthRequired; $i ++)
-			$sRes .= $sCharList [mt_rand ( 0, strlen ( $sCharList ) - 1 )];
+		for ($i = 0; $i < $nLengthRequired; $i++)
+			$sRes .= $sCharList[mt_rand(0, strlen($sCharList) - 1)];
 		return $sRes;
 	}
 
-	public function pager($html_list, $url, $page, $pager_id, $activ_flg) {
+	public function pager($html_list, $url, $page, $pager_id, $activ_flg)
+	{
 		$ret_html = null;
 		$start_no = 0;
 		$end_no = 0;
 		$hairetu = $html_list;
 		// ↑先ほど作成したユーザー関数をarray_map()関数で配列全体に処理を施す
-		$cnt = count ( $hairetu ); // レコード数をカウントしておきます
-		                           // テスト用、適当レコード作成ここまで
+		$cnt = count($hairetu); // レコード数をカウントしておきます
+		// テスト用、適当レコード作成ここまで
 
 		// ここから表示する内容を作成
-		                           // ↓はじめてこのページにやってきたら「1ページ目だよ」とやさしく教えてあげる
+		// ↓はじめてこのページにやってきたら「1ページ目だよ」とやさしく教えてあげる
 		if ($genzai_page == "") {
 			$genzai_page = 1;
 			$start = 0; // このスタートは配列の中の何個目から取り出すのか？
 		}
 		$hyouji_kazu = 10; // 表示する数
-		$max_page = ceil ( $cnt / $hyouji_kazu ); // ceilは切り上げ（$max_pageは表示最大ページ数）
+		$max_page = ceil($cnt / $hyouji_kazu); // ceilは切り上げ（$max_pageは表示最大ページ数）
 
 		// ↓すでにこのページにいたら・・・
 		if ($page != "") {
@@ -490,12 +512,12 @@ class common_logic {
 
 		$ret_html .= $pageing_mes;
 
-		if (is_array ( $hairetu )) {
-			$naiyou = array_slice ( $hairetu, $start, $hyouji_kazu ); // 表示する数と内容
+		if (is_array($hairetu)) {
+			$naiyou = array_slice($hairetu, $start, $hyouji_kazu); // 表示する数と内容
 		}
 
 		// ↓データ内容を表示する部分
-		foreach ( $naiyou as $val ) {
+		foreach ($naiyou as $val) {
 			$ret_html .= $val;
 		}
 		// ↑内容を表示する部分終り
@@ -519,23 +541,23 @@ class common_logic {
 		// ↓表示最大数が１０未満でページ表示数が１(表示数１ならページングする必要がない）でなければ・・・
 		if (($max_page <= 10) && ($max_page != 1)) {
 			$ret_html .= '      　'; // 表示があまり乱れないように全角空スペース４個を入れておく
-			for($i = 1; $i <= $max_page; $i ++) {
+			for ($i = 1; $i <= $max_page; $i++) {
 				$ret_html .= '<a href="' . $url . '?page=' . $i . '&id=' . $pager_id . '"><li class="pager001" id="active_' . $genzai_page . '">' . $i . '</li></a> ';
 			}
 
 			// ↓最大表示数が１０以上で現在のページが６未満なら・・・
 		} elseif (($max_page > 10) && ($genzai_page < 6)) {
 			$ret_html .= '　　　　'; // 表示があまり乱れないように全角空スペース４個を入れておく
-			for($a = 1; $a <= 10; $a ++) {
+			for ($a = 1; $a <= 10; $a++) {
 				$ret_html .= '<a href="' . $url . '?page=' . $a . '&id=' . $pager_id . '"><li class="pager001" id="active_' . $genzai_page . '">' . $a . '</li></a> ';
 			}
 
 			// ↓最大表示数が１０以上かつ、現在のページが６以上かつ最終ページより５ページ以内にいなければ・・・
 		} elseif (($max_page > 10) && ($genzai_page >= 6) && (($genzai_page + 5) < $max_page)) {
-			for($a = 1; $a <= 5; $a ++) {
+			for ($a = 1; $a <= 5; $a++) {
 				$ret_html .= '<a href="' . $url . '?page=' . ($genzai_page - 5 + $a) . '&id=' . $pager_id . '"><li class="pager001" id="active_' . $genzai_page . '">' . ($genzai_page - 5 + $a) . '</li></a> ';
 			}
-			for($a = 1; $a <= 5; $a ++) {
+			for ($a = 1; $a <= 5; $a++) {
 				$ret_html .= '<a href="' . $url . '?page=' . ($genzai_page + $a) . '&id=' . $pager_id . '"><li class="pager001" id="active_' . $genzai_page . '">' . ($genzai_page + $a) . '</li></a> ';
 			}
 
@@ -543,9 +565,9 @@ class common_logic {
 			// ↓現在のページが最終ページから５ページ以内にいる場合の処理
 		} elseif (($max_page > 10) && ($genzai_page >= 6) && (($genzai_page + 5) >= $max_page)) {
 			$b = $max_page - 10;
-			while ( $b <= $max_page ) {
+			while ($b <= $max_page) {
 				$ret_html .= '<a href="' . $url . '?page=' . $b . '&id=' . $pager_id . '"><li class="pager001" id="active_' . $genzai_page . '">' . $b . '</li></a> ';
-				$b ++;
+				$b++;
 			}
 		}
 
@@ -571,10 +593,10 @@ class common_logic {
 		$ret_html .= "</script>";
 
 		$ret_html = $ret_html . $ret_html_sp;
-		return array (
-				$ret_html,
-				$start_no,
-				$end_no
+		return array(
+			$ret_html,
+			$start_no,
+			$end_no
 		);
 	}
 
@@ -583,14 +605,15 @@ class common_logic {
 	 *
 	 * @param unknown $dir
 	 */
-	function deleteData($dir) {
-		if ($dirHandle = opendir ( $dir )) {
-			while ( false !== ($fileName = readdir ( $dirHandle )) ) {
+	function deleteData($dir)
+	{
+		if ($dirHandle = opendir($dir)) {
+			while (false !== ($fileName = readdir($dirHandle))) {
 				if ($fileName != "." && $fileName != "..") {
-					unlink ( $dir . $fileName );
+					unlink($dir . $fileName);
 				}
 			}
-			closedir ( $dirHandle );
+			closedir($dirHandle);
 		}
 	}
 
@@ -601,13 +624,14 @@ class common_logic {
 	 * @param unknown $path
 	 * @return string
 	 */
-	function upload_file($file, $path) {
-		if (is_uploaded_file ( $file ["tmp_name"] )) {
-			if (move_uploaded_file ( $file ["tmp_name"], $path . $file ["name"] )) {
-				chmod ( $path . $file ["name"], 0644 );
+	function upload_file($file, $path)
+	{
+		if (is_uploaded_file($file["tmp_name"])) {
+			if (move_uploaded_file($file["tmp_name"], $path . $file["name"])) {
+				chmod($path . $file["name"], 0644);
 			}
 		}
-		return $file ["name"];
+		return $file["name"];
 	}
 
 	/**
@@ -617,20 +641,21 @@ class common_logic {
 	 * @param unknown $material_full_path
 	 * @param unknown $material_file_list
 	 */
-	function create_zip($zip_full_path, $material_full_path, $material_file_list) {
-		$zip = new ZipArchive ();
+	function create_zip($zip_full_path, $material_full_path, $material_file_list)
+	{
+		$zip = new ZipArchive();
 		// ZIPファイルをオープン
-		$res = $zip->open ( $zip_full_path, ZipArchive::CREATE );
+		$res = $zip->open($zip_full_path, ZipArchive::CREATE);
 
 		// zipファイルのオープンに成功した場合
 		if ($res === true) {
 
-			for($i = 0; $i < count ( $material_full_path ); $i ++) {
+			for ($i = 0; $i < count($material_full_path); $i++) {
 				// 圧縮するファイルを指定する
-				$zip->addFile ( $material_full_path [$i], $material_file_list [$i] );
+				$zip->addFile($material_full_path[$i], $material_file_list[$i]);
 			}
 			// ZIPファイルをクローズ
-			$zip->close ();
+			$zip->close();
 		}
 	}
 
@@ -641,18 +666,19 @@ class common_logic {
 	 * @param boolean $create_flg
 	 * @return boolean
 	 */
-	public function chkDirectory($array, $create_flg = true) {
+	public function chkDirectory($array, $create_flg = true)
+	{
 		$directory_path = null;
-		for($i = 0; $i < count ( $array ); $i ++) {
-			$directory_path .= $array [$i] . "/";
+		for ($i = 0; $i < count($array); $i++) {
+			$directory_path .= $array[$i] . "/";
 			$return = false;
-			if (file_exists ( $directory_path )) {
+			if (file_exists($directory_path)) {
 				$return = true;
 			}
 			if (! $return) {
 				if ($create_flg) {
-					mkdir ( $directory_path, 0777 );
-					chmod ( $directory_path, 0777 );
+					mkdir($directory_path, 0777);
+					chmod($directory_path, 0777);
 				}
 				$return = true;
 			}
@@ -667,11 +693,12 @@ class common_logic {
 	 * @param unknown $path
 	 * @return Ambigous <NULL, string>
 	 */
-	public function get_file_list($path) {
+	public function get_file_list($path)
+	{
 		$ret_array = null;
-		foreach ( glob ( $path . '{*.gif,*.jpg,*.png,*.PNG,*.jpeg,*.JPG,*.JPEG,*.GIF}', GLOB_BRACE ) as $file ) {
-			if (is_file ( $file )) {
-				$ret_array [] = htmlspecialchars ( $file );
+		foreach (glob($path . '{*.gif,*.jpg,*.png,*.PNG,*.jpeg,*.JPG,*.JPEG,*.GIF}', GLOB_BRACE) as $file) {
+			if (is_file($file)) {
+				$ret_array[] = htmlspecialchars($file);
 			}
 		}
 		return $ret_array;
@@ -683,30 +710,32 @@ class common_logic {
 	 * @param unknown $strId
 	 * @return number
 	 */
-	function get_countVisits($strId) {
-		$aa = explode ( "/", $strId );
+	function get_countVisits($strId)
+	{
+		$aa = explode("/", $strId);
 
-		$strId = end ( $aa );
+		$strId = end($aa);
 
-		$strId = str_replace ( "?", "", $strId );
-		$strId = str_replace ( ".", "", $strId );
-		$strId = str_replace ( "=", "", $strId );
-		$strId = str_replace ( "_", "", $strId );
+		$strId = str_replace("?", "", $strId);
+		$strId = str_replace(".", "", $strId);
+		$strId = str_replace("=", "", $strId);
+		$strId = str_replace("_", "", $strId);
 
 		$life = 60 * 60 * 24 * 30 * 12;
-		if (isset ( $_COOKIE ["count" . $strId] )) {
-			$count = $_COOKIE ["count" . $strId] + 1;
+		if (isset($_COOKIE["count" . $strId])) {
+			$count = $_COOKIE["count" . $strId] + 1;
 		} else {
 			$count = 1;
 		}
-		setcookie ( "count" . $strId, $count, time () + $life );
+		setcookie("count" . $strId, $count, time() + $life);
 		return $count;
 	}
-	public function zip_dl($filename, $path) {
-		ob_end_clean ();
-		header ( 'Content-Type: application/octet-stream' );
-		header ( 'Content-Disposition: attachment; filename="' . $filename . '"' );
-		readfile ( $path );
+	public function zip_dl($filename, $path)
+	{
+		ob_end_clean();
+		header('Content-Type: application/octet-stream');
+		header('Content-Disposition: attachment; filename="' . $filename . '"');
+		readfile($path);
 	}
 
 	/**
@@ -717,20 +746,21 @@ class common_logic {
 	 * @param unknown $string(文字列)
 	 * @return unknown $string(文字列)
 	 */
-	public function disp_list_detail($line_max_length, $lin_max_cnt, $string) {
-		if (strlen ( $string ) >= $line_max_length) {
-			$string = mb_substr ( $string, 0, $line_max_length, 'UTF-8' ) . "<br>";
+	public function disp_list_detail($line_max_length, $lin_max_cnt, $string)
+	{
+		if (strlen($string) >= $line_max_length) {
+			$string = mb_substr($string, 0, $line_max_length, 'UTF-8') . "<br>";
 		} else {
-			$string = mb_substr ( $string, 0, $line_max_length, 'UTF-8' );
+			$string = mb_substr($string, 0, $line_max_length, 'UTF-8');
 		}
-		$strin = nl2br ( $string );
-		$string_list = explode ( "\r\n", $string );
+		$strin = nl2br($string);
+		$string_list = explode("\r\n", $string);
 
-		$ret_string = $string_list [0];
-		if ($string_list [1] != "" && $string_list [1] != null) {
-			$ret_string .= "<br>" . $string_list [1];
-			if ($string_list [2] != "" && $string_list [2] != null) {
-				$ret_string .= "<br>" . $string_list [2];
+		$ret_string = $string_list[0];
+		if ($string_list[1] != "" && $string_list[1] != null) {
+			$ret_string .= "<br>" . $string_list[1];
+			if ($string_list[2] != "" && $string_list[2] != null) {
+				$ret_string .= "<br>" . $string_list[2];
 			}
 		}
 
@@ -745,21 +775,22 @@ class common_logic {
 	 * @param string $remote_addr
 	 * @return boolean
 	 */
-	public function getIpMatching($ip_list, $remote_addr) {
+	public function getIpMatching($ip_list, $remote_addr)
+	{
 		$acsess_flg = false;
 
-		if (strpos ( $ip_list, ',' ) === false) {
+		if (strpos($ip_list, ',') === false) {
 			// IPの指定が1つ XXX.XXX.XXX.XXX/XX
-			$ip_list_arr = array (
-					$ip_list
+			$ip_list_arr = array(
+				$ip_list
 			);
 		} else {
 			// IPの指定が複数 XXX.XXX.XXX.XXX/XX,XXX.XXX.XXX.XXX/XX,XXX.XXX.XXX.XXX/XX
-			$ip_list_arr = explode ( ',', $ip_list );
+			$ip_list_arr = explode(',', $ip_list);
 		}
 
-		foreach ( $ip_list_arr as $ipListKey => $ipListVal ) {
-			if (strpos ( $ipListVal, '/' ) === false) {
+		foreach ($ip_list_arr as $ipListKey => $ipListVal) {
+			if (strpos($ipListVal, '/') === false) {
 				$ip = $ipListVal;
 				// IPの形式がXXX.XXX.XXX.XXX
 				if ($ip == $remote_addr) {
@@ -767,10 +798,10 @@ class common_logic {
 					break;
 				}
 			} else {
-				list ( $ip, $bit_mask ) = explode ( '/', $ipListVal );
+				list($ip, $bit_mask) = explode('/', $ipListVal);
 				// IPの形式がXXX.XXX.XXX.XXX/XX
-				$allow_ip_long = ip2long ( $ip ) >> (32 - $bit_mask);
-				$acsess_ip_long = ip2long ( $remote_addr ) >> (32 - $bit_mask);
+				$allow_ip_long = ip2long($ip) >> (32 - $bit_mask);
+				$acsess_ip_long = ip2long($remote_addr) >> (32 - $bit_mask);
 				if ($acsess_ip_long == $allow_ip_long) {
 					$acsess_flg = true;
 					break;
@@ -787,7 +818,8 @@ class common_logic {
 	 * @param unknown $value
 	 * @return boolean
 	 */
-	public function isNullBlank($value) {
+	public function isNullBlank($value)
+	{
 		if ($value == null || $value == "") {
 			return false;
 		}
@@ -801,31 +833,32 @@ class common_logic {
 	 * @param unknown $upload_path(アップロード先パス　../test_uploads/)
 	 * @return 結果配列(結果ステータス, ファイルフルパス, ファイル名)
 	 */
-	public function unit_file_upload($file, $upload_path){
-		$fileName = $file ["name"]; // The file name
-		$fileTmpLoc = $file ["tmp_name"]; // File in the PHP tmp folder
-		$fileType = $file ["type"]; // The type of file it is
-		$fileSize = $file ["size"]; // File size in bytes
-		$fileErrorMsg = $file ["error"]; // 0 for false... and 1 for true
+	public function unit_file_upload($file, $upload_path)
+	{
+		$fileName = $file["name"]; // The file name
+		$fileTmpLoc = $file["tmp_name"]; // File in the PHP tmp folder
+		$fileType = $file["type"]; // The type of file it is
+		$fileSize = $file["size"]; // File size in bytes
+		$fileErrorMsg = $file["error"]; // 0 for false... and 1 for true
 		if (! $fileTmpLoc) { // if file not chosen
 			echo "ERROR: Please browse for a file before clicking the upload button.";
-			exit ();
+			exit();
 		}
-		if (move_uploaded_file ( $fileTmpLoc, $upload_path . $fileName )) {
-			$ret_array = implode(',', array (
-					$upload_path . $fileName,
-					$fileName
+		if (move_uploaded_file($fileTmpLoc, $upload_path . $fileName)) {
+			$ret_array = implode(',', array(
+				$upload_path . $fileName,
+				$fileName
 			));
 			return array(
-					"status" => true,
-					"full_path" => $upload_path . $fileName,
-					"file_name" => $fileName
+				"status" => true,
+				"full_path" => $upload_path . $fileName,
+				"file_name" => $fileName
 			);
 		} else {
 			return array(
-					"status" => false,
-					"full_path" => $upload_path . $fileName,
-					"file_name" => $fileName
+				"status" => false,
+				"full_path" => $upload_path . $fileName,
+				"file_name" => $fileName
 			);
 		}
 	}
@@ -833,13 +866,14 @@ class common_logic {
 	/**
 	 * エリアセレクトボックス生成
 	 */
-	public function create_area_select_html() {
-		$common_logic = new common_logic ();
-		$area_result = $common_logic->select_logic_no_param ( 'select distinct area_code, area_name from m_area_pref' );
+	public function create_area_select_html()
+	{
+		$common_logic = new common_logic();
+		$area_result = $common_logic->select_logic_no_param('select distinct area_code, area_name from m_area_pref');
 		$area_select_html = "<option value=''>エリア</option>";
-		for($i = 0; $i < count ( $area_result ); $i ++) {
-			$area_row = $area_result [$i];
-			$area_select_html .= "<option value='" . $area_row ['area_name'] . "'>" . $area_row ['area_name'] . "</option>";
+		for ($i = 0; $i < count($area_result); $i++) {
+			$area_row = $area_result[$i];
+			$area_select_html .= "<option value='" . $area_row['area_name'] . "'>" . $area_row['area_name'] . "</option>";
 		}
 		return $area_select_html;
 	}
@@ -849,15 +883,16 @@ class common_logic {
 	 * 都道府県セレクトボックス生成
 	 * @param unknown $pref_name
 	 */
-	public function create_pref_select_html($area_name) {
-		$common_logic = new common_logic ();
-		$pref_result = $common_logic->select_logic ( 'select * from m_area_pref where area_name = ?', array (
-				$area_name
-		) );
+	public function create_pref_select_html($area_name)
+	{
+		$common_logic = new common_logic();
+		$pref_result = $common_logic->select_logic('select * from m_area_pref where area_name = ?', array(
+			$area_name
+		));
 		$pref_select_html = "<option value=''>都道府県</option>";
-		for($i = 0; $i < count ( $pref_result ); $i ++) {
-			$pref_row = $pref_result [$i];
-			$pref_select_html .= "<option value='" . $pref_row ['pref_name'] . "'>" . $pref_row ['pref_name'] . "</option>";
+		for ($i = 0; $i < count($pref_result); $i++) {
+			$pref_row = $pref_result[$i];
+			$pref_select_html .= "<option value='" . $pref_row['pref_name'] . "'>" . $pref_row['pref_name'] . "</option>";
 		}
 		return $pref_select_html;
 	}
@@ -866,11 +901,12 @@ class common_logic {
 	 * 都道府県からエリア取得
 	 * @param unknown $pref_name
 	 */
-	public function create_area_select_html_by_pref($pref_name) {
-		$common_logic = new common_logic ();
-		$area_result = $common_logic->select_logic ( 'select * from m_area_pref where pref_name = ?', array (
-				$pref_name
-		) );
+	public function create_area_select_html_by_pref($pref_name)
+	{
+		$common_logic = new common_logic();
+		$area_result = $common_logic->select_logic('select * from m_area_pref where pref_name = ?', array(
+			$pref_name
+		));
 		return $area_result[0]['area_name'];
 	}
 
@@ -878,11 +914,12 @@ class common_logic {
 	 * 都道府県名から都道府県ID取得
 	 * @param unknown $pref_name
 	 */
-	public function get_pref_code_by_pref_name($pref_name) {
-		$common_logic = new common_logic ();
-		$area_result = $common_logic->select_logic ( 'select * from m_area_pref where pref_name = ?', array (
-				$pref_name
-		) );
+	public function get_pref_code_by_pref_name($pref_name)
+	{
+		$common_logic = new common_logic();
+		$area_result = $common_logic->select_logic('select * from m_area_pref where pref_name = ?', array(
+			$pref_name
+		));
 		return $area_result[0]['pref_code'];
 	}
 
@@ -890,16 +927,17 @@ class common_logic {
 	 * 都道府県コードから都道府県名取得
 	 * @param unknown $pref_name
 	 */
-	public function get_pref_name_by_pref_code($pref_code) {
-		$common_logic = new common_logic ();
-		$area_result = $common_logic->select_logic ( 'select * from m_area_pref where pref_code = ?', array (
-				$pref_code
-		) );
+	public function get_pref_name_by_pref_code($pref_code)
+	{
+		$common_logic = new common_logic();
+		$area_result = $common_logic->select_logic('select * from m_area_pref where pref_code = ?', array(
+			$pref_code
+		));
 		return $area_result[0]['pref_name'];
 	}
 
 
-// 	public function get
+	// 	public function get
 	/**
 	 * パスワード暗号化処理
 	 * (セキュリティ向上の為以下の複数暗号化を行う)
@@ -908,27 +946,30 @@ class common_logic {
 	 * 3.上記の値をhash変換
 	 * @param unknown $pass
 	 */
-	public function convert_password_encode($pass){
+	public function convert_password_encode($pass)
+	{
 		//MD5変換
 		$pass2 = MD5($pass);
 
 		// パスワード用キーをパスワード前後に付与
-		$pass3 = $this->befor.$pass2.$this->after;
+		$pass3 = $this->befor . $pass2 . $this->after;
 
 		//hash変換
-		$super_pass = hash('sha256',$pass3);
+		$super_pass = hash('sha256', $pass3);
 
 		return $pass2;
 	}
 
-	public function isNullEmpty($val){
+	public function isNullEmpty($val)
+	{
 		if ($val != "" || $val != null) {
 			return false;
 		}
 		return true;
 	}
 
-	public function convert_pref_name_to_code($area_name){
+	public function convert_pref_name_to_code($area_name)
+	{
 		$m_area_pref_model = new m_area_pref_model();
 
 		$result = $m_area_pref_model->get_area_pref_data_pref_name($area_name);
@@ -936,9 +977,7 @@ class common_logic {
 		return $result[0]['pref_code'];
 	}
 
-// 	require_once '../model/m_interest_model.php';
-// 	require_once '../model/m_area_pref_model.php';
+	// 	require_once '../model/m_interest_model.php';
+	// 	require_once '../model/m_area_pref_model.php';
 
 }
-
-?>

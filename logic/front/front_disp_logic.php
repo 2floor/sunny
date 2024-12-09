@@ -194,7 +194,7 @@ class front_disp_logic
 
 		$table = "";
 		$add_col = "";
-		$order = " ORDER BY `create_at` DESC ";
+		$order = " ORDER BY `created_at` DESC ";
 		$detail_url_base = "";
 		if ($type == 'truck_me') {
 			//自身の依頼したトラック
@@ -262,7 +262,7 @@ class front_disp_logic
 
 		//検索条件がなかったとき検索結果を0にするんだ
 		if (($get == null || $get == "") && ($type == 't_evaluation' || $type == 'agreement' || $type == 'baggage' || $type == 'truck')) {
-			$wp['where'] .= " AND create_at = 'y' ";
+			$wp['where'] .= " AND created_at = 'y' ";
 		}
 
 		$where .= $wp['where'];
@@ -659,10 +659,10 @@ class front_disp_logic
 							<div class="searchResultListRow">
 								<div class="searchResultItem itemWid1">
 									<input type="checkbox" name="del_item" value="' . $row[$id_col_name] . '">
-									
+
 								</div>
 								<div class="searchResultItem itemWid1">
-									
+
 									<a href="' . $detail_url_base . $row[$id_col_name] . '">' . $this->common_logic->zero_padding($row[$id_col_name], 8) . '</a>
 									<br><a href="./truck_entry.php?cp=' . $row[$id_col_name] . '" t="truck" class="btnCancel">コピー</a>
 								</div>
@@ -673,7 +673,7 @@ class front_disp_logic
 								<div class="searchResultItem itemWid3">
 									' . $shipment_place . '
 								</div>
-								
+
 								<div class="searchResultItem itemWid3">
 									' . $arrival_place . '
 								</div>
@@ -745,7 +745,7 @@ class front_disp_logic
 							<div class="searchResultItem itemWid1">
 									<a href="' . $detail_url_base . $row[$id_col_name] . '">' . $this->common_logic->zero_padding($row[$id_col_name], 8) . '</a>
 								</div>
-								
+
 								<div class="searchResultItem itemWid1 innnerWidBasis100">
 									<a href="' . $detail_url_base . $row[$id_col_name] . '" style="    font-size: 12px;
     color: #293f54;
@@ -766,7 +766,7 @@ class front_disp_logic
 								<div class="searchResultItem itemWid3">
 									' . $shipment_place . '
 								</div>
-								
+
 								<div class="searchResultItem itemWid3">
 									' . $arrival_place . '
 								</div>
@@ -860,10 +860,10 @@ class front_disp_logic
 							<div class="searchResultListRow">
 							<div class="searchResultItem itemWid1">
 									<input type="checkbox" name="del_item" value="' . $row[$id_col_name] . '">
-									
+
 								</div>
 								<div class="searchResultItem itemWid1">
-									
+
 									<a href="' . $detail_url_base . $row[$id_col_name] . '">' . $this->common_logic->zero_padding($row[$id_col_name], 8) . '</a>
 									<br><a href="./luggage_entry.php?cp=' . $row[$id_col_name] . '" t="truck" class="btnCancel">コピー</a>
 								</div>
@@ -940,8 +940,8 @@ class front_disp_logic
 		<div class="searchResultItem itemWid1">
 									<a href="' . $detail_url_base . $row[$id_col_name] . '">' . $this->common_logic->zero_padding($row[$id_col_name], 8) . '</a>
 								</div>
-		
-		
+
+
 								<div class="searchResultItem itemWid1 innnerWidBasis100">
 									<a href="' . $detail_url_base . $row[$id_col_name] . '" style="    font-size: 12px;
     color: #293f54;
@@ -955,8 +955,8 @@ class front_disp_logic
 								<div class="searchResultItem itemWid1">
 									' . $btn . '
 								</div>
-						
-								
+
+
 								<div class="searchResultItem itemWid1">
 									' . $shipment_date . '<br>
 									' . $shipment_time . '
@@ -1071,7 +1071,7 @@ class front_disp_logic
 		$detail_url_base = "agreement_detail.php?aid=";
 		$html = '';
 
-		$create_date = date('m/d', strtotime($row['create_at'])) . "(" . $week_str[date('w', strtotime($row['create_at']))] . ")<br>" . $this->displayTimeFormat($row['shipment_time']);
+		$create_date = date('m/d', strtotime($row['created_at'])) . "(" . $week_str[date('w', strtotime($row['created_at']))] . ")<br>" . $this->displayTimeFormat($row['shipment_time']);
 
 		$shipment_time = explode(" ", $row['shippment_datetime']);
 		$shipment_date = date('m/d', strtotime($row['shippment_datetime'])) . "(" . $week_str[date('w', strtotime($row['shippment_datetime']))] . ")<br>" . $this->displayTimeFormat($shipment_time[1]);
@@ -1261,7 +1261,7 @@ class front_disp_logic
 													登録年月
 												</th>
 												<td>
-													' . date('Y年m月', strtotime($row['create_at'])) . '
+													' . date('Y年m月', strtotime($row['created_at'])) . '
 												</td>
 											</tr>';
 		return $html;
