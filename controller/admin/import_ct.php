@@ -121,7 +121,7 @@ class import_ct
 
         $html_child = '';
         foreach ($children as $key => $child) {
-            $created_at = Carbon::parse($child->created_at)->format('Y-m-d H:i:s');
+            $create_at = Carbon::parse($child->created_at)->format('Y-m-d H:i:s');
             $completed_time = '';
             $error_file = '';
 
@@ -130,7 +130,7 @@ class import_ct
             }
 
             if ($child->error_file) {
-                $error_file = '<a href="' . BASE_URL . 'upload_files/export_error_data/' . $child->error_file . '">エラー情報</a>';
+                $error_file = '<a href="'.BASE_URL.'upload_files/export_error_data/'.$child->error_file.'">エラー情報</a>';
             }
 
 
@@ -148,15 +148,15 @@ class import_ct
                 default => '',
             };
 
-            $html_child .= '<tr ' . $back_color_html . '>';
-            $html_child .= '<td>' . ($key + 1) . '</td>';
-            $html_child .= '<td>' . $file_name . '</td>';
-            $html_child .= '<td>' . (IMPORT_STATUS[$child->status] ?? '') . '</td>';
-            $html_child .= '<td>' . $child->success . '</td>';
-            $html_child .= '<td>' . $child->error . '</td>';
-            $html_child .= '<td>' . $created_at . '</td>';
-            $html_child .= '<td>' . $completed_time . '</td>';
-            $html_child .= '<td>' . $error_file . '</td>';
+            $html_child .= '<tr '.$back_color_html.'>';
+            $html_child .= '<td>'.($key + 1).'</td>';
+            $html_child .= '<td>'.$file_name.'</td>';
+            $html_child .= '<td>'.(IMPORT_STATUS[$child->status] ?? '').'</td>';
+            $html_child .= '<td>'.$child->success.'</td>';
+            $html_child .= '<td>'.$child->error.'</td>';
+            $html_child .= '<td>'.$create_at.'</td>';
+            $html_child .= '<td>'.$completed_time.'</td>';
+            $html_child .= '<td>'.$error_file.'</td>';
             $html_child .= '</tr>';
         }
 

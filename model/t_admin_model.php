@@ -1,14 +1,12 @@
 <?php
-class t_admin_model
-{
+class t_admin_model {
 	private $common_logic;
 
 	/**
 	 * コンストラクタ
 	 */
-	function __construct()
-	{
-		$this->common_logic = new common_logic();
+	function __construct() {
+		$this->common_logic = new common_logic ();
 	}
 
 	/**
@@ -16,9 +14,8 @@ class t_admin_model
 	 *
 	 * @param unknown $params(id,pass)
 	 */
-	public function get_login_data_by_id_pass($params)
-	{
-		return $this->common_logic->select_logic('select * from t_admin_user where login_id = ? and pass = ?', $params);
+	public function get_login_data_by_id_pass($params) {
+		return $this->common_logic->select_logic ( 'select * from t_admin_user where login_id = ? and pass = ?', $params );
 	}
 
 	/**
@@ -27,13 +24,12 @@ class t_admin_model
 	 * @param unknown $id
 	 * @param unknown $ses_id
 	 */
-	public function update_ses_id($id, $ses_id)
-	{
-		$this->common_logic->update_logic('t_admin_user', " where id = '" . $id . "'", array(
-			'ses_id'
-		), array(
-			$ses_id
-		));
+	public function update_ses_id($id, $ses_id) {
+		$this->common_logic->update_logic ( 't_admin_user', " where id = '" . $id . "'", array (
+				'ses_id'
+		), array (
+				$ses_id
+		) );
 	}
 
 	/**
@@ -42,24 +38,23 @@ class t_admin_model
 	 * @param unknown $id
 	 * @param unknown $ses_id
 	 */
-	public function count_token_chk($id, $ses_id, $ses_limit_time)
-	{
+	public function count_token_chk($id, $ses_id, $ses_limit_time) {
 
 		// 該当ユーザー情報取得
-		$result = $this->common_logic->select_logic('select * from t_admin_user where id = ? and ses_id = ?', array(
-			$id,
-			$ses_id
-		));
+		$result = $this->common_logic->select_logic ( 'select * from t_admin_user where id = ? and ses_id = ?', array (
+				$id,
+				$ses_id
+		) );
 
-		if (count($result) > 0) {
+		if (count ( $result ) > 0) {
 			// 更新日時取得
-			$updated_at = $result[0]['updated_at'];
+			$update_at = $result [0] ['update_at'];
 
 			// 現在時刻と更新日時の差分を分で取得
-			$result = $this->common_logic->select_logic_no_param("select timestampdiff(minute, '" . $updated_at . "', now()) as diff_time");
+			$result = $this->common_logic->select_logic_no_param ( "select timestampdiff(minute, '" . $update_at . "', now()) as diff_time" );
 
 			// セッション保持時間内判定
-			if ($result[0]['diff_time'] <= $ses_limit_time) {
+			if ($result [0] ['diff_time'] <= $ses_limit_time) {
 				return true;
 			}
 		}
@@ -69,9 +64,8 @@ class t_admin_model
 	/**
 	 * 管理画面ユーザー一覧情報取得
 	 */
-	public function get_admin_user_list()
-	{
-		return $this->common_logic->select_logic_no_param("select * from t_admin_user order by del_flg asc, created_at desc");
+	public function get_admin_user_list() {
+		return $this->common_logic->select_logic_no_param ( "select * from t_admin_user order by del_flg asc, create_at desc" );
 	}
 
 	/**
@@ -79,9 +73,8 @@ class t_admin_model
 	 *
 	 * @param unknown $params
 	 */
-	public function insert_admin_user($params)
-	{
-		return $this->common_logic->insert_logic("t_admin_user", $params);
+	public function insert_admin_user($params) {
+		return $this->common_logic->insert_logic ( "t_admin_user", $params );
 	}
 
 	/**
@@ -90,11 +83,10 @@ class t_admin_model
 	 * @param unknown $id
 	 * @return Ambigous
 	 */
-	public function get_admin_user_detail($id)
-	{
-		return $this->common_logic->select_logic('select * from t_admin_user where id = ?', array(
-			$id
-		));
+	public function get_admin_user_detail($id) {
+		return $this->common_logic->select_logic ( 'select * from t_admin_user where id = ?', array (
+				$id
+		) );
 	}
 
 	/**
@@ -102,15 +94,14 @@ class t_admin_model
 	 *
 	 * @param unknown $params
 	 */
-	public function update_admin_user($params)
-	{
-		return $this->common_logic->update_logic("t_admin_user", " where id = ?", array(
-			"login_id",
-			"name",
-			"mail",
-			"pass",
-			"authority"
-		), $params);
+	public function update_admin_user($params) {
+		return $this->common_logic->update_logic ( "t_admin_user", " where id = ?", array (
+				"login_id",
+				"name",
+				"mail",
+				"pass",
+				"authority"
+		), $params );
 	}
 
 	/**
@@ -118,11 +109,10 @@ class t_admin_model
 	 *
 	 * @param unknown $login_id
 	 */
-	public function count_login_id($login_id)
-	{
-		return $this->common_logic->select_logic('select count(*) as cnt from t_admin_user where login_id = ?', array(
-			$login_id
-		));
+	public function count_login_id($login_id) {
+		return $this->common_logic->select_logic ( 'select count(*) as cnt from t_admin_user where login_id = ?', array (
+				$login_id
+		) );
 	}
 
 	/**
@@ -130,14 +120,13 @@ class t_admin_model
 	 *
 	 * @param unknown $id
 	 */
-	public function del_admin_user($id)
-	{
-		return $this->common_logic->update_logic("t_admin_user", " where id = ?", array(
-			"del_flg"
-		), array(
-			'1',
-			$id
-		));
+	public function del_admin_user($id) {
+		return $this->common_logic->update_logic ( "t_admin_user", " where id = ?", array (
+				"del_flg"
+		), array (
+				'1',
+				$id
+		) );
 	}
 
 	/**
@@ -145,14 +134,13 @@ class t_admin_model
 	 *
 	 * @param unknown $id
 	 */
-	public function recoveryl_admin_user($id)
-	{
-		return $this->common_logic->update_logic("t_admin_user", " where id = ?", array(
-			"del_flg"
-		), array(
-			'0',
-			$id
-		));
+	public function recoveryl_admin_user($id) {
+		return $this->common_logic->update_logic ( "t_admin_user", " where id = ?", array (
+				"del_flg"
+		), array (
+				'0',
+				$id
+		) );
 	}
 
 	// ニュース
@@ -160,85 +148,78 @@ class t_admin_model
 	/**
 	 * ニュース管理一覧情報取得
 	 */
-	public function check_contents_cnt()
-	{
-		return $this->common_logic->select_logic("select count(*) as cnt from t_news where del_flg = ? and public_flg = ?", array(
-			'1',
-			'1'
-		));
+	public function check_contents_cnt() {
+		return $this->common_logic->select_logic ( "select count(*) as cnt from t_news where del_flg = ? and public_flg = ?", array (
+				'1',
+				'1'
+		) );
 	}
 
 	/**
 	 * ニュース管理一覧総件数取得
 	 */
-	public function get_performance_list_cnt()
-	{
-		return $this->common_logic->select_logic_no_param("select count(*) as cnt from t_news order by del_flg asc, created_at desc");
+	public function get_performance_list_cnt() {
+		return $this->common_logic->select_logic_no_param ( "select count(*) as cnt from t_news order by del_flg asc, create_at desc" );
 	}
 
 
 	/**
 	 * ニュース管理一覧情報取得
 	 */
-	public function get_performance_list($offset, $limit)
-	{
-		return $this->common_logic->select_logic_no_param("select * from t_news order by del_flg desc, created_at asc  limit " . $limit . " offset " . $offset);
+	public function get_performance_list($offset, $limit) {
+		return $this->common_logic->select_logic_no_param ( "select * from t_news order by del_flg desc, create_at asc  limit " . $limit . " offset " . $offset  );
 	}
 	/**
 	 * ニュース削除(論理削除)
 	 *
 	 * @param unknown $id
 	 */
-	public function del_performance($id)
-	{
-		return $this->common_logic->update_logic("t_news", " where news_id = ?", array(
-			"del_flg"
-		), array(
-			'0',
-			$id
-		));
+	public function del_performance($id) {
+		return $this->common_logic->update_logic ( "t_news", " where news_id = ?", array (
+				"del_flg"
+		), array (
+				'0',
+				$id
+		) );
 	}
 	/**
 	 * 管理画面ユーザー有効化
 	 *
 	 * @param unknown $id
 	 */
-	public function recoveryl_performance($id)
-	{
-		return $this->common_logic->update_logic("t_news", " where news_id = ?", array(
-			"del_flg"
-		), array(
-			'1',
-			$id
-		));
+	public function recoveryl_performance($id) {
+		return $this->common_logic->update_logic ( "t_news", " where news_id = ?", array (
+				"del_flg"
+		), array (
+				'1',
+				$id
+		) );
 	}
 	/**
 	 * ニュース非公開
 	 *
 	 * @param unknown $id
 	 */
-	public function private_performance($id)
-	{
-		return $this->common_logic->update_logic("t_news", " where news_id = ?", array(
-			"public_flg"
-		), array(
-			'0',
-			$id
-		));
+	public function private_performance($id) {
+		return $this->common_logic->update_logic ( "t_news", " where news_id = ?", array (
+				"public_flg"
+		), array (
+				'0',
+				$id
+		) );
 	}
 	/**
 	 * ニュース公開
 	 *
 	 * @param unknown $id
 	 */
-	public function release_performance($id)
-	{
-		return $this->common_logic->update_logic("t_news", " where news_id = ?", array(
-			"public_flg"
-		), array(
-			'1',
-			$id
-		));
+	public function release_performance($id) {
+		return $this->common_logic->update_logic ( "t_news", " where news_id = ?", array (
+				"public_flg"
+		), array (
+				'1',
+				$id
+		) );
 	}
 
 	/**
@@ -246,9 +227,8 @@ class t_admin_model
 	 *
 	 * @param unknown $params
 	 */
-	public function new_entry_performance($params)
-	{
-		return $this->common_logic->insert_logic("t_news", $params);
+	public function new_entry_performance($params) {
+		return $this->common_logic->insert_logic ( "t_news", $params );
 	}
 
 	/**
@@ -257,25 +237,23 @@ class t_admin_model
 	 * @param unknown $id
 	 * @return Ambigous
 	 */
-	public function get_performance_detail($id)
-	{
-		return $this->common_logic->select_logic('select * from t_news where news_id = ?', array(
-			$id
-		));
+	public function get_performance_detail($id) {
+		return $this->common_logic->select_logic ( 'select * from t_news where news_id = ?', array (
+				$id
+		) );
 	}
 	/**
 	 * ニュース更新
 	 *
 	 * @param unknown $params
 	 */
-	public function update_performance($params)
-	{
-		return $this->common_logic->update_logic("t_news", " where news_id = ?", array(
-			"news_type",
-			"disp_date",
-			"title",
-			"detail",
-			"img_name"
-		), $params);
+	public function update_performance($params) {
+		return $this->common_logic->update_logic ( "t_news", " where news_id = ?", array (
+				"news_type",
+				"disp_date",
+				"title",
+				"detail",
+				"img_name"
+		), $params );
 	}
 }

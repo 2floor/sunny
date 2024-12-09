@@ -43,7 +43,7 @@ var search_select = {
 		'更新日時' : {
 			search 		: false,
 			order		: true,
-			ColName 	: 'updated_at',
+			ColName 	: 'update_at',
 			tableOrder 	: 5,
 			type 		: 'date',
 		},

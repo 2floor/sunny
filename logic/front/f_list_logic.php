@@ -38,20 +38,21 @@ class f_list_logic
 	 */
 	public function getNewAgreement($limit = 5)
 	{
-		//		$data = $this->common_logic->select_logic("SELECT * FROM t_agreement WHERE del_flg = 0 AND hightway_fee = 1 ORDER BY created_at DESC LIMIT " . $limit, array());
-
-		$data = $this->common_logic->select_logic("select * from t_agreement as a inner join t_member as b on b.member_id = a.received_id where b.del_flg = '0' and a.del_flg = '0' and a.hightway_fee = 1 ORDER BY a.created_at DESC limit " . $limit, array());;
-
-
+//		$data = $this->common_logic->select_logic("SELECT * FROM t_agreement WHERE del_flg = 0 AND hightway_fee = 1 ORDER BY create_at DESC LIMIT " . $limit, array());
+		
+		$data = $this->common_logic->select_logic("select * from t_agreement as a inner join t_member as b on b.member_id = a.received_id where b.del_flg = '0' and a.del_flg = '0' and a.hightway_fee = 1 ORDER BY a.create_at DESC limit " . $limit, array());
+		;
+		
+		
 		return $data;
 	}
 	private function getTransaction($limit = 10)
 	{
 		$data = $this->common_logic->select_logic(
-			"SELECT * FROM (SELECT truck_id,'dummy' as baggage_id, 1 AS bt_type, hope_weight AS bt_id, CONCAT(shipment_date, ' ',CASE shipment_time WHEN '' THEN '00' ELSE shipment_time END ,':00') AS shippment_datetime, shipment_pref, shipment_addr1, CONCAT(arrival_date,' ',CASE arrival_time WHEN '' THEN '00' ELSE arrival_time END,':00') AS arrival_datetime, arrival_pref, arrival_addr1,created_at FROM t_truck WHERE del_flg = 0 ORDER BY created_at DESC LIMIT {$limit} ) as truck
+			"SELECT * FROM (SELECT truck_id,'dummy' as baggage_id, 1 AS bt_type, hope_weight AS bt_id, CONCAT(shipment_date, ' ',CASE shipment_time WHEN '' THEN '00' ELSE shipment_time END ,':00') AS shippment_datetime, shipment_pref, shipment_addr1, CONCAT(arrival_date,' ',CASE arrival_time WHEN '' THEN '00' ELSE arrival_time END,':00') AS arrival_datetime, arrival_pref, arrival_addr1,create_at FROM t_truck WHERE del_flg = 0 ORDER BY create_at DESC LIMIT {$limit} ) as truck
              UNION ALL
-            SELECT * FROM (SELECT 'dummy' as truck_id,baggage_id, 0 AS bt_type, hope_weight AS bt_id, CONCAT(shipment_date, ' ',CASE shipment_time WHEN '' THEN '00' ELSE shipment_time END,':00') AS shippment_datetime, shipment_pref, shipment_addr1, CONCAT(arrival_date,' ',CASE arrival_time WHEN '' THEN '00' ELSE arrival_time END,':00') AS arrival_datetime, arrival_pref, arrival_addr1,created_at FROM t_baggage WHERE del_flg = 0 ORDER BY created_at DESC LIMIT {$limit}) as baggage
-              ORDER BY created_at DESC LIMIT {$limit}
+            SELECT * FROM (SELECT 'dummy' as truck_id,baggage_id, 0 AS bt_type, hope_weight AS bt_id, CONCAT(shipment_date, ' ',CASE shipment_time WHEN '' THEN '00' ELSE shipment_time END,':00') AS shippment_datetime, shipment_pref, shipment_addr1, CONCAT(arrival_date,' ',CASE arrival_time WHEN '' THEN '00' ELSE arrival_time END,':00') AS arrival_datetime, arrival_pref, arrival_addr1,create_at FROM t_baggage WHERE del_flg = 0 ORDER BY create_at DESC LIMIT {$limit}) as baggage
+              ORDER BY create_at DESC LIMIT {$limit}
 ",
 			array()
 		);
@@ -97,7 +98,7 @@ class f_list_logic
 		foreach ($se as $type) {
 			$table = "";
 			$add_col = "";
-			$order = " ORDER BY `created_at` DESC ";
+			$order = " ORDER BY `create_at` DESC ";
 			$detail_url_base = "";
 			if ($type == 'truck_me') {
 				//自身の依頼したトラック
@@ -180,13 +181,13 @@ class f_list_logic
 
 		$cunt = 0;
 		for ($i = 0; $i < count((array)$data); $i++) {
-
-			$fff = $this->common_logic->select_logic("select * from t_member where member_id = '" . $data[$i]['received_id'] . "' and del_flg = '1'", array());
-
+			
+			$fff = $this->common_logic->select_logic("select * from t_member where member_id = '".$data[$i]['received_id']."' and del_flg = '1'", array() );
+			
 			if ($fff != null) {
 				continue;
 			}
-
+		
 			if ($cunt > $limit) {
 				break;
 			}
@@ -269,8 +270,9 @@ class f_list_logic
 				$template = str_replace('発　 　', '<img alt="" src="assets/img/menu_arw.png" style="    width: 13px;">', $template);
 			}
 			$html .= preg_replace($pattern, $replacement, $template);
-
+			
 			$cunt++;
+
 		}
 
 		return $html;

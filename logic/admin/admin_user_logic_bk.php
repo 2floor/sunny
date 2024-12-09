@@ -2,8 +2,7 @@
 require_once __DIR__ . '/../../model/t_admin_model.php';
 require_once __DIR__ . '/../../model/t_admin_menu_model.php';
 require_once __DIR__ . '/../../logic/common/common_logic.php';
-class admin_user_logic_bk
-{
+class admin_user_logic_bk {
 	private $t_admin_model;
 	private $t_admin_menu_model;
 	private $common_logic;
@@ -11,59 +10,57 @@ class admin_user_logic_bk
 	/**
 	 * コンストラクタ
 	 */
-	public function __construct()
-	{
+	public function __construct() {
 		// 管理画面ユーザー
-		$this->t_admin_model = new t_admin_model();
-		$this->t_admin_menu_model = new t_admin_menu_model();
-		$this->common_logic = new common_logic();
+		$this->t_admin_model = new t_admin_model ();
+		$this->t_admin_menu_model = new t_admin_menu_model ();
+		$this->common_logic = new common_logic ();
 	}
 
 	/**
 	 * 管理画面ユーザー管理初期HTML生成
 	 */
-	public function create_admin_user_list_html()
-	{
+	public function create_admin_user_list_html() {
 		// 管理画面ユーザー情報取得
-		$result = $this->t_admin_model->get_admin_user_list();
+		$result = $this->t_admin_model->get_admin_user_list ();
 
 		// 管理画面メニュー情報取得
-		$result_menu = $this->t_admin_menu_model->get_admin_menu_list();
+		$result_menu = $this->t_admin_menu_model->get_admin_menu_list ();
 
 		$return_html = "";
 		$back_color = 1;
 		$cnt = 0;
-		for ($i = 0; $i < count($result); $i++) {
-			$row = $result[$i];
+		for($i = 0; $i < count ( $result ); $i ++) {
+			$row = $result [$i];
 
-			if ($row['id'] != 2) {
+			if ($row ['id'] != 2) {
 
-				$cnt++;
+				$cnt ++;
 				$edit_html = '&nbsp;';
 
 				// 管理画面ユーザー権限成型
-				$authority_list = explode(',', $row['authority']);
-				$id = $this->common_logic->zero_padding($row['id']);
-				$member_id = $this->common_logic->zero_padding($row['member_id']);
+				$authority_list = explode ( ',', $row ['authority'] );
+				$id = $this->common_logic->zero_padding ( $row ['id'] );
+				$member_id = $this->common_logic->zero_padding ( $row ['member_id'] );
 
 				// 各種変数初期化
 				$admin_menu_name_html = "";
 				$admin_menu_authority_flg_html = "";
 				$admin_menu_list_html = "";
 
-				for ($n = 0; $n < count($result_menu); $n++) {
-					$row_menu = $result_menu[$n];
+				for($n = 0; $n < count ( $result_menu ); $n ++) {
+					$row_menu = $result_menu [$n];
 
 					// 管理画面ユーザー権限デフォルト値設定
 					$authority_flg = "×";
 
 					// 管理画面ユーザー権限判定
-					if (in_array($row_menu['admin_menu_id'], $authority_list)) {
+					if (in_array ( $row_menu ['admin_menu_id'], $authority_list )) {
 						$authority_flg = "○";
 					}
 
 					// 管理画面メニュー名設定
-					$admin_menu_name_html .= "<td style='border: 1px solid rgba(0, 0, 0, 0.1);'>" . $row_menu['admin_menu_name'] . '</td>';
+					$admin_menu_name_html .= "<td style='border: 1px solid rgba(0, 0, 0, 0.1);'>" . $row_menu ['admin_menu_name'] . '</td>';
 
 					// 管理画面ユーザー権限表示用設定
 					$admin_menu_authority_flg_html .= "<td style='border: 1px solid rgba(0, 0, 0, 0.1); text-align:center;'>" . $authority_flg . '</td>';
@@ -71,24 +68,24 @@ class admin_user_logic_bk
 					// 管理画面ユーザー登録用権限一覧HTML設定
 					$admin_menu_list_html .= '
 								<td>
-									<input type="checkbox" name="admin_authority" value="' . $row_menu['admin_menu_id'] . '" class="checkboxRequired">&nbsp;<label>' . $row_menu['admin_menu_name'] . '</label>
+									<input type="checkbox" name="admin_authority" value="' . $row_menu ['admin_menu_id'] . '" class="checkboxRequired">&nbsp;<label>' . $row_menu ['admin_menu_name'] . '</label>
 								</td>';
 				}
 
 				$del_color = "";
 				$del_html = "有効";
-				if ($row['del_flg'] == 1) {
+				if ($row ['del_flg'] == 1) {
 					$del_color = "color:#d3d3d3";
 					$del_html = "削除";
 
-					if ($row['id'] != 23) {
-						$edit_html = "<a herf='#' class='edit' name='edit_" . $row['id'] . "' value='" . $row['id'] . "'>管理画面ユーザーの変更をする</a><br>";
-						$edit_html .= "<a herf='#' class='recovery' name='recovery_" . $row['id'] . "' value='" . $row['id'] . "'>管理画面ユーザーを有効にする</a>";
+					if ($row ['id'] != 23) {
+						$edit_html = "<a herf='#' class='edit' name='edit_" . $row ['id'] . "' value='" . $row ['id'] . "'>管理画面ユーザーの変更をする</a><br>";
+						$edit_html .= "<a herf='#' class='recovery' name='recovery_" . $row ['id'] . "' value='" . $row ['id'] . "'>管理画面ユーザーを有効にする</a>";
 					}
 				} else {
-					if ($row['id'] != 23) {
-						$edit_html = "<a herf='#' class='edit' name='edit_" . $row['id'] . "' value='" . $row['id'] . "'>管理画面ユーザーの変更をする</a><br>";
-						$edit_html .= "<a herf='#' class='del' name='del_" . $row['id'] . "' value='" . $row['id'] . "'>管理画面ユーザーの削除をする</a>";
+					if ($row ['id'] != 23) {
+						$edit_html = "<a herf='#' class='edit' name='edit_" . $row ['id'] . "' value='" . $row ['id'] . "'>管理画面ユーザーの変更をする</a><br>";
+						$edit_html .= "<a herf='#' class='del' name='del_" . $row ['id'] . "' value='" . $row ['id'] . "'>管理画面ユーザーの削除をする</a>";
 					}
 				}
 
@@ -107,12 +104,12 @@ class admin_user_logic_bk
 						<td>" . $cnt . "</td>
 						<td>" . $id . "</td>
 						<td>" . $del_html . "</td>
-						<td>" . $row['login_id'] . "</td>
+						<td>" . $row ['login_id'] . "</td>
 						<td>**********</td>
-						<td>" . $row['name'] . "</td>
-						<td><a href='mailto:" . $row['mail'] . "'>" . $row['mail'] . "</a></td>
-						<td>" . $row['created_at'] . "</td>
-						<td>" . $row['updated_at'] . "</td>
+						<td>" . $row ['name'] . "</td>
+						<td><a href='mailto:" . $row ['mail'] . "'>" . $row ['mail'] . "</a></td>
+						<td>" . $row ['create_at'] . "</td>
+						<td>" . $row ['update_at'] . "</td>
 						<td width='200'>
 							$edit_html
 						</td>
@@ -129,7 +126,7 @@ class admin_user_logic_bk
 							</table>
 						</td>
 					</tr>";
-				$back_color++;
+				$back_color ++;
 
 				if ($back_color >= 3) {
 					$back_color = 1;
@@ -137,9 +134,9 @@ class admin_user_logic_bk
 			}
 		}
 
-		return array(
-			"list_html" => $return_html,
-			"entry_menu_list_html" => $admin_menu_list_html
+		return array (
+				"list_html" => $return_html,
+				"entry_menu_list_html" => $admin_menu_list_html
 		);
 	}
 
@@ -149,14 +146,13 @@ class admin_user_logic_bk
 	 * @param unknown $_post_datas
 	 * @return boolean
 	 */
-	public function new_entry_admin_user($params, $pass_array)
-	{
-		if ($pass_array[0] === $pass_array[1]) {
+	public function new_entry_admin_user($params, $pass_array) {
+		if ($pass_array [0] === $pass_array [1]) {
 
 			// パスワード暗号化
-			$params[4] = $this->common_logic->convert_password_encode($params[4]);
+			$params [4] = $this->common_logic->convert_password_encode ( $params [4] );
 
-			$this->t_admin_model->insert_admin_user($params);
+			$this->t_admin_model->insert_admin_user ( $params );
 			return true;
 		}
 		return false;
@@ -170,14 +166,13 @@ class admin_user_logic_bk
 	 * @param unknown $pass_conf
 	 * @param unknown $authority_menu
 	 */
-	public function update_admin_user($params, $pass_array)
-	{
-		if ($pass_array[0] === $pass_array[1]) {
+	public function update_admin_user($params, $pass_array) {
+		if ($pass_array [0] === $pass_array [1]) {
 
 			// パスワード暗号化
-			$params[3] = $this->common_logic->convert_password_encode($params[3]);
+			$params [3] = $this->common_logic->convert_password_encode ( $params [3] );
 
-			$this->t_admin_model->update_admin_user($params);
+			$this->t_admin_model->update_admin_user ( $params );
 			return true;
 		}
 
@@ -189,10 +184,9 @@ class admin_user_logic_bk
 	 *
 	 * @param unknown $id
 	 */
-	public function create_admin_user_detail_html($id)
-	{
-		$result = $this->t_admin_model->get_admin_user_detail($id);
-		return $result[0];
+	public function create_admin_user_detail_html($id) {
+		$result = $this->t_admin_model->get_admin_user_detail ( $id );
+		return $result [0];
 	}
 
 	/**
@@ -201,11 +195,10 @@ class admin_user_logic_bk
 	 * @param unknown $login_id
 	 * @return boolean
 	 */
-	public function chk_admin_login_id($login_id)
-	{
-		$result = $this->t_admin_model->count_login_id($login_id);
+	public function chk_admin_login_id($login_id) {
+		$result = $this->t_admin_model->count_login_id ( $login_id );
 
-		if ($result[0]['cnt'] == 0) {
+		if ($result [0] ['cnt'] == 0) {
 			return true;
 		}
 		return false;
@@ -216,17 +209,16 @@ class admin_user_logic_bk
 	 *
 	 * @param unknown $id
 	 */
-	public function del_admin_user($id)
-	{
-		$this->t_admin_model->del_admin_user($id);
+	public function del_admin_user($id) {
+		$this->t_admin_model->del_admin_user ( $id );
 	}
 
 	/**
 	 * 有効化処理
 	 * @param unknown $id
 	 */
-	public function recoveryl_admin_user($id)
-	{
-		$this->t_admin_model->recoveryl_admin_user($id);
+	public function recoveryl_admin_user($id) {
+		$this->t_admin_model->recoveryl_admin_user ( $id );
 	}
+
 }

@@ -1,5 +1,4 @@
 <?php
-
 /**
  * 当クラスはセキュリティに影響がないシステムの定数を定義するクラスである
  */
@@ -10,7 +9,7 @@
  * @var unknown
  */
 
-define("HTTP_TYPE", (empty($_SERVER["HTTPS"]) ? "http://" : "https://") . $_SERVER["HTTP_HOST"]) . "/";
+define ( "HTTP_TYPE", (empty ( $_SERVER ["HTTPS"] ) ? "http://" : "https://") . $_SERVER ["HTTP_HOST"] ) . "/";
 
 /**
  * 管理画面URL
@@ -18,21 +17,19 @@ define("HTTP_TYPE", (empty($_SERVER["HTTPS"]) ? "http://" : "https://") . $_SERV
  * @var unknown
  */
 // ビューリンク用path
-// define ( "MEDICALNET_ADMIN_PATH", HTTP_TYPE . "/sunny-health/admin/" );
-define("MEDICALNET_ADMIN_PATH", HTTP_TYPE . "/admin/");
+define ( "MEDICALNET_ADMIN_PATH", HTTP_TYPE . "/sunny-health/admin/" );
 
 /**
  * ini_path
  *
  * @var unknown
  */
-define("INI_PATH", __DIR__ . '/../common/config.ini');
+define ( "INI_PATH", __DIR__ . '/../common/config.ini' );
 
 /**
  * BaseUrl
  */
-// $path = '/sunny-health/';
-$path = '';
+$path = '/sunny-health/';
 $protocol = (!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off' || $_SERVER['SERVER_PORT'] == 443) ? "https://" : "http://";
 $host = $_SERVER['HTTP_HOST'];
 $baseUrl = $protocol . $host . $path;
@@ -43,7 +40,7 @@ define('BASE_URL', $baseUrl);
  *
  * @var unknown
  */
-define("PAGE_HEDER_DETAIL", '{
+define ( "PAGE_HEDER_DETAIL", '{
 	"menu.php":[{
 		"title":"総合メニュー","pan":["menu"]
 		}],
@@ -54,22 +51,22 @@ define("PAGE_HEDER_DETAIL", '{
 		"title":"総合メニュー","pan":["menu"]
 		}],
 	}]
-}');
+}' );
 
 /** ニュースタイプ **/
-defined('NEWS_TYPE1') or define('NEWS_TYPE1', '交通情報');
-defined('NEWS_TYPE2') or define('NEWS_TYPE2', '天気情報');
-defined('NEWS_TYPE3') or define('NEWS_TYPE3', '運営からのお知らせ');
-defined('NEWS_TYPE4') or define('NEWS_TYPE4', '一般ニュース');
-defined('NEWS_TYPE5') or define('NEWS_TYPE5', '交通ニュース');
-defined('NEWS_TYPE6') or define('NEWS_TYPE6', '経済ニュース');
-defined('NEWS_TYPE7') or define('NEWS_TYPE7', 'スポーツニュース');
-defined('NEWS_TYPE8') or define('NEWS_TYPE8', '速報');
-defined('NEWS_TYPE9') or define('NEWS_TYPE9', '政治');
+defined('NEWS_TYPE1') or define('NEWS_TYPE1','交通情報');
+defined('NEWS_TYPE2') or define('NEWS_TYPE2','天気情報');
+defined('NEWS_TYPE3') or define('NEWS_TYPE3','運営からのお知らせ');
+defined('NEWS_TYPE4') or define('NEWS_TYPE4','一般ニュース');
+defined('NEWS_TYPE5') or define('NEWS_TYPE5','交通ニュース');
+defined('NEWS_TYPE6') or define('NEWS_TYPE6','経済ニュース');
+defined('NEWS_TYPE7') or define('NEWS_TYPE7','スポーツニュース');
+defined('NEWS_TYPE8') or define('NEWS_TYPE8','速報');
+defined('NEWS_TYPE9') or define('NEWS_TYPE9','政治');
 
 
 
-define("PREF_SELECT_HTML", '
+define ( "PREF_SELECT_HTML", '
 		<select name="pref" id="pref" class="form-control input_form validate" style="width:auto">
 			<option value="" selected>都道府県</option>
 			<option value="北海道">北海道</option>
@@ -119,9 +116,9 @@ define("PREF_SELECT_HTML", '
 			<option value="宮崎県">宮崎県</option>
 			<option value="鹿児島県">鹿児島県</option>
 			<option value="沖縄県">沖縄県</option>
-		</select>');
+		</select>' );
 
-define("PREF_SELECT_HTML2", '
+define ( "PREF_SELECT_HTML2", '
 			<option value="" selected>都道府県</option>
 			<option value="北海道">北海道</option>
 			<option value="青森県">青森県</option>
@@ -169,9 +166,9 @@ define("PREF_SELECT_HTML2", '
 			<option value="大分県">大分県</option>
 			<option value="宮崎県">宮崎県</option>
 			<option value="鹿児島県">鹿児島県</option>
-			<option value="沖縄県">沖縄県</option>');
+			<option value="沖縄県">沖縄県</option>' );
 
-define("PREF_SELECT_HTML3", '
+define ( "PREF_SELECT_HTML3", '
 			<option value="北海道">北海道</option>
 			<option value="青森県">青森県</option>
 			<option value="岩手県">岩手県</option>
@@ -218,11 +215,11 @@ define("PREF_SELECT_HTML3", '
 			<option value="大分県">大分県</option>
 			<option value="宮崎県">宮崎県</option>
 			<option value="鹿児島県">鹿児島県</option>
-			<option value="沖縄県">沖縄県</option>');
+			<option value="沖縄県">沖縄県</option>' );
 
 
 
-define("TIME_OPTION_HTML", '
+define ( "TIME_OPTION_HTML", '
 			<option value="">select</option>
 			<option value="0">休診日</option>
 			<option value="800">8：00</option>
@@ -253,51 +250,51 @@ define("TIME_OPTION_HTML", '
 				<option value="2030">20：30</option>
 				<option value="2100">21：00</option>
 				<option value="2130">21：30</option>
-				<option value="2200">22：00</option>');
+				<option value="2200">22：00</option>' );
 
-define("GROUP_FAQ", [
-	1 => '医療専門用語について',
-	2 => 'その他',
+define ( "GROUP_FAQ", [
+    1 => '医療専門用語について',
+    2 => 'その他',
 ]);
 
-define("IMPORT_DATA_TYPE", [
-	1 => '病院',
-	2 => '病院 がん',
-	3 => 'DPC',
-	4 => 'Stage',
-	5 => 'Survival',
-	6 => '癌',
+define ( "IMPORT_DATA_TYPE", [
+    1 => '病院',
+    2 => '病院 がん',
+    3 => 'DPC',
+    4 => 'Stage',
+    5 => 'Survival',
+    6 => '癌',
 ]);
 
-define("IMPORT_STATUS", [
-	1 => '進行中',
-	2 => '成功した',
-	3 => 'エラー',
-	4 => 'タイムアウト',
-	5 => '再度インポートする'
+define ( "IMPORT_STATUS", [
+    1 => '進行中',
+    2 => '成功した',
+    3 => 'エラー',
+    4 => 'タイムアウト',
+    5 => '再度インポートする'
 ]);
 
-define("RANK_DATA_TYPE", [
-	1 => 'DPC',
-	2 => 'Stage',
-	3 => 'Survival'
+define ( "RANK_DATA_TYPE", [
+    1 => 'DPC',
+    2 => 'Stage',
+    3 => 'Survival'
 ]);
 
-define("AVG_RANK_DATA_TYPE", [
-	1 => 'DPC',
-	2 => 'Stage',
-	3 => 'Survival'
+define ( "AVG_RANK_DATA_TYPE", [
+    1 => 'DPC',
+    2 => 'Stage',
+    3 => 'Survival'
 ]);
 
-define("AUTO_RANK_TYPE", [
-	1 => '自動ランキングを作成',
-	2 => '平均データの自動生成',
+define ( "AUTO_RANK_TYPE", [
+    1 => '自動ランキングを作成',
+    2 => '平均データの自動生成',
 ]);
 
-define("AUTO_RANK_STATUS", [
-	1 => '進行中',
-	2 => 'タイムアウト',
-	3 => '未作成',
-	4 => '再作成必要',
-	5 => '完了'
+define ( "AUTO_RANK_STATUS", [
+    1 => '進行中',
+    2 => 'タイムアウト',
+    3 => '未作成',
+    4 => '再作成必要',
+    5 => '完了'
 ]);

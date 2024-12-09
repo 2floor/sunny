@@ -9,8 +9,7 @@ use Carbon\Carbon;
 
 class hospital_logic extends base_logic
 {
-    public function getModel()
-    {
+    public function getModel() {
         return Hospital::class;
     }
 
@@ -24,19 +23,19 @@ class hospital_logic extends base_logic
         $back_color = 1;
         $cnt = ($params[0] * ($params[1] - 1));
 
-        for ($i = 0; $i < count($list ?? []); $i++) {
+        for($i = 0; $i < count ($list ?? []); $i ++) {
             $row = $list[$i];
-            $cnt++;
+            $cnt ++;
 
             //削除フラグ
             $del_color = "";
-            $edit_html_a = "<a herf='javascript:void(0);' class='edit clr1' name='edit_" . $row['id'] . "' value='" . $row['id'] . "'><i class=\"fa fa-pencil\" aria-hidden=\"true\"></i></a><br>";
+            $edit_html_a = "<a herf='javascript:void(0);' class='edit clr1' name='edit_" . $row ['id'] . "' value='" . $row ['id'] . "'><i class=\"fa fa-pencil\" aria-hidden=\"true\"></i></a><br>";
 
-            if ($row['del_flg'] == 1) {
+            if ($row ['del_flg'] == 1) {
                 $del_color = "color:#d3d3d3";
-                $edit_html_a .= "<a herf='javascript:void(0);' class='recovery clr2' name='recovery_" . $row['id'] . "' value='" . $row['id'] . "' ><i class=\"fa fa-undo\" aria-hidden=\"true\"></i></a><br>";
+                $edit_html_a .= "<a herf='javascript:void(0);' class='recovery clr2' name='recovery_" . $row ['id'] . "' value='" . $row ['id'] . "' ><i class=\"fa fa-undo\" aria-hidden=\"true\"></i></a><br>";
             } else {
-                $edit_html_a .= "<a herf='javascript:void(0);' class='del clr2' name='del_" . $row['id'] . "' value='" . $row['id'] . "'><i class=\"fa fa-trash\" aria-hidden=\"true\"></i></a><br>";
+                $edit_html_a .= "<a herf='javascript:void(0);' class='del clr2' name='del_" . $row ['id'] . "' value='" . $row ['id'] . "'><i class=\"fa fa-trash\" aria-hidden=\"true\"></i></a><br>";
             }
 
             if ($back_color == 2) {
@@ -46,37 +45,37 @@ class hospital_logic extends base_logic
             }
 
             $edit_html_b = '';
-            if ($row['public_flg'] == 1) {
-                $edit_html_b .= "<a herf='javascript:void(0);' class='release btn btn-default waves-effect w-xs btn-xs' name='release_" . $row['id'] . "' value='" . $row['id'] . "'>非公開</a>";
+            if ($row ['public_flg'] == 1) {
+                $edit_html_b .= "<a herf='javascript:void(0);' class='release btn btn-default waves-effect w-xs btn-xs' name='release_" . $row ['id'] . "' value='" . $row ['id'] . "'>非公開</a>";
             } else {
-                $edit_html_b .= "<a herf='javascript:void(0);' class='private btn btn-custom waves-effect w-xs btn-xs ' name='private_" . $row['id'] . "' value='" . $row['id'] . "'>公開</a>";
+                $edit_html_b .= "<a herf='javascript:void(0);' class='private btn btn-custom waves-effect w-xs btn-xs ' name='private_" . $row ['id'] . "' value='" . $row ['id'] . "'>公開</a>";
             }
 
-            $created_at = Carbon::parse($row['created_at'])->format('Y-m-d H:i:s');
-            $diff = strtotime(date('YmdHis')) - strtotime($created_at);
+            $create_at = Carbon::parse($row['created_at'])->format('Y-m-d H:i:s');
+            $diff = strtotime(date('YmdHis')) - strtotime($create_at);
 
-            if ($diff < 60) {
+            if($diff < 60){
                 $time = $diff;
-                $created_at = $time . '秒前';
-            } elseif ($diff < 60 * 60) {
+                $create_at = $time . '秒前';
+            }elseif($diff < 60 * 60){
                 $time = round($diff / 60);
-                $created_at = $time . '分前';
-            } elseif ($diff < 60 * 60 * 24) {
+                $create_at = $time . '分前';
+            }elseif($diff < 60 * 60 * 24){
                 $time = round($diff / 3600);
-                $created_at = $time . '時間前';
+                $create_at = $time . '時間前';
             }
 
-            $updated_at = Carbon::parse($row['updated_at'])->format('Y-m-d H:i:s');
-            $diff = strtotime(date('YmdHis')) - strtotime($updated_at);
-            if ($diff < 60) {
+            $update_at = Carbon::parse($row['updated_at'])->format('Y-m-d H:i:s');
+            $diff = strtotime(date('YmdHis')) - strtotime($update_at);
+            if($diff < 60){
                 $time = $diff;
-                $updated_at = $time . '秒前';
-            } elseif ($diff < 60 * 60) {
+                $update_at = $time . '秒前';
+            }elseif($diff < 60 * 60){
                 $time = round($diff / 60);
-                $updated_at = $time . '分前';
-            } elseif ($diff < 60 * 60 * 24) {
+                $update_at = $time . '分前';
+            }elseif($diff < 60 * 60 * 24){
                 $time = round($diff / 3600);
-                $updated_at = $time . '時間前';
+                $update_at = $time . '時間前';
             }
 
             $return_html .= "
@@ -86,8 +85,8 @@ class hospital_logic extends base_logic
 						<td>" . $row['hospital_name'] . "</td>
 						<td>" . $row['area']['area_name'] . "</td>
 						<td>" . $row['addr'] . "</td>
-						<td>" . $created_at . "</td>
-						<td>" . $updated_at . "</td>
+						<td>" . $create_at . "</td>
+						<td>" . $update_at . "</td>
 						<td>
 							$edit_html_a
 						</td>
@@ -96,14 +95,14 @@ class hospital_logic extends base_logic
 						</td>
 					</tr>
 					";
-            $back_color++;
+            $back_color ++;
 
             if ($back_color >= 3) {
                 $back_color = 1;
             }
         }
 
-        return array(
+        return array (
             "list_html" => $return_html,
             'all_cnt' => $all_cnt
         );

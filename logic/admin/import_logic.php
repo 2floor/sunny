@@ -7,8 +7,7 @@ use Carbon\Carbon;
 
 class import_logic extends base_logic
 {
-    public function getModel()
-    {
+    public function getModel() {
         return Import::class;
     }
 
@@ -22,25 +21,25 @@ class import_logic extends base_logic
         $back_color = 1;
         $cnt = ($params[0] * ($params[1] - 1));
 
-        for ($i = 0; $i < count($list ?? []); $i++) {
+        for($i = 0; $i < count ($list ?? []); $i ++) {
             $row = $list[$i];
-            $cnt++;
+            $cnt ++;
 
             //削除フラグ
-            $edit_html_a = "<a herf='javascript:void(0);' class='edit clr1' name='edit_" . $row['id'] . "' value='" . $row['id'] . "'><i class=\"fa fa-pencil\" aria-hidden=\"true\"></i></a><br>";
+            $edit_html_a = "<a herf='javascript:void(0);' class='edit clr1' name='edit_" . $row ['id'] . "' value='" . $row ['id'] . "'><i class=\"fa fa-pencil\" aria-hidden=\"true\"></i></a><br>";
 
-            $created_at = Carbon::parse($row['created_at'])->format('Y-m-d H:i:s');
-            $diff = strtotime(date('YmdHis')) - strtotime($created_at);
+            $create_at = Carbon::parse($row['created_at'])->format('Y-m-d H:i:s');
+            $diff = strtotime(date('YmdHis')) - strtotime($create_at);
 
-            if ($diff < 60) {
+            if($diff < 60){
                 $time = $diff;
-                $created_at = $time . '秒前';
-            } elseif ($diff < 60 * 60) {
+                $create_at = $time . '秒前';
+            }elseif($diff < 60 * 60){
                 $time = round($diff / 60);
-                $created_at = $time . '分前';
-            } elseif ($diff < 60 * 60 * 24) {
+                $create_at = $time . '分前';
+            }elseif($diff < 60 * 60 * 24){
                 $time = round($diff / 3600);
-                $created_at = $time . '時間前';
+                $create_at = $time . '時間前';
             }
 
             $completed_time = '';
@@ -48,16 +47,17 @@ class import_logic extends base_logic
             if ($row['completed_time']) {
                 $completed_time = Carbon::parse($row['completed_time'])->format('Y-m-d H:i:s');
                 $diff = strtotime(date('YmdHis')) - strtotime($completed_time);
-                if ($diff < 60) {
+                if($diff < 60){
                     $time = $diff;
                     $completed_time = $time . '秒前';
-                } elseif ($diff < 60 * 60) {
+                }elseif($diff < 60 * 60){
                     $time = round($diff / 60);
                     $completed_time = $time . '分前';
-                } elseif ($diff < 60 * 60 * 24) {
+                }elseif($diff < 60 * 60 * 24){
                     $time = round($diff / 3600);
                     $completed_time = $time . '時間前';
                 }
+
             }
 
             $data_type_import = IMPORT_DATA_TYPE;
@@ -89,21 +89,21 @@ class import_logic extends base_logic
 						<td>" . $status . "</td>
 						<td>" . $row['success'] . "</td>
 						<td>" . $row['error'] . "</td>
-						<td>" . $created_at . "</td>
+						<td>" . $create_at . "</td>
 						<td>" . $completed_time . "</td>
 						<td>
 							$edit_html_a
 						</td>
 					</tr>
 					";
-            $back_color++;
+            $back_color ++;
 
             if ($back_color >= 3) {
                 $back_color = 1;
             }
         }
 
-        return array(
+        return array (
             "list_html" => $return_html,
             'all_cnt' => $all_cnt
         );

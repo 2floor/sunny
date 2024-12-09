@@ -3,25 +3,22 @@ require_once __DIR__ . '/../../model/t_items_detail_model.php';
 require_once __DIR__ . '/../../logic/common/common_logic.php';
 
 
-class items_detail_logic
-{
+class items_detail_logic {
 	private $t_items_detail_model;
 	private $common_logic;
 
 	/**
 	 * コンストラクタ
 	 */
-	public function __construct()
-	{
-		$this->t_items_detail_model = new t_items_detail_model();
-		$this->common_logic = new common_logic();
+	public function __construct() {
+		$this->t_items_detail_model= new t_items_detail_model();
+		$this->common_logic = new common_logic ();
 	}
 
 	/**
 	 * 初期HTML生成
 	 */
-	public function create_data_list($params, $search_select = null)
-	{
+	public function create_data_list($params, $search_select = null){
 		$admin_menu_list_html = $disp_all = '';
 
 		$this->common_logic->create_table_dump('t_items_detail');
@@ -37,54 +34,54 @@ class items_detail_logic
 		$pager_cnt = ceil($all_cnt / $params[2]);
 		$offset = ($params[1] - 1) * $params[2];
 
-		$result_items = $this->t_items_detail_model->get_items_detail_list($offset, $params[2], $sqlAdd);
+		$result_items = $this->t_items_detail_model->get_items_detail_list($offset, $params[2],$sqlAdd);
 
 		$return_html = "";
 		$back_color = 1;
 		$cnt = $offset;
-		for ($i = 0; $i < count($result_items); $i++) {
-			$row = $result_items[$i];
+		for($i = 0; $i < count ( $result_items ); $i ++) {
+			$row = $result_items [$i];
 
-			$cnt++;
+			$cnt ++;
 			$edit_html = '&nbsp;';
 
-			$items_detail_id = $this->common_logic->zero_padding($row['items_detail_id']);
+			$items_detail_id = $this->common_logic->zero_padding ( $row ['items_detail_id'] );
 
 			//各データをhtmlに変換
 
 			//画像表示処理
 			$img_tag_html = '<img src="../assets/admin/img/nophoto.png" style="height:50px">';
-			$nmage_list = array();
-			if (strpos($row['img'], ',') !== false && ($row['img'] != null && $row['img'] != '')) {
+			$nmage_list = array ();
+			if (strpos ( $row ['img'], ',' ) !== false && ($row ['img'] != null && $row ['img'] != '')) {
 				// 'abcd'のなかに'bc'が含まれている場合
 				$img_tag_html = '';
-				$nmage_list = explode(',', $row['img']);
+				$nmage_list = explode ( ',', $row ['img'] );
 
-				for ($n = 0; $n < count($nmage_list); $n++) {
-					$img_tag_html .= '<img src="../upload_files/items_detail/' . $nmage_list[$n] . '" style="height:50px">';
+				for($n = 0; $n < count ( $nmage_list ); $n ++) {
+					$img_tag_html .= '<img src="../upload_files/items_detail/' . $nmage_list [$n] . '" style="height:50px">';
 				}
-			} else if ($row['img'] != null && $row['image'] != '') {
-				$img_tag_html = '<img src="../upload_files/items_detail/' . $row['img'] . '" style="height:50px">';
+			} else if ($row ['img'] != null && $row ['image'] != '') {
+				$img_tag_html = '<img src="../upload_files/items_detail/' . $row ['img'] . '" style="height:50px">';
 			}
 
 			//動画
-			if (isset($row['movie'])) {
-				$movie = '<a  href="#modal" class="check_movie" items_detail_id="' . $row['items_detail_id'] . '">有り</a>';
-			} else {
+			if (isset($row['movie'])){
+				$movie = '<a  href="#modal" class="check_movie" items_detail_id="'. $row['items_detail_id'] .'">有り</a>';
+			}else{
 				$movie = '無し';
 			}
 
 
 			//削除フラグ
 			$del_color = "";
-			$edit_html_a = "<a herf='javascript:void(0);' class='edit clr1' name='edit_" . $row['items_detail_id'] . "' value='" . $row['items_detail_id'] . "'><i class=\"fa fa-pencil\" aria-hidden=\"true\"></i></a><br>";
+			$edit_html_a = "<a herf='javascript:void(0);' class='edit clr1' name='edit_" . $row ['items_detail_id'] . "' value='" . $row ['items_detail_id'] . "'><i class=\"fa fa-pencil\" aria-hidden=\"true\"></i></a><br>";
 			$del_html = "有効";
-			if ($row['del_flg'] == 1) {
+			if ($row ['del_flg'] == 1) {
 				$del_color = "color:#d3d3d3";
 				$del_html = "削除";
-				$edit_html_a .= "<a herf='javascript:void(0);' class='recovery clr2' name='recovery_" . $row['items_detail_id'] . "' value='" . $row['items_detail_id'] . "' ><i class=\"fa fa-undo\" aria-hidden=\"true\"></i></a><br>";
+				$edit_html_a .= "<a herf='javascript:void(0);' class='recovery clr2' name='recovery_" . $row ['items_detail_id'] . "' value='" . $row ['items_detail_id'] . "' ><i class=\"fa fa-undo\" aria-hidden=\"true\"></i></a><br>";
 			} else {
-				$edit_html_a .= "<a herf='javascript:void(0);' class='del clr2' name='del_" . $row['items_detail_id'] . "' value='" . $row['items_detail_id'] . "'><i class=\"fa fa-trash\" aria-hidden=\"true\"></i></a><br>";
+				$edit_html_a .= "<a herf='javascript:void(0);' class='del clr2' name='del_" . $row ['items_detail_id'] . "' value='" . $row ['items_detail_id'] . "'><i class=\"fa fa-trash\" aria-hidden=\"true\"></i></a><br>";
 			}
 
 			if ($back_color == 2) {
@@ -97,37 +94,37 @@ class items_detail_logic
 
 			$edit_html_b = '';
 			$public_html = "公開";
-			if ($row['public_flg'] == 1) {
+			if ($row ['public_flg'] == 1) {
 				$public_html = "非公開";
-				$edit_html_b .= "<a herf='javascript:void(0);' class='release btn btn-default waves-effect w-md btn-xs' name='release_" . $row['items_detail_id'] . "' value='" . $row['items_detail_id'] . "'>非公開</a>";
+				$edit_html_b .= "<a herf='javascript:void(0);' class='release btn btn-default waves-effect w-md btn-xs' name='release_" . $row ['items_detail_id'] . "' value='" . $row ['items_detail_id'] . "'>非公開</a>";
 			} else {
-				$edit_html_b .= "<a herf='javascript:void(0);' class='private btn btn-custom waves-effect w-md btn-xs ' name='private_" . $row['items_detail_id'] . "' value='" . $row['items_detail_id'] . "'>公開</a>";
+				$edit_html_b .= "<a herf='javascript:void(0);' class='private btn btn-custom waves-effect w-md btn-xs ' name='private_" . $row ['items_detail_id'] . "' value='" . $row ['items_detail_id'] . "'>公開</a>";
 			}
 
-			$created_at = $row['created_at'];
-			$diff = strtotime(date('YmdHis')) - strtotime($created_at);
-			if ($diff < 60) {
+			$create_at = $row['create_at'];
+			$diff = strtotime(date('YmdHis')) - strtotime($create_at);
+			if($diff < 60){
 				$time = $diff;
-				$created_at = $time . '秒前';
-			} elseif ($diff < 60 * 60) {
+				$create_at = $time . '秒前';
+			}elseif($diff < 60 * 60){
 				$time = round($diff / 60);
-				$created_at = $time . '分前';
-			} elseif ($diff < 60 * 60 * 24) {
+				$create_at = $time . '分前';
+			}elseif($diff < 60 * 60 * 24){
 				$time = round($diff / 3600);
-				$created_at = $time . '時間前';
+				$create_at = $time . '時間前';
 			}
 
-			$updated_at = $row['updated_at'];
-			$diff = strtotime(date('YmdHis')) - strtotime($updated_at);
-			if ($diff < 60) {
+			$update_at = $row['update_at'];
+			$diff = strtotime(date('YmdHis')) - strtotime($update_at);
+			if($diff < 60){
 				$time = $diff;
-				$updated_at = $time . '秒前';
-			} elseif ($diff < 60 * 60) {
+				$update_at = $time . '秒前';
+			}elseif($diff < 60 * 60){
 				$time = round($diff / 60);
-				$updated_at = $time . '分前';
-			} elseif ($diff < 60 * 60 * 24) {
+				$update_at = $time . '分前';
+			}elseif($diff < 60 * 60 * 24){
 				$time = round($diff / 3600);
-				$updated_at = $time . '時間前';
+				$update_at = $time . '時間前';
 			}
 
 
@@ -141,8 +138,8 @@ class items_detail_logic
 						<td>" . $row['category'] . "</td>
 						<td>" . $title . "</td>
 						<td>" . $row['disp_date'] . "</td>
-						<td>" . $created_at . "</td>
-						<td>" . $updated_at . "</td>
+						<td>" . $create_at . "</td>
+						<td>" . $update_at . "</td>
 						<td>
 							$edit_html_a
 						</td>
@@ -151,7 +148,7 @@ class items_detail_logic
 						</td>
 					</tr>
 ";
-			$back_color++;
+			$back_color ++;
 
 			if ($back_color >= 3) {
 				$back_color = 1;
@@ -162,23 +159,23 @@ class items_detail_logic
 		//ページャー部分HTML生成
 		$pager_html = '<li><a href="javascript:void(0)" class="page prev" pager_type="prev">prev</a></li>';
 		for ($i = 0; $i < $pager_cnt; $i++) {
-			$disp_cnt = $i + 1;
+			$disp_cnt = $i+1;
 
 			if ($i == 0) {
-				$pager_html .= '<li><a href="javascript:void(0)" class="page num_link" num_link="true" disp_id="' . $disp_cnt . '">' . $disp_cnt . '</a></li>';
+				$pager_html .= '<li><a href="javascript:void(0)" class="page num_link" num_link="true" disp_id="'.$disp_cnt.'">'.$disp_cnt.'</a></li>';
 			} else {
-				$pager_html .= '<li><a href="javascript:void(0)" class="page num_link" num_link="true" disp_id="' . $disp_cnt . '">' . $disp_cnt . '</a></li>';
+				$pager_html .= '<li><a href="javascript:void(0)" class="page num_link" num_link="true" disp_id="'.$disp_cnt.'">'.$disp_cnt.'</a></li>';
 			}
 		}
 		$pager_html .= '<li><a href="javascript:void(0)" class="page next" pager_type="next">next</a></li>';
 
-		return array(
-			"entry_menu_list_html" => $admin_menu_list_html,
-			"list_html" => $return_html,
-			"pager_html" => $pager_html,
-			'page_cnt' => $pager_cnt,
-			'all_cnt' => $all_cnt,
-			'disp_all' => $disp_all,
+		return array (
+				"entry_menu_list_html" => $admin_menu_list_html,
+				"list_html" => $return_html,
+				"pager_html" => $pager_html,
+				'page_cnt' => $pager_cnt,
+				'all_cnt' => $all_cnt,
+				'disp_all' => $disp_all,
 		);
 	}
 
@@ -186,29 +183,26 @@ class items_detail_logic
 	/**
 	 * 新規登録処理
 	 */
-	public function entry_new_data($params)
-	{
+	public function entry_new_data($params) {
 
-		$result = $this->t_items_detail_model->entry_items_detail($params);
+		$result = $this->t_items_detail_model->entry_items_detail( $params );
 		return true;
 	}
 
 	/**
 	 * 取得処理
 	 */
-	public function get_detail($items_detail_id)
-	{
-		$result = $this->t_items_detail_model->get_items_detail_detail($items_detail_id);
+	public function get_detail($items_detail_id ){
+		$result = $this->t_items_detail_model->get_items_detail_detail ( $items_detail_id );
 
-		return  $result[0];
+		return  $result [0];
 	}
 
 	/**
 	 * 編集更新処理
 	 * @param unknown $post
 	 */
-	public function update_detail($params)
-	{
+	public function update_detail($params){
 
 		$result = $this->t_items_detail_model->update_items_detail($params);
 		return true;
@@ -219,9 +213,8 @@ class items_detail_logic
 	 *
 	 * @param unknown $id
 	 */
-	public function recoveryl_func($id)
-	{
-		$this->t_items_detail_model->recoveryl_items_detail($id);
+	public function recoveryl_func($id) {
+		$this->t_items_detail_model->recoveryl_items_detail ( $id );
 	}
 
 
@@ -230,9 +223,8 @@ class items_detail_logic
 	 *
 	 * @param unknown $id
 	 */
-	public function del_func($id)
-	{
-		$this->t_items_detail_model->del_items_detail($id);
+	public function del_func($id) {
+		$this->t_items_detail_model->del_items_detail ( $id );
 	}
 
 	/**
@@ -240,9 +232,8 @@ class items_detail_logic
 	 *
 	 * @param unknown $id
 	 */
-	public function private_func($id)
-	{
-		$this->t_items_detail_model->private_items_detail($id);
+	public function private_func($id) {
+		$this->t_items_detail_model->private_items_detail ( $id );
 	}
 
 
@@ -251,8 +242,8 @@ class items_detail_logic
 	 *
 	 * @param unknown $id
 	 */
-	public function release_func($id)
-	{
-		$this->t_items_detail_model->release_items_detail($id);
+	public function release_func($id) {
+		$this->t_items_detail_model->release_items_detail ( $id );
 	}
+
 }
