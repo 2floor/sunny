@@ -144,7 +144,7 @@ class upload_csv_ct {
                 } elseif ($post['type'] == 'hospital_cancer') {
                     $import = new hospital_cancer_import();
                 } elseif ($post['type'] == 'dpc') {
-                    $import = new dpc_import();
+                    $import = new dpc_import($processing_import->file_name);
                 } elseif ($post['type'] == 'stage') {
                     $import = new stage_import();
                 } elseif ($post['type'] == 'survival') {
