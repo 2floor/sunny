@@ -2,5 +2,4 @@
 log
 third_party/vendor/
 third_party/storage/framework/cache/laravel-excel
-third_party/composer.lock
-common/common_constant.php
+
