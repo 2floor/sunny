@@ -10,6 +10,7 @@ class MissMatch extends BaseModel
 {
     const STATUS_NOT_CONFIRM = 0;
     const STATUS_CONFIRMED = 1;
+    const STATUS_ABSOLUTELY_MATCH = 2;
     const TYPE_DPC = 1;
     const TYPE_STAGE = 2;
     const TYPE_SURVIVAL = 3;
@@ -44,5 +45,10 @@ class MissMatch extends BaseModel
     public function area(): BelongsTo
     {
         return $this->belongsTo(Area::class, 'area_id', 'id');
+    }
+
+    public function cancer(): BelongsTo
+    {
+        return $this->belongsTo(Cancer::class, 'cancer_id', 'id');
     }
 }

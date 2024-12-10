@@ -128,4 +128,18 @@ class dpc_logic extends base_logic
     {
         return Cancer::find($id);
     }
+
+    public function getLastedYearDPC($num_lasted_year = 3)
+    {
+        return DPC::select('year')
+            ->distinct()
+            ->orderBy('year', 'desc')
+            ->limit($num_lasted_year)
+            ->get();
+    }
+
+    public function getListByWhereClause($clause)
+    {
+        return DPC::where($clause)->get();
+    }
 }
