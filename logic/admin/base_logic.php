@@ -258,9 +258,6 @@ abstract class base_logic
             $query->orderBy("$table.created_at", 'DESC');
         }
 
-        // var_dump($query->toSql());
-        // die;
-
         $cloneQuery = clone $query;
         $count = $query->count();
 

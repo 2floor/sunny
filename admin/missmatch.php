@@ -106,7 +106,7 @@ require_once __DIR__ . '/../required/view_common_include.php';
 														<th></th>
 														<th>No</th>
 														<th>都道府県名</th>
-														<th>がん種<br><span class="thead_type"></span></th>
+														<th>がん種<br>(<span class="thead_type">)</span></th>
 														<th>医療機関名<br>(基本)</th>
 														<th>
 															<span class="thead_type"></span>
@@ -124,7 +124,9 @@ require_once __DIR__ . '/../required/view_common_include.php';
 															(<span id="thead_year_0"></span>)
 														</th>
 														<th>類似度</th>
-														<th></th>
+														<th style="width: 25px;"></th>
+														<th style="width: 25px;"></th>
+														<th style="width: 25px;"></th>
 														<!-- <th>操作</th> -->
 														<!-- <th>公開</th> -->
 													</tr>
