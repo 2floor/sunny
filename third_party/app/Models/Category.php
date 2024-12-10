@@ -18,6 +18,21 @@ class Category extends BaseModel
     const FOR_ALL_CANCER = 1;
     const NOT_FOR_ALL_CANCER = 0;
 
+    const LIST_GROUP = [
+        self::HOSPITAL_GROUP => '病院区分',
+        self::DOCTOR_GROUP => '医師区分',
+    ];
+    const LIST_CANCER = [
+        self::NOT_FOR_ALL_CANCER => '医療機関基本',
+        self::FOR_ALL_CANCER => '医療機関がん種',
+    ];
+    const LIST_TYPE = [
+        self::OTHER_TYPE => 'その他',
+        self::HOSPITAL_DETAIL_TYPE => '病院詳細',
+        self::HOSPITAL_TREATMENT_TYPE => '治療法',
+        self::HOSPITAL_POLICY_TYPE => '治療方針',
+    ];
+
     protected $table = 't_category';
     protected $primaryKey = 'id';
     protected $fillable = [
@@ -41,8 +56,8 @@ class Category extends BaseModel
     {
         parent::boot();
 
-        static::addGlobalScope('deleted', fn(Builder $builder) => $builder->where('t_category.del_flg', '!=' , BaseModel::DELETED));
-        static::addGlobalScope('unpublish', fn(Builder $builder) => $builder->where('t_category.public_flg', '!=' , BaseModel::UNPUBLISHED));
+        static::addGlobalScope('deleted', fn(Builder $builder) => $builder->where('t_category.del_flg', '!=', BaseModel::DELETED));
+        static::addGlobalScope('unpublish', fn(Builder $builder) => $builder->where('t_category.public_flg', '!=', BaseModel::UNPUBLISHED));
     }
 
     public function hospitals(): BelongsToMany
