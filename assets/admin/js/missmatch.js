@@ -22,22 +22,6 @@ var input_file_name = {};
 
 var search_select = {
 	selectArea : {
-		//検索項目生成用
-		'ID' : {
-			search 		: true,
-			order		: true,
-			orderInit	: false,
-			ColName 	: 'id',
-			tableOrder 	: 1,
-			type 		: 'bigint',
-		},
-		'アイテム名' : {
-			search 		: true,
-			order		: false,
-			ColName 	: 'level1',
-			tableOrder 	: 2,
-			type 		: 'text',
-		}
 	},
 	//検索時内容
 	value : {},
@@ -45,9 +29,13 @@ var search_select = {
 }
 
 
+
 //初回定義
 var call_ajax_init;
 var call_ajax_edit_init;
+
+var currentPage = 1;
+
 
 var state = {
 	"actType": 'init',
@@ -57,7 +45,7 @@ history.replaceState(state, null, null);
 
 $(window).on('bb');
 $(window).on('popstate.bb',function(e) {
-    var state = e.originalEvent.state; // pushState()で渡しておいたstateオブジェクトを取得する
+    var state = e.originalEvent.state;
     if (state) {
         $('html, body').scrollTop(0);
         if(state.search_select){
@@ -132,10 +120,15 @@ $(function() {
 						common_func_bind();
 						validate_start();
 						tableColDispChange();
-						searchMain();
+						// searchMain();
 
 						$('.pagination-info .total-result span').text(data[1] + ' 結果');
 						$('#page_title').html('<i class="fa fa-list" aria-hidden="true"></i>'+ page_title + '一覧');
+
+						$('.thead_type').text('('+data[3]+')');
+						data[2].forEach((year,key) => {
+							$('#thead_year_'+key).text('('+year+')');
+						});
 						$(".loading").hide();
 
 						if (afterChange && pagination.pageNumber !== startPage) {
@@ -182,26 +175,55 @@ $(function() {
 	 * 更新初期処理
 	 */
 	function edit_init_exection(){
-		$('.edit').off();
-		$('.edit').on('click',function(){
-			var state = {
-				"actType": 'edit',
-				"id" : $(this).attr('value'),
-				"search_select" : search_select,
-			};
-			history.pushState(state, null, null);
+		$('.cancel').off();
+		$('.cancel').on('click',function(){
+			var id = $(this).attr('value');
 
-			// 編集対象ID設定
-			$('#id').val($(this).attr('value'));
-			$('#page_type').val('edit_init');
-			disp_ctrl();
+			swal({
+				title : "有効にする",
+				text : '管理ID' + id + "を有効にします。よろしいですか？",
+				type : "warning",
+				showCancelButton : true,
+				confirmButtonClass : 'btn-warning',
+				confirmButtonText : "有効にする",
+				cancelButtonText : 'キャンセル',
+				closeOnConfirm : false,
+				closeOnCancel : false
+			}, function(isConfirm) {
+				if (isConfirm) {
+					var form_data = append_form_prams('cancel_list', 'frm', null, false);
+					form_data.append('id', id);
 
-			// 入力内容取得
-			var form_data = append_form_prams('edit_init', 'frm', null, false);
+					call_ajax_change_state(form_data);
+				} else {
+					swal.close();
+				}
+			});
+		});
+		$('.accept').off();
+		$('.accept').on('click',function(){
+			var id = $(this).attr('value');
 
-			// ajax呼び出し
-			call_ajax_edit_init(form_data);
+			swal({
+				title : "有効にする",
+				text : '管理ID' + id + "を有効にします。よろしいですか？",
+				type : "warning",
+				showCancelButton : true,
+				confirmButtonClass : 'btn-warning',
+				confirmButtonText : "有効にする",
+				cancelButtonText : 'キャンセル',
+				closeOnConfirm : false,
+				closeOnCancel : false
+			}, function(isConfirm) {
+				if (isConfirm) {
+					var form_data = append_form_prams('accept_list', 'frm', null, false);
+					form_data.append('id', id);
 
+					call_ajax_change_state(form_data);
+				} else {
+					swal.close();
+				}
+			});
 		});
 	}
 

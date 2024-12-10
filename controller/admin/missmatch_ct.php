@@ -109,6 +109,10 @@ class missmatch_ct
 		} else if ($post['method'] == 'release') {
 			// 公開化処理
 			$data = $this->release($post['id']);
+		} else if ($post['method'] == 'cancel_list') {
+			$data = $this->cancel_list($post['id']);
+		} else if ($post['method'] == 'accept_list') {
+			$data = $this->accept_list($post['id']);
 		}
 
 		return $data;
@@ -226,7 +230,9 @@ class missmatch_ct
 			'status' => true,
 			'html' => [
 				$list_html['list_html'],
-				$list_html['all_cnt']
+				$list_html['all_cnt'],
+				$list_html['list_year'],
+				$list_html['process_type'],
 			],
 		];
 	}
@@ -382,6 +388,35 @@ class missmatch_ct
 			'status' => true,
 			'method' => 'release',
 			'msg' => '公開しました'
+		);
+		return $data;
+	}
+
+	public function cancel_list($id)
+	{
+		$ids = explode(',', $id);
+		foreach ($ids as $key => $idv) {
+			$this->missmatch_logic->cancel_data($idv);
+		}
+
+		$data = array(
+			'status' => true,
+			'method' => 'cancel_list',
+			'msg' => '削除しました'
+		);
+		return $data;
+	}
+	public function accept_list($id)
+	{
+		$ids = explode(',', $id);
+		foreach ($ids as $key => $idv) {
+			$this->missmatch_logic->accept_data($idv);
+		}
+
+		$data = array(
+			'status' => true,
+			'method' => 'accept_list',
+			'msg' => '承認しました'
 		);
 		return $data;
 	}
