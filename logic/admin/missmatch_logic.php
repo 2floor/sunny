@@ -26,6 +26,7 @@ class missmatch_logic extends base_logic
 		];
 
 		$process_type = isset($search_select['commonSearch']['const_type']) ? $search_select['commonSearch']['const_type'] : "DPC";
+		unset($search_select['commonSearch']['const_type']);
 
 		$const_nspace = "App\\Models\\";
 		$instance = $const_nspace . $process_type;
@@ -51,7 +52,7 @@ class missmatch_logic extends base_logic
 		// }, $const_model);
 
 
-		$data = $this->getListDataJoin($params, $search_select, [], [], function (&$query, $search_select) use ($list_year) {
+		$data = $this->getListDataJoin($params, $search_select, [], [], function (&$query, &$search_select) use ($list_year) {
 			$query->distinct();
 			$query->select([
 				't_miss_match.hospital_id',
@@ -76,16 +77,6 @@ class missmatch_logic extends base_logic
 			$query->leftJoin('m_area', 'm_area.id', '=', 't_miss_match.area_id');
 			$query->leftJoin('t_hospital', 't_hospital.id', '=', 't_miss_match.hospital_id');
 
-			// foreach ($list_year as $key => $year) {
-			// 	$query->leftJoin('t_miss_match AS year_' . $key, function ($join) use ($key, $year) {
-			// 		$join->on('year_' . $key . '.hospital_id', '=', 't_miss_match.hospital_id')
-			// 			->where('year_' . $key . '.area_id', '=', 't_miss_match.area_id')
-			// 			->where('year_' . $key . '.cancer_id', '=', 't_miss_match.cancer_id')
-			// 			->where('year_' . $key . '.year', '=', $year)
-			// 			->where('year_' . $key . '.status', '=', 0)
-			// 			->where('year_' . $key . '.del_flg', '=', 0);
-			// 	});
-			// }
 			foreach ($list_year as $key => $year) {
 				$query->leftJoinSub(
 					DB::table('t_miss_match')->where('year', $year)->where('status', 0)->where('del_flg', 0),
@@ -99,7 +90,29 @@ class missmatch_logic extends base_logic
 				);
 			}
 			$query->where('t_miss_match.status', 0);
-		}, [], function (&$query) {
+
+			if (!empty($search_select['commonSearch'])) {
+				if (!empty($search_select['commonSearch']['multitext'])) {
+
+					$multitext = $search_select['commonSearch']['multitext'];
+					unset($search_select['commonSearch']['multitext']);
+
+					$query->where(function ($query) use ($multitext, $list_year) {
+						$query->orWhere("t_miss_match.hospital_name", $multitext[1], $multitext[2]);
+						$query->orWhere("t_miss_match.year", $multitext[1], $multitext[2]);
+						$query->orWhere("m_cancer.cancer_type", $multitext[1], $multitext[2]);
+						$query->orWhere("m_area.area_name", $multitext[1], $multitext[2]);
+						$query->orWhere("t_miss_match.hospital_name", $multitext[1], $multitext[2]);
+
+						foreach ($list_year as $key => $year) {
+							$query->orWhere("year_" . $key . ".hospital_name", $multitext[1], $multitext[2]);
+						}
+					});
+				}
+			}
+		}, [
+			'area_id' => 'm_area'
+		], function (&$query) {
 			// $query->groupBy(
 			// 	't_miss_match.hospital_id',
 			// 	't_miss_match.cancer_id',

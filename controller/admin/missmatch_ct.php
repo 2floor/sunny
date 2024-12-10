@@ -116,10 +116,27 @@ class missmatch_ct
 	 */
 	private function create_data_list($post)
 	{
+
+		$whereClause = ['commonSearch' => []];
+
+		if (isset($post['search_select'])) {
+			$search_select = json_decode(htmlspecialchars_decode($post['search_select']), true);
+		}
+
+		if (!empty($search_select)) {
+			if (!empty($search_select['multitext'])) {
+				$whereClause['commonSearch']['multitext'] =  ['multitext', 'like', "%" . (trim($search_select['multitext'])) . "%"];
+			}
+
+			if (!empty($search_select['search_area'])) {
+				$whereClause['commonSearch'][] =  ['area_id', 'like', "%" . (trim($search_select['search_area'])) . "%"];
+			}
+		}
+
 		$list_html = $this->missmatch_logic->create_data_list([
 			$post['pageSize'],
 			$post['pageNumber']
-		],  $post['search_select']);
+		],  $whereClause);
 
 		// AJAX返却用データ成型
 		return [

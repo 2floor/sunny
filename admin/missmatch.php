@@ -46,23 +46,27 @@ require_once __DIR__ . '/../required/view_common_include.php';
 					<!-- searchBox -->
 					<div class="container table-rep-plugin">
 						<div class="searchBox">
-							<div class="searchBoxLeft searchArea">
+
+							<form name="search_form" class="searchBoxLeft searchArea">
 								<div class="searchBox1">
 									<div class="searchTxt">
 										絞り込み検索
 									</div>
-									<select class="form-control searchAreaSelect">
+									<select class="form-control" name="search_area">
 									</select>
 								</div>
 								<div class="searchBox2">
 									<div class="input-group">
-										<input type="text" id="search_input" name="search_input" class="form-control" placeholder="フリーワードを入力">
+										<input type="text" id="multitext" name="multitext" class="form-control" placeholder="フリーワードを入力">
 										<span class="input-group-btn">
-											<button type="button" class="btn waves-effect waves-light btn-primary callSearch">検索</button>
+											<button type="button" name="search_submit" class="btn waves-effect waves-light btn-primary">検索</button>
+											<!-- <button type="reset" class="btn waves-effect waves-light btn-secondary">リセット</button> -->
 										</span>
+
 									</div>
 								</div>
-							</div>
+							</form>
+
 							<div class="searchBoxRight">
 								<div class="serachW110">
 									<button type="button" name="new_entry" class="btn btn-primary waves-effect w-md waves-light m-b-5">新規登録</button>
