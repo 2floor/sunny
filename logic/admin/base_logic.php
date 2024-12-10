@@ -225,10 +225,12 @@ abstract class base_logic
         return $mainQuery;
     }
 
-    public function getListDataCustomJoin($params, $searchSelect = [], $withRelation = [], $whereClass = [], $applyCustomJoins = null, $tablePrefix = [], $applyCustomeGroupBy = null)
+    function getListDataJoin($params, $searchSelect = [], $withRelation = [], $whereClass = [], $applyCustomJoins = null, $tablePrefix = [], $applyCustomeGroupBy = null, &$model = null)
     {
-        $table = $this->model->getTable();
-        $query = $this->model->newQuery();
+        $model = $model ?? $this->model;
+
+        $table = $model->getTable();
+        $query = $model->newQuery();
 
         if (is_callable($applyCustomJoins)) {
             $applyCustomJoins($query, $searchSelect);
@@ -255,8 +257,6 @@ abstract class base_logic
             $query->orderBy("$table.del_flg", 'ASC');
             $query->orderBy("$table.created_at", 'DESC');
         }
-
-
 
         // var_dump($query->toSql());
         // die;

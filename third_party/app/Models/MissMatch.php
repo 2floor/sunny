@@ -8,15 +8,15 @@ use Illuminate\Database\Eloquent\Relations\MorphTo;
 
 class MissMatch extends BaseModel
 {
-    CONST STATUS_NOT_CONFIRM = 0;
-    CONST STATUS_CONFIRMED = 1;
+    const STATUS_NOT_CONFIRM = 0;
+    const STATUS_CONFIRMED = 1;
 
     protected $table = 't_miss_match';
     protected $fillable = [
         'hospital_id',
         'hospital_name',
-        'mm_type',
-        'mm_id',
+        'type',
+        'cancer_id',
         'area_id',
         'year',
         'status',
@@ -31,7 +31,7 @@ class MissMatch extends BaseModel
     {
         parent::boot();
 
-        static::addGlobalScope('deleted', fn(Builder $builder) => $builder->where('t_miss_match.del_flg', '!=' , BaseModel::DELETED));
+        static::addGlobalScope('deleted', fn(Builder $builder) => $builder->where('t_miss_match.del_flg', '!=', BaseModel::DELETED));
     }
 
     public function hospital(): BelongsTo
@@ -44,8 +44,8 @@ class MissMatch extends BaseModel
         return $this->belongsTo(Area::class, 'area_id', 'id');
     }
 
-    public function mmRelation(): MorphTo
-    {
-        return $this->morphTo(null, 'mm_type', 'mm_id');
-    }
+    // public function mmRelation(): MorphTo
+    // {
+    //     return $this->morphTo(null, 'mm_type', 'mm_id');
+    // }
 }
