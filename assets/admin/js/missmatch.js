@@ -125,9 +125,9 @@ $(function() {
 						$('.pagination-info .total-result span').text(data[1] + ' 結果');
 						$('#page_title').html('<i class="fa fa-list" aria-hidden="true"></i>'+ page_title + '一覧');
 
-						$('.thead_type').text(data[3]);
+						$('.thead_type').text('('+data[3]+')');
 						data[2].forEach((year,key) => {
-							$('#thead_year_'+key).text(year);
+							$('#thead_year_'+key).text('('+year+')');
 						});
 						$(".loading").hide();
 
@@ -175,8 +175,8 @@ $(function() {
 	 * 更新初期処理
 	 */
 	function edit_init_exection(){
-		$('.del').off();
-		$('.del').on('click',function(){
+		$('.cancel').off();
+		$('.cancel').on('click',function(){
 			var id = $(this).attr('value');
 
 			swal({
@@ -191,7 +191,7 @@ $(function() {
 				closeOnCancel : false
 			}, function(isConfirm) {
 				if (isConfirm) {
-					var form_data = append_form_prams('delete_list', 'frm', null, false);
+					var form_data = append_form_prams('cancel_list', 'frm', null, false);
 					form_data.append('id', id);
 
 					call_ajax_change_state(form_data);

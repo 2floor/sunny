@@ -106,22 +106,22 @@ require_once __DIR__ . '/../required/view_common_include.php';
 														<th></th>
 														<th>No</th>
 														<th>都道府県名</th>
-														<th>がん種<br>(<span class="thead_type">)</span></th>
+														<th>がん種<br><span class="thead_type"></span></th>
 														<th>医療機関名<br>(基本)</th>
 														<th>
 															<span class="thead_type"></span>
 															医療機関名<br>
-															(<span id="thead_year_2"></span>)
+															<span id="thead_year_2"></span>
 														</th>
 														<th>
 															<span class="thead_type"></span>
 															医療機関名<br>
-															(<span id="thead_year_1"></span>)
+															<span id="thead_year_1"></span>
 														</th>
 														<th>
 															<span class="thead_type"></span>
 															医療機関名<br>
-															(<span id="thead_year_0"></span>)
+															<span id="thead_year_0"></span>
 														</th>
 														<th>類似度</th>
 														<th style="width: 25px;"></th>
@@ -145,77 +145,7 @@ require_once __DIR__ . '/../required/view_common_include.php';
 				<!-- END Data List Area -->
 
 				<!-- Start Data Edit Area -->
-				<div class="disp_area entry_input">
-					<!-- btnBox -->
-					<div class="container">
-						<div class="registBtnBox">
-							<div class="registBtnLeft">
-								<span class="require_text">必要事項を入力後、[登録]ボタンをクリックしてください。</span>
-								<h3 class="conf_text">下記の内容が登録されます。よろしければ登録ボタンを押してください。</h3>
-							</div>
-							<div class="registBtnRight">
-							</div>
-						</div>
-					</div>
-					<!-- /btnBox -->
 
-					<!-- faqSetting -->
-					<div class="container">
-						<div class="row">
-							<div class="col-xs-12" id="frm">
-								<div class="contentBox">
-									<input type="hidden" class="form-control" name="id" id="id">
-
-									<div class="formRow">
-										<div class="formItem">
-											質問グループ
-											<span class="label01 require_text">必須</span>
-										</div>
-										<div class="formTxt">
-											<div class="formIn50">
-												<select class="selection2 group-selection validate required" name="group_answer" id="group_answer">
-													<option value="" disabled selected hidden></option>
-													<?php foreach (GROUP_FAQ as $key => $group) { ?>
-														<option value="<?= $key ?>"><?= $group ?></option>;
-													<?php } ?>
-												</select>
-											</div>
-										</div>
-									</div>
-
-									<div class="formRow">
-										<div class="formItem">
-											質問
-											<span class="label01 require_text">必須</span>
-										</div>
-										<div class="formTxt">
-											<div class="formIn50">
-												<input type="text" class="form-control validate required" name="question" id="question" value="">
-											</div>
-										</div>
-									</div>
-
-									<div class="formRow">
-										<div class="formItem">
-											回答
-											<span class="label01 require_text">必須</span>
-										</div>
-										<div class="formTxt">
-											<div class="formIn50">
-												<textarea class="form-control validate required" name="answer" id="answer"></textarea>
-											</div>
-										</div>
-									</div>
-
-									<button type="button" class="btn btn-primary waves-effect w-md waves-light m-b-5 button_input button_form" name='conf' id="conf">確認する</button>
-									<button type="button" class="btn btn-inverse waves-effect w-md waves-light m-b-5 button_conf button_form" name='return' id="return">戻る</button>
-									<button type="button" class="btn btn-info waves-effect w-md waves-light m-b-5 button_conf button_form" name='submit' id="submit">登録する</button>
-								</div>
-							</div>
-						</div>
-					</div>
-					<!-- /faqSetting -->
-				</div>
 				<!-- END Data Edit Area -->
 
 				<!-- container -->

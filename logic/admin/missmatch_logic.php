@@ -146,9 +146,18 @@ class missmatch_logic extends base_logic
 		);
 	}
 
-	public function acceptData($id)
+	public function accept_data($id)
 	{
 		return $this->getQueryWithoutGlobalScopes()->where('id', $id)->update(['status' => MissMatch::STATUS_CONFIRMED]);
+	}
+	public function cancel_data($id)
+	{
+		return $this->getQueryWithoutGlobalScopes()->where('id', $id)->update([
+			'hospital_id' => null,
+			'area_id' => null,
+			'percent_match' => 0,
+			'status' => MissMatch::STATUS_NOT_CONFIRM
+		]);
 	}
 
 	static function avg_percent_match($row)
@@ -177,7 +186,7 @@ class missmatch_logic extends base_logic
 	static function min_of_ids($row)
 	{
 		$ids = self::get_ids($row);
-		return min($ids);
+		return count($ids) > 0 ? min($ids) : 0;
 	}
 
 	private function generateRowHtml($row, $cnt, $back_color, $params)
@@ -199,7 +208,7 @@ class missmatch_logic extends base_logic
 
 					<td>" . ($this->generateHtml('accept', $row, $params) ?? "-") . "</td>
 					<td>" . ($this->generateHtml('edit', $row, $params) ?? "-") . "</td>
-					<td>" . ($this->generateHtml('delete', $row, $params) ?? "-") . "</td>
+					<td>" . ($this->generateHtml('cancel', $row, $params) ?? "-") . "</td>
 			</tr>";
 	}
 
@@ -211,12 +220,8 @@ class missmatch_logic extends base_logic
 
 				// return "<a href='javascript:void(0);' class='edit clr1' name='edit_{$row['id']}' value='{$row['id']}'><i class=\"fa fa-pencil\" aria-hidden=\"true\"></i></a><br>";
 				break;
-			case 'delete':
-				if ($row['del_flg'] == 1) {
-					// return "<a href='javascript:void(0);' class='recovery clr2' name='recovery_{$row['id']}' value='{$row['id']}' ><i class=\"fa fa-undo\" aria-hidden=\"true\"></i></a><br>";
-				} else {
-					return "<a href='javascript:void(0);' class='del clr2' name='del_{$row['id']}' value='" . self::implode_ids($row) . "'><i class=\"fa fa-trash\" aria-hidden=\"true\"></i></a><br>";
-				}
+			case 'cancel':
+				return "<a href='javascript:void(0);' class='cancel clr2' name='cancel_{$row['id']}' value='" . self::implode_ids($row) . "'><i class=\"fa fa-trash\" aria-hidden=\"true\"></i></a><br>";
 				break;
 			case 'accept':
 				return "<a href='javascript:void(0);' class='accept clr1' name='accept_{$row['id']}' value='" . self::implode_ids($row) . "'><i class=\"fa fa-check\" aria-hidden=\"true\"></i></a><br>";

@@ -102,8 +102,8 @@ class missmatch_ct
 		} else if ($post['method'] == 'release') {
 			// 公開化処理
 			$data = $this->release($post['id']);
-		} else if ($post['method'] == 'delete_list') {
-			$data = $this->delete_list($post['id']);
+		} else if ($post['method'] == 'cancel_list') {
+			$data = $this->cancel_list($post['id']);
 		} else if ($post['method'] == 'accept_list') {
 			$data = $this->accept_list($post['id']);
 		}
@@ -288,16 +288,16 @@ class missmatch_ct
 		return $data;
 	}
 
-	public function delete_list($id)
+	public function cancel_list($id)
 	{
 		$ids = explode(',', $id);
 		foreach ($ids as $key => $idv) {
-			$this->missmatch_logic->deleteData($idv);
+			$this->missmatch_logic->cancel_data($idv);
 		}
 
 		$data = array(
 			'status' => true,
-			'method' => 'delete',
+			'method' => 'cancel_list',
 			'msg' => '削除しました'
 		);
 		return $data;
@@ -306,12 +306,12 @@ class missmatch_ct
 	{
 		$ids = explode(',', $id);
 		foreach ($ids as $key => $idv) {
-			$this->missmatch_logic->acceptData($idv);
+			$this->missmatch_logic->accept_data($idv);
 		}
 
 		$data = array(
 			'status' => true,
-			'method' => 'accept',
+			'method' => 'accept_list',
 			'msg' => '承認しました'
 		);
 		return $data;
