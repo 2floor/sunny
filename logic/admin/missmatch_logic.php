@@ -99,7 +99,9 @@ class missmatch_logic extends base_logic
 			}
 		}, [
 			'area_id' => 't_miss_match'
-		], function (&$query) {});
+		], function (&$query) {}, [
+			't_miss_match.hospital_id'
+		]);
 
 		$all_cnt = $data['total'];
 		$list = $data['data'];

@@ -225,7 +225,7 @@ abstract class base_logic
         return $mainQuery;
     }
 
-    function getListDataJoin($params, $searchSelect = [], $withRelation = [], $whereClass = [], $applyCustomJoins = null, $tablePrefix = [], $applyCustomeGroupBy = null, &$model = null)
+    function getListDataJoin($params, $searchSelect = [], $withRelation = [], $whereClass = [], $applyCustomJoins = null, $tablePrefix = [], $applyCustomeGroupBy = null, $collumnCount = [], &$model = null)
     {
         $model = $model ?? $this->model;
 
@@ -259,10 +259,17 @@ abstract class base_logic
         }
 
         $cloneQuery = clone $query;
-        $count = $query->count();
+
+        $count = $query->count($collumnCount ?? ['*']);
+        // $count = $query->count();
 
         $data = $query->with($withRelation)
-            ->paginate($params[0], ['*'], 'page', $params[1])
+            ->paginate(
+                $params[0],
+                $collumnCount ?? ['*'],
+                'page',
+                $params[1]
+            )
             ->toArray();
 
         return [
