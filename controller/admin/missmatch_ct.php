@@ -308,21 +308,38 @@ class missmatch_ct
 	public function cancel_list($id)
 	{
 		$ids = explode(',', $id);
-		foreach ($ids as $key => $idv) {
+		foreach ($ids as $idv) {
+			if (empty($idv)) {
+				return [
+					'status' => false,
+					'method' => 'cancel_list',
+					'msg' => '無効な値'
+				];
+			}
+		}
+		foreach ($ids as $idv) {
 			$this->missmatch_logic->cancel_data($idv);
 		}
 
-		$data = array(
+		return [
 			'status' => true,
 			'method' => 'cancel_list',
 			'msg' => '削除しました'
-		);
-		return $data;
+		];
 	}
 	public function accept_list($id)
 	{
 		$ids = explode(',', $id);
-		foreach ($ids as $key => $idv) {
+		foreach ($ids as $idv) {
+			if (empty($idv)) {
+				return [
+					'status' => false,
+					'method' => 'accept_list',
+					'msg' => '無効な値'
+				];
+			}
+		}
+		foreach ($ids as $idv) {
 			$this->missmatch_logic->accept_data($idv);
 		}
 

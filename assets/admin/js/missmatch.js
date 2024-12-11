@@ -67,6 +67,7 @@ $(function() {
 						common_func_bind();
 						validate_start();
 						tableColDispChange();
+						checkListAction();
 						searchNew();
 
 						$('.pagination-info .total-result span').text(data[1] + ' 結果');
@@ -76,6 +77,11 @@ $(function() {
 						data[2].forEach((year,key) => {
 							$('#thead_year_'+key).text('('+year+')');
 						});
+
+						// $(document).ready(function() {
+						// 		$('#dataTable').DataTable();
+						// });
+
 						$(".loading").hide();
 
 						if (afterChange && pagination.pageNumber !== startPage) {
@@ -172,6 +178,122 @@ $(function() {
 				}
 			});
 		});
+	}
+
+	function checkListAction(){
+		$('#selectAllCheckbox').off();
+		$('.row-checkbox').off();
+		$('#submitAction').off();
+		$('#actionSelect').off();
+
+		$('#selectAllCheckbox').on('change', function () {
+			const isChecked = $(this).is(':checked');
+			$('.row-checkbox').prop('checked', isChecked);
+			$('.row-checkbox').trigger('change');
+		});
+
+
+		$('.row-checkbox').on('change', function () {
+			if ($('.row-checkbox:checked').length > 0) {
+				$('.action-footer').show();
+			} else {
+				$('.action-footer').hide();
+			}
+			const allCheckboxes = $('.row-checkbox').length;
+			const checkedCheckboxes = $('.row-checkbox:checked').length;
+			$('#selectAllCheckbox').prop('checked', allCheckboxes === checkedCheckboxes);
+		});
+
+
+
+		$('#submitAction').on('click', function () {
+			const selectedAction = $('#actionSelect').val();
+			if (!selectedAction) {
+				swal({
+					title : "警告",
+					text: "アクションを選択してください。",
+					type : "warning",
+					confirmButtonClass : 'btn-warning',
+					confirmButtonText : "理解した",
+					closeOnConfirm : true,
+				});
+				return;
+			}
+
+			const selectedCheckboxes = $('.row-checkbox:checked');
+			if (selectedCheckboxes.length === 0) {
+				swal({
+					title : "警告",
+					text: "少なくとも1行を選択してください",
+					type : "warning",
+					confirmButtonClass : 'btn-warning',
+					confirmButtonText : "理解した",
+					closeOnConfirm : true,
+				});
+				return;
+			}
+
+			const selectedValues = selectedCheckboxes.map(function () {
+				return $(this).val();
+			}).get();
+
+			const mapingValues = selectedValues.flatMap(value => value.split(',')).filter(Boolean).map(Number);
+
+			const mapAlert = {'accept_list': 'すべてを受け入れる', 'cancel_list': 'すべて削除する'};
+
+			console.log('Selected Action:', selectedAction);
+			console.log('Selected Values:', mapingValues);
+
+			if (mapingValues.length < 0) {
+				swal({
+					title : "エラー",
+					text: "無効なID",
+					type : "danger",
+					confirmButtonClass : 'btn-warning',
+					confirmButtonText : "理解した",
+					closeOnConfirm : true,
+				});
+				return;
+			} else {
+				swal({
+					title : mapAlert[selectedAction],
+					text : '管理ID' + mapingValues.join(',') + ' ' + mapAlert[selectedAction] +"。よろしいですか？",
+					type : "warning",
+					showCancelButton : true,
+					confirmButtonClass : 'btn-warning',
+					confirmButtonText : "有効にする",
+					cancelButtonText : 'キャンセル',
+					closeOnConfirm : false,
+					closeOnCancel : false
+				}, function(isConfirm) {
+					if (isConfirm) {
+						var form_data = append_form_prams(selectedAction, 'frm', null, false);
+						form_data.append('id', mapingValues.join(','));
+
+						call_ajax_change_state(form_data);
+						$('#actionSelect').trigger('change');
+					} else {
+						swal.close();
+					}
+				});
+			}
+		});
+
+
+		$('#actionSelect').on('change', function () {
+			const selectedValue = $(this).val();
+			$(this).removeClass('text-muted text-success text-danger');
+
+			if (selectedValue === 'accept_list') {
+					$(this).addClass('text-success');
+			} else if (selectedValue === 'cancel_list') {
+					$(this).addClass('text-danger');
+			} else {
+					$(this).addClass('text-muted');
+			}
+		});
+
+		$('#actionSelect').trigger('change');
 	}
 
 	/**
