@@ -699,7 +699,18 @@ class common_logic {
 		} else {
 			$count = 1;
 		}
-		setcookie ( "count" . $strId, $count, time () + $life );
+
+        setcookie(
+            "count" . $strId,
+            $count,
+            [
+                "expires" => time() + $life,
+                "path" => "/",
+                "secure" => true,
+                "httponly" => true,
+                "samesite" => "Strict"
+            ]
+        );
 		return $count;
 	}
 	public function zip_dl($filename, $path) {

@@ -264,7 +264,17 @@ class security_common_logic {
 		$_SESSION = array ();
 
 		if (isset ( $_COOKIE [session_name ()] )) {
-			setcookie ( session_name (), '', time () - 42000, '/' );
+            setcookie(
+                session_name (),
+                '',
+                [
+                    "expires" => time () - 42000,
+                    "path" => "/",
+                    "secure" => true,
+                    "httponly" => true,
+                    "samesite" => "Strict"
+                ]
+            );
 		}
 
 		@session_destroy ();
