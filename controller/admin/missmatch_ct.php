@@ -68,14 +68,14 @@ class missmatch_ct
 	 * コンストラクタ
 	 */
 	protected $missmatch_logic;
-    protected $dpc_logic;
+	protected $dpc_logic;
 	protected $common_logic;
 
 	public function __construct()
 	{
 		// 管理画面ユーザーロジックインスタンス
 		$this->missmatch_logic = new missmatch_logic();
-        $this->dpc_logic = new dpc_logic();
+		$this->dpc_logic = new dpc_logic();
 		$this->common_logic = new common_logic();
 	}
 
@@ -118,112 +118,129 @@ class missmatch_ct
 		return $data;
 	}
 
-    public function get_not_confirm_mm_list($year, $cancer_id, $type)
-    {
-        return $this->missmatch_logic->getListByWhereClause(
-            [
-                'year' => $year,
-                'cancer_id' => $cancer_id,
-                'type' => $type,
-                'status' => MissMatch::STATUS_NOT_CONFIRM
-            ]
-        );
-    }
+	public function get_not_confirm_mm_list($year, $cancer_id, $type)
+	{
+		return $this->missmatch_logic->getListByWhereClause(
+			[
+				'year' => $year,
+				'cancer_id' => $cancer_id,
+				'type' => $type,
+				'status' => MissMatch::STATUS_NOT_CONFIRM
+			]
+		);
+	}
 
-    public function get_mm_detail($hospital_id, $cancer_id, $type)
-    {
-        $hospital = Hospital::find($hospital_id);
-        $cancer = Cancer::find($cancer_id);
+	public function get_mm_detail($hospital_id, $cancer_id, $type)
+	{
+		$hospital = Hospital::find($hospital_id);
+		$cancer = Cancer::find($cancer_id);
 
-        if (!$hospital || !$cancer) {
-            return [];
-        }
+		if (!$hospital || !$cancer) {
+			return [];
+		}
 
-        if ($type == MissMatch::TYPE_DPC) {
-            $detail = $this->dpc_logic->getLastedYearDPC()->pluck('year')
-                ->map(function ($year) use ($hospital_id, $cancer_id, $type, $hospital, $cancer) {
-                    $mm = $this->missmatch_logic->getListByWhereClause(
-                        [
-                            'year' => $year,
-                            'cancer_id' => $cancer_id,
-                            'hospital_id' => $hospital_id,
-                            'type' => $type
-                        ]
-                    )->first();
+		if ($type == MissMatch::TYPE_DPC) {
+			$detail = $this->dpc_logic->getLastedYearDPC()->pluck('year')
+				->map(function ($year) use ($hospital_id, $cancer_id, $type, $hospital, $cancer) {
+					$mm = $this->missmatch_logic->getListByWhereClause(
+						[
+							'year' => $year,
+							'cancer_id' => $cancer_id,
+							'hospital_id' => $hospital_id,
+							'type' => $type
+						]
+					)->first();
 
-                    if (!$mm) {
-                        $dpc = $this->dpc_logic->getListByWhereClause([
-                            'year' => $year,
-                            'cancer_id' => $cancer_id,
-                            'hospital_id' => $hospital_id,
-                        ])->first();
+					if (!$mm) {
+						$dpc = $this->dpc_logic->getListByWhereClause([
+							'year' => $year,
+							'cancer_id' => $cancer_id,
+							'hospital_id' => $hospital_id,
+						])->first();
 
-                        if ($dpc) {
-                            $mm_lasted = $this->missmatch_logic->getListByWhereClause(
-                                [
-                                    'cancer_id' => $dpc->cancer_id,
-                                    'hospital_id' => $dpc->hospital_id,
-                                    'type' => $type,
-                                    'status' => MissMatch::STATUS_CONFIRMED
-                                ]
-                            )->sortByDesc('year')->first();
+						if ($dpc) {
+							$mm_lasted = $this->missmatch_logic->getListByWhereClause(
+								[
+									'cancer_id' => $dpc->cancer_id,
+									'hospital_id' => $dpc->hospital_id,
+									'type' => $type,
+									'status' => MissMatch::STATUS_CONFIRMED
+								]
+							)->sortByDesc('year')->first();
 
-                            return [
-                                'area_id' => $dpc->hospital?->area_id,
-                                'hospital_name' => $mm_lasted ? $mm_lasted['hospital_name'] : $dpc->hospital?->hospital_name,
-                                'hospital_id' => $dpc->hospital_id,
-                                'year' => $dpc->year,
-                                'cancer_type' => $dpc->cancer?->cancer_type,
-                                'cancer_type_dpc' => $dpc->cancer?->cancer_type_dpc,
-                                'cancer_id' => $dpc->cancer_id,
-                                'dpc' => $dpc->n_dpc,
-                                'percent_match' => 100,
-                                'status' => MissMatch::STATUS_ABSOLUTELY_MATCH,
-                            ];
-                        } else {
-                            return [
-                                'area_id' => $hospital->area_id,
-                                'hospital_name' => null,
-                                'hospital_id' => $hospital->id,
-                                'year' => $year,
-                                'cancer_type' => $cancer->cancer_type,
-                                'cancer_type_dpc' => $cancer->cancer_type_dpc,
-                                'cancer_id' => $cancer->id,
-                                'dpc' => null,
-                                'percent_match' => null,
-                                'status' => -1,
-                            ];
-                        }
-                    } else {
-                        $value = json_decode($mm->import_value, true);
-                        return [
-                            'area_id' => $mm->area_id,
-                            'hospital_name' => $mm->hospital_name,
-                            'hospital_id' => $mm->hospital_id,
-                            'year' => $mm->year,
-                            'cancer_type' => $mm->cancer?->cancer_type,
-                            'cancer_type_dpc' => $mm->cancer?->cancer_type_dpc,
-                            'cancer_id' => $mm->cancer?->id,
-                            'dpc' => $value[2] ?? 0,
-                            'percent_match' => $mm->percent_match,
-                            'status' => $mm->status,
-                        ];
-                    }
-                })->toArray();
-        }
+							return [
+								'area_id' => $dpc->hospital?->area_id,
+								'hospital_name' => $mm_lasted ? $mm_lasted['hospital_name'] : $dpc->hospital?->hospital_name,
+								'hospital_id' => $dpc->hospital_id,
+								'year' => $dpc->year,
+								'cancer_type' => $dpc->cancer?->cancer_type,
+								'cancer_type_dpc' => $dpc->cancer?->cancer_type_dpc,
+								'cancer_id' => $dpc->cancer_id,
+								'dpc' => $dpc->n_dpc,
+								'percent_match' => 100,
+								'status' => MissMatch::STATUS_ABSOLUTELY_MATCH,
+							];
+						} else {
+							return [
+								'area_id' => $hospital->area_id,
+								'hospital_name' => null,
+								'hospital_id' => $hospital->id,
+								'year' => $year,
+								'cancer_type' => $cancer->cancer_type,
+								'cancer_type_dpc' => $cancer->cancer_type_dpc,
+								'cancer_id' => $cancer->id,
+								'dpc' => null,
+								'percent_match' => null,
+								'status' => -1,
+							];
+						}
+					} else {
+						$value = json_decode($mm->import_value, true);
+						return [
+							'area_id' => $mm->area_id,
+							'hospital_name' => $mm->hospital_name,
+							'hospital_id' => $mm->hospital_id,
+							'year' => $mm->year,
+							'cancer_type' => $mm->cancer?->cancer_type,
+							'cancer_type_dpc' => $mm->cancer?->cancer_type_dpc,
+							'cancer_id' => $mm->cancer?->id,
+							'dpc' => $value[2] ?? 0,
+							'percent_match' => $mm->percent_match,
+							'status' => $mm->status,
+						];
+					}
+				})->toArray();
+		}
 
-        return $detail ?? [];
-    }
+		return $detail ?? [];
+	}
 
 	/**
 	 * 初期処理(一覧HTML生成)
 	 */
 	private function create_data_list($post)
 	{
+
+		$whereClause = ['commonSearch' => []];
+
+		if (isset($post['search_select'])) {
+			$search_select = json_decode(htmlspecialchars_decode($post['search_select']), true);
+		}
+
+		if (!empty($search_select)) {
+			if (!empty($search_select['multitext'])) {
+				$whereClause['commonSearch']['multitext'] =  ['multitext', 'like', "%" . (trim($search_select['multitext'])) . "%"];
+			}
+
+			if (!empty($search_select['search_area'])) {
+				$whereClause['commonSearch'][] =  ['area_id', 'like', "%" . (trim($search_select['search_area'])) . "%"];
+			}
+		}
+
 		$list_html = $this->missmatch_logic->create_data_list([
 			$post['pageSize'],
 			$post['pageNumber']
-		],  $post['search_select']);
+		],  $whereClause);
 
 		// AJAX返却用データ成型
 		return [
@@ -479,29 +496,54 @@ class missmatch_ct
 	public function cancel_list($id)
 	{
 		$ids = explode(',', $id);
-		foreach ($ids as $key => $idv) {
+		foreach ($ids as $idv) {
+			if (empty($idv)) {
+				return [
+					'status' => false,
+					'method' => 'cancel_list',
+					'msg' => '無効な値'
+				];
+			}
+		}
+		foreach ($ids as $idv) {
+			$missmatch = $this->missmatch_logic->getDetailById($idv);
+			if ($missmatch) {
+				$this->dpc_logic->deleteData([
+					'cancer_id' => $missmatch->cancer_id,
+					'hospital_id' => $missmatch->hospital_id,
+					'year' => $missmatch->year,
+				]);
+			}
 			$this->missmatch_logic->cancel_data($idv);
 		}
-
-		$data = array(
+		return [
 			'status' => true,
 			'method' => 'cancel_list',
 			'msg' => '削除しました'
-		);
-		return $data;
+		];
 	}
+
 	public function accept_list($id)
 	{
 		$ids = explode(',', $id);
-		foreach ($ids as $key => $idv) {
+		foreach ($ids as $idv) {
+			if (empty($idv)) {
+				return [
+					'status' => false,
+					'method' => 'accept_list',
+					'msg' => '無効な値'
+				];
+			}
+		}
+		foreach ($ids as $idv) {
 			$this->missmatch_logic->accept_data($idv);
 		}
 
-		$data = array(
+		return [
 			'status' => true,
 			'method' => 'accept_list',
 			'msg' => '承認しました'
-		);
+		];
 		return $data;
 	}
 }

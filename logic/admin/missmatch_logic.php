@@ -26,6 +26,7 @@ class missmatch_logic extends base_logic
 		];
 
 		$process_type = isset($search_select['commonSearch']['const_type']) ? $search_select['commonSearch']['const_type'] : "DPC";
+		unset($search_select['commonSearch']['const_type']);
 
 		$const_nspace = "App\\Models\\";
 		$instance = $const_nspace . $process_type;
@@ -34,24 +35,7 @@ class missmatch_logic extends base_logic
 
 		$list_year = $const_model->select('year')->distinct()->orderBy('year', 'DESC')->limit(3)->get()->pluck('year')->toArray();
 
-		// $query = $this->getListDataJoin($params, $search_select, [], [], function (&$query, $search_select) use ($list_year) {
-		// 	$selects = [
-		// 		'area_id',
-		// 		'cancer_id',
-		// 		'hospital_id',
-		// 		'del_flg'
-		// 	];
-
-		// 	foreach ($list_year as $key => $year) {
-		// 		$selects[] = DB::raw("(SELECT hospital_name FROM t_miss_match WHERE t_miss_match.hospital_id = t_miss_match.hospital_id AND t_miss_match.year = $year AND t_miss_match.status = 0 AND t_miss_match.del_flg = 0 ORDER BY created_at DESC LIMIT 1) AS hospital_name_$key");
-		// 	}
-		// 	$query->select($selects);
-		// }, [], function (&$query) {
-		// 	$query->groupBy('area_id', 'cancer_id', 'hospital_id', 'del_flg');
-		// }, $const_model);
-
-
-		$data = $this->getListDataJoin($params, $search_select, [], [], function (&$query, $search_select) use ($list_year) {
+		$data = $this->getListDataJoin($params, $search_select, [], [], function (&$query, &$search_select) use ($list_year) {
 			$query->distinct();
 			$query->select([
 				't_miss_match.hospital_id',
@@ -76,16 +60,6 @@ class missmatch_logic extends base_logic
 			$query->leftJoin('m_area', 'm_area.id', '=', 't_miss_match.area_id');
 			$query->leftJoin('t_hospital', 't_hospital.id', '=', 't_miss_match.hospital_id');
 
-			// foreach ($list_year as $key => $year) {
-			// 	$query->leftJoin('t_miss_match AS year_' . $key, function ($join) use ($key, $year) {
-			// 		$join->on('year_' . $key . '.hospital_id', '=', 't_miss_match.hospital_id')
-			// 			->where('year_' . $key . '.area_id', '=', 't_miss_match.area_id')
-			// 			->where('year_' . $key . '.cancer_id', '=', 't_miss_match.cancer_id')
-			// 			->where('year_' . $key . '.year', '=', $year)
-			// 			->where('year_' . $key . '.status', '=', 0)
-			// 			->where('year_' . $key . '.del_flg', '=', 0);
-			// 	});
-			// }
 			foreach ($list_year as $key => $year) {
 				$query->leftJoinSub(
 					DB::table('t_miss_match')->where('year', $year)->where('status', 0)->where('del_flg', 0),
@@ -99,26 +73,35 @@ class missmatch_logic extends base_logic
 				);
 			}
 			$query->where('t_miss_match.status', 0);
-		}, [], function (&$query) {
-			// $query->groupBy(
-			// 	't_miss_match.hospital_id',
-			// 	't_miss_match.cancer_id',
-			// 	't_miss_match.area_id',
-			// 	't_miss_match.del_flg',
-			// 	'm_area.area_name',
-			// 	'm_cancer.cancer_type',
-			// 	't_hospital.hospital_name',
-			// 	'year_0.hospital_name',
-			// 	'year_1.hospital_name',
-			// 	'year_2.hospital_name',
-			// 	'year_0.percent_match',
-			// 	'year_1.percent_match',
-			// 	'year_2.percent_match',
-			// 	'year_0.id',
-			// 	'year_1.id',
-			// 	'year_2.id'
-			// );
-		});
+			$query->whereNotNull('t_miss_match.hospital_id')
+				->where('t_miss_match.hospital_id', '>', 0)
+				->whereNotNull('t_miss_match.area_id')
+				->where('t_miss_match.area_id', '>', 0);
+
+			if (!empty($search_select['commonSearch'])) {
+				if (!empty($search_select['commonSearch']['multitext'])) {
+
+					$multitext = $search_select['commonSearch']['multitext'];
+					unset($search_select['commonSearch']['multitext']);
+
+					$query->where(function ($query) use ($multitext, $list_year) {
+						$query->orWhere("t_miss_match.hospital_name", $multitext[1], $multitext[2]);
+						$query->orWhere("t_miss_match.year", $multitext[1], $multitext[2]);
+						$query->orWhere("m_cancer.cancer_type", $multitext[1], $multitext[2]);
+						$query->orWhere("m_area.area_name", $multitext[1], $multitext[2]);
+						$query->orWhere("t_miss_match.hospital_name", $multitext[1], $multitext[2]);
+
+						foreach ($list_year as $key => $year) {
+							$query->orWhere("year_" . $key . ".hospital_name", $multitext[1], $multitext[2]);
+						}
+					});
+				}
+			}
+		}, [
+			'area_id' => 't_miss_match'
+		], function (&$query) {}, [
+			't_miss_match.hospital_id'
+		]);
 
 		$all_cnt = $data['total'];
 		$list = $data['data'];
@@ -194,9 +177,11 @@ class missmatch_logic extends base_logic
 		$del_color = $row['del_flg'] == 1 ? "color:#d3d3d3" : "";
 		$back_color_html = $back_color == 2 ? "style='background: #f7f7f9; $del_color'" : "style='background: #ffffff; $del_color'";
 
+		$checkbox_name = "checkbox_{$row['id']}";
+
 		return "
 			<tr $back_color_html>
-					<td></td>
+					<td><input type='checkbox' class='row-checkbox' name='$checkbox_name' value='" . self::implode_ids($row) . "'></td>
 					<td class='count_no'>$cnt</td>
 					<td>" . ($row['area_name'] ?? "-") . "</td>
 					<td>" . ($row['cancer_name'] ?? "-") . "</td>
@@ -216,9 +201,7 @@ class missmatch_logic extends base_logic
 	{
 		switch ($type) {
 			case 'edit':
-				return "<a href='missmatch_detail.php?id={$row['id']}&cur_page=" . $params[1] . "' class='edit clr1'><i class=\"fa fa-pencil\" aria-hidden=\"true\"></i></a>";
-
-				// return "<a href='javascript:void(0);' class='edit clr1' name='edit_{$row['id']}' value='{$row['id']}'><i class=\"fa fa-pencil\" aria-hidden=\"true\"></i></a><br>";
+				return "<a href='missmatch_detail.php?cancer_id={$row['cancer_id']}&hospital_id={$row['hospital_id']}&cur_page=" . $params[1] . "' class='edit clr1'><i class=\"fa fa-pencil\" aria-hidden=\"true\"></i></a>";
 				break;
 			case 'cancel':
 				return "<a href='javascript:void(0);' class='cancel clr2' name='cancel_{$row['id']}' value='" . self::implode_ids($row) . "'><i class=\"fa fa-trash\" aria-hidden=\"true\"></i></a><br>";
@@ -249,8 +232,8 @@ class missmatch_logic extends base_logic
 		}
 	}
 
-    public function getListByWhereClause($clause)
-    {
-        return MissMatch::where($clause)->get();
-    }
+	public function getListByWhereClause($clause)
+	{
+		return MissMatch::where($clause)->get();
+	}
 }

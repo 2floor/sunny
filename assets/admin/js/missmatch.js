@@ -20,13 +20,7 @@ var page_title = '処理済一覧'
 //画像input用配列
 var input_file_name = {};
 
-var search_select = {
-	selectArea : {
-	},
-	//検索時内容
-	value : {},
-	order : {}
-}
+var search_select = {};
 
 
 
@@ -43,53 +37,6 @@ var state = {
 };
 history.replaceState(state, null, null);
 
-$(window).on('bb');
-$(window).on('popstate.bb',function(e) {
-    var state = e.originalEvent.state;
-    if (state) {
-        $('html, body').scrollTop(0);
-        if(state.search_select){
-            search_select = state.search_select;
-            $('[name=search_input]').val(search_select.value.value);
-        }
-        if(state.actType == 'init'){
-            $('#id').val(null);
-
-            $('#frm').find('input, select, textarea').each(function(i, elem){
-                $(elem).val(null);
-            });
-            $('.unit_prev_img').remove();
-            $('.list_show').show();
-            $('.entry_input').hide();
-            $('[name=search_input]').val('');
-
-            $('#page_type').val('list_show');
-
-            var form_datas = append_form_prams('init', 'frm', null, false);
-            click_ctrl(null, page_title, 'init');
-            call_ajax_init(form_datas);
-        }else if(state.actType == 'disp_change'){
-            $('#id').val(null);
-            click_ctrl($('[name='+state.elemName+']'), page_title, 'nopush');
-        }else if(state.actType == 'edit'){
-            // 編集対象ID設定
-            $('#id').val(state.id);
-            $('#page_type').val('edit_init');
-            disp_ctrl();
-
-            // 入力内容取得
-            var form_data = append_form_prams('edit_init', 'frm', null, false);
-
-            // ajax呼び出し
-            call_ajax_edit_init(form_data);
-        }else if(state.actType == 'search'){
-            var form_data =  append_form_prams('init', 'frm', null, false);
-            form_data.append('search_select', JSON.stringify(search_select));
-            call_ajax_init(form_data);
-
-        }
-    }
-});
 
 $(function() {
 
@@ -120,7 +67,8 @@ $(function() {
 						common_func_bind();
 						validate_start();
 						tableColDispChange();
-						// searchMain();
+						checkListAction();
+						searchNew();
 
 						$('.pagination-info .total-result span').text(data[1] + ' 結果');
 						$('#page_title').html('<i class="fa fa-list" aria-hidden="true"></i>'+ page_title + '一覧');
@@ -129,6 +77,11 @@ $(function() {
 						data[2].forEach((year,key) => {
 							$('#thead_year_'+key).text('('+year+')');
 						});
+
+						// $(document).ready(function() {
+						// 		$('#dataTable').DataTable();
+						// });
+
 						$(".loading").hide();
 
 						if (afterChange && pagination.pageNumber !== startPage) {
@@ -227,6 +180,122 @@ $(function() {
 		});
 	}
 
+	function checkListAction(){
+		$('#selectAllCheckbox').off();
+		$('.row-checkbox').off();
+		$('#submitAction').off();
+		$('#actionSelect').off();
+
+		$('#selectAllCheckbox').on('change', function () {
+			const isChecked = $(this).is(':checked');
+			$('.row-checkbox').prop('checked', isChecked);
+			$('.row-checkbox').trigger('change');
+		});
+
+
+		$('.row-checkbox').on('change', function () {
+			if ($('.row-checkbox:checked').length > 0) {
+				$('.action-footer').show();
+			} else {
+				$('.action-footer').hide();
+			}
+			const allCheckboxes = $('.row-checkbox').length;
+			const checkedCheckboxes = $('.row-checkbox:checked').length;
+			$('#selectAllCheckbox').prop('checked', allCheckboxes === checkedCheckboxes);
+		});
+
+
+
+		$('#submitAction').on('click', function () {
+			const selectedAction = $('#actionSelect').val();
+			if (!selectedAction) {
+				swal({
+					title : "警告",
+					text: "アクションを選択してください。",
+					type : "warning",
+					confirmButtonClass : 'btn-warning',
+					confirmButtonText : "理解した",
+					closeOnConfirm : true,
+				});
+				return;
+			}
+
+			const selectedCheckboxes = $('.row-checkbox:checked');
+			if (selectedCheckboxes.length === 0) {
+				swal({
+					title : "警告",
+					text: "少なくとも1行を選択してください",
+					type : "warning",
+					confirmButtonClass : 'btn-warning',
+					confirmButtonText : "理解した",
+					closeOnConfirm : true,
+				});
+				return;
+			}
+
+			const selectedValues = selectedCheckboxes.map(function () {
+				return $(this).val();
+			}).get();
+
+			const mapingValues = selectedValues.flatMap(value => value.split(',')).filter(Boolean).map(Number);
+
+			const mapAlert = {'accept_list': 'すべてを受け入れる', 'cancel_list': 'すべて削除する'};
+
+			console.log('Selected Action:', selectedAction);
+			console.log('Selected Values:', mapingValues);
+
+			if (mapingValues.length < 0) {
+				swal({
+					title : "エラー",
+					text: "無効なID",
+					type : "danger",
+					confirmButtonClass : 'btn-warning',
+					confirmButtonText : "理解した",
+					closeOnConfirm : true,
+				});
+				return;
+			} else {
+				swal({
+					title : mapAlert[selectedAction],
+					text : '管理ID' + mapingValues.join(',') + ' ' + mapAlert[selectedAction] +"。よろしいですか？",
+					type : "warning",
+					showCancelButton : true,
+					confirmButtonClass : 'btn-warning',
+					confirmButtonText : "有効にする",
+					cancelButtonText : 'キャンセル',
+					closeOnConfirm : false,
+					closeOnCancel : false
+				}, function(isConfirm) {
+					if (isConfirm) {
+						var form_data = append_form_prams(selectedAction, 'frm', null, false);
+						form_data.append('id', mapingValues.join(','));
+
+						call_ajax_change_state(form_data);
+						$('#actionSelect').trigger('change');
+					} else {
+						swal.close();
+					}
+				});
+			}
+		});
+
+
+		$('#actionSelect').on('change', function () {
+			const selectedValue = $(this).val();
+			$(this).removeClass('text-muted text-success text-danger');
+
+			if (selectedValue === 'accept_list') {
+					$(this).addClass('text-success');
+			} else if (selectedValue === 'cancel_list') {
+					$(this).addClass('text-danger');
+			} else {
+					$(this).addClass('text-muted');
+			}
+		});
+
+		$('#actionSelect').trigger('change');
+	}
+
 	/**
 	 * 更新初期処理処理AJAX
 	 */
@@ -273,7 +342,33 @@ $(function() {
 	}
 });
 
+function searchNew(){
+	$('button[name="search_submit"]').off();
+    $('button[name="search_submit"]').on('click', function(){
+			$('form[name="search_form"]').find('input, select, textarea').each(function() {
+				let name = $(this).attr('name');
+				let type = $(this).attr('type');
 
+				if (name) {
+					if (type === 'checkbox') {
+						if (!search_select[name]) search_select[name] = [];
+						if ($(this).is(':checked')) {
+								search_select[name].push($(this).val());
+						}
+					} else if (type === 'radio') {
+						if ($(this).is(':checked')) {
+								search_select[name] = $(this).val();
+						}
+					} else {
+						search_select[name] = $(this).val();
+					}
+				}
+			});
+
+		var form_data = append_form_prams('init', 'frm', null, false);
+		call_ajax_init(form_data);
+	});
+}
 
 /**
  * ページが切り替わる際の処理

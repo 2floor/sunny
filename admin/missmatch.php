@@ -1,21 +1,61 @@
 <?php
 session_start();
 require_once __DIR__ . '/../required/view_common_include.php';
+require_once __DIR__ . '/../logic/common/common_logic.php';
+
+$common_logic = new common_logic();
+
+$data_area = $common_logic->select_logic_no_param("SELECT DISTINCT(mm.area_id), a.area_name FROM t_miss_match mm, m_area a WHERE mm.area_id = a.id", []);
+$data_area_option = '';
+foreach ($data_area as $dao_row) {
+	$data_area_option .= '<option value="' . $dao_row['area_id'] . '">' . $common_logic->zero_padding($dao_row['area_id'], 5) . "-" . $dao_row['area_name'] . '</option>';
+}
+
+
+
 ?>
 <!DOCTYPE html>
 <html>
 
 <head>
 	<?php require_once __DIR__ . '/../required/html_head.php'; ?>
+
+	<link rel="stylesheet" href="https://cdn.datatables.net/2.0.0/css/dataTables.bootstrap.css">
+
+
+
 	<style>
-		.select2-container .select2-selection--single {
-			height: 32px;
+		#dataTable th {
+			background-color: #14ae5c;
+			color: #fff;
 		}
 
-		.group-selection {
-			width: 100%;
+		.action-footer {
+			margin-top: 20px;
+			display: flex;
+			align-items: center;
+			gap: 10px;
+		}
+
+		.action-select {
+			padding: 5px;
+			font-size: 14px;
+		}
+
+		.btn-submit {
+			padding: 5px 10px;
+			background-color: #007bff;
+			color: white;
+			border: none;
+			border-radius: 4px;
+			cursor: pointer;
+		}
+
+		.btn-submit:hover {
+			background-color: #0056b3;
 		}
 	</style>
+
 </head>
 
 <body class="fixed-left">
@@ -46,23 +86,29 @@ require_once __DIR__ . '/../required/view_common_include.php';
 					<!-- searchBox -->
 					<div class="container table-rep-plugin">
 						<div class="searchBox">
-							<div class="searchBoxLeft searchArea">
+
+							<form name="search_form" class="searchBoxLeft searchArea">
 								<div class="searchBox1">
 									<div class="searchTxt">
 										絞り込み検索
 									</div>
-									<select class="form-control searchAreaSelect">
+									<select class="form-control" name="search_area">
+										<option value="">-- セレクト --</option>
+										<?= $data_area_option ?>
 									</select>
 								</div>
 								<div class="searchBox2">
 									<div class="input-group">
-										<input type="text" id="search_input" name="search_input" class="form-control" placeholder="フリーワードを入力">
+										<input type="text" id="multitext" name="multitext" class="form-control" placeholder="フリーワードを入力">
 										<span class="input-group-btn">
-											<button type="button" class="btn waves-effect waves-light btn-primary callSearch">検索</button>
+											<button type="button" name="search_submit" class="btn waves-effect waves-light btn-primary">検索</button>
+											<!-- <button type="reset" class="btn waves-effect waves-light btn-secondary">リセット</button> -->
 										</span>
+
 									</div>
 								</div>
-							</div>
+							</form>
+
 							<div class="searchBoxRight">
 								<div class="serachW110">
 									<button type="button" name="new_entry" class="btn btn-primary waves-effect w-md waves-light m-b-5">新規登録</button>
@@ -100,10 +146,10 @@ require_once __DIR__ . '/../required/view_common_include.php';
 											</div>
 										</div>
 										<div class="table-responsive">
-											<table class="table parts">
+											<table class="table parts" id="dataTable">
 												<thead class="tableHeadArea">
 													<tr>
-														<th></th>
+														<th><input type="checkbox" id="selectAllCheckbox"></th>
 														<th>No</th>
 														<th>都道府県名</th>
 														<th>がん種<br><span class="thead_type"></span></th>
@@ -134,6 +180,15 @@ require_once __DIR__ . '/../required/view_common_include.php';
 												<tbody id="list_html_area" class="tableBodyArea">
 												</tbody>
 											</table>
+											<div class="action-footer" style="display: none;">
+												<select id="actionSelect" class="btn btn-default dropdown-toggle text-muted">
+													<option value="">-- アクションを選択する --</option>
+													<option value="accept_list">すべてを受け入れる</option>
+													<option value="cancel_list">すべて削除する</option>
+												</select>
+												<button id="submitAction" class="btn btn-default btn-primary">実行する</button>
+											</div>
+
 										</div>
 									</div>
 								</div>
@@ -156,6 +211,8 @@ require_once __DIR__ . '/../required/view_common_include.php';
 	</div>
 	<!-- END wrapper -->
 	<?php require_once __DIR__ . '/../required/foot.php'; ?>
+	<script src="https://cdn.datatables.net/2.0.0/js/dataTables.js"></script>
+	<script src="https://cdn.datatables.net/2.0.0/js/dataTables.bootstrap.js"></script>
 	<!-- Start Personal script -->
 	<script src="../assets/admin/js/missmatch.js"></script>
 
