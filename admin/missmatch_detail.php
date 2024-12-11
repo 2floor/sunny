@@ -232,11 +232,7 @@ if (empty($initData)) {
 </div>
 <!-- END wrapper -->
 <?php require_once __DIR__ . '/../required/foot.php'; ?>
-<script>
-    $( document ).ready(function() {
-        $('.loading').hide();
-    });
-</script>
+<script src="../assets/admin/js/missmatch_detail.js"></script>
 <!-- Start Personal script -->
 
 <!-- End Personal script -->
