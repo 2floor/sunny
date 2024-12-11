@@ -499,48 +499,48 @@ class missmatch_ct
 
 	public function cancel_list($post)
 	{
-        $id = $post['id'] ?? null;
+		$id = $post['id'] ?? null;
 
-        if (!$id && $post['hospital_id'] && $post['cancer_id'] && $post['type']) {
-            $whereClause = [
-                'hospital_id' => $post['hospital_id'],
-                'cancer_id' => $post['cancer_id'],
-                'type' => $post['type']
-            ];
+		if (!$id && $post['hospital_id'] && $post['cancer_id'] && $post['type']) {
+			$whereClause = [
+				'hospital_id' => $post['hospital_id'],
+				'cancer_id' => $post['cancer_id'],
+				'type' => $post['type']
+			];
 
-            if (is_numeric($post['year'])) {
-                $whereClause['year'] = $post['year'];
-            }
+			if (is_numeric($post['year'])) {
+				$whereClause['year'] = $post['year'];
+			}
 
-            $mm = $this->missmatch_logic->getListByWhereClause($whereClause);
-            if (!is_numeric($post['year']) && $yearList = json_decode(htmlspecialchars_decode($post['year']), true)) {
-                $mm->whereIn('year', $yearList);
-            }
+			$mm = $this->missmatch_logic->getListByWhereClause($whereClause);
+			if (!is_numeric($post['year']) && $yearList = json_decode(htmlspecialchars_decode($post['year']), true)) {
+				$mm->whereIn('year', $yearList);
+			}
 
-            $ids = $mm->pluck('id')->toArray();
-        } else {
-            $ids = explode(',', $id);
-        }
+			$ids = $mm->pluck('id')->toArray();
+		} else {
+			$ids = explode(',', $id);
+		}
 
 		foreach ($ids as $idv) {
 			if (empty($idv)) {
 				return [
 					'status' => false,
 					'method' => 'cancel_list',
-					'msg' => '無効な値'
+					'error_msg' => '無効な値'
 				];
 			}
 		}
 		foreach ($ids as $idv) {
 			$missmatch = $this->missmatch_logic->getDetailById($idv);
 			if ($missmatch) {
-                $this->dpc_logic->forceDelete([
-                    'cancer_id' => $missmatch->cancer_id,
-                    'hospital_id' => $missmatch->hospital_id,
-                    'year' => $missmatch->year,
-                ]);
+				$this->dpc_logic->forceDelete([
+					'cancer_id' => $missmatch->cancer_id,
+					'hospital_id' => $missmatch->hospital_id,
+					'year' => $missmatch->year,
+				]);
 
-                $this->missmatch_logic->cancel_data($idv);
+				$this->missmatch_logic->cancel_data($idv);
 			}
 		}
 		return [
@@ -558,7 +558,7 @@ class missmatch_ct
 				return [
 					'status' => false,
 					'method' => 'accept_list',
-					'msg' => '無効な値'
+					'error_msg' => '無効な値'
 				];
 			}
 		}

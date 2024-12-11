@@ -241,9 +241,6 @@ $(function() {
 
 			const mapAlert = {'accept_list': 'すべてを受け入れる', 'cancel_list': 'すべて削除する'};
 
-			console.log('Selected Action:', selectedAction);
-			console.log('Selected Values:', mapingValues);
-
 			if (mapingValues.length < 0) {
 				swal({
 					title : "エラー",
