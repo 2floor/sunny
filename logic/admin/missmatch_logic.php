@@ -229,4 +229,9 @@ class missmatch_logic extends base_logic
 			return $parsed_time;
 		}
 	}
+
+    public function getListByWhereClause($clause)
+    {
+        return MissMatch::where($clause)->get();
+    }
 }

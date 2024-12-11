@@ -19,7 +19,9 @@ class dpc_import implements ToModel, WithStartRow, WithBatchInserts, WithChunkRe
 
     public function __construct(protected $fileName = null)
     {
-        $this->hospitalMaster = Hospital::withoutGlobalScope('unpublish')->all();
+        $this->hospitalMaster = Hospital::withoutGlobalScope('unpublish')
+            ->select(['id', 'hospital_name', 'area_id'])
+            ->get();
     }
 
     public function model(array $row): Model|null
@@ -66,7 +68,11 @@ class dpc_import implements ToModel, WithStartRow, WithBatchInserts, WithChunkRe
         }
 
         if (!$hospital) {
-            $mm = MissMatch::where('hospital_name', $hospital_name)->orderBy('year', 'desc')->first();
+            $mm = MissMatch::where([
+                'hospital_name' => $hospital_name,
+                'status' => MissMatch::STATUS_CONFIRMED,
+                'cancer_id' => $cancer->id
+            ])->orderBy('year', 'desc')->first();
             if ($mm) {
                 $hospital = Hospital::withoutGlobalScope('unpublish')->find($mm->hospital_id);
             } else {
@@ -86,23 +92,39 @@ class dpc_import implements ToModel, WithStartRow, WithBatchInserts, WithChunkRe
                     $mmHospitalId = $hospital->id;
                 }
 
-                MissMatch::create([
-                    'hospital_id' => $mmHospitalId,
-                    'hospital_name' => $hospital_name,
-                    'type' => MissMatch::TYPE_DPC,
-                    'cancer_id' => $cancer->id,
-                    'area_id' => $hospital?->area_id,
-                    'year' => $row[4],
-                    'percent_match' => $percent,
-                    'import_file' => $this->fileName,
-                    'import_value' => json_encode($row, JSON_UNESCAPED_UNICODE),
-                ]);
+                if ($mmHospitalId) {
+                    MissMatch::updateOrCreate([
+                        'hospital_id' => $mmHospitalId,
+                        'type' => MissMatch::TYPE_DPC,
+                        'year' => $row[4],
+                        'cancer_id' => $cancer->id,
+                    ], [
+                        'hospital_name' => $hospital_name,
+                        'area_id' => $hospital?->area_id,
+                        'percent_match' => $percent,
+                        'import_file' => $this->fileName,
+                        'import_value' => json_encode($row, JSON_UNESCAPED_UNICODE),
+                    ]);
+                } else {
+                    $vr = MissMatch::create([
+                        'hospital_id' => null,
+                        'hospital_name' => $hospital_name,
+                        'type' => MissMatch::TYPE_DPC,
+                        'cancer_id' => $cancer->id,
+                        'area_id' => $hospital?->area_id,
+                        'year' => $row[4],
+                        'percent_match' => $percent,
+                        'import_file' => $this->fileName,
+                        'import_value' => json_encode($row, JSON_UNESCAPED_UNICODE),
+                    ]);
+                }
 
                 if (!$mmHospitalId) {
                     $this->errors[] = [
                         'row' => json_encode($row, JSON_UNESCAPED_UNICODE),
                         'error' => 'マスターデータに病院名がありません'
                     ];
+                    return null;
                 }
 
             }
