@@ -25,6 +25,11 @@ foreach ($data_area as $dao_row) {
 
 
 	<style>
+		#dataTable th {
+			background-color: #14ae5c;
+			color: #fff;
+		}
+
 		.action-footer {
 			margin-top: 20px;
 			display: flex;

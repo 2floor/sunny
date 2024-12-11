@@ -230,8 +230,8 @@ class missmatch_logic extends base_logic
 		}
 	}
 
-    public function getListByWhereClause($clause)
-    {
-        return MissMatch::where($clause)->get();
-    }
+	public function getListByWhereClause($clause)
+	{
+		return MissMatch::where($clause)->get();
+	}
 }
