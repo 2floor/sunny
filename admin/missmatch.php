@@ -5,12 +5,17 @@ require_once __DIR__ . '/../logic/common/common_logic.php';
 
 $common_logic = new common_logic();
 
-$data_area = $common_logic->select_logic_no_param("SELECT DISTINCT(mm.area_id), a.area_name FROM t_miss_match mm, m_area a WHERE mm.area_id = a.id", []);
+$data_area = $common_logic->select_logic_no_param("SELECT DISTINCT(mm.area_id), a.area_name FROM t_miss_match mm, m_area a WHERE mm.area_id = a.id");
 $data_area_option = '';
 foreach ($data_area as $dao_row) {
 	$data_area_option .= '<option value="' . $dao_row['area_id'] . '">' . $common_logic->zero_padding($dao_row['area_id'], 5) . "-" . $dao_row['area_name'] . '</option>';
 }
 
+$data_cancer = $common_logic->select_logic_no_param("SELECT id, cancer_type FROM m_cancer");
+$data_cancer_option = '';
+foreach ($data_cancer as $dco_row) {
+	$data_cancer_option .= '<option value="' . $dco_row['id'] . '"' . ($dco_row === reset($data_cancer) ? ' selected' : '') . '>' . $common_logic->zero_padding($dco_row['id'], 5) . "-" . $dco_row['cancer_type'] . '</option>';
+}
 
 
 ?>
@@ -92,6 +97,9 @@ foreach ($data_area as $dao_row) {
 									<div class="searchTxt">
 										絞り込み検索
 									</div>
+									<select class="form-control" name="search_cancer">
+										<?= $data_cancer_option ?>
+									</select>
 									<select class="form-control" name="search_area">
 										<option value="">-- セレクト --</option>
 										<?= $data_area_option ?>

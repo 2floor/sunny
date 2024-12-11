@@ -268,19 +268,26 @@ abstract class base_logic
             $query->orderBy("$table.created_at", 'DESC');
         }
 
+
+
         $cloneQuery = clone $query;
 
-        $count = $query->count($collumnCount ?? ['*']);
+        $count = $query->count(count($collumnCount) > 0 ? $collumnCount : ['*']);
         // $count = $query->count();
+
+        // var_dump($query->toSql());
+        // die;
 
         $data = $query->with($withRelation)
             ->paginate(
                 $params[0],
-                $collumnCount ?? ['*'],
+                count($collumnCount) > 0 ? $collumnCount : ['*'],
                 'page',
                 $params[1]
             )
             ->toArray();
+
+
 
         return [
             'total' => $count,
