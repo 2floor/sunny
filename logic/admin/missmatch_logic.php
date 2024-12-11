@@ -138,7 +138,7 @@ class missmatch_logic extends base_logic
 		return $this->getQueryWithoutGlobalScopes()->where('id', $id)->update([
 			'hospital_id' => null,
 			'area_id' => null,
-			'percent_match' => 0,
+			'percent_match' => null,
 			'status' => MissMatch::STATUS_NOT_CONFIRM
 		]);
 	}

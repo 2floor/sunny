@@ -1,60 +1,72 @@
-$( document ).ready(function() {
+$(document).ready(function () {
+    const DPC_TYPE = 1;
+
     $('.loading').hide();
 
-    $('#confirm_mm').off().on('click', function(){
+    function showAlert(type, title, text, confirmText, callback) {
         swal({
-            title: "選択を確認する!",
-            text: "現在のリンクを確認しますか?",
-            type : "info",
-            showCancelButton : true,
-            confirmButtonClass : 'btn-info',
-            confirmButtonText : "確認する",
-            cancelButtonText : '戻る',
-            closeOnConfirm : false,
-            closeOnCancel : false
-        }, function(isConfirm) {
+            title: title,
+            text: text,
+            type: type,
+            showCancelButton: true,
+            confirmButtonClass: type === "error" ? 'btn-danger' : 'btn-info',
+            confirmButtonText: confirmText,
+            cancelButtonText: '戻る',
+            closeOnConfirm: false,
+            closeOnCancel: false
+        }, callback);
+    }
+
+    function sendAjax(data, successCallback, failCallback) {
+        ajax.get(data).done(successCallback).fail(failCallback || function (result) {
+            $('body').html(result.responseText);
+        });
+    }
+
+    function reloadPage() {
+        window.location.reload();
+    }
+
+    function getUrlParams() {
+        const urlParams = new URLSearchParams(window.location.search);
+        return {
+            cancer_id: urlParams.get('cancer_id') || null,
+            hospital_id: urlParams.get('hospital_id') || null
+        };
+    }
+
+    $('#confirm_mm').off().on('click', function () {
+        showAlert("info", "選択を確認する!", "現在のリンクを確認しますか?", "確認する", function (isConfirm) {
             if (isConfirm) {
-                const urlParams = new URLSearchParams(window.location.search);
-                const cancer_id = urlParams.get('cancer_id') || null;
-                const hospital_id = urlParams.get('hospital_id') || null;
-                const request = [];
+                const { cancer_id, hospital_id } = getUrlParams();
+                const request = $('.mm-info').map(function () {
+                    return {
+                        cancer_id,
+                        hospital_id,
+                        year: $(this).find('.yearMM').text().trim(),
+                        search: $(this).find('.searchMM').val() || ''
+                    };
+                }).get();
 
-                $('.mm-info').each(function () {
-                    let year = $(this).find('.yearMM').text().trim();
-                    let search = $(this).find('.searchMM').val() || '';
-                    request.push({
-                        cancer_id : cancer_id,
-                        hospital_id : hospital_id,
-                        year : year,
-                        search : search
-                    });
-                });
+                let formData = new FormData();
+                formData.append('method', 'update_mm_dpc');
+                formData.append('request', JSON.stringify(request));
 
-                var form_data = new FormData();
-                form_data.append('method', 'update_mm_dpc');
-                form_data.append('request', JSON.stringify(request));
-
-                ajax.get(form_data).done(function(result) {
+                sendAjax(formData, function (result) {
                     loaded();
                     if (result.data.status) {
                         swal({
-                            title : "Success!",
-                            text : result.data.msg,
-                            type : "success",
-                            confirmButtonText : "戻る",
-                            closeOnConfirm : true
-                        }, function() {
-                            if (isConfirm) {
-                                window.location.href = 'missmatch.php';
-                            }
+                            title: "Success!",
+                            text: result.data.msg,
+                            type: "success",
+                            confirmButtonText: "戻る",
+                            closeOnConfirm: true
+                        }, function () {
+                            window.location.href = 'missmatch.php';
                         });
-                    } else if (!result.data.status && result.data.error_code == 0) {
+                    } else {
                         alert(result.data.error_msg);
                     }
-
-                }).fail(function(result) {
-                    // 異常終了
-                    $('body').html(result.responseText);
                 });
             } else {
                 swal.close();
@@ -64,31 +76,98 @@ $( document ).ready(function() {
 
     $('.searchMM').on('change', function () {
         const mm_info = $(this).parents('.mm-info');
+        const { cancer_id, hospital_id } = getUrlParams();
         const year = mm_info.find('.yearMM').text().trim();
-        const urlParams = new URLSearchParams(window.location.search);
-        const cancer_id = urlParams.get('cancer_id') || null;
-        const hospital_id = urlParams.get('hospital_id') || null;
 
-        var form_data = new FormData();
-        form_data.append('method', 'get_detail');
-        form_data.append('edit_del_id', $(this).val());
-        form_data.append('hospital_id', hospital_id);
-        form_data.append('cancer_id', cancer_id);
-        form_data.append('year', year);
-        form_data.append('type', 1);
+        let formData = new FormData();
+        formData.append('method', 'get_detail');
+        formData.append('edit_del_id', $(this).val());
+        formData.append('hospital_id', hospital_id);
+        formData.append('cancer_id', cancer_id);
+        formData.append('year', year);
+        formData.append('type', DPC_TYPE);
 
-        ajax.get(form_data).done(function(result) {
+        sendAjax(formData, function (result) {
             loaded();
             if (result.data.status) {
-                const value = JSON.parse(result.data.data.import_value || '');
+                const value = JSON.parse(result.data.data.import_value || '{}');
                 mm_info.find('.dpcArea').text(result.data.data.area_id || '');
                 mm_info.find('.dpcMM').text(value[2] || '');
                 mm_info.find('.percentMM').text(result.data.isGetById ? '' : result.data.data.percent_match);
-            } else if (!result.data.status && result.data.error_code == 0) {
+            } else {
                 alert(result.data.error_msg);
             }
-        }).fail(function(result) {
-            $('body').html(result.responseText);
+        });
+    });
+
+    $('.remove-icon').on('click', function () {
+        const mm_info = $(this).parents('.mm-info');
+        const { cancer_id, hospital_id } = getUrlParams();
+        const year = mm_info.find('.yearMM').text().trim();
+
+        showAlert("error", "削除の確認!", "このリンクされたデータを破棄してもよろしいですか?", "確認する", function (isConfirm) {
+            if (isConfirm) {
+                let formData = new FormData();
+                formData.append('method', 'cancel_list');
+                formData.append('hospital_id', hospital_id);
+                formData.append('cancer_id', cancer_id);
+                formData.append('year', year);
+                formData.append('type', DPC_TYPE);
+
+                sendAjax(formData, function (result) {
+                    loaded();
+                    if (result.data.status) {
+                        swal({
+                            title: "Success!",
+                            text: result.data.msg,
+                            type: "success",
+                            confirmButtonText: "戻る",
+                            closeOnConfirm: true
+                        }, reloadPage);
+                    } else {
+                        alert(result.data.error_msg);
+                    }
+                });
+            } else {
+                swal.close();
+            }
+        });
+    });
+
+    $('#cancer_all_mm').off().on('click', function () {
+        const { cancer_id, hospital_id } = getUrlParams();
+        const year = $('.mm-info').map(function () {
+            return $(this).find('.yearMM').text().trim();
+        }).get();
+
+        showAlert("error", "削除の確認!", "リンクされたデータをすべて破棄しますか?", "確認する", function (isConfirm) {
+            if (isConfirm) {
+                let formData = new FormData();
+                formData.append('method', 'cancel_list');
+                formData.append('hospital_id', hospital_id);
+                formData.append('cancer_id', cancer_id);
+                formData.append('year', JSON.stringify(year));
+                formData.append('type', DPC_TYPE);
+
+                sendAjax(formData, function (result) {
+                    loaded();
+                    if (result.data.status) {
+                        swal({
+                            title: "Success!",
+                            text: result.data.msg,
+                            type: "success",
+                            confirmButtonText: "戻る",
+                            closeOnConfirm: true
+                        }, function () {
+                            window.location.href = 'missmatch.php';
+                        });
+                    } else {
+                        alert(result.data.error_msg);
+                    }
+                });
+            } else {
+                swal.close();
+            }
         });
     });
 });

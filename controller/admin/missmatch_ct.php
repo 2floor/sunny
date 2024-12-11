@@ -110,7 +110,7 @@ class missmatch_ct
 			// 公開化処理
 			$data = $this->release($post['id']);
 		} else if ($post['method'] == 'cancel_list') {
-			$data = $this->cancel_list($post['id']);
+			$data = $this->cancel_list($post);
 		} else if ($post['method'] == 'accept_list') {
 			$data = $this->accept_list($post['id']);
 		}
@@ -493,9 +493,31 @@ class missmatch_ct
 		return $data;
 	}
 
-	public function cancel_list($id)
+	public function cancel_list($post)
 	{
-		$ids = explode(',', $id);
+        $id = $post['id'] ?? null;
+
+        if (!$id && $post['hospital_id'] && $post['cancer_id'] && $post['type']) {
+            $whereClause = [
+                'hospital_id' => $post['hospital_id'],
+                'cancer_id' => $post['cancer_id'],
+                'type' => $post['type']
+            ];
+
+            if (is_numeric($post['year'])) {
+                $whereClause['year'] = $post['year'];
+            }
+
+            $mm = $this->missmatch_logic->getListByWhereClause($whereClause);
+            if (!is_numeric($post['year']) && $yearList = json_decode(htmlspecialchars_decode($post['year']), true)) {
+                $mm->whereIn('year', $yearList);
+            }
+
+            $ids = $mm->pluck('id')->toArray();
+        } else {
+            $ids = explode(',', $id);
+        }
+
 		foreach ($ids as $idv) {
 			if (empty($idv)) {
 				return [
@@ -508,11 +530,11 @@ class missmatch_ct
 		foreach ($ids as $idv) {
 			$missmatch = $this->missmatch_logic->getDetailById($idv);
 			if ($missmatch) {
-				$this->dpc_logic->deleteData([
-					'cancer_id' => $missmatch->cancer_id,
-					'hospital_id' => $missmatch->hospital_id,
-					'year' => $missmatch->year,
-				]);
+                $this->dpc_logic->forceDelete([
+                    'cancer_id' => $missmatch->cancer_id,
+                    'hospital_id' => $missmatch->hospital_id,
+                    'year' => $missmatch->year,
+                ]);
 			}
 			$this->missmatch_logic->cancel_data($idv);
 		}
@@ -544,6 +566,5 @@ class missmatch_ct
 			'method' => 'accept_list',
 			'msg' => '承認しました'
 		];
-		return $data;
 	}
 }
