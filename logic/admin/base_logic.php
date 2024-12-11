@@ -35,6 +35,11 @@ abstract class base_logic
         return $this->model->newQuery()->withoutGlobalScopes();
     }
 
+    public function getQueryWithoutGlobalScope($scope)
+    {
+        return $this->model->newQuery()->withoutGlobalScope($scope);
+    }
+
     public function getListData($params, $searchSelect = null, $withRelation = [], $whereClass = [])
     {
         $query = $this->createSearchQuery($searchSelect);
@@ -78,6 +83,11 @@ abstract class base_logic
     public function updateData($id, $params)
     {
         return $this->getQueryWithoutGlobalScopes()->where('id', $id)->update($params);
+    }
+
+    public function updateMultiData($clause, $params)
+    {
+        return $this->getQueryWithoutGlobalScopes()->where($clause)->update($params);
     }
 
     public function recoveryData($id)
@@ -157,7 +167,7 @@ abstract class base_logic
     protected function createSearchAutoRankingQuery($searchSelect, $data_type, $auto_type)
     {
         $searchSelect = json_decode(htmlspecialchars_decode($searchSelect), true);
-        $query = $this->getQueryWithoutGlobalScopes();
+        $query = $this->getQueryWithoutGlobalScope('unpublish');
 
         if ($auto_type === AutoRank::AUTO_TYPE_RANK) {
             $subQuery = $query->select('cancer_id', 'year', DB::raw('COUNT(`hospital_id`) as total_records'))
@@ -191,7 +201,7 @@ abstract class base_logic
                     WHEN t_auto_rank.status = 3 THEN 2
                     WHEN t_auto_rank.status IS NULL THEN 3
                     WHEN t_auto_rank.status = 2
-                        AND tb_grouped.total_records > COALESCE(t_auto_rank.total_affect, 0)
+                        AND tb_grouped.total_records != COALESCE(t_auto_rank.total_affect, 0)
                         AND t_auto_rank.total_affect IS NOT NULL THEN 4
                     ELSE 5 END) as status,
                 t_auto_rank.updated_at,

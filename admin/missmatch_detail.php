@@ -185,8 +185,8 @@ if (empty($initData)) {
 
                                             }
                                         ?>
-                                        <tr class="<?= ($value['status'] == MissMatch::STATUS_ABSOLUTELY_MATCH ? 'status_absolutely' : ($value['status'] == -1 ? 'status_not_match' : '') ) ?>">
-                                            <td><?= ($value['area_id'] ?? '') ?></td>
+                                        <tr class="<?= ($value['status'] == MissMatch::STATUS_ABSOLUTELY_MATCH ? 'status_absolutely' : ($value['status'] == -1 ? 'status_not_match' : '') ) ?> mm-info">
+                                            <td class="dpcArea"><?= ($value['area_id'] ?? '') ?></td>
                                             <td class="<?= ($value['status'] == MissMatch::STATUS_CONFIRMED ? 'status_confirmed' : '' )?>">
                                                 <select class="form-control searchMM">
                                                     <option value="" selected><?= ($value['hospital_name'] ?? '') ?></option>
@@ -194,11 +194,11 @@ if (empty($initData)) {
                                                 </select>
                                             </td>
                                             <td><?= ($value['hospital_id'] ?? '') ?></td>
-                                            <td><?= ($value['year'] ?? '') ?></td>
+                                            <td class="yearMM"><?= ($value['year'] ?? '') ?></td>
                                             <td><?= ($value['cancer_type'] ?? '') ?></td>
                                             <td><?= ($value['cancer_type_dpc'] ?? '') ?></td>
-                                            <td><?= ($value['dpc'] ?? '') ?></td>
-                                            <td><?= ($value['percent_match'] ?? '') ?></td>
+                                            <td class="dpcMM"><?= ($value['dpc'] ?? '') ?></td>
+                                            <td class="percentMM"><?= ($value['percent_match'] ?? '') ?></td>
                                             <?php if($value['status'] != MissMatch::STATUS_ABSOLUTELY_MATCH && $value['status'] !=-1) { ?>
                                                 <td class="remove-icon">×</td>
                                             <?php } else { ?>
@@ -209,7 +209,7 @@ if (empty($initData)) {
                                     </tbody>
                                 </table>
                                 <div class="footer-buttons">
-                                    <button class="bg-primary">確認する</button>
+                                    <button class="bg-primary" id="confirm_mm">確認する</button>
                                     <button class="bg-warning">紐付けを解除する</button>
                                 </div>
                                 <div class="warning">

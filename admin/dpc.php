@@ -133,8 +133,7 @@ foreach ($hospitals as $hospital) {
                                                 <th>年間入院患者数</th>
                                                 <th>作成日時</th>
                                                 <th>更新日時</th>
-                                                <th>操作</th>
-                                                <th>公開</th>
+                                                <th style="width: 50px">操作</th>
                                             </tr>
                                             </thead>
                                             <tbody id="list_html_area" class="tableBodyArea">

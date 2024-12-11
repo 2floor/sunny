@@ -91,12 +91,12 @@ class missmatch_ct
 		} else if ($post['method'] == 'entry') {
 			// 新規登録処理
 			$data = $this->entry_new_data($post);
-		} else if ($post['method'] == 'edit_init') {
+		} else if ($post['method'] == 'get_detail') {
 			// 編集初期処理
-			$data = $this->get_detail($post['edit_del_id']);
-		} else if ($post['method'] == 'edit') {
+			$data = $this->get_detail($post);
+		} else if ($post['method'] == 'update_mm_dpc') {
 			// 編集更新処理
-			$data = $this->update_detail($post);
+			$data = $this->update_mm_dpc($post);
 		} else if ($post['method'] == 'delete') {
 			// 削除処理
 			$data = $this->delete($post['id']);
@@ -272,48 +272,132 @@ class missmatch_ct
 	 * 編集初期処理(詳細情報取得)
 	 *
 	 */
-	private function get_detail($id)
+	private function get_detail($post)
 	{
-		$detail = $this->missmatch_logic->getDetailById($id);
+        $isGetById = false;
+        if ($post['edit_del_id']) {
+            $detail = $this->missmatch_logic->getDetailById($post['edit_del_id']);
+            $isGetById = true;
+        } else {
+            $detail = $this->missmatch_logic->getListByWhereClause([
+                'cancer_id' => $post['cancer_id'],
+                'hospital_id' => $post['hospital_id'],
+                'type' => $post['type'],
+                'year' => $post['year']
+            ])->first();
+        }
 
 		// AJAX返却用データ成型
-		return array_merge([
-			'status' => true,
-		], $detail->toArray());
+		return [
+            'status' => true,
+            'isGetById' => $isGetById,
+            'data' => $detail->toArray()
+        ];
 	}
 
 	/**
 	 * 編集更新処理
 	 *
 	 */
-	private function update_detail($post)
+	private function update_mm_dpc($post)
 	{
-		// 編集ロジック呼び出し
-		$faq = $this->missmatch_logic->getDetailById($post['id']);
-		if (!$faq) {
-			return [
-				'status' => false,
-				'error_code' => 0,
-				'error_msg' => 'faq データが存在しません',
-				'return_url' => MEDICALNET_ADMIN_PATH . 'faq.php'
-			];
-		}
+		$request = json_decode(htmlspecialchars_decode($post['request'] ?? ''), true);
 
-		$updatedData = [
-			'question' => $post['question'] ?? null,
-			'answer' => $post['answer'] ?? null,
-			'group_answer' => $post['group_answer'] ?? null,
-		];
+        if (empty($request)) {
+            return [
+                'status' => false,
+                'error_code' => 0,
+                'error_msg' => '無効なリクエスト',
+                'return_url' => MEDICALNET_ADMIN_PATH . 'missmatch.php'
+            ];
+        }
 
-		if (!$this->missmatch_logic->updateData($faq->id, $updatedData)) {
-			return [
-				'status' => false,
-				'error_code' => 0,
-				'error_msg' => 'データ更新に失敗しました',
-				'return_url' => MEDICALNET_ADMIN_PATH . 'faq.php'
-			];
-		}
+        foreach ($request as $k => $v) {
+            $hospital = Hospital::find($v['hospital_id']);
+            $cancer = Cancer::find($v['cancer_id']);
 
+            if (!$hospital || !$cancer) {
+                continue;
+            }
+
+            if ($v['search']) {
+                $mmChanged = $this->missmatch_logic->getDetailById($v['search']);
+
+                if (!$mmChanged || $mmChanged->status == MissMatch::STATUS_CONFIRMED) {
+                    continue;
+                }
+
+                $importValue = json_decode($mmChanged['import_value'], true);
+                $nDPCChanged = $importValue[2] ?? 0;
+
+                if (!$nDPCChanged) {
+                    continue;
+                }
+
+                $currentDPC = $this->dpc_logic->getListByWhereClause([
+                    'cancer_id' => $cancer->id,
+                    'hospital_id' => $hospital->id,
+                    'year' => $v['year']
+                ])->first();
+
+                if ($currentDPC) {
+                    $currentDPC->update([
+                        'n_dpc' => $nDPCChanged,
+                        'rank_nation_dpc' => null,
+                        'rank_area_dpc' => null,
+                        'rank_pref_dpc' => null
+                    ]);
+                } else {
+                    $newDPC = $this->dpc_logic->createData([
+                        'cancer_id' => $cancer->id,
+                        'cancer_name_dpc' => $cancer->cancer_type_dpc,
+                        'hospital_id' => $hospital->id,
+                        'hospital_name' => $hospital->hospital_name,
+                        'area_id' => $hospital->area_id,
+                        'year' => $v['year'],
+                        'n_dpc' => $nDPCChanged,
+                    ]);
+                }
+
+                $mmCurrent = $this->missmatch_logic->getListByWhereClause(
+                    [
+                        'cancer_id' => $cancer->id,
+                        'hospital_id' => $hospital->id,
+                        'type' => MissMatch::TYPE_DPC,
+                        'year' => $v['year']
+                    ]
+                )->first();
+
+                if ($mmCurrent) {
+                    $mmCurrent->update([
+                        'hospital_id' => null,
+                        'area_id' => null,
+                        'percent_match' => null
+                    ]);
+                }
+
+                $this->dpc_logic->forceDelete([
+                    'cancer_id' => $mmChanged->cancer_id,
+                    'hospital_id' => $mmChanged->hospital_id,
+                    'year' => $mmChanged->year
+                ]);
+
+                $mmChanged->update([
+                    'hospital_id' => $hospital->id,
+                    'area_id' => $hospital->area_id,
+                    'percent_match' => 100
+                ]);
+            }
+
+            $clause = [
+                'cancer_id' => $cancer->id,
+                'hospital_id' => $hospital->id,
+                'type' => MissMatch::TYPE_DPC,
+                'year' => $v['year']
+            ];
+
+            $this->missmatch_logic->updateMultiData($clause, ['status' => MissMatch::STATUS_CONFIRMED]);
+        }
 
 		// AJAX返却用データ成型
 		return [

@@ -44,12 +44,12 @@ class dpc_logic extends base_logic
                 $back_color_html = "style='background: #ffffff; " . $del_color . "'";
             }
 
-            $edit_html_b = '';
-            if ($row ['public_flg'] == 1) {
-                $edit_html_b .= "<a herf='javascript:void(0);' class='release btn btn-default waves-effect w-xs btn-xs' name='release_" . $row ['id'] . "' value='" . $row ['id'] . "'>非公開</a>";
-            } else {
-                $edit_html_b .= "<a herf='javascript:void(0);' class='private btn btn-custom waves-effect w-xs btn-xs ' name='private_" . $row ['id'] . "' value='" . $row ['id'] . "'>公開</a>";
-            }
+//            $edit_html_b = '';
+//            if ($row ['public_flg'] == 1) {
+//                $edit_html_b .= "<a herf='javascript:void(0);' class='release btn btn-default waves-effect w-xs btn-xs' name='release_" . $row ['id'] . "' value='" . $row ['id'] . "'>非公開</a>";
+//            } else {
+//                $edit_html_b .= "<a herf='javascript:void(0);' class='private btn btn-custom waves-effect w-xs btn-xs ' name='private_" . $row ['id'] . "' value='" . $row ['id'] . "'>公開</a>";
+//            }
 
             $create_at = Carbon::parse($row['created_at'])->format('Y-m-d H:i:s');
             $diff = strtotime(date('YmdHis')) - strtotime($create_at);
@@ -90,9 +90,6 @@ class dpc_logic extends base_logic
 						<td>" . $update_at . "</td>
 						<td>
 							$edit_html_a
-						</td>
-						<td>
-							$edit_html_b
 						</td>
 					</tr>
 					";
@@ -141,5 +138,10 @@ class dpc_logic extends base_logic
     public function getListByWhereClause($clause)
     {
         return DPC::where($clause)->get();
+    }
+
+    public function forceDelete($clause)
+    {
+        return DPC::where($clause)->forceDelete();
     }
 }
