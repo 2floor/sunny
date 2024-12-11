@@ -227,6 +227,7 @@ class missmatch_logic extends base_logic
 					} else {
 						$value = json_decode($mm->import_value, true);
 						return [
+							'missmatch_id' => $mm->id,
 							'area_id' => $mm->area_id,
 							'hospital_name' => $mm->hospital_name,
 							'hospital_id' => $mm->hospital_id,
@@ -244,6 +245,10 @@ class missmatch_logic extends base_logic
 			foreach ($detail as $yearkey => $datayear) {
 				$row['hospital_name_' . $yearkey] = $datayear['hospital_name'];
 				$row['percent_match_' . $yearkey] = $datayear['percent_match'];
+				$row['status_' . $yearkey] = $datayear['status'];
+				if (isset($datayear['missmatch_id'])) {
+					$row['id_' . $yearkey] = $datayear['missmatch_id'];
+				}
 			}
 
 			$cnt++;
@@ -279,11 +284,12 @@ class missmatch_logic extends base_logic
 
 	static function avg_percent_match($row)
 	{
-		$percent_match_0 = $row['percent_match_0'] ?? 0;
-		$percent_match_1 = $row['percent_match_1'] ?? 0;
-		$percent_match_2 = $row['percent_match_2'] ?? 0;
+		$percents = [];
+		if ((int)$row['percent_match_0'] > 0) $percents[] = $row['percent_match_0'];
+		if ((int)$row['percent_match_1'] > 0) $percents[] = $row['percent_match_1'];
+		if ((int)$row['percent_match_2'] > 0) $percents[] = $row['percent_match_2'];
 
-		$avg = ($percent_match_0 + $percent_match_1 + $percent_match_2) / 3;
+		$avg = (count($percents) > 0) ? (array_sum($percents) / count($percents)) : 0;
 		return round($avg, 2);
 	}
 
@@ -320,15 +326,20 @@ class missmatch_logic extends base_logic
 					<td>" . ($row['area_name'] ?? "-") . "</td>
 					<td>" . ($row['cancer_name'] ?? "-") . "</td>
 					<td>" . ($row['hospital_name_master'] ?? "-") . "</td>
-					<td>" . ($row['hospital_name_2'] ?? "-") . "</td>
-					<td>" . ($row['hospital_name_1'] ?? "-") . "</td>
-					<td>" . ($row['hospital_name_0'] ?? "-") . "</td>
+					<td " . self::getStatusHtml($row['status_2']) . ">" . ($row['hospital_name_2'] ?? "-") . "</td>
+					<td " . self::getStatusHtml($row['status_1']) . ">" . ($row['hospital_name_1'] ?? "-") . "</td>
+					<td " . self::getStatusHtml($row['status_0']) . ">" . ($row['hospital_name_0'] ?? "-") . "</td>
 					<td>" . self::avg_percent_match($row) . "</td>
 
 					<td>" . ($this->generateHtml('accept', $row, $params) ?? "-") . "</td>
 					<td>" . ($this->generateHtml('edit', $row, $params) ?? "-") . "</td>
 					<td>" . ($this->generateHtml('cancel', $row, $params) ?? "-") . "</td>
 			</tr>";
+	}
+
+	static function getStatusHtml($status)
+	{
+		return ($status == 0) ? '' : ($status == 1 ? "class='mm_status_confirmed'" : "");
 	}
 
 	private function generateHtml($type, $row, $params)

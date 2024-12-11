@@ -59,6 +59,10 @@ foreach ($data_cancer as $dco_row) {
 		.btn-submit:hover {
 			background-color: #0056b3;
 		}
+
+		.mm_status_confirmed {
+			background-color: #AFF4C6;
+		}
 	</style>
 
 </head>
