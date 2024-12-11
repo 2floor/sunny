@@ -3,6 +3,12 @@ $(document).ready(function () {
 
     $('.loading').hide();
 
+    const menu_a = $('li.has_sub').find('a[href*="missmatch.php"]');
+    menu_a.addClass('active');
+    menu_a.parent().addClass('active');
+    menu_a.parents('.has_sub').find('.waves-effect').addClass('active subdrop');
+    menu_a.parents('.list-unstyled').show();
+
     function showAlert(type, title, text, confirmText, callback) {
         swal({
             title: title,

@@ -535,8 +535,9 @@ class missmatch_ct
                     'hospital_id' => $missmatch->hospital_id,
                     'year' => $missmatch->year,
                 ]);
+
+                $this->missmatch_logic->cancel_data($idv);
 			}
-			$this->missmatch_logic->cancel_data($idv);
 		}
 		return [
 			'status' => true,
