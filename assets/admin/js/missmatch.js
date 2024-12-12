@@ -48,13 +48,10 @@ var searchnew_select = {};
 const lastSegment = window.location.pathname.split('/').filter(Boolean).pop();
 const storedSearchSelect = localStorage.getItem(`searchnew_select_${lastSegment}`);
 
-
 if (storedSearchSelect) {
 	searchnew_select = JSON.parse(storedSearchSelect);
 	load_data_search();
 }
-
-
 
 //初回定義
 var call_ajax_init;
@@ -62,7 +59,10 @@ var call_ajax_edit_init;
 
 var currentPage = 1;
 
-
+const storedCurrentPage = localStorage.getItem(`searchnew_select_${lastSegment}_current_page`);
+if (storedCurrentPage) {
+	currentPage = storedCurrentPage;
+}
 
 
 $(function() {
@@ -118,6 +118,7 @@ $(function() {
 				},
 				afterPageOnClick: function(event, pageNumber) {
 						currentPage = pageNumber;
+						localStorage.setItem(`searchnew_select_${lastSegment}_current_page`, pageNumber);
 				}
 		});
 	}
@@ -147,7 +148,7 @@ $(function() {
 		var form_datas = append_form_prams('init', 'frm', null, false);
 
 		// 初期処理AJAX呼び出し処理
-		call_ajax_init(form_datas);
+		call_ajax_init(form_datas, currentPage, true);
 
 		$('button[type="reset"]').on('click', function() {
 			$('[name="search_form"]').get(0).reset();
@@ -434,6 +435,7 @@ function searchNew(){
 		fetch_data_search();
 		const lastSegment = window.location.pathname.split('/').filter(Boolean).pop();
 		localStorage.setItem(`searchnew_select_${lastSegment}`, JSON.stringify(searchnew_select));
+		localStorage.setItem(`searchnew_select_${lastSegment}_current_page`, 1);
 
 		var form_data = append_form_prams('init', 'frm', null, false);
 		call_ajax_init(form_data);
