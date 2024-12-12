@@ -11,27 +11,17 @@ use Maatwebsite\Excel\Concerns\WithChunkReading;
 use Maatwebsite\Excel\Concerns\WithStartRow;
 use Maatwebsite\Excel\Concerns\WithUpserts;
 
-class dpc_import implements ToModel, WithStartRow, WithBatchInserts, WithChunkReading, WithUpserts
+class dpc_import extends base_import implements ToModel, WithStartRow, WithBatchInserts, WithChunkReading, WithUpserts
 {
-    protected $errors = [];
-    protected $success = 0;
-    protected $hospitalMaster = [];
-
-    public function __construct(protected $fileName = null)
+    public function getMMType ()
     {
-        $this->hospitalMaster = Hospital::withoutGlobalScope('unpublish')
-            ->select(['id', 'hospital_name', 'area_id'])
-            ->get();
+        return MissMatch::TYPE_DPC;
     }
 
     public function model(array $row): Model|null
     {
         if (!$row[1]) {
-            $this->errors[] = [
-                'row' => json_encode($row, JSON_UNESCAPED_UNICODE),
-                'error' => '病院名は空白にすることはできません'
-            ];
-
+            $this->addError($row, '病院名は空白にすることはできません');
             return null;
         }
 
@@ -68,105 +58,9 @@ class dpc_import implements ToModel, WithStartRow, WithBatchInserts, WithChunkRe
         }
 
         if (!$hospital) {
-            $mm = MissMatch::where([
-                'hospital_name' => $hospital_name,
-                'status' => MissMatch::STATUS_CONFIRMED,
-                'cancer_id' => $cancer->id
-            ])->orderBy('year', 'desc')->first();
-            if ($mm) {
-                $hospital = Hospital::withoutGlobalScope('unpublish')->find($mm->hospital_id);
-            } else {
-                $mostSimilar = $this->hospitalMaster->map(function ($hospital) use ($hospital_name) {
-                    similar_text($hospital_name, $hospital->hospital_name, $percent);
-                    return [
-                        'hospital' => $hospital,
-                        'similarity' => $percent,
-                    ];
-                })->sortByDesc('similarity')->first();
-
-                $mmHospitalId = null;
-                $percent = null;
-                if (!empty($mostSimilar) && $mostSimilar['similarity'] > 70) {
-                    $hospital = $mostSimilar['hospital'];
-                    $percent = $mostSimilar['similarity'];
-                    $mmHospitalId = $hospital->id;
-                }
-
-                if ($mmHospitalId) {
-                    $existMM = MissMatch::where([
-                        'hospital_id' => $mmHospitalId,
-                        'type' => MissMatch::TYPE_DPC,
-                        'year' => $row[4],
-                        'cancer_id' => $cancer->id,
-                    ])->first();
-
-                    if (!$existMM) {
-                        $newMM = MissMatch::create([
-                            'hospital_id' => $mmHospitalId,
-                            'hospital_name' => $hospital_name,
-                            'type' => MissMatch::TYPE_DPC,
-                            'cancer_id' => $cancer->id,
-                            'area_id' => $hospital?->area_id,
-                            'year' => $row[4],
-                            'percent_match' => $percent,
-                            'import_file' => $this->fileName,
-                            'import_value' => json_encode($row, JSON_UNESCAPED_UNICODE),
-                        ]);
-                    } else {
-                        if ($existMM->percent_match >= $percent) {
-                            $newMM = MissMatch::create([
-                                'hospital_id' => null,
-                                'hospital_name' => $hospital_name,
-                                'type' => MissMatch::TYPE_DPC,
-                                'cancer_id' => $cancer->id,
-                                'area_id' => null,
-                                'year' => $row[4],
-                                'percent_match' => null,
-                                'import_file' => $this->fileName,
-                                'import_value' => json_encode($row, JSON_UNESCAPED_UNICODE),
-                            ]);
-                        } else {
-                            $existMM->update([
-                                'hospital_id' => null,
-                                'area_id' => null,
-                                'percent_match' => null,
-                            ]);
-
-                            $newMM = MissMatch::create([
-                                'hospital_id' => $mmHospitalId,
-                                'hospital_name' => $hospital_name,
-                                'type' => MissMatch::TYPE_DPC,
-                                'cancer_id' => $cancer->id,
-                                'area_id' => $hospital?->area_id,
-                                'year' => $row[4],
-                                'percent_match' => $percent,
-                                'import_file' => $this->fileName,
-                                'import_value' => json_encode($row, JSON_UNESCAPED_UNICODE),
-                            ]);
-                        }
-                    }
-                } else {
-                    $newMM = MissMatch::create([
-                        'hospital_id' => null,
-                        'hospital_name' => $hospital_name,
-                        'type' => MissMatch::TYPE_DPC,
-                        'cancer_id' => $cancer->id,
-                        'area_id' => null,
-                        'year' => $row[4],
-                        'percent_match' => $percent,
-                        'import_file' => $this->fileName,
-                        'import_value' => json_encode($row, JSON_UNESCAPED_UNICODE),
-                    ]);
-                }
-
-                if (!$mmHospitalId) {
-                    $this->errors[] = [
-                        'row' => json_encode($row, JSON_UNESCAPED_UNICODE),
-                        'error' => 'マスターデータに病院名がありません'
-                    ];
-                    return null;
-                }
-
+            $hospital =  $this->handleMMHospital($hospital_name, $cancer->id, $row[4], $row);
+            if (!$hospital) {
+                return null;
             }
         }
 
@@ -215,15 +109,5 @@ class dpc_import implements ToModel, WithStartRow, WithBatchInserts, WithChunkRe
         }
 
         return $this->errors;
-    }
-
-    public function getSuccess()
-    {
-        return $this->success;
-    }
-
-    public function getCountError(): int
-    {
-        return count($this->errors);
     }
 }

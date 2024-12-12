@@ -1,6 +1,7 @@
 <?php
 
 use App\Models\Hospital;
+use App\Models\MissMatch;
 use App\Models\Stage;
 use App\Models\Cancer;
 use Illuminate\Database\Eloquent\Model;
@@ -10,14 +11,22 @@ use Maatwebsite\Excel\Concerns\WithChunkReading;
 use Maatwebsite\Excel\Concerns\WithStartRow;
 use Maatwebsite\Excel\Concerns\WithUpserts;
 
-class stage_import implements ToModel, WithBatchInserts, WithChunkReading, WithStartRow, WithUpserts
+class stage_import extends base_import implements ToModel, WithBatchInserts, WithChunkReading, WithStartRow, WithUpserts
 {
-    protected $errors = [];
-    protected $success = 0;
+    public function getMMType ()
+    {
+        return MissMatch::TYPE_STAGE;
+    }
 
     public function model(array $row): Model|null
     {
-        $hospital = Hospital::withoutGlobalScope('unpublish')->where('hospital_code', ($row[0] ?? null))->first();
+        if (!$row[1]) {
+            $this->addError($row, '病院名は空白にすることはできません');
+            return null;
+        }
+
+        $hospital_name = trim($row[1]);
+        $hospital = Hospital::withoutGlobalScope('unpublish')->where('hospital_name', $hospital_name)->first();
         $cancer = Cancer::withoutGlobalScope('unpublish')->where('cancer_type', ($row[7] ?? null))
             ->orWhere('cancer_type_stage', ($row[7] ?? null))->first();
 
@@ -30,15 +39,6 @@ class stage_import implements ToModel, WithBatchInserts, WithChunkReading, WithS
             return null;
         }
 
-        if (!$hospital) {
-            $this->errors[] = [
-                'row' => json_encode($row, JSON_UNESCAPED_UNICODE),
-                'error' => 'マスターデータに病院情報がありません'
-            ];
-
-            return null;
-        }
-
         if (!$row[8] || !is_numeric($row[8])) {
             $this->errors[] = [
                 'row' => json_encode($row, JSON_UNESCAPED_UNICODE),
@@ -46,6 +46,13 @@ class stage_import implements ToModel, WithBatchInserts, WithChunkReading, WithS
             ];
 
             return null;
+        }
+
+        if (!$hospital) {
+            $hospital =  $this->handleMMHospital($hospital_name, $cancer->id, $row[8], $row);
+            if (!$hospital) {
+                return null;
+            }
         }
 
         $this->success += 1;
@@ -97,15 +104,5 @@ class stage_import implements ToModel, WithBatchInserts, WithChunkReading, WithS
         }
 
         return $this->errors;
-    }
-
-    public function getSuccess()
-    {
-        return $this->success;
-    }
-
-    public function getCountError(): int
-    {
-        return count($this->errors);
     }
 }
