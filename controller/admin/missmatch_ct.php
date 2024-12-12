@@ -223,21 +223,28 @@ class missmatch_ct
 
 		$whereClause = ['commonSearch' => []];
 
+		if (isset($post['searchnew_select'])) {
+			$searchnew_select = json_decode(htmlspecialchars_decode($post['searchnew_select']), true);
+		}
+		if (!empty($searchnew_select)) {
+			if (!empty($searchnew_select['multitext'])) {
+				$whereClause['commonSearch']['multitext'] =  ['multitext', 'like', "%" . (trim($searchnew_select['multitext'])) . "%"];
+			}
+			if (!empty($searchnew_select['search_area'])) {
+				$whereClause['commonSearch'][] =  ['id', 'like', "%" . (trim($searchnew_select['search_area'])) . "%"];
+			}
+			if (!empty($searchnew_select['search_cancer'])) {
+				$whereClause['commonSearch']['cancer_id'] = trim($searchnew_select['search_cancer']);
+			}
+		}
+
+
 		if (isset($post['search_select'])) {
 			$search_select = json_decode(htmlspecialchars_decode($post['search_select']), true);
 		}
-
 		if (!empty($search_select)) {
-			if (!empty($search_select['multitext'])) {
-				$whereClause['commonSearch']['multitext'] =  ['multitext', 'like', "%" . (trim($search_select['multitext'])) . "%"];
-			}
-
-			if (!empty($search_select['search_area'])) {
-				$whereClause['commonSearch'][] =  ['id', 'like', "%" . (trim($search_select['search_area'])) . "%"];
-			}
-
-			if (!empty($search_select['search_cancer'])) {
-				$whereClause['commonSearch']['cancer_id'] = trim($search_select['search_cancer']);
+			if (!empty($search_select['order'])) {
+				$whereClause['commonOrder'] =  $search_select['order'];
 			}
 		}
 

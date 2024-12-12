@@ -189,6 +189,10 @@ function append_form_prams(method, form_id, input_file_name, isGetFormData = tru
 	if(search_select != undefined || search_select != null || search_select != ''){
 		fd.append('search_select', JSON.stringify(search_select));
 	}
+	var searchnew_select_ = searchnew_select || {};
+	if(searchnew_select_ != undefined || searchnew_select_ != null || searchnew_select_ != ''){
+		fd.append('searchnew_select', JSON.stringify(searchnew_select_));
+	}
 
 	return fd;
 }
@@ -1510,6 +1514,7 @@ function searchMain(){
  */
 var orderIconDispChange = function($target, Callback){
 	var order, target, indexName, foreignRelation;
+
 	if($target.hasClass('orderActive')){
 		if($target.attr('order') == 'desc'){
 			$target.find('i').addClass('fa-sort-amount-asc').removeClass('fa-sort-amount-desc');
@@ -1521,7 +1526,8 @@ var orderIconDispChange = function($target, Callback){
 			order = 'desc';
 		}
 	}else{
-		$('.orderActive').removeAttr('order').removeClass('orderActive').find('i').removeClass('fa-sort-amount-asc fa-sort-amount-desc').addClass('fa-sort')
+
+		$('.orderActive').removeAttr('order').removeClass('orderActive').find('i').removeClass('fa-sort-amount-asc fa-sort-amount-desc').addClass('fa-sort');
 		$target.addClass('orderActive').attr('order', 'desc').find('i').addClass('fa-sort-amount-desc').removeClass('fa-sort');
 		order = 'desc';
 	}
@@ -1540,8 +1546,7 @@ var orderIconDispChange = function($target, Callback){
 			name : indexName,
 			foreignRelation : foreignRelation
 	}
-
-    Callback();
+	Callback();
 };
 
 $(window).on('scroll', function() {

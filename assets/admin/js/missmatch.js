@@ -20,7 +20,30 @@ var page_title = '処理済一覧'
 //画像input用配列
 var input_file_name = {};
 
-var search_select = {};
+var search_select = {
+	selectArea : {
+		'がん種' : {
+			search 		 : false,
+			order		 : true,
+			orderInit	: false,
+			ColName 	 : 'area_name',
+			tableOrder 	 : 2,
+			type 		 : 'text',
+			foreignRelation : 'cancer',
+		},
+		'医療機関名' : {
+			search 		 : false,
+			order		 : true,
+			ColName 	 : 'hospital_name',
+			tableOrder 	 : 4,
+			type 		 : 'text',
+			foreignRelation : 'hospital',
+		},
+	},
+	value : {},
+	order : {}
+};
+var searchnew_select = {};
 
 
 
@@ -37,6 +60,46 @@ var state = {
 };
 history.replaceState(state, null, null);
 
+
+$(window).on('bb');
+$(window).on('popstate.bb',function(e) {
+	var state = e.originalEvent.state;
+	if (state) {
+		$('html, body').scrollTop(0);
+		if(state.search_select){
+			search_select = state.search_select;
+			$('[name=search_input]').val(search_select.value.value);
+		}
+		if(state.actType == 'init'){
+			$('#id').val(null);
+			$('#frm').find('input, select, textarea').each(function(i, elem){
+				$(elem).val(null);
+			});
+			$('.unit_prev_img').remove();
+			$('.list_show').show();
+			$('.entry_input').hide();
+			$('[name=search_input]').val('');
+			$('#page_type').val('list_show');
+			var form_datas = append_form_prams('init', 'frm', null, false);
+			click_ctrl(null, page_title, 'init');
+			call_ajax_init(form_datas);
+		}else if(state.actType == 'disp_change'){
+				$('#id').val(null);
+				click_ctrl($('[name='+state.elemName+']'), page_title, 'nopush');
+		}else if(state.actType == 'edit'){
+			$('#id').val(state.id);
+			$('#page_type').val('edit_init');
+			disp_ctrl();
+			var form_data = append_form_prams('edit_init', 'frm', null, false);
+			// call_ajax_edit_init(form_data);
+		}else if(state.actType == 'search'){
+			var form_data =  append_form_prams('init', 'frm', null, false);
+			form_data.append('search_select', JSON.stringify(search_select));
+			call_ajax_init(form_data);
+
+		}
+	}
+});
 
 $(function() {
 
@@ -121,6 +184,10 @@ $(function() {
 
 		// 初期処理AJAX呼び出し処理
 		call_ajax_init(form_datas);
+
+		$('button[type="reset"]').on('click', function() {
+			$('[name="search_form"]').get(0).reset();
+		});
 
 	}
 
@@ -341,29 +408,73 @@ $(function() {
 
 function searchNew(){
 	$('button[name="search_submit"]').off();
-    $('button[name="search_submit"]').on('click', function(){
-			$('form[name="search_form"]').find('input, select, textarea').each(function() {
-				let name = $(this).attr('name');
-				let type = $(this).attr('type');
+	$('button[name="search_submit"]').on('click', function(){
+		$('form[name="search_form"]').find('input, select, textarea').each(function() {
+			let name = $(this).attr('name');
+			let type = $(this).attr('type');
 
-				if (name) {
-					if (type === 'checkbox') {
-						if (!search_select[name]) search_select[name] = [];
-						if ($(this).is(':checked')) {
-								search_select[name].push($(this).val());
-						}
-					} else if (type === 'radio') {
-						if ($(this).is(':checked')) {
-								search_select[name] = $(this).val();
-						}
-					} else {
-						search_select[name] = $(this).val();
+			if (name) {
+				if (type === 'checkbox') {
+					if (!searchnew_select[name]) searchnew_select[name] = [];
+					if ($(this).is(':checked')) {
+							searchnew_select[name].push($(this).val());
 					}
+				} else if (type === 'radio') {
+					if ($(this).is(':checked')) {
+							searchnew_select[name] = $(this).val();
+					}
+				} else {
+					searchnew_select[name] = $(this).val();
 				}
-			});
+			}
+		});
 
 		var form_data = append_form_prams('init', 'frm', null, false);
 		call_ajax_init(form_data);
+	});
+
+	if(search_select != undefined || search_select != null || search_select != '') {
+		if(!$('.tableHeadArea').hasClass('changedOrder')){
+			var selectOption = '', selectFlg = false;
+			var orderOption = {}, orderFlg = false;
+			$.each(search_select['selectArea'], function(name, options){
+				if(options['order']){
+					orderFlg = true;
+					orderOption[options['tableOrder']] = {};
+					if(options['orderInit']){
+						orderOption[options['tableOrder']]['icon'] = '<i class="fa fa-sort-amount-desc"></i>';
+						orderOption[options['tableOrder']]['active'] = 'orderActive';
+						orderOption[options['tableOrder']]['order'] = 'desc';
+					}else{
+						orderOption[options['tableOrder']]['icon'] = '<i class="fa fa-sort"></i>';
+						orderOption[options['tableOrder']]['active'] = '';
+					}
+				}
+			});
+			if(orderFlg){
+				$('.tableHeadArea').addClass('changedOrder');
+				$.each(orderOption, function(order, options){
+					$('.tableHeadArea th').eq(order).addClass('changeOrder ' + options['active']).append(options['icon']);
+					if(options['active']){
+						$('.tableHeadArea th').eq(order).attr('order', options['order']);
+					}
+				});
+			}
+		}
+
+		newBind();
+	}
+
+}
+
+function newBind(){
+	$('.changeOrder').off('.changeOrder');
+	$('.changeOrder').on('click.changeOrder', function(){
+		orderIconDispChange($(this), function(){
+			var form_data =  append_form_prams('init', 'frm', input_file_name);
+			form_data.append('search_select', JSON.stringify(search_select));
+			call_ajax_init(form_data);
+		});
 	});
 }
 
@@ -381,7 +492,16 @@ function fd_add(fd){
 	return fd;
 }
 
-$('.group-selection').select2({
-    placeholder: '質問グループを選択してください',
-    allowClear: true
+// $('.group-selection').select2({
+//     placeholder: '質問グループを選択してください',
+//     allowClear: true
+// });
+
+$('.cancer-selection').select2({
+	placeholder: 'がんの種類'
+});
+
+$('.area-selection').select2({
+	placeholder: '地域を選択',
+	allowClear: true
 });
