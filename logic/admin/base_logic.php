@@ -262,7 +262,7 @@ abstract class base_logic
         }
 
         if (is_callable($applyCustomeGroupBy)) {
-            $applyCustomeGroupBy($query);
+            $applyCustomeGroupBy($query, $searchSelect);
         } else {
             $query->orderBy("$table.del_flg", 'ASC');
             $query->orderBy("$table.created_at", 'DESC');

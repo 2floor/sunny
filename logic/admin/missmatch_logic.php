@@ -133,8 +133,6 @@ class missmatch_logic extends base_logic
 
 					$query->where(function ($query) use ($multitext) {
 						$query->orWhere("t_hospital.hospital_name", $multitext[1], $multitext[2]);
-						$query->orWhere("m_cancer.cancer_type", $multitext[1], $multitext[2]);
-						$query->orWhere("m_area.area_name", $multitext[1], $multitext[2]);
 					});
 				}
 				if (!empty($search_select['commonSearch']['cancer_id'])) {
@@ -145,9 +143,15 @@ class missmatch_logic extends base_logic
 			$query->where('m_cancer.id', '=', $cancer_id_find);
 		}, [
 			'id' => 'm_area',
-		], function (&$query) {
-			$query->orderBy('cancer_id')
-				->orderBy('hospital_id');
+		], function (&$query, &$search_select) {
+
+			if (!empty($search_select['commonOrder'])) {
+				$query->orderBy($search_select['commonOrder']['target'], $search_select['commonOrder']['order']);
+			} else {
+				$query->orderBy('hospital_id');
+			}
+			// $query->orderBy('hospital_id');
+			$query->orderBy('hospital_id');
 		}, ['*'], $cancer_model);
 
 		$all_cnt = $data['total'];

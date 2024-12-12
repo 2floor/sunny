@@ -5,18 +5,17 @@ require_once __DIR__ . '/../logic/common/common_logic.php';
 
 $common_logic = new common_logic();
 
-$data_area = $common_logic->select_logic_no_param("SELECT DISTINCT(mm.area_id), a.area_name FROM t_miss_match mm, m_area a WHERE mm.area_id = a.id");
-$data_area_option = '';
-foreach ($data_area as $dao_row) {
-	$data_area_option .= '<option value="' . $dao_row['area_id'] . '">' . $common_logic->zero_padding($dao_row['area_id'], 5) . "-" . $dao_row['area_name'] . '</option>';
-}
-
 $data_cancer = $common_logic->select_logic_no_param("SELECT id, cancer_type FROM m_cancer");
 $data_cancer_option = '';
 foreach ($data_cancer as $dco_row) {
 	$data_cancer_option .= '<option value="' . $dco_row['id'] . '"' . ($dco_row === reset($data_cancer) ? ' selected' : '') . '>' . $common_logic->zero_padding($dco_row['id'], 5) . "-" . $dco_row['cancer_type'] . '</option>';
 }
 
+$data_area = $common_logic->select_logic_no_param("SELECT id as area_id, area_name FROM m_area");
+$data_area_option = '';
+foreach ($data_area as $dao_row) {
+	$data_area_option .= '<option value="' . $dao_row['area_id'] . '">' . $common_logic->zero_padding($dao_row['area_id'], 5) . "-" . $dao_row['area_name'] . '</option>';
+}
 
 ?>
 <!DOCTYPE html>
@@ -25,14 +24,16 @@ foreach ($data_cancer as $dco_row) {
 <head>
 	<?php require_once __DIR__ . '/../required/html_head.php'; ?>
 
-	<link rel="stylesheet" href="https://cdn.datatables.net/2.0.0/css/dataTables.bootstrap.css">
-
-
-
 	<style>
 		#dataTable th {
 			background-color: #14ae5c;
 			color: #fff;
+		}
+
+		#dataTable th>i {
+			position: relative;
+			float: right;
+			right: 20px;
 		}
 
 		.action-footer {
@@ -62,6 +63,50 @@ foreach ($data_cancer as $dco_row) {
 
 		.mm_status_confirmed {
 			background-color: #AFF4C6;
+		}
+
+		.searchBox .row {
+			margin-bottom: 10px;
+		}
+
+		.searchTxt {
+			font-size: 14px;
+			color: #333333;
+			font-weight: bold;
+			background-color: transparent;
+			border: none;
+			border-radius: unset;
+			padding: 7px 0px;
+			height: 38px;
+			max-width: 100%;
+			box-shadow: none;
+			transition: all 300ms linear;
+			line-height: 1.42857143;
+			display: block;
+			width: 100%;
+		}
+
+		.list-button-search {
+			text-align: right;
+		}
+
+		.select2-container--default .select2-selection--single {
+			background-color: #fff;
+			border: 1px solid #e3e3e3;
+			border-radius: 4px;
+			height: 38px;
+		}
+
+		.select2-container--default .select2-selection--single .select2-selection__arrow {
+			height: 38px;
+		}
+
+		.select2-container--default .select2-selection--single .select2-selection__rendered {
+			line-height: 38px;
+		}
+
+		.select2-container--default .select2-selection--single .select2-selection__clear {
+			font-size: 22px;
 		}
 	</style>
 
@@ -94,38 +139,50 @@ foreach ($data_cancer as $dco_row) {
 				<div class="disp_area list_show list_disp_area">
 					<!-- searchBox -->
 					<div class="container table-rep-plugin">
-						<div class="searchBox">
+						<div class="searchBox row">
 
-							<form name="search_form" class="searchBoxLeft searchArea">
-								<div class="searchBox1">
-									<div class="searchTxt">
-										絞り込み検索
-									</div>
-									<select class="form-control" name="search_cancer">
-										<?= $data_cancer_option ?>
-									</select>
-									<select class="form-control" name="search_area">
-										<option value="">-- セレクト --</option>
-										<?= $data_area_option ?>
-									</select>
-								</div>
-								<div class="searchBox2">
-									<div class="input-group">
-										<input type="text" id="multitext" name="multitext" class="form-control" placeholder="フリーワードを入力">
-										<span class="input-group-btn">
-											<button type="button" name="search_submit" class="btn waves-effect waves-light btn-primary">検索</button>
-											<!-- <button type="reset" class="btn waves-effect waves-light btn-secondary">リセット</button> -->
+							<form name="search_form" class="searchArea col-sm-12">
+								<div class="col-sm-12">
+									<div class="row">
+										<!-- <div class="col-sm-2"> -->
+										<span class="searchTxt">
+											絞り込み検索
 										</span>
+										<!-- </div> -->
+										<div class="col-sm-6">
+											<select class="selection2 cancer-selection form-control col-sm-5" name="search_cancer">
+												<?= $data_cancer_option ?>
+											</select>
+										</div>
+										<div class="col-sm-6">
+											<select class="selection2 area-selection form-control col-sm-5" name="search_area">
+												<option value="">-- セレクト --</option>
+												<?= $data_area_option ?>
+											</select>
+										</div>
+									</div>
+								</div>
+								<div class="col-sm-12">
+									<div class="row">
+										<div class="input-group-search col-sm-6">
+											<input type="text" id="multitext" name="multitext" class="form-control" placeholder="フリーワードを入力">
+										</div>
 
+										<div class="col-sm-6">
+											<div class="list-button-search">
+												<button type="button" name="search_submit" class="btn waves-effect waves-light btn-primary">検索</button>
+												<button type="reset" class="btn waves-effect waves-light btn-secondary">リセット</button>
+											</div>
+										</div>
 									</div>
 								</div>
 							</form>
 
-							<div class="searchBoxRight">
+							<!-- <div class="searchBoxRight">
 								<div class="serachW110">
 									<button type="button" name="new_entry" class="btn btn-primary waves-effect w-md waves-light m-b-5">新規登録</button>
 								</div>
-							</div>
+							</div> -->
 						</div>
 					</div>
 					<!-- searchBox -->
@@ -223,8 +280,6 @@ foreach ($data_cancer as $dco_row) {
 	</div>
 	<!-- END wrapper -->
 	<?php require_once __DIR__ . '/../required/foot.php'; ?>
-	<script src="https://cdn.datatables.net/2.0.0/js/dataTables.js"></script>
-	<script src="https://cdn.datatables.net/2.0.0/js/dataTables.bootstrap.js"></script>
 	<!-- Start Personal script -->
 	<script src="../assets/admin/js/missmatch.js"></script>
 
