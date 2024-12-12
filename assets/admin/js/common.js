@@ -189,7 +189,7 @@ function append_form_prams(method, form_id, input_file_name, isGetFormData = tru
 	if(search_select != undefined || search_select != null || search_select != ''){
 		fd.append('search_select', JSON.stringify(search_select));
 	}
-	var searchnew_select_ = searchnew_select || {};
+	var searchnew_select_ = (typeof searchnew_select !== 'undefined') ? searchnew_select : {};
 	if(searchnew_select_ != undefined || searchnew_select_ != null || searchnew_select_ != ''){
 		fd.append('searchnew_select', JSON.stringify(searchnew_select_));
 	}
