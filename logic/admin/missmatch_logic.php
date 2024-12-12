@@ -156,16 +156,50 @@ class missmatch_logic extends base_logic
 					'percent_match' => $mm->percent_match,
 					'status' => $mm->status,
 				];
-			}
+			} else {
+				$tmodel = $instance::where([
+					'year' => $year,
+					'cancer_id' => $cancer->id,
+					'hospital_id' => $hospital->id,
+				])->get()->first();
 
-			return [
-				'hospital_name' => null,
-				'year' => $year,
-				'cancer_type' => $cancer->cancer_type,
-				$cancer_name_process[$instance] => $cancer->{$cancer_name_process[$instance]},
-				'percent_match' => null,
-				'status' => -1,
-			];
+				if ($tmodel) {
+					$mm_lasted = $this->getListByWhereClause(
+						[
+							'cancer_id' => $tmodel->cancer_id,
+							'hospital_id' => $tmodel->hospital_id,
+							'type' => $type,
+							'status' => MissMatch::STATUS_CONFIRMED
+						]
+					)->sortByDesc('year')->first();
+
+					return [
+						'area_id' => $tmodel->hospital?->area_id,
+						'hospital_name' => $mm_lasted ? $mm_lasted['hospital_name'] : $tmodel->hospital?->hospital_name,
+						'hospital_id' => $tmodel->hospital_id,
+						'year' => $tmodel->year,
+						'cancer_type' => $tmodel->cancer?->cancer_type,
+						'cancer_type_dpc' => $tmodel->cancer?->cancer_type_dpc,
+						'cancer_id' => $tmodel->cancer_id,
+						'dpc' => $tmodel->n_dpc,
+						'percent_match' => 100,
+						'status' => MissMatch::STATUS_ABSOLUTELY_MATCH,
+					];
+				} else {
+					return [
+						'area_id' => $hospital->area_id,
+						'hospital_name' => null,
+						'hospital_id' => $hospital->id,
+						'year' => $year,
+						'cancer_type' => $cancer->cancer_type,
+						'cancer_type_dpc' => $cancer->cancer_type_dpc,
+						'cancer_id' => $cancer->id,
+						'dpc' => null,
+						'percent_match' => null,
+						'status' => -1,
+					];
+				}
+			}
 		})->toArray();
 	}
 
