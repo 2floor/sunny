@@ -30,6 +30,27 @@ $_COOKIE = $security_result[2];
 $security_common_logic = new security_common_logic();
 $data = $security_common_logic->isTokenExection();
 if ($data['status']) {
+
+	if (isset($_SERVER['HTTP_REFERER'])) {
+
+		$referer = end(explode("/", $_SERVER['HTTP_REFERER']));
+		switch ($referer) {
+			case 'missmatch_dpc.php':
+				$_GET["const_type"] = "DPC";
+				break;
+			case 'missmatch_stage.php':
+				$_GET["const_type"] = "Stage";
+				break;
+			case 'missmatch_surv.php':
+				$_GET["const_type"] = "SurvHospital";
+				break;
+			default:
+				unset($_GET["const_type"]);
+				break;
+		}
+	}
+
+
 	// 正常処理 コントローラー呼び出し
 
 	// インスタンス生成
