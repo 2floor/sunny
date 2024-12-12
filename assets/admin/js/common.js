@@ -189,10 +189,13 @@ function append_form_prams(method, form_id, input_file_name, isGetFormData = tru
 	if(search_select != undefined || search_select != null || search_select != ''){
 		fd.append('search_select', JSON.stringify(search_select));
 	}
-	var searchnew_select_ = (typeof searchnew_select !== 'undefined') ? searchnew_select : {};
-	if(searchnew_select_ != undefined || searchnew_select_ != null || searchnew_select_ != ''){
-		fd.append('searchnew_select', JSON.stringify(searchnew_select_));
+
+	if(typeof searchnew_select !== 'undefined'){
+		if(searchnew_select != null && searchnew_select != ''){
+			fd.append('searchnew_select', JSON.stringify(searchnew_select));
+		}
 	}
+
 
 	return fd;
 }
