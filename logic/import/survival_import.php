@@ -2,18 +2,21 @@
 
 use App\Models\Cancer;
 use App\Models\Hospital;
+use App\Models\MissMatch;
 use App\Models\SurvAverage;
 use App\Models\SurvHospital;
 use Maatwebsite\Excel\Concerns\OnEachRow;
 use Maatwebsite\Excel\Concerns\WithBatchInserts;
 use Maatwebsite\Excel\Concerns\WithChunkReading;
 
-class survival_import implements OnEachRow, WithBatchInserts, WithChunkReading
+class survival_import extends base_import implements OnEachRow, WithBatchInserts, WithChunkReading
 {
-    protected $errors = [];
-    protected $success = 0;
     protected $headers = [];
 
+    public function getMMType ()
+    {
+        return MissMatch::TYPE_SURVIVAL;
+    }
 
     public function onRow($row)
     {
@@ -24,23 +27,20 @@ class survival_import implements OnEachRow, WithBatchInserts, WithChunkReading
 
         $row = $row->toArray();
 
+        if (!$row[2]) {
+            $this->addError($row, '病院名は空白にすることはできません');
+            return null;
+        }
+
+        $hospital_name = trim($row[2]);
+        $hospital_master = Hospital::withoutGlobalScope('unpublish')->where('hospital_name', $hospital_name)->first();
         $cancers = Cancer::withoutGlobalScope('unpublish')->where('cancer_type', ($row[3] ? trim($row[3]) : null))
             ->orWhere('cancer_type_surv', ($row[3] ? trim($row[3]) : null))->get();
-        $hospital = Hospital::withoutGlobalScope('unpublish')->where('hospital_code', ($row[1] ? trim($row[1]) : null))->first();
 
         if (empty($cancers)) {
             $this->errors[] = [
                 'row' => json_encode($row, JSON_UNESCAPED_UNICODE),
                 'error' => 'マスターデータにがん情報が見つかりません'
-            ];
-
-            return null;
-        }
-
-        if (!$hospital) {
-            $this->errors[] = [
-                'row' => json_encode($row, JSON_UNESCAPED_UNICODE),
-                'error' => 'マスターデータに病院情報がありません'
             ];
 
             return null;
@@ -199,6 +199,15 @@ class survival_import implements OnEachRow, WithBatchInserts, WithChunkReading
         $avg4 =  $row27 ? (round($row27, 4) * 100): null;
 
         foreach ($cancers as $cancer) {
+            if (!$hospital_master) {
+                $hospital =  $this->handleMMHospital($hospital_name, $cancer->id, $row[0], $row);
+                if (!$hospital) {
+                    continue;
+                }
+            } else {
+                $hospital = $hospital_master;
+            }
+
             SurvHospital::withoutGlobalScope('unpublish')->updateOrCreate([
                 'hospital_id' => $hospital->id,
                 'cancer_id' => $cancer->id,
@@ -266,15 +275,5 @@ class survival_import implements OnEachRow, WithBatchInserts, WithChunkReading
         }
 
         return [];
-    }
-
-    public function getSuccess()
-    {
-        return $this->success;
-    }
-
-    public function getCountError(): int
-    {
-        return count($this->errors);
     }
 }
