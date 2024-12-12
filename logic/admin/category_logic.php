@@ -91,8 +91,8 @@ class category_logic extends base_logic
 		$cnt = $offset;
 		foreach ($result_category as $row) {
 			$cnt++;
-			$edit_html_a = $this->generate_edit_html_a($row['category_id'], $row['del_flg']);
-			$edit_html_b = $this->generate_edit_html_b($row['category_id'], $row['public_flg']);
+			$edit_html_a = $this->generate_edit_html_a($row['id'], $row['del_flg']);
+			$edit_html_b = $this->generate_edit_html_b($row['id'], $row['public_flg']);
 			$created_at = $this->format_time($row['created_at']);
 			$updated_at = $this->format_time($row['updated_at']);
 			$back_color_html = $this->generate_back_color_html($back_color, $row['del_flg']);
@@ -100,12 +100,11 @@ class category_logic extends base_logic
 			$return_html .= "
 			<tr " . $back_color_html . ">
 				<td class='count_no'>" . $cnt . "</td>
-				<td>" . Category::LIST_CANCER[$row['is_whole_cancer']] . "</td>
-				<td>" . Category::LIST_GROUP[$row['category_group']] . "</td>
-
+				<td>" . $row['id'] . "</td>
 				<td>" . $row['level1'] . "</td>
 				<td>" . $row['level2'] . "</td>
 				<td>" . $row['level3'] . "</td>
+				<td>" . Category::LIST_GROUP[$row['category_group']] . "</td>
 				<td>" . $created_at . "</td>
 				<td>" . $updated_at . "</td>
 				<td>
@@ -124,11 +123,11 @@ class category_logic extends base_logic
 	private function generate_edit_html_a($category_id, $del_flg)
 	{
 		$edit_html_a = "<a href='javascript:void(0);' class='edit clr1' name='edit_" . $category_id . "' value='" . $category_id . "'><i class=\"fa fa-pencil\" aria-hidden=\"true\"></i></a><br>";
-		// if ($del_flg == 1) {
-		// 	$edit_html_a .= "<a href='javascript:void(0);' class='recovery clr2' name='recovery_" . $category_id . "' value='" . $category_id . "' ><i class=\"fa fa-undo\" aria-hidden=\"true\"></i></a><br>";
-		// } else {
-		// 	$edit_html_a .= "<a href='javascript:void(0);' class='del clr2' name='del_" . $category_id . "' value='" . $category_id . "'><i class=\"fa fa-trash\" aria-hidden=\"true\"></i></a><br>";
-		// }
+		 if ($del_flg == 1) {
+		 	$edit_html_a .= "<a href='javascript:void(0);' class='recovery clr2' name='recovery_" . $category_id . "' value='" . $category_id . "' ><i class=\"fa fa-undo\" aria-hidden=\"true\"></i></a><br>";
+		 } else {
+		 	$edit_html_a .= "<a href='javascript:void(0);' class='del clr2' name='del_" . $category_id . "' value='" . $category_id . "'><i class=\"fa fa-trash\" aria-hidden=\"true\"></i></a><br>";
+		 }
 		return $edit_html_a;
 	}
 
@@ -188,4 +187,9 @@ class category_logic extends base_logic
 	{
 		return $movie != null && $movie != "" ? '<a href="#modal" class="check_movie" category_id="' . $category_id . '">有り</a>' : '無し';
 	}
+
+    public function getListByWhereClause($clause)
+    {
+        return Category::where($clause)->get();
+    }
 }

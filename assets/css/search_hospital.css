@@ -262,8 +262,8 @@ input[type="radio"], input[type="checkbox"] {
     border-radius: 8px;
     padding: 4px 8px;
     font-size: 12px;
-    margin-top: -40px;
-    margin-left: -20px;
+    margin-top: -50px;
+    margin-left: 0;
 }
 
 .popup-close {
