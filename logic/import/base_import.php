@@ -41,6 +41,8 @@ abstract class base_import
         if ($mm) {
             $hospital = Hospital::withoutGlobalScope('unpublish')->find($mm->hospital_id);
         } else {
+            $hospital = null;
+
             $mm = MissMatch::where([
                 'hospital_name' => $hospitalName,
                 'status' => MissMatch::STATUS_CONFIRMED,
@@ -54,31 +56,34 @@ abstract class base_import
                     'cancer_id' => $cancerId,
                 ])->first();
 
-                if ($existMM) {
-                    $existMM->update([
-                        'hospital_id' => null,
-                        'area_id' => null,
-                        'percent_match' => null,
+                if (!$existMM || ($existMM->status == MissMatch::STATUS_NOT_CONFIRM)) {
+                    if ($existMM) {
+                        $existMM->update([
+                            'hospital_id' => null,
+                            'area_id' => null,
+                            'percent_match' => null,
+                        ]);
+                    }
+
+                    $this->createMissMatch([
+                        'hospital_id' => $mm->hospital_id,
+                        'hospital_name' => $hospitalName,
+                        'cancer_id' => $cancerId,
+                        'area_id' => $mm->area_id,
+                        'year' => $year,
+                        'percent_match' => $mm->percent_match,
+                        'import_value' => $row,
                     ]);
+
+                    $hospital = Hospital::withoutGlobalScope('unpublish')->find($mm->hospital_id);
                 }
+            }
 
-                $this->createMissMatch([
-                    'hospital_id' => $mm->hospital_id,
-                    'hospital_name' => $hospitalName,
-                    'cancer_id' => $cancerId,
-                    'area_id' => $mm->area_id,
-                    'year' => $year,
-                    'percent_match' => $mm->percent_match,
-                    'import_value' => $row,
-                ]);
-
-                $hospital = Hospital::withoutGlobalScope('unpublish')->find($mm->hospital_id);
-            } else {
+            if (!$hospital) {
                 $mostSimilar = $this->findMostSimilarHospital($hospitalName);
 
                 $mmHospitalId = null;
                 $percent = null;
-                $hospital = null;
                 if (!empty($mostSimilar) && $mostSimilar['similarity'] > 70) {
                     $hospital = $mostSimilar['hospital'];
                     $percent = $mostSimilar['similarity'];
@@ -104,7 +109,7 @@ abstract class base_import
                             'import_value' => $row,
                         ]);
                     } else {
-                        if ($existMM->percent_match >= $percent) {
+                        if ($existMM->percent_match >= $percent || $existMM->status == MissMatch::STATUS_CONFIRMED) {
                             $this->createMissMatch([
                                 'hospital_id' => null,
                                 'hospital_name' => $hospitalName,
