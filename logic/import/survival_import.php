@@ -1,5 +1,7 @@
 <?php
 
+require_once __DIR__ . '/../../logic/import/base_import.php';
+
 use App\Models\Cancer;
 use App\Models\Hospital;
 use App\Models\MissMatch;
