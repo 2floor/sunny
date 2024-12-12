@@ -47,6 +47,21 @@ abstract class base_import
             ])->orderBy('year', 'desc')->first();
 
             if ($mm) {
+                $existMM = MissMatch::where([
+                    'hospital_id' => $mm->hospital_id,
+                    'type' => $this->type,
+                    'year' => $year,
+                    'cancer_id' => $cancerId,
+                ])->first();
+
+                if ($existMM) {
+                    $existMM->update([
+                        'hospital_id' => null,
+                        'area_id' => null,
+                        'percent_match' => null,
+                    ]);
+                }
+
                 $this->createMissMatch([
                     'hospital_id' => $mm->hospital_id,
                     'hospital_name' => $hospitalName,
