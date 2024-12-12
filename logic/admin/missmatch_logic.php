@@ -21,92 +21,24 @@ class missmatch_logic extends base_logic
 	public function create_data_list($params, $search_select = null)
 	{
 		// DPC , Stage , SurvHospital
-		$cancer_name_process = [
-			"App\\Models\\DPC" => "cancer_type_dpc",
-			"App\\Models\\Stage" => "cancer_type_stage",
-			"App\\Models\\SurvHospital" => "cancer_type_surv",
+
+		// const TYPE_DPC = 1;
+		// const TYPE_STAGE = 2;
+		// const TYPE_SURVIVAL = 3;
+
+		$list_type_process = [
+			"App\\Models\\DPC" => MissMatch::TYPE_DPC,
+			"App\\Models\\Stage" => MissMatch::TYPE_STAGE,
+			"App\\Models\\SurvHospital" => MissMatch::TYPE_SURVIVAL,
 		];
 
-		$process_type = isset($search_select['commonSearch']['const_type']) ? $search_select['commonSearch']['const_type'] : "DPC";
-		unset($search_select['commonSearch']['const_type']);
-
 		$const_nspace = "App\\Models\\";
+		if (!empty($_GET["const_type"])) {
+			$process_type = isset($_GET["const_type"]) ? $_GET["const_type"] : "DPC";
+		}
+
 		$instance = $const_nspace . $process_type;
-
 		$const_model = new $instance();
-
-		$find_list_year = $const_model->select('year')->distinct()->orderBy('year', 'DESC')->limit(3)->get()->pluck('year');
-		$list_year = $find_list_year->toArray();
-
-
-
-		// $data = $this->getListDataJoin($params, $search_select, [], [], function (&$query, &$search_select) use ($list_year) {
-		// 	$query->distinct();
-		// 	$query->select([
-		// 		't_miss_match.hospital_id',
-		// 		't_miss_match.cancer_id',
-		// 		't_miss_match.area_id',
-		// 		'm_cancer.cancer_type AS cancer_name',
-		// 		'm_area.area_name',
-		// 		't_hospital.hospital_name AS hospital_name_master',
-		// 		'year_0.hospital_name AS hospital_name_0',
-		// 		'year_1.hospital_name AS hospital_name_1',
-		// 		'year_2.hospital_name AS hospital_name_2',
-		// 		'year_0.percent_match AS percent_match_0',
-		// 		'year_1.percent_match AS percent_match_1',
-		// 		'year_2.percent_match AS percent_match_2',
-		// 		'year_0.id AS id_0',
-		// 		'year_1.id AS id_1',
-		// 		'year_2.id AS id_2',
-		// 		't_miss_match.del_flg',
-		// 	]);
-
-		// 	$query->leftJoin('m_cancer', 'm_cancer.id', '=', 't_miss_match.cancer_id');
-		// 	$query->leftJoin('m_area', 'm_area.id', '=', 't_miss_match.area_id');
-		// 	$query->leftJoin('t_hospital', 't_hospital.id', '=', 't_miss_match.hospital_id');
-
-		// 	foreach ($list_year as $key => $year) {
-		// 		$query->leftJoinSub(
-		// 			DB::table('t_miss_match')->where('year', $year)->where('status', 0)->where('del_flg', 0),
-		// 			'year_' . $key,
-		// 			function ($join) use ($key) {
-		// 				$join
-		// 					->on('year_' . $key . '.hospital_id', '=', 't_miss_match.hospital_id')
-		// 					->on('year_' . $key . '.area_id', '=', 't_miss_match.area_id')
-		// 					->on('year_' . $key . '.cancer_id', '=', 't_miss_match.cancer_id');
-		// 			}
-		// 		);
-		// 	}
-		// 	$query->where('t_miss_match.status', 0);
-		// 	$query->whereNotNull('t_miss_match.hospital_id')
-		// 		->where('t_miss_match.hospital_id', '>', 0)
-		// 		->whereNotNull('t_miss_match.area_id')
-		// 		->where('t_miss_match.area_id', '>', 0);
-
-		// 	if (!empty($search_select['commonSearch'])) {
-		// 		if (!empty($search_select['commonSearch']['multitext'])) {
-
-		// 			$multitext = $search_select['commonSearch']['multitext'];
-		// 			unset($search_select['commonSearch']['multitext']);
-
-		// 			$query->where(function ($query) use ($multitext, $list_year) {
-		// 				$query->orWhere("t_miss_match.hospital_name", $multitext[1], $multitext[2]);
-		// 				$query->orWhere("t_miss_match.year", $multitext[1], $multitext[2]);
-		// 				$query->orWhere("m_cancer.cancer_type", $multitext[1], $multitext[2]);
-		// 				$query->orWhere("m_area.area_name", $multitext[1], $multitext[2]);
-		// 				$query->orWhere("t_miss_match.hospital_name", $multitext[1], $multitext[2]);
-
-		// 				foreach ($list_year as $key => $year) {
-		// 					$query->orWhere("year_" . $key . ".hospital_name", $multitext[1], $multitext[2]);
-		// 				}
-		// 			});
-		// 		}
-		// 	}
-		// }, [
-		// 	'area_id' => 't_miss_match'
-		// ], function (&$query) {}, [
-		// 	't_miss_match.hospital_id'
-		// ]);
 
 		$cancer_model = new Cancer();
 
@@ -168,14 +100,13 @@ class missmatch_logic extends base_logic
 
 			$hospital = Hospital::find($hospital_id);
 			$cancer = Cancer::find($cancer_id);
-			$type = MissMatch::TYPE_DPC;
+			$type = $list_type_process[$instance];
 
-			$detail = DPC::select('year')
-				->distinct()
-				->orderBy('year', 'desc')
-				->limit(3)
-				->get()->pluck('year')
-				->map(function ($year) use ($hospital_id, $cancer_id, $type, $hospital, $cancer) {
+			$find_list_year = $const_model->select('year')->distinct()->orderBy('year', 'DESC')->limit(3)->get()->pluck('year');
+			$list_year = $find_list_year->toArray();
+
+			$detail = $find_list_year->map(
+				function ($year) use ($instance, $hospital_id, $cancer_id, $type, $hospital, $cancer) {
 					$mm = $this->getListByWhereClause(
 						[
 							'year' => $year,
@@ -186,31 +117,31 @@ class missmatch_logic extends base_logic
 					)->first();
 
 					if (!$mm) {
-						$dpc = DPC::where([
+						$tmodel = $instance::where([
 							'year' => $year,
 							'cancer_id' => $cancer_id,
 							'hospital_id' => $hospital_id,
 						])->get()->first();
 
-						if ($dpc) {
+						if ($tmodel) {
 							$mm_lasted = $this->getListByWhereClause(
 								[
-									'cancer_id' => $dpc->cancer_id,
-									'hospital_id' => $dpc->hospital_id,
+									'cancer_id' => $tmodel->cancer_id,
+									'hospital_id' => $tmodel->hospital_id,
 									'type' => $type,
 									'status' => MissMatch::STATUS_CONFIRMED
 								]
 							)->sortByDesc('year')->first();
 
 							return [
-								'area_id' => $dpc->hospital?->area_id,
-								'hospital_name' => $mm_lasted ? $mm_lasted['hospital_name'] : $dpc->hospital?->hospital_name,
-								'hospital_id' => $dpc->hospital_id,
-								'year' => $dpc->year,
-								'cancer_type' => $dpc->cancer?->cancer_type,
-								'cancer_type_dpc' => $dpc->cancer?->cancer_type_dpc,
-								'cancer_id' => $dpc->cancer_id,
-								'dpc' => $dpc->n_dpc,
+								'area_id' => $tmodel->hospital?->area_id,
+								'hospital_name' => $mm_lasted ? $mm_lasted['hospital_name'] : $tmodel->hospital?->hospital_name,
+								'hospital_id' => $tmodel->hospital_id,
+								'year' => $tmodel->year,
+								'cancer_type' => $tmodel->cancer?->cancer_type,
+								'cancer_type_dpc' => $tmodel->cancer?->cancer_type_dpc,
+								'cancer_id' => $tmodel->cancer_id,
+								'dpc' => $tmodel->n_dpc,
 								'percent_match' => 100,
 								'status' => MissMatch::STATUS_ABSOLUTELY_MATCH,
 							];
@@ -244,7 +175,8 @@ class missmatch_logic extends base_logic
 							'status' => $mm->status,
 						];
 					}
-				})->toArray();
+				}
+			)->toArray();
 
 			foreach ($detail as $yearkey => $datayear) {
 				$row['hospital_name_' . $yearkey] = $datayear['hospital_name'];
