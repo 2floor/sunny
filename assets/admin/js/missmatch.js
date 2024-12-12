@@ -45,6 +45,15 @@ var search_select = {
 };
 var searchnew_select = {};
 
+const lastSegment = window.location.pathname.split('/').filter(Boolean).pop();
+const storedSearchSelect = localStorage.getItem(`searchnew_select_${lastSegment}`);
+
+
+if (storedSearchSelect) {
+	searchnew_select = JSON.parse(storedSearchSelect);
+	load_data_search();
+}
+
 
 
 //初回定義
@@ -54,52 +63,7 @@ var call_ajax_edit_init;
 var currentPage = 1;
 
 
-var state = {
-	"actType": 'init',
-	"elemName" : $(this).attr('name'),
-};
-history.replaceState(state, null, null);
 
-
-$(window).on('bb');
-$(window).on('popstate.bb',function(e) {
-	var state = e.originalEvent.state;
-	if (state) {
-		$('html, body').scrollTop(0);
-		if(state.search_select){
-			search_select = state.search_select;
-			$('[name=search_input]').val(search_select.value.value);
-		}
-		if(state.actType == 'init'){
-			$('#id').val(null);
-			$('#frm').find('input, select, textarea').each(function(i, elem){
-				$(elem).val(null);
-			});
-			$('.unit_prev_img').remove();
-			$('.list_show').show();
-			$('.entry_input').hide();
-			$('[name=search_input]').val('');
-			$('#page_type').val('list_show');
-			var form_datas = append_form_prams('init', 'frm', null, false);
-			click_ctrl(null, page_title, 'init');
-			call_ajax_init(form_datas);
-		}else if(state.actType == 'disp_change'){
-				$('#id').val(null);
-				click_ctrl($('[name='+state.elemName+']'), page_title, 'nopush');
-		}else if(state.actType == 'edit'){
-			$('#id').val(state.id);
-			$('#page_type').val('edit_init');
-			disp_ctrl();
-			var form_data = append_form_prams('edit_init', 'frm', null, false);
-			// call_ajax_edit_init(form_data);
-		}else if(state.actType == 'search'){
-			var form_data =  append_form_prams('init', 'frm', null, false);
-			form_data.append('search_select', JSON.stringify(search_select));
-			call_ajax_init(form_data);
-
-		}
-	}
-});
 
 $(function() {
 
@@ -198,52 +162,74 @@ $(function() {
 		$('.cancel').off();
 		$('.cancel').on('click',function(){
 			var id = $(this).attr('value');
+			if(id) {
+				swal({
+					title : "有効にする",
+					text : '管理ID' + id + "を有効にします。よろしいですか？",
+					type : "warning",
+					showCancelButton : true,
+					confirmButtonClass : 'btn-warning',
+					confirmButtonText : "有効にする",
+					cancelButtonText : 'キャンセル',
+					closeOnConfirm : false,
+					closeOnCancel : false
+				}, function(isConfirm) {
+					if (isConfirm) {
+						var form_data = append_form_prams('cancel_list', 'frm', null, false);
+						form_data.append('id', id);
 
-			swal({
-				title : "有効にする",
-				text : '管理ID' + id + "を有効にします。よろしいですか？",
-				type : "warning",
-				showCancelButton : true,
-				confirmButtonClass : 'btn-warning',
-				confirmButtonText : "有効にする",
-				cancelButtonText : 'キャンセル',
-				closeOnConfirm : false,
-				closeOnCancel : false
-			}, function(isConfirm) {
-				if (isConfirm) {
-					var form_data = append_form_prams('cancel_list', 'frm', null, false);
-					form_data.append('id', id);
-
-					call_ajax_change_state(form_data);
-				} else {
-					swal.close();
-				}
-			});
+						call_ajax_change_state(form_data);
+					} else {
+						swal.close();
+					}
+				});
+			} else {
+				swal({
+					title: "エラー",
+					text: "この項目はキャンセルできません。",
+					type: "error",
+					confirmButtonClass: 'btn-danger',
+					confirmButtonText: "理解した",
+					closeOnConfirm: true
+				});
+			}
 		});
+
 		$('.accept').off();
 		$('.accept').on('click',function(){
 			var id = $(this).attr('value');
 
-			swal({
-				title : "有効にする",
-				text : '管理ID' + id + "を有効にします。よろしいですか？",
-				type : "warning",
-				showCancelButton : true,
-				confirmButtonClass : 'btn-warning',
-				confirmButtonText : "有効にする",
-				cancelButtonText : 'キャンセル',
-				closeOnConfirm : false,
-				closeOnCancel : false
-			}, function(isConfirm) {
-				if (isConfirm) {
-					var form_data = append_form_prams('accept_list', 'frm', null, false);
-					form_data.append('id', id);
+			if(id) {
+				swal({
+					title : "有効にする",
+					text : '管理ID' + id + "を有効にします。よろしいですか？",
+					type : "warning",
+					showCancelButton : true,
+					confirmButtonClass : 'btn-warning',
+					confirmButtonText : "有効にする",
+					cancelButtonText : 'キャンセル',
+					closeOnConfirm : false,
+					closeOnCancel : false
+				}, function(isConfirm) {
+					if (isConfirm) {
+						var form_data = append_form_prams('accept_list', 'frm', null, false);
+						form_data.append('id', id);
 
-					call_ajax_change_state(form_data);
-				} else {
-					swal.close();
-				}
-			});
+						call_ajax_change_state(form_data);
+					} else {
+						swal.close();
+					}
+				});
+			} else {
+				swal({
+					title: "エラー",
+					text: "この項目は有効にできません。",
+					type: "error",
+					confirmButtonClass: 'btn-danger',
+					confirmButtonText: "理解した",
+					closeOnConfirm: true
+				});
+			}
 		});
 	}
 
@@ -406,28 +392,48 @@ $(function() {
 	}
 });
 
+function fetch_data_search(){
+	$('form[name="search_form"]').find('input, select, textarea').each(function() {
+		let name = $(this).attr('name');
+		let type = $(this).attr('type');
+
+		if (name) {
+			if (type === 'checkbox') {
+				if (!searchnew_select[name]) searchnew_select[name] = [];
+				if ($(this).is(':checked')) {
+						searchnew_select[name].push($(this).val());
+				}
+			} else if (type === 'radio') {
+				if ($(this).is(':checked')) {
+						searchnew_select[name] = $(this).val();
+				}
+			} else {
+				searchnew_select[name] = $(this).val();
+			}
+		}
+	});
+}
+function load_data_search() {
+	$('form[name="search_form"]').find('input, select, textarea').each(function() {
+		let name = $(this).attr('name');
+		if (name && searchnew_select[name] !== undefined) {
+			let type = $(this).attr('type');
+			if (type === 'checkbox' || type === 'radio') {
+				$(this).prop('checked', searchnew_select[name].includes($(this).val()));
+			} else {
+				$(this).val(searchnew_select[name]);
+			}
+		}
+	});
+}
+
 function searchNew(){
 	$('button[name="search_submit"]').off();
 	$('button[name="search_submit"]').on('click', function(){
-		$('form[name="search_form"]').find('input, select, textarea').each(function() {
-			let name = $(this).attr('name');
-			let type = $(this).attr('type');
 
-			if (name) {
-				if (type === 'checkbox') {
-					if (!searchnew_select[name]) searchnew_select[name] = [];
-					if ($(this).is(':checked')) {
-							searchnew_select[name].push($(this).val());
-					}
-				} else if (type === 'radio') {
-					if ($(this).is(':checked')) {
-							searchnew_select[name] = $(this).val();
-					}
-				} else {
-					searchnew_select[name] = $(this).val();
-				}
-			}
-		});
+		fetch_data_search();
+		const lastSegment = window.location.pathname.split('/').filter(Boolean).pop();
+		localStorage.setItem(`searchnew_select_${lastSegment}`, JSON.stringify(searchnew_select));
 
 		var form_data = append_form_prams('init', 'frm', null, false);
 		call_ajax_init(form_data);
@@ -472,7 +478,6 @@ function newBind(){
 	$('.changeOrder').on('click.changeOrder', function(){
 		orderIconDispChange($(this), function(){
 			var form_data =  append_form_prams('init', 'frm', input_file_name);
-			form_data.append('search_select', JSON.stringify(search_select));
 			call_ajax_init(form_data);
 		});
 	});

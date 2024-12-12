@@ -292,20 +292,20 @@ class missmatch_ct
 	private function entry_new_data($post)
 	{
 		// 登録ロジック呼び出し
-		$faqData = [
+		$data = [
 			'question' => $post['question'] ?? null,
 			'answer' => $post['answer'] ?? null,
 			'group_answer' => $post['group_answer'] ?? null,
 		];
 
-		$faq = $this->missmatch_logic->createData($faqData);
+		$add = $this->missmatch_logic->createData($data);
 
-		if (!$faq) {
+		if (!$add) {
 			return [
 				'status' => false,
 				'error_code' => 0,
 				'error_msg' => 'FAQデータを作成できません',
-				'return_url' => MEDICALNET_ADMIN_PATH . 'faq.php'
+				'return_url' => MEDICALNET_ADMIN_PATH . self::set_return_url()
 			];
 		}
 
@@ -357,7 +357,7 @@ class missmatch_ct
 				'status' => false,
 				'error_code' => 0,
 				'error_msg' => '無効なリクエスト',
-				'return_url' => MEDICALNET_ADMIN_PATH . 'missmatch.php'
+				'return_url' => MEDICALNET_ADMIN_PATH . self::set_return_url()
 			];
 		}
 
@@ -448,7 +448,6 @@ class missmatch_ct
 			$this->missmatch_logic->updateMultiData($clause, ['status' => MissMatch::STATUS_CONFIRMED]);
 		}
 
-		// AJAX返却用データ成型
 		return [
 			'status' => true,
 			'method' => 'update',
@@ -599,5 +598,23 @@ class missmatch_ct
 			'method' => 'accept_list',
 			'msg' => '承認しました'
 		];
+	}
+
+	static function set_return_url()
+	{
+		if (isset($_GET["const_type"])) {
+			switch ($_GET["const_type"]) {
+				case 'DPC':
+					return 'missmatch_dpc.php';
+					break;
+				case 'Stage':
+					return 'missmatch_stage.php';
+					break;
+				case 'SurvHospital':
+					return 'missmatch_surv.php';
+					break;
+			}
+		}
+		return '';
 	}
 }

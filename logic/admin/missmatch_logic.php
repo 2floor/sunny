@@ -21,10 +21,11 @@ class missmatch_logic extends base_logic
 	public function create_data_list($params, $search_select = null)
 	{
 		// DPC , Stage , SurvHospital
-
-		// const TYPE_DPC = 1;
-		// const TYPE_STAGE = 2;
-		// const TYPE_SURVIVAL = 3;
+		$cancer_name_process = [
+			"App\\Models\\DPC" => "cancer_type_dpc",
+			"App\\Models\\Stage" => "cancer_type_stage",
+			"App\\Models\\SurvHospital" => "cancer_type_surv",
+		];
 
 		$list_type_process = [
 			"App\\Models\\DPC" => MissMatch::TYPE_DPC,
@@ -33,9 +34,7 @@ class missmatch_logic extends base_logic
 		];
 
 		$const_nspace = "App\\Models\\";
-		if (!empty($_GET["const_type"])) {
-			$process_type = isset($_GET["const_type"]) ? $_GET["const_type"] : "DPC";
-		}
+		$process_type = isset($_GET["const_type"]) ? $_GET["const_type"] : "DPC";
 
 		$instance = $const_nspace . $process_type;
 		$const_model = new $instance();
@@ -105,78 +104,7 @@ class missmatch_logic extends base_logic
 			$find_list_year = $const_model->select('year')->distinct()->orderBy('year', 'DESC')->limit(3)->get()->pluck('year');
 			$list_year = $find_list_year->toArray();
 
-			$detail = $find_list_year->map(
-				function ($year) use ($instance, $hospital_id, $cancer_id, $type, $hospital, $cancer) {
-					$mm = $this->getListByWhereClause(
-						[
-							'year' => $year,
-							'cancer_id' => $cancer_id,
-							'hospital_id' => $hospital_id,
-							'type' => $type
-						]
-					)->first();
-
-					if (!$mm) {
-						$tmodel = $instance::where([
-							'year' => $year,
-							'cancer_id' => $cancer_id,
-							'hospital_id' => $hospital_id,
-						])->get()->first();
-
-						if ($tmodel) {
-							$mm_lasted = $this->getListByWhereClause(
-								[
-									'cancer_id' => $tmodel->cancer_id,
-									'hospital_id' => $tmodel->hospital_id,
-									'type' => $type,
-									'status' => MissMatch::STATUS_CONFIRMED
-								]
-							)->sortByDesc('year')->first();
-
-							return [
-								'area_id' => $tmodel->hospital?->area_id,
-								'hospital_name' => $mm_lasted ? $mm_lasted['hospital_name'] : $tmodel->hospital?->hospital_name,
-								'hospital_id' => $tmodel->hospital_id,
-								'year' => $tmodel->year,
-								'cancer_type' => $tmodel->cancer?->cancer_type,
-								'cancer_type_dpc' => $tmodel->cancer?->cancer_type_dpc,
-								'cancer_id' => $tmodel->cancer_id,
-								'dpc' => $tmodel->n_dpc,
-								'percent_match' => 100,
-								'status' => MissMatch::STATUS_ABSOLUTELY_MATCH,
-							];
-						} else {
-							return [
-								'area_id' => $hospital->area_id,
-								'hospital_name' => null,
-								'hospital_id' => $hospital->id,
-								'year' => $year,
-								'cancer_type' => $cancer->cancer_type,
-								'cancer_type_dpc' => $cancer->cancer_type_dpc,
-								'cancer_id' => $cancer->id,
-								'dpc' => null,
-								'percent_match' => null,
-								'status' => -1,
-							];
-						}
-					} else {
-						$value = json_decode($mm->import_value, true);
-						return [
-							'missmatch_id' => $mm->id,
-							'area_id' => $mm->area_id,
-							'hospital_name' => $mm->hospital_name,
-							'hospital_id' => $mm->hospital_id,
-							'year' => $mm->year,
-							'cancer_type' => $mm->cancer?->cancer_type,
-							'cancer_type_dpc' => $mm->cancer?->cancer_type_dpc,
-							'cancer_id' => $mm->cancer?->id,
-							'dpc' => $value[2] ?? 0,
-							'percent_match' => $mm->percent_match,
-							'status' => $mm->status,
-						];
-					}
-				}
-			)->toArray();
+			$detail = $this->getDetailsForYears($list_year, $instance, $cancer_name_process, $hospital, $cancer, $type);
 
 			foreach ($detail as $yearkey => $datayear) {
 				$row['hospital_name_' . $yearkey] = $datayear['hospital_name'];
@@ -202,6 +130,40 @@ class missmatch_logic extends base_logic
 			'list_year' => $list_year,
 			'process_type' => $process_type
 		);
+	}
+
+	private function getDetailsForYears($years, $instance, $cancer_name_process, $hospital, $cancer, $type)
+	{
+		return collect($years)->map(function ($year) use ($instance, $cancer_name_process, $hospital, $cancer, $type) {
+			$mm = $this->getListByWhereClause([
+				'year' => $year,
+				'cancer_id' => $cancer->id,
+				'hospital_id' => $hospital->id,
+				'type' => $type
+			])->first();
+
+			if ($mm) {
+				return [
+					'missmatch_id' => $mm->id,
+					'area_id' => $mm->area_id,
+					'hospital_name' => $mm->hospital_name,
+					'year' => $mm->year,
+					'cancer_type' => $mm->cancer->cancer_type,
+					$cancer_name_process[$instance] => $mm->cancer->{$cancer_name_process[$instance]},
+					'percent_match' => $mm->percent_match,
+					'status' => $mm->status,
+				];
+			}
+
+			return [
+				'hospital_name' => null,
+				'year' => $year,
+				'cancer_type' => $cancer->cancer_type,
+				$cancer_name_process[$instance] => $cancer->{$cancer_name_process[$instance]},
+				'percent_match' => null,
+				'status' => -1,
+			];
+		})->toArray();
 	}
 
 	public function accept_data($id)
