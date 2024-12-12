@@ -92,6 +92,10 @@ class missmatch_logic extends base_logic
 		$back_color = 1;
 		$cnt = ($params[0] * ($params[1] - 1));
 
+		$find_list_year = $const_model->select('year')->distinct()->orderBy('year', 'DESC')->limit(3)->get()->pluck('year');
+		$list_year = $find_list_year->toArray();
+
+
 		foreach ($list ?? [] as $key => $row) {
 
 			$hospital_id = $row['hospital_id'];
@@ -101,8 +105,7 @@ class missmatch_logic extends base_logic
 			$cancer = Cancer::find($cancer_id);
 			$type = $list_type_process[$instance];
 
-			$find_list_year = $const_model->select('year')->distinct()->orderBy('year', 'DESC')->limit(3)->get()->pluck('year');
-			$list_year = $find_list_year->toArray();
+
 
 			$detail = $this->getDetailsForYears($list_year, $instance, $cancer_name_process, $hospital, $cancer, $type);
 
