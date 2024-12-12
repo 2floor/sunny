@@ -30,6 +30,12 @@ foreach ($data_area as $dao_row) {
 			color: #fff;
 		}
 
+		#dataTable th>i {
+			position: relative;
+			float: right;
+			right: 20px;
+		}
+
 		.action-footer {
 			margin-top: 20px;
 			display: flex;
