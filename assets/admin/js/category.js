@@ -15,7 +15,7 @@
 var query = getUrlVars();
 
 //ページタイトル
-var page_title = 'カテゴリ'
+var page_title = 'カテゴリ';
 
 //画像input用配列
 var input_file_name = {};
@@ -31,13 +31,34 @@ var search_select = {
 			tableOrder 	: 1,
 			type 		: 'bigint',
 		},
-		'アイテム名' : {
+		'カテゴリ名 1' : {
 			search 		: true,
 			order		: false,
 			ColName 	: 'level1',
 			tableOrder 	: 2,
 			type 		: 'text',
-		}
+		},
+		'カテゴリ名 2' : {
+			search 		: true,
+			order		: false,
+			ColName 	: 'level2',
+			tableOrder 	: 3,
+			type 		: 'text',
+		},
+		'カテゴリ名 3' : {
+			search 		: true,
+			order		: false,
+			ColName 	: 'level3',
+			tableOrder 	: 4,
+			type 		: 'text',
+		},
+		'更新⽇時' : {
+			search 		: false,
+			order		: true,
+			ColName 	: 'updated_at',
+			tableOrder 	: 7,
+			type 		: 'date',
+		},
 	},
 	//検索時内容
 	value : {},
@@ -53,6 +74,7 @@ var state = {
 		"actType": 'init',
 		"elemName" : $(this).attr('name'),
 		};
+var currentPage = 1;
 history.replaceState(state, null, null);
 
 $(window).on('bb');
@@ -149,8 +171,6 @@ $(function() {
 		});
 	}
 
-
-
 	//初期処理
 	page_init()
 
@@ -175,7 +195,6 @@ $(function() {
 
 		// 初期処理AJAX呼び出し処理
 		call_ajax_init(form_datas);
-
 	}
 
 	/**
@@ -267,7 +286,41 @@ function fd_add(fd){
 	return fd;
 }
 
-$('.group-selection').select2({
-    placeholder: '質問グループを選択してください',
-    allowClear: true
+$('.level1-selection').select2({
+	placeholder: 'カテゴリを選択してください',
+	allowClear: true,
+	tags: true,
+	createTag: function (params) {
+		var term = $.trim(params.term);
+
+		if (term === '') {
+			return null;
+		}
+
+		return {
+			id: term,
+			text: term,
+			newTag: true
+		}
+	}
 });
+
+$('.level2-selection').select2({
+	placeholder: 'カテゴリを選択してください',
+	allowClear: true,
+	tags: true,
+	createTag: function (params) {
+		var term = $.trim(params.term);
+
+		if (term === '') {
+			return null;
+		}
+
+		return {
+			id: term,
+			text: term,
+			newTag: true
+		}
+	}
+});
+

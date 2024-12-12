@@ -1,4 +1,7 @@
 <?php
+
+use Illuminate\Support\Facades\DB;
+
 session_start();
 // header('Content-Type: applisampleion/json');
 
@@ -132,16 +135,57 @@ class category_ct
 	 */
 	private function entry_new_data($post)
 	{
+        $data_type = null;
+        $level1 = $this->category_logic->getListByWhereClause(['level1' => $post['level1'] ?? ''])->first();
+        $level2 = $this->category_logic->getListByWhereClause(
+            [
+                'level1' => $post['level1'] ?? '',
+                'level2' => $post['level2'] ?? '',
+            ]
+        )->sortByDesc('order_num3')->first();
 
-		$data = [];
+        if ($level1) {
+            $data_type = $level1->data_type;
+        }
+
+        if (!$post['order_num3']) {
+            $order_num3 = $level2 ? ($level2->order_num3 + 1) : 1;
+        } else {
+            $existed_level2 = $this->category_logic->getListByWhereClause(
+                [
+                    'level1' => $post['level1'] ?? '',
+                    'level2' => $post['level2'] ?? '',
+                    'order_num3' => $post['order_num3'],
+                ]
+            )->first();
+
+            if ($existed_level2) {
+                $existed_level2->update(['order_num3' => $level2->order_num3 + 1]);
+                $order_num3 = $post['order_num3'];
+            } else {
+                $order_num3 = $level2 ? ($level2->order_num3 + 1) : 1;
+            }
+        }
+
+
+		$data = [
+            'level1' => $post['level1'] ?? '',
+            'level2' => $post['level2'] ?? '',
+            'level3' => $post['level3'] ?? '',
+            'category_group' => $post['category_group'] ?? '',
+            'is_whole_cancer' => $post['is_whole_cancer'] ?? '',
+            'order_num3' => $order_num3,
+            'data_type' => $data_type,
+        ];
+
 		// 登録ロジック呼び出し
 		$category = $this->category_logic->createData($data);
 		if (!$category) {
 			return [
 				'status' => false,
 				'error_code' => 0,
-				'error_msg' => '',
-				'return_url' =>  ''
+				'error_msg' => 'ディレクトリデータを作成できません',
+				'return_url' =>  MEDICALNET_ADMIN_PATH . 'category.php'
 			];
 		}
 
@@ -176,7 +220,6 @@ class category_ct
 	 */
 	private function update_detail($post)
 	{
-
 		// 編集ロジック呼び出し
 		$category = $this->category_logic->getDetailById($post['id']);
 		if (!$category) {
@@ -188,11 +231,75 @@ class category_ct
 			];
 		}
 
-		$updatedData = [
-			'question' => $post['question'] ?? null,
-			'answer' => $post['answer'] ?? null,
-			'group_answer' => $post['group_answer'] ?? null,
-		];
+        $data_type = null;
+        $level1 = $this->category_logic->getListByWhereClause(['level1' => $post['level1'] ?? ''])->first();
+        $level2 = $this->category_logic->getListByWhereClause(
+            [
+                'level1' => $post['level1'] ?? '',
+                'level2' => $post['level2'] ?? '',
+            ]
+        )->sortByDesc('order_num3')->first();
+
+        if ($level1) {
+            $data_type = $level1->data_type;
+        }
+
+        if ($level2) {
+            if ($level2->level1 == $category->level1 && $level2->level2 == $category->level2) {
+                $order_num3 = $category->order_num3;
+                if ($post['order_num3'] && $post['order_num3'] != $category->order_num3) {
+                    $existed_level2 = $this->category_logic->getListByWhereClause(
+                        [
+                            'level1' => $post['level1'] ?? '',
+                            'level2' => $post['level2'] ?? '',
+                            'order_num3' => $post['order_num3'],
+                        ]
+                    )->first();
+
+                    if ($existed_level2) {
+                        $existed_level2->update(['order_num3' => $category->order_num3]);
+                        $order_num3 = $post['order_num3'];
+                    } else {
+                        $order_num3 = $level2->order_num3;
+                        \App\Models\Category::where([
+                            'level1' => $post['level1'] ?? '',
+                            'level2' => $post['level2'] ?? '',
+                        ])->where('order_num3', '>', $category->order_num3)->update(['order_num3'  => DB::raw('order_num3 - 1')]);
+                    }
+                }
+            } else {
+                if (!$post['order_num3']) {
+                    $order_num3 = $level2->order_num3 + 1;
+                } else {
+                    $existed_level2 = $this->category_logic->getListByWhereClause(
+                        [
+                            'level1' => $post['level1'] ?? '',
+                            'level2' => $post['level2'] ?? '',
+                            'order_num3' => $post['order_num3'],
+                        ]
+                    )->first();
+
+                    if ($existed_level2) {
+                        $existed_level2->update(['order_num3' => $level2->order_num3 + 1]);
+                        $order_num3 = $post['order_num3'];
+                    } else {
+                        $order_num3 = $level2->order_num3 + 1;
+                    }
+                }
+            }
+        } else {
+            $order_num3 = 1;
+        }
+
+        $updatedData = [
+            'level1' => $post['level1'] ?? '',
+            'level2' => $post['level2'] ?? '',
+            'level3' => $post['level3'] ?? '',
+            'category_group' => $post['category_group'] ?? '',
+            'is_whole_cancer' => $post['is_whole_cancer'] ?? '',
+            'order_num3' => $order_num3,
+            'data_type' => $data_type,
+        ];
 
 		if (!$this->category_logic->updateData($category->id, $updatedData)) {
 			return [
@@ -202,7 +309,6 @@ class category_ct
 				'return_url' => 'category.php'
 			];
 		}
-
 
 		// AJAX返却用データ成型
 		return [

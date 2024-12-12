@@ -93,25 +93,65 @@ class dpc_import implements ToModel, WithStartRow, WithBatchInserts, WithChunkRe
                 }
 
                 if ($mmHospitalId) {
-                    MissMatch::updateOrCreate([
+                    $existMM = MissMatch::where([
                         'hospital_id' => $mmHospitalId,
                         'type' => MissMatch::TYPE_DPC,
                         'year' => $row[4],
                         'cancer_id' => $cancer->id,
-                    ], [
-                        'hospital_name' => $hospital_name,
-                        'area_id' => $hospital?->area_id,
-                        'percent_match' => $percent,
-                        'import_file' => $this->fileName,
-                        'import_value' => json_encode($row, JSON_UNESCAPED_UNICODE),
-                    ]);
+                    ])->first();
+
+                    if (!$existMM) {
+                        $newMM = MissMatch::create([
+                            'hospital_id' => $mmHospitalId,
+                            'hospital_name' => $hospital_name,
+                            'type' => MissMatch::TYPE_DPC,
+                            'cancer_id' => $cancer->id,
+                            'area_id' => $hospital?->area_id,
+                            'year' => $row[4],
+                            'percent_match' => $percent,
+                            'import_file' => $this->fileName,
+                            'import_value' => json_encode($row, JSON_UNESCAPED_UNICODE),
+                        ]);
+                    } else {
+                        if ($existMM->percent_match >= $percent) {
+                            $newMM = MissMatch::create([
+                                'hospital_id' => null,
+                                'hospital_name' => $hospital_name,
+                                'type' => MissMatch::TYPE_DPC,
+                                'cancer_id' => $cancer->id,
+                                'area_id' => null,
+                                'year' => $row[4],
+                                'percent_match' => null,
+                                'import_file' => $this->fileName,
+                                'import_value' => json_encode($row, JSON_UNESCAPED_UNICODE),
+                            ]);
+                        } else {
+                            $existMM->update([
+                                'hospital_id' => null,
+                                'area_id' => null,
+                                'percent_match' => null,
+                            ]);
+
+                            $newMM = MissMatch::create([
+                                'hospital_id' => $mmHospitalId,
+                                'hospital_name' => $hospital_name,
+                                'type' => MissMatch::TYPE_DPC,
+                                'cancer_id' => $cancer->id,
+                                'area_id' => $hospital?->area_id,
+                                'year' => $row[4],
+                                'percent_match' => $percent,
+                                'import_file' => $this->fileName,
+                                'import_value' => json_encode($row, JSON_UNESCAPED_UNICODE),
+                            ]);
+                        }
+                    }
                 } else {
-                    $vr = MissMatch::create([
+                    $newMM = MissMatch::create([
                         'hospital_id' => null,
                         'hospital_name' => $hospital_name,
                         'type' => MissMatch::TYPE_DPC,
                         'cancer_id' => $cancer->id,
-                        'area_id' => $hospital?->area_id,
+                        'area_id' => null,
                         'year' => $row[4],
                         'percent_match' => $percent,
                         'import_file' => $this->fileName,

@@ -23,8 +23,8 @@ class Category extends BaseModel
         self::DOCTOR_GROUP => '医師区分',
     ];
     const LIST_CANCER = [
-        self::NOT_FOR_ALL_CANCER => '医療機関基本',
         self::FOR_ALL_CANCER => '医療機関がん種',
+        self::NOT_FOR_ALL_CANCER => '医療機関基本',
     ];
     const LIST_TYPE = [
         self::OTHER_TYPE => 'その他',
@@ -42,6 +42,7 @@ class Category extends BaseModel
         'data_type',
         'order_num2',
         'order_num3',
+        'category_group',
         'is_whole_cancer',
         'etc1',
         'etc2',

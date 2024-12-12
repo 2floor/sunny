@@ -107,7 +107,10 @@ class f_hospital_ct
                 'category_group' => Category::HOSPITAL_GROUP,
             ])
             ->when($categoryType == 'detail', function ($query) {
-                $query->where('data_type', Category::HOSPITAL_DETAIL_TYPE);
+                $query->where(function ($query2) {
+                    $query2->where('data_type', Category::HOSPITAL_DETAIL_TYPE);
+                    $query2->orWhereNull('data_type');
+                });
             })
             ->get()
             ->groupBy('level1')->map(function ($items) {
