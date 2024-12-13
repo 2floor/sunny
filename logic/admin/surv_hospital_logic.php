@@ -127,4 +127,23 @@ class surv_hospital_logic extends base_logic
     {
         return Cancer::find($id);
     }
+
+    public function getLastedYearData($num_lasted_year = 3)
+    {
+        return SurvHospital::select('year')
+            ->distinct()
+            ->orderBy('year', 'desc')
+            ->limit($num_lasted_year)
+            ->get();
+    }
+
+    public function getListByWhereClause($clause)
+    {
+        return SurvHospital::where($clause)->get();
+    }
+
+    public function forceDelete($clause)
+    {
+        return SurvHospital::where($clause)->forceDelete();
+    }
 }

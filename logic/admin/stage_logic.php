@@ -125,4 +125,23 @@ class stage_logic extends base_logic
     {
         return Cancer::find($id);
     }
+
+    public function getLastedYearData($num_lasted_year = 3)
+    {
+        return Stage::select('year')
+            ->distinct()
+            ->orderBy('year', 'desc')
+            ->limit($num_lasted_year)
+            ->get();
+    }
+
+    public function getListByWhereClause($clause)
+    {
+        return Stage::where($clause)->get();
+    }
+
+    public function forceDelete($clause)
+    {
+        return Stage::where($clause)->forceDelete();
+    }
 }

@@ -126,7 +126,7 @@ class dpc_logic extends base_logic
         return Cancer::find($id);
     }
 
-    public function getLastedYearDPC($num_lasted_year = 3)
+    public function getLastedYearData($num_lasted_year = 3)
     {
         return DPC::select('year')
             ->distinct()

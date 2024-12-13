@@ -9,19 +9,32 @@ use App\Models\MissMatch;
 
 $cancer_id = $_GET['cancer_id'];
 $hospital_id = $_GET['hospital_id'];
+$type = $_GET['type'] ? (int)$_GET['type']: null;
 
-if (!$cancer_id || !$hospital_id) {
+if (!$cancer_id || !$hospital_id || !$type) {
+    header("Location: missmatch.php");
+    exit();
+}
+
+if (!in_array($type, MissMatch::getTypeList())) {
     header("Location: missmatch.php");
     exit();
 }
 
 $missmatch_ct = new missmatch_ct();
-$initData = $missmatch_ct->get_mm_detail($hospital_id, $cancer_id, MissMatch::TYPE_DPC);
+$initData = $missmatch_ct->get_mm_detail($hospital_id, $cancer_id, $type);
 
 if (empty($initData)) {
     header("Location: missmatch.php");
     exit();
 }
+
+$spec_cancer_name = match ($type) {
+    MissMatch::TYPE_DPC => "がん種(DPC)",
+    MissMatch::TYPE_STAGE => "がん種(Stage)",
+    MissMatch::TYPE_SURVIVAL => "がん種(Surv)",
+    default => '',
+};
 ?>
 <!DOCTYPE html>
 <html>
@@ -162,8 +175,8 @@ if (empty($initData)) {
                                         <th>医療機関ID</th>
                                         <th>年度</th>
                                         <th>がん種名</th>
-                                        <th>がん種(DPC)</th>
-                                        <th>年間入院患者数</th>
+                                        <th><?= $spec_cancer_name ?></th>
+                                        <th>輸入情報</th>
                                         <th>一致率</th>
                                         <th>操作</th>
                                     </tr>
@@ -174,7 +187,7 @@ if (empty($initData)) {
                                         <?php
                                             $op_mm = '';
                                             if ($value['status'] != MissMatch::STATUS_ABSOLUTELY_MATCH) {
-                                                $list_mm = $missmatch_ct->get_not_confirm_mm_list($value['year'], $value['cancer_id'], MissMatch::TYPE_DPC);
+                                                $list_mm = $missmatch_ct->get_not_confirm_mm_list($value['year'], $value['cancer_id'], $value['type']);
                                                 foreach ($list_mm as $mm) {
                                                     if ($mm['hospital_name'] == $value['hospital_name']) {
                                                         continue;
@@ -196,8 +209,16 @@ if (empty($initData)) {
                                             <td><?= ($value['hospital_id'] ?? '') ?></td>
                                             <td class="yearMM"><?= ($value['year'] ?? '') ?></td>
                                             <td><?= ($value['cancer_type'] ?? '') ?></td>
-                                            <td><?= ($value['cancer_type_dpc'] ?? '') ?></td>
-                                            <td class="dpcMM"><?= ($value['dpc'] ?? '') ?></td>
+                                            <td><?php
+                                                    echo match ($type) {
+                                                        MissMatch::TYPE_DPC => ($value['cancer_type_dpc'] ?? ''),
+                                                        MissMatch::TYPE_STAGE => ($value['cancer_type_stage'] ?? ''),
+                                                        MissMatch::TYPE_SURVIVAL => ($value['cancer_type_surv'] ?? ''),
+                                                        default => '',
+                                                    };
+                                                ?>
+                                            </td>
+                                            <td class="dpcMM"><?= ($value['import_data'] ?? '') ?></td>
                                             <td class="percentMM"><?= ($value['percent_match'] ?? '') ?></td>
                                             <?php if($value['status'] != MissMatch::STATUS_ABSOLUTELY_MATCH && $value['status'] !=-1) { ?>
                                                 <td class="remove-icon">×</td>

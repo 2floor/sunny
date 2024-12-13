@@ -6,6 +6,8 @@ if (!isset($_SESSION)) {
 require_once __DIR__ . '/../../logic/common/common_logic.php';
 require_once __DIR__ . '/../../logic/admin/missmatch_logic.php';
 require_once __DIR__ . '/../../logic/admin/dpc_logic.php';
+require_once __DIR__ . '/../../logic/admin/stage_logic.php';
+require_once __DIR__ . '/../../logic/admin/surv_hospital_logic.php';
 require_once __DIR__ . '/../../common/security_common_logic.php';
 
 use App\Models\Hospital;
@@ -90,6 +92,8 @@ class missmatch_ct
 	 */
 	protected $missmatch_logic;
 	protected $dpc_logic;
+    protected $stage_logic;
+    protected $surv_hospital_logic;
 	protected $common_logic;
 
 	public function __construct()
@@ -97,6 +101,8 @@ class missmatch_ct
 		// 管理画面ユーザーロジックインスタンス
 		$this->missmatch_logic = new missmatch_logic();
 		$this->dpc_logic = new dpc_logic();
+        $this->stage_logic = new stage_logic();
+        $this->surv_hospital_logic = new surv_hospital_logic();
 		$this->common_logic = new common_logic();
 	}
 
@@ -115,9 +121,9 @@ class missmatch_ct
 		} else if ($post['method'] == 'get_detail') {
 			// 編集初期処理
 			$data = $this->get_detail($post);
-		} else if ($post['method'] == 'update_mm_dpc') {
+		} else if ($post['method'] == 'update_mm') {
 			// 編集更新処理
-			$data = $this->update_mm_dpc($post);
+			$data = $this->update_mm($post);
 		} else if ($post['method'] == 'delete') {
 			// 削除処理
 			$data = $this->delete($post['id']);
@@ -156,82 +162,98 @@ class missmatch_ct
 		$hospital = Hospital::find($hospital_id);
 		$cancer = Cancer::find($cancer_id);
 
-		if (!$hospital || !$cancer) {
+		if (!$hospital || !$cancer || !in_array($type, MissMatch::getTypeList())) {
 			return [];
 		}
 
-		if ($type == MissMatch::TYPE_DPC) {
-			$detail = $this->dpc_logic->getLastedYearDPC()->pluck('year')
-				->map(function ($year) use ($hospital_id, $cancer_id, $type, $hospital, $cancer) {
-					$mm = $this->missmatch_logic->getListByWhereClause(
-						[
-							'year' => $year,
-							'cancer_id' => $cancer_id,
-							'hospital_id' => $hospital_id,
-							'type' => $type
-						]
-					)->first();
+        if ($type == MissMatch::TYPE_DPC) {
+            $instance_logic = $this->dpc_logic;
+        } elseif ($type == MissMatch::TYPE_STAGE) {
+            $instance_logic = $this->stage_logic;
+        } else {
+            $instance_logic = $this->surv_hospital_logic;
+        }
 
-					if (!$mm) {
-						$dpc = $this->dpc_logic->getListByWhereClause([
-							'year' => $year,
-							'cancer_id' => $cancer_id,
-							'hospital_id' => $hospital_id,
-						])->first();
+        $detail = $instance_logic->getLastedYearData()->pluck('year')
+            ->map(function ($year) use ($hospital_id, $cancer_id, $type, $hospital, $cancer, $instance_logic) {
+                $mm = $this->missmatch_logic->getListByWhereClause(
+                    [
+                        'year' => $year,
+                        'cancer_id' => $cancer_id,
+                        'hospital_id' => $hospital_id,
+                        'type' => $type
+                    ]
+                )->first();
 
-						if ($dpc) {
-							$mm_lasted = $this->missmatch_logic->getListByWhereClause(
-								[
-									'cancer_id' => $dpc->cancer_id,
-									'hospital_id' => $dpc->hospital_id,
-									'type' => $type,
-									'status' => MissMatch::STATUS_CONFIRMED
-								]
-							)->sortByDesc('year')->first();
+                if (!$mm) {
+                    $imported = $instance_logic->getListByWhereClause([
+                        'year' => $year,
+                        'cancer_id' => $cancer_id,
+                        'hospital_id' => $hospital_id,
+                    ])->first();
 
-							return [
-								'area_id' => $dpc->hospital?->area_id,
-								'hospital_name' => $mm_lasted ? $mm_lasted['hospital_name'] : $dpc->hospital?->hospital_name,
-								'hospital_id' => $dpc->hospital_id,
-								'year' => $dpc->year,
-								'cancer_type' => $dpc->cancer?->cancer_type,
-								'cancer_type_dpc' => $dpc->cancer?->cancer_type_dpc,
-								'cancer_id' => $dpc->cancer_id,
-								'dpc' => $dpc->n_dpc,
-								'percent_match' => 100,
-								'status' => MissMatch::STATUS_ABSOLUTELY_MATCH,
-							];
-						} else {
-							return [
-								'area_id' => $hospital->area_id,
-								'hospital_name' => null,
-								'hospital_id' => $hospital->id,
-								'year' => $year,
-								'cancer_type' => $cancer->cancer_type,
-								'cancer_type_dpc' => $cancer->cancer_type_dpc,
-								'cancer_id' => $cancer->id,
-								'dpc' => null,
-								'percent_match' => null,
-								'status' => -1,
-							];
-						}
-					} else {
-						$value = json_decode($mm->import_value, true);
-						return [
-							'area_id' => $mm->area_id,
-							'hospital_name' => $mm->hospital_name,
-							'hospital_id' => $mm->hospital_id,
-							'year' => $mm->year,
-							'cancer_type' => $mm->cancer?->cancer_type,
-							'cancer_type_dpc' => $mm->cancer?->cancer_type_dpc,
-							'cancer_id' => $mm->cancer?->id,
-							'dpc' => $value[2] ?? 0,
-							'percent_match' => $mm->percent_match,
-							'status' => $mm->status,
-						];
-					}
-				})->toArray();
-		}
+                    if ($imported) {
+                        $mm_lasted = $this->missmatch_logic->getListByWhereClause(
+                            [
+                                ['cancer_id', $imported->cancer_id],
+                                ['hospital_id', $imported->hospital_id],
+                                ['type', $type],
+                                ['status', MissMatch::STATUS_CONFIRMED],
+                                ['year', '<=', $imported->year]
+                            ]
+                        )->sortByDesc('year')->first();
+
+                        return [
+                            'area_id' => $imported->hospital?->area_id,
+                            'hospital_name' => $mm_lasted ? $mm_lasted['hospital_name'] : $imported->hospital?->hospital_name,
+                            'hospital_id' => $imported->hospital_id,
+                            'year' => $imported->year,
+                            'cancer_type' => $imported->cancer?->cancer_type,
+                            'cancer_type_dpc' => $imported->cancer?->cancer_type_dpc,
+                            'cancer_type_stage' => $imported->cancer?->cancer_type_stage,
+                            'cancer_type_surv' => $imported->cancer?->cancer_type_surv,
+                            'cancer_id' => $imported->cancer_id,
+                            'import_data' => $this->getDataFromInstance($imported, $type),
+                            'percent_match' => 100,
+                            'status' => MissMatch::STATUS_ABSOLUTELY_MATCH,
+                            'type' => $type
+                        ];
+                    } else {
+                        return [
+                            'area_id' => $hospital->area_id,
+                            'hospital_name' => null,
+                            'hospital_id' => $hospital->id,
+                            'year' => $year,
+                            'cancer_type' => $cancer->cancer_type,
+                            'cancer_type_dpc' => $cancer->cancer_type_dpc,
+                            'cancer_type_stage' => $cancer->cancer_type_stage,
+                            'cancer_type_surv' => $cancer->cancer_type_surv,
+                            'cancer_id' => $cancer->id,
+                            'import_data' => '',
+                            'percent_match' => null,
+                            'status' => -1,
+                            'type' => $type
+                        ];
+                    }
+                } else {
+                    $value = json_decode($mm->import_value, true);
+                    return [
+                        'area_id' => $mm->area_id,
+                        'hospital_name' => $mm->hospital_name,
+                        'hospital_id' => $mm->hospital_id,
+                        'year' => $mm->year,
+                        'cancer_type' => $mm->cancer?->cancer_type,
+                        'cancer_type_dpc' => $mm->cancer?->cancer_type_dpc,
+                        'cancer_type_stage' => $mm->cancer?->cancer_type_stage,
+                        'cancer_type_surv' => $mm->cancer?->cancer_type_surv,
+                        'cancer_id' => $mm->cancer?->id,
+                        'import_data' => $this->getDataFromImportValue($value, $type),
+                        'percent_match' => $mm->percent_match,
+                        'status' => $mm->status,
+                        'type' => $type
+                    ];
+                }
+            })->toArray();
 
 		return $detail ?? [];
 	}
@@ -336,11 +358,18 @@ class missmatch_ct
 			])->first();
 		}
 
+        $importValue = '';
+        if ($detail) {
+            $value = json_decode($detail->import_value, true);
+            $importValue = $this->getDataFromImportValue($value, $detail->type);
+        }
+
 		// AJAX返却用データ成型
 		return [
 			'status' => true,
 			'isGetById' => $isGetById,
-			'data' => $detail->toArray()
+			'data' => $detail->toArray(),
+            'importValue' => $importValue
 		];
 	}
 
@@ -348,7 +377,7 @@ class missmatch_ct
 	 * 編集更新処理
 	 *
 	 */
-	private function update_mm_dpc($post)
+	private function update_mm($post)
 	{
 		$request = json_decode(htmlspecialchars_decode($post['request'] ?? ''), true);
 
@@ -364,55 +393,39 @@ class missmatch_ct
 		foreach ($request as $k => $v) {
 			$hospital = Hospital::find($v['hospital_id']);
 			$cancer = Cancer::find($v['cancer_id']);
+            $type = $v['type'];
 
-			if (!$hospital || !$cancer) {
+			if (!$hospital || !$cancer || !in_array($type, MissMatch::getTypeList())) {
 				continue;
 			}
 
 			if ($v['search']) {
 				$mmChanged = $this->missmatch_logic->getDetailById($v['search']);
 
-				if (!$mmChanged || $mmChanged->status == MissMatch::STATUS_CONFIRMED) {
+				if (!$mmChanged || $mmChanged->status == MissMatch::STATUS_CONFIRMED || $mmChanged->type != $type) {
 					continue;
 				}
 
 				$importValue = json_decode($mmChanged['import_value'], true);
-				$nDPCChanged = $importValue[2] ?? 0;
-
-				if (!$nDPCChanged) {
-					continue;
-				}
-
-				$currentDPC = $this->dpc_logic->getListByWhereClause([
-					'cancer_id' => $cancer->id,
-					'hospital_id' => $hospital->id,
-					'year' => $v['year']
-				])->first();
-
-				if ($currentDPC) {
-					$currentDPC->update([
-						'n_dpc' => $nDPCChanged,
-						'rank_nation_dpc' => null,
-						'rank_area_dpc' => null,
-						'rank_pref_dpc' => null
-					]);
-				} else {
-					$newDPC = $this->dpc_logic->createData([
-						'cancer_id' => $cancer->id,
-						'cancer_name_dpc' => $cancer->cancer_type_dpc,
-						'hospital_id' => $hospital->id,
-						'hospital_name' => $hospital->hospital_name,
-						'area_id' => $hospital->area_id,
-						'year' => $v['year'],
-						'n_dpc' => $nDPCChanged,
-					]);
-				}
+                if ($mmChanged->type == MissMatch::TYPE_DPC) {
+                    if (!$this->handleUpdateDPC($importValue, $cancer, $hospital, $v['year'], $mmChanged)) {
+                        continue;
+                    }
+                } elseif ($mmChanged->type == MissMatch::TYPE_STAGE) {
+                    if (!$this->handleUpdateStage($importValue, $cancer, $hospital, $v['year'], $mmChanged)) {
+                        continue;
+                    }
+                } else {
+                    if (!$this->handleUpdateSurvival($importValue, $cancer, $hospital, $v['year'], $mmChanged)) {
+                        continue;
+                    }
+                }
 
 				$mmCurrent = $this->missmatch_logic->getListByWhereClause(
 					[
 						'cancer_id' => $cancer->id,
 						'hospital_id' => $hospital->id,
-						'type' => MissMatch::TYPE_DPC,
+						'type' => $type,
 						'year' => $v['year']
 					]
 				)->first();
@@ -425,12 +438,6 @@ class missmatch_ct
 					]);
 				}
 
-				$this->dpc_logic->forceDelete([
-					'cancer_id' => $mmChanged->cancer_id,
-					'hospital_id' => $mmChanged->hospital_id,
-					'year' => $mmChanged->year
-				]);
-
 				$mmChanged->update([
 					'hospital_id' => $hospital->id,
 					'area_id' => $hospital->area_id,
@@ -441,7 +448,7 @@ class missmatch_ct
 			$clause = [
 				'cancer_id' => $cancer->id,
 				'hospital_id' => $hospital->id,
-				'type' => MissMatch::TYPE_DPC,
+				'type' => $type,
 				'year' => $v['year']
 			];
 
@@ -561,7 +568,15 @@ class missmatch_ct
 		foreach ($ids as $idv) {
 			$missmatch = $this->missmatch_logic->getDetailById($idv);
 			if ($missmatch) {
-				$this->dpc_logic->forceDelete([
+                if ($missmatch->type == MissMatch::TYPE_DPC) {
+                    $instance_logic = $this->dpc_logic;
+                } elseif ($missmatch->type == MissMatch::TYPE_STAGE) {
+                    $instance_logic = $this->stage_logic;
+                } else {
+                    $instance_logic = $this->surv_hospital_logic;
+                }
+
+                $instance_logic->forceDelete([
 					'cancer_id' => $missmatch->cancer_id,
 					'hospital_id' => $missmatch->hospital_id,
 					'year' => $missmatch->year,
@@ -570,6 +585,7 @@ class missmatch_ct
 				$this->missmatch_logic->cancel_data($idv);
 			}
 		}
+
 		return [
 			'status' => true,
 			'method' => 'cancel_list',
@@ -599,6 +615,212 @@ class missmatch_ct
 			'msg' => '承認しました'
 		];
 	}
+
+    private function handleUpdateDPC($data, $cancer, $hospital, $year, $mmChanged)
+    {
+        $nDPCChanged = is_numeric($data[2]) ? $data[2] : null;
+
+        $currentDPC = $this->dpc_logic->getListByWhereClause([
+            'cancer_id' => $cancer->id,
+            'hospital_id' => $hospital->id,
+            'year' => $year
+        ])->first();
+
+        if ($currentDPC) {
+            $currentDPC->update([
+                'n_dpc' => $nDPCChanged,
+                'rank_nation_dpc' => null,
+                'rank_area_dpc' => null,
+                'rank_pref_dpc' => null
+            ]);
+        } else {
+            $this->dpc_logic->createData([
+                'cancer_id' => $cancer->id,
+                'cancer_name_dpc' => $cancer->cancer_type_dpc,
+                'hospital_id' => $hospital->id,
+                'hospital_name' => $hospital->hospital_name,
+                'area_id' => $hospital->area_id,
+                'year' => $year,
+                'n_dpc' => $nDPCChanged,
+            ]);
+        }
+
+        $this->dpc_logic->forceDelete([
+            'cancer_id' => $mmChanged->cancer_id,
+            'hospital_id' => $mmChanged->hospital_id,
+            'year' => $mmChanged->year
+        ]);
+
+        return true;
+    }
+
+    private function handleUpdateStage($data, $cancer, $hospital, $year, $mmChanged)
+    {
+        $stage_new1 = is_numeric($data[2]) ? $data[2] : null;
+        $stage_new2 = is_numeric($data[3]) ? $data[3] : null;
+        $stage_new3 = is_numeric($data[4]) ? $data[4] : null;
+        $stage_new4 = is_numeric($data[5]) ? $data[5] : null;
+        $total_num_new = is_numeric($data[6]) ? $data[6] : null;
+
+        $currentStage = $this->stage_logic->getListByWhereClause([
+            'cancer_id' => $cancer->id,
+            'hospital_id' => $hospital->id,
+            'year' => $year
+        ])->first();
+
+        if ($currentStage) {
+            $currentStage->update([
+                'stage_new1' => $stage_new1,
+                'stage_new2' => $stage_new2,
+                'stage_new3' => $stage_new3,
+                'stage_new4' => $stage_new4,
+                'total_num_new' => $total_num_new,
+                'total_num_rank' => null,
+                'local_num_rank' => null,
+                'pref_num_rank' => null,
+                'total_num_rank_stage1' => null,
+                'local_num_rank_stage1' => null,
+                'pref_num_rank_stage1' => null,
+                'total_num_rank_stage2' => null,
+                'local_num_rank_stage2' => null,
+                'pref_num_rank_stage2' => null,
+                'total_num_rank_stage3' => null,
+                'local_num_rank_stage3' => null,
+                'pref_num_rank_stage3' => null
+            ]);
+        } else {
+            $this->stage_logic->createData([
+                'area_id' => $hospital->area_id,
+                'cancer_id' => $cancer->id,
+                'cancer_name_stage' => $cancer->cancer_type_stage,
+                'hospital_id' => $hospital->id,
+                'hospital_name' => $hospital->hospital_name,
+                'year' => $year,
+                'total_num_new' => $total_num_new,
+                'stage_new1' => $stage_new1,
+                'stage_new2' => $stage_new2,
+                'stage_new3' => $stage_new3,
+                'stage_new4' => $stage_new4,
+            ]);
+        }
+
+        $this->stage_logic->forceDelete([
+            'cancer_id' => $mmChanged->cancer_id,
+            'hospital_id' => $mmChanged->hospital_id,
+            'year' => $mmChanged->year
+        ]);
+
+        return true;
+    }
+
+    private function handleUpdateSurvival($data, $cancer, $hospital, $year, $mmChanged)
+    {
+        $total_num = is_numeric($data[4]) ? $data[4] : null;
+        $stage_target1 = is_numeric($data[5]) ? $data[5] : null;
+        $stage_target2 = is_numeric($data[6]) ? $data[6] : null;
+        $stage_target3 = is_numeric($data[7]) ? $data[7] : null;
+        $stage_target4 = is_numeric($data[8]) ? $data[8] : null;
+
+        $stage_survival_rate1 = is_numeric($data[9]) ? $data[9] : null;
+        $stage_survival_rate2 = is_numeric($data[10]) ? $data[10] : null;
+        $stage_survival_rate3 = is_numeric($data[11]) ? $data[11] : null;
+        $stage_survival_rate4 = is_numeric($data[12]) ? $data[12] : null;
+        $survival_rate = is_numeric($data[23]) ? $data[23] : null;
+
+        $currentSurvival = $this->surv_hospital_logic->getListByWhereClause([
+            'cancer_id' => $cancer->id,
+            'hospital_id' => $hospital->id,
+            'year' => $year
+        ])->first();
+
+        if ($currentSurvival) {
+            $currentSurvival->update([
+                'total_num' => $total_num,
+                'stage_target1' => $stage_target1,
+                'stage_target2' => $stage_target2,
+                'stage_target3' => $stage_target3,
+                'stage_target4' => $stage_target4,
+                'survival_rate' => $survival_rate,
+                'stage_survival_rate1' => $stage_survival_rate1,
+                'stage_survival_rate2' => $stage_survival_rate2,
+                'stage_survival_rate3' => $stage_survival_rate3,
+                'stage_survival_rate4' => $stage_survival_rate4,
+                'total_stage_total_taget' => null,
+                'local_stage_total_taget' => null,
+                'pref_stage_total_taget' => null,
+                'total_stage_taget1' => null,
+                'local_stage_taget1' => null,
+                'pref_stage_taget1' => null,
+                'total_stage_taget2' => null,
+                'local_stage_taget2' => null,
+                'pref_stage_taget2' => null,
+                'total_stage_taget3' => null,
+                'local_stage_taget3' => null,
+                'pref_stage_taget3' => null,
+                'total_stage_taget4' => null,
+                'local_stage_taget4' => null,
+                'pref_stage_taget4' => null,
+                'total_survival_rate' => null,
+                'local_survival_rate' => null,
+                'pref_survival_rate' => null,
+                'total_survival_rate1' => null,
+                'local_survival_rate1' => null,
+                'pref_survival_rate1' => null,
+                'total_survival_rate2' => null,
+                'local_survival_rate2' => null,
+                'pref_survival_rate2' => null,
+                'total_survival_rate3' => null,
+                'local_survival_rate3' => null,
+                'pref_survival_rate3' => null,
+                'total_survival_rate4' => null,
+                'local_survival_rate4' => null,
+                'pref_survival_rate4' => null,
+            ]);
+        } else {
+            $this->surv_hospital_logic->createData([
+                'hospital_id' => $hospital->id,
+                'cancer_id' => $cancer->id,
+                'year' => $year,
+                'area_id' => $hospital->area_id,
+                'total_num' => $total_num,
+                'stage_target1' => $stage_target1,
+                'stage_target2' => $stage_target2,
+                'stage_target3' => $stage_target3,
+                'stage_target4' => $stage_target4,
+                'stage_survival_rate1' => $stage_survival_rate1,
+                'stage_survival_rate2' => $stage_survival_rate2,
+                'stage_survival_rate3' => $stage_survival_rate3,
+                'stage_survival_rate4' => $stage_survival_rate4,
+                'survival_rate' => $survival_rate,
+            ]);
+        }
+
+        $this->surv_hospital_logic->forceDelete([
+            'cancer_id' => $mmChanged->cancer_id,
+            'hospital_id' => $mmChanged->hospital_id,
+            'year' => $mmChanged->year
+        ]);
+
+        return true;
+    }
+
+    private function getDataFromImportValue($value, $type) {
+        return match ($type) {
+            MissMatch::TYPE_DPC => "退院患者数: " . ($value[2] ?? 0),
+            MissMatch::TYPE_STAGE => "Ⅰ期: " . ($value[2] ?? 0) . "<br>Ⅱ期: " . ($value[3] ?? 0) . "<br>Ⅲ期: " . ($value[4] ?? 0) . "<br>Ⅳ期: " . ($value[5] ?? 0) . "<br>総数: " . ($value[6] ?? 0),
+            MissMatch::TYPE_SURVIVAL => "Ⅰ期: " . ($value[5] ?? 0) . "<br>Ⅱ期: " . ($value[6] ?? 0)  . "<br>Ⅲ期: " . ($value[7] ?? 0)  . "<br>Ⅳ期: " . ($value[8] ?? 0) . "<br>総和: " . ($value[4] ?? 0),
+            default => '',
+        };
+    }
+
+    private function getDataFromInstance($instance, $type) {
+        return match ($type) {
+            MissMatch::TYPE_DPC => "退院患者数: " . ($instance->n_dpc ?? 0),
+            MissMatch::TYPE_STAGE => "Ⅰ期: " . ($instance->total_num_new ?? 0) . "<br>Ⅱ期: " . ($instance->stage_new1 ?? 0) . "<br>Ⅲ期: " . ($instance->stage_new2 ?? 0) . "<br>Ⅳ期: " . ($instance->stage_new3 ?? 0) . "<br>総数: " . ($instance->stage_new4 ?? 0),
+            MissMatch::TYPE_SURVIVAL => "Ⅰ期: " . ($instance->stage_target1 ?? 0) . "<br>Ⅱ期: " . ($instance->stage_target2 ?? 0)  . "<br>Ⅲ期: " . ($instance->stage_target3 ?? 0)  . "<br>Ⅳ期: " . ($instance->stage_target4 ?? 0) . "<br>総和: " . ($instance->total_num ?? 0),
+            default => '',
+        };
+    }
 
 	static function set_return_url()
 	{

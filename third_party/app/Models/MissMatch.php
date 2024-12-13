@@ -51,4 +51,13 @@ class MissMatch extends BaseModel
     {
         return $this->belongsTo(Cancer::class, 'cancer_id', 'id');
     }
+
+    public static function getTypeList()
+    {
+        return [
+            self::TYPE_DPC,
+            self::TYPE_STAGE,
+            self::TYPE_SURVIVAL,
+        ];
+    }
 }

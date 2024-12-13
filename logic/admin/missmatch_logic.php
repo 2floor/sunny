@@ -120,7 +120,7 @@ class missmatch_logic extends base_logic
 
 			$cnt++;
 
-			$return_html .= $this->generateRowHtml($row, $cnt, $back_color, $params);
+			$return_html .= $this->generateRowHtml($row, $cnt, $back_color, $params, $type);
 			$back_color = $back_color == 2 ? 1 : 2;
 		}
 
@@ -247,7 +247,7 @@ class missmatch_logic extends base_logic
 		return count($ids) > 0 ? min($ids) : 0;
 	}
 
-	private function generateRowHtml($row, $cnt, $back_color, $params)
+	private function generateRowHtml($row, $cnt, $back_color, $params, $mm_type = MissMatch::TYPE_DPC)
 	{
 		$del_color = $row['del_flg'] == 1 ? "color:#d3d3d3" : "";
 		$back_color_html = $back_color == 2 ? "style='background: #f7f7f9; $del_color'" : "style='background: #ffffff; $del_color'";
@@ -267,7 +267,7 @@ class missmatch_logic extends base_logic
 					<td>" . self::avg_percent_match($row) . "</td>
 
 					<td>" . ($this->generateHtml('accept', $row, $params) ?? "-") . "</td>
-					<td>" . ($this->generateHtml('edit', $row, $params) ?? "-") . "</td>
+					<td>" . ($this->generateHtml('edit', $row, $params, $mm_type) ?? "-") . "</td>
 					<td>" . ($this->generateHtml('cancel', $row, $params) ?? "-") . "</td>
 			</tr>";
 	}
@@ -277,11 +277,11 @@ class missmatch_logic extends base_logic
 		return ($status == 0) ? '' : ($status == 1 ? "class='mm_status_confirmed'" : "");
 	}
 
-	private function generateHtml($type, $row, $params)
+	private function generateHtml($type, $row, $params, $mm_type = MissMatch::TYPE_DPC)
 	{
 		switch ($type) {
 			case 'edit':
-				return "<a href='missmatch_detail.php?cancer_id={$row['cancer_id']}&hospital_id={$row['hospital_id']}&cur_page=" . $params[1] . "' class='edit clr1'><i class=\"fa fa-pencil\" aria-hidden=\"true\"></i></a>";
+				return "<a href='missmatch_detail.php?cancer_id={$row['cancer_id']}&hospital_id={$row['hospital_id']}&type=".$mm_type."&cur_page=" . $params[1] . "' class='edit clr1'><i class=\"fa fa-pencil\" aria-hidden=\"true\"></i></a>";
 				break;
 			case 'cancel':
 				return "<a href='javascript:void(0);' class='cancel clr2' name='cancel_{$row['id']}' value='" . self::implode_ids($row) . "'><i class=\"fa fa-trash\" aria-hidden=\"true\"></i></a><br>";

@@ -195,10 +195,10 @@ class survival_import extends base_import implements OnEachRow, WithBatchInserts
         $stageSurvivalRate4 = $row12 ? (round($row12, 4) * 100): null;
         $survivalRate = $row23 ? round($row23, 2) : null;
 
-        $avg1 =  $row24 ? (round($row24, 4) * 100): null;
-        $avg2 =  $row25 ? (round($row25, 4) * 100): null;
-        $avg3 =  $row26 ? (round($row26, 4) * 100): null;
-        $avg4 =  $row27 ? (round($row27, 4) * 100): null;
+//        $avg1 =  $row24 ? (round($row24, 4) * 100): null;
+//        $avg2 =  $row25 ? (round($row25, 4) * 100): null;
+//        $avg3 =  $row26 ? (round($row26, 4) * 100): null;
+//        $avg4 =  $row27 ? (round($row27, 4) * 100): null;
 
         foreach ($cancers as $cancer) {
             if (!$hospital_master) {
@@ -228,15 +228,15 @@ class survival_import extends base_import implements OnEachRow, WithBatchInserts
                 'survival_rate' => $survivalRate,
             ]);
 
-            SurvAverage::updateOrCreate([
-                'cancer_id' => $cancer->id,
-                'year' => $row[0],
-            ], [
-                'stage_survival1' => $avg1,
-                'stage_survival2' => $avg2,
-                'stage_survival3' => $avg3,
-                'stage_survival4' => $avg4,
-            ]);
+//            SurvAverage::updateOrCreate([
+//                'cancer_id' => $cancer->id,
+//                'year' => $row[0],
+//            ], [
+//                'stage_survival1' => $avg1,
+//                'stage_survival2' => $avg2,
+//                'stage_survival3' => $avg3,
+//                'stage_survival4' => $avg4,
+//            ]);
 
             $this->success += 1;
         }
