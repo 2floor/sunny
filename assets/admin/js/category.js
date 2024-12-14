@@ -236,10 +236,8 @@ $(function() {
 			if (result.data.status) {
 				//更新情報自動入力
 				insert_edit_data(result.data, 'frm', null);
-				$('.group-selection').val(null).trigger('change');
-
-				let group = result.data.group_answer || null;
-				$('.group-selection').val(group).trigger('change');
+				$('.level1-selection').trigger('change');
+				$('.level2-selection').trigger('change');
 				//ロード終了
 				loaded();
 

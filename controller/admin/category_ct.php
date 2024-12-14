@@ -40,7 +40,7 @@ if ($data['status']) {
 	// AJAX返却用データ成型
 	$data = array(
 		'status' => false,
-		'input_datas' => $post,
+		'input_datas' => $_POST,
 		'return_url' => 'logout.php'
 	);
 }

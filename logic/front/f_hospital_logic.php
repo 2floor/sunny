@@ -31,6 +31,11 @@ class f_hospital_logic
 
         if (!empty($areas)) {
             $query->whereIn('area_id', $areas);
+        } else {
+            $query->whereHas('area', function ($query) {
+                $query->where('del_flg', \App\Models\BaseModel::NOT_DELETED);
+                $query->where('public_flg', \App\Models\BaseModel::PUBLISHED);
+            });
         }
 
         if (!empty($categories)) {
