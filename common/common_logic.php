@@ -112,7 +112,7 @@ class common_logic {
 
 			// PrimaryKeyを除外
 			if ($i != 0) {
-				if (($rows [$i] ['Field'] == "create_at" || $rows [$i] ['Field'] == "update_at")) {
+				if (($rows [$i] ['Field'] == "created_at" || $rows [$i] ['Field'] == "updated_at")) {
 					$set_value .= ", " . $rows [$i] ['Field'] . " = now()";
 				} else {
 					$set_value .= ", " . $rows [$i] ['Field'] . " = ?";
@@ -151,7 +151,7 @@ class common_logic {
 
 		// query生成
 		for($i = 0; $i < count ( $rows ); $i ++) {
-			if ($rows [$i] ['Field'] == "update_at") {
+			if ($rows [$i] ['Field'] == "updated_at") {
 				$set_value .= ", " . $rows [$i] ['Field'] . " = now()";
 			} else {
 				for($n = 0; $n < count ( $up_field_list ); $n ++) {

@@ -675,7 +675,7 @@ function call_ajax_change_state (post_data){
 				title : "Success!",
 				text : result.data.msg,
 				type : "success",
-				confirmButtonText : "Close",
+				confirmButtonText : "戻る",
 				closeOnConfirm : true
 			}, function() {
 				if(result.data.method == 'entry' || result.data.method == 'update' ){
@@ -688,7 +688,13 @@ function call_ajax_change_state (post_data){
 			});
 		} else if (!result.data.status && result.data.error_code == 0) {
 			// PHP返却エラー
-			alert(result.data.error_msg);
+			swal({
+				title : "Error!",
+				text : result.data.error_msg,
+				type : "error",
+				confirmButtonText : "戻る",
+				closeOnConfirm : true
+			});
 			// location.href = result.data.return_url;
 		}
 
@@ -1424,7 +1430,7 @@ function tableColDispChange(){
 	});
 	function colDispChangeMain(){
 		var colDispChangeArray = $('[name=colDispChange]:checked').map(function(){ return $(this).val(); }).get();
-		$('.thCol').hide();
+		$('.thCol').not('.td-permission').hide();
 		$.each(colDispChangeArray, function(k, val){
 			var name
 			$('[colDispChangeName="'+val+'"]').show();

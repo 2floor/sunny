@@ -1,8 +1,7 @@
 <?php
 require_once __DIR__ . '/../logic/common/common_logic.php';
 $common_logic = new common_logic();
-$result_dealer = $common_logic->select_logic_no_param ( "select * from t_admin_menu where admin_menu_class_level = '0'" );
-
+$result_dealer = $common_logic->select_logic_no_param ( "select * from t_admin_menu where admin_menu_class_level = '0' order by order_num asc, admin_menu_id asc" );
 $authority_list = explode(',', $_SESSION ['adminer']['user_datas']['authority']);
 
 $where = "";

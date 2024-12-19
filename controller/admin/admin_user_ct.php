@@ -37,7 +37,7 @@ if ($data['status']) {
 	// AJAX返却用データ成型
 	$data = array(
 		'status' => false,
-		'input_datas' => $post,
+		'input_datas' => $_POST,
 		'return_url' => 'logout.php'
 	);
 }
@@ -88,15 +88,15 @@ class admin_user_ct
 		} else if ($post['method'] == 'edit') {
 			// 編集更新処理
 			$data = $this->update_admin_user_detail($post);
-		} else if ($post['method'] == 'del') {
+		} else if ($post['method'] == 'delete') {
 			// 削除処理
-			$data = $this->del_admin_user($post['del_id']);
+			$data = $this->del_admin_user($post['id']);
 		} else if ($post['method'] == 'entry') {
 			// 新規ユーザー登録処理
 			$data = $this->entry_admin_user($post);
 		} else if ($post['method'] == 'recovery') {
 			// ユーザー有効化処理
-			$data = $this->recovery($post['recovery_id']);
+			$data = $this->recovery($post['id']);
 		}
 
 		return $data;
@@ -124,44 +124,42 @@ class admin_user_ct
 	 */
 	private function entry_admin_user($post)
 	{
-
 		// ログインID重複チェック
-		$chk_result = $this->admin_user_logic->chk_admin_login_id($post['id']);
+		$chk_result = $this->admin_user_logic->chk_admin_login_id($post['login_id']);
 
-		if ($chk_result) {
+        if (!$chk_result) {
+            return [
+                'status' => false,
+                'error_code' => 0,
+                'method' => 'entry',
+                'error_msg' => 'そのログインIDは既に利用されています。'
+            ];
+        }
 
-			// メニュー権限成型
-			$authority_menu_comma = $this->common_string_logic->convert_comma_by_array($post['admin_authority']);
+        $authority_menu_comma = $this->common_string_logic->convert_comma_by_array($post['admin_authority']);
 
-			// 登録ロジック呼び出し
-			$this->admin_user_logic->new_entry_admin_user(array(
-				'0',
-				$post['user_id'],
-				$post['id'],
-				$post['mail'],
-				$post['password'],
-				$post['admin_authority'],
-				'',
-				'0'
-			), array(
-				$post['password'],
-				$post['conf_password']
-			));
+        // 登録ロジック呼び出し
+        $this->admin_user_logic->new_entry_admin_user(array(
+            '0',
+            $post['login_id'],
+            $post['name'],
+            $post['mail'],
+            $post['pass'],
+            $authority_menu_comma,
+            '',
+            '0'
+        ), array(
+            $post['pass'],
+            $post['conf_pass']
+        ));
 
-			// AJAX返却用データ成型
-			$data = array(
-				'status' => true,
-				'method' => 'entry',
-				'msg' => '登録しました'
-			);
-		} else {
-			// ログインID重複返却
-			$data = array(
-				'status' => true,
-				'method' => 'entry',
-				'msg' => 'そのログインIDは既に利用されています。'
-			);
-		}
+        // AJAX返却用データ成型
+        $data = array(
+            'status' => true,
+            'method' => 'entry',
+            'msg' => '登録しました'
+        );
+
 		return $data;
 	}
 
@@ -180,8 +178,9 @@ class admin_user_ct
 		// AJAX返却用データ成型
 		$data = array(
 			'status' => true,
-			'user_id' => $admin_user_detail['login_id'],
-			'id' => $admin_user_detail['name'],
+			'login_id' => $admin_user_detail['login_id'],
+			'name' => $admin_user_detail['name'],
+            'mail' => $admin_user_detail['mail'],
 			'admin_authority' => $admin_user_detail['authority']
 		);
 
@@ -197,20 +196,42 @@ class admin_user_ct
 	{
 
 		// メニュー権限成型
-		$authority_menu_comma = $this->common_string_logic->convert_comma_by_array($post['admin_authority']);
+        $chk_result = $this->admin_user_logic->chk_admin_login_id($post['login_id'], $post['edit_del_id']);
+
+        if (!$chk_result) {
+            return [
+                'status' => false,
+                'error_code' => 0,
+                'method' => 'entry',
+                'error_msg' => 'そのログインIDは既に利用されています。'
+            ];
+        }
+
+
+        $authority_menu_comma = $this->common_string_logic->convert_comma_by_array($post['admin_authority']);
 
 		// 編集ロジック呼び出し
-		$this->admin_user_logic->update_admin_user(array(
-			$post['user_id'],
-			$post['id'],
-			$post['mail'],
-			$post['password'],
-			$authority_menu_comma,
-			$post['edit_del_id']
-		), array(
-			$post['password'],
-			$post['conf_password']
-		));
+        if ($post['pass'] && $post['conf_pass']) {
+            $this->admin_user_logic->update_admin_user(array(
+                $post['login_id'],
+                $post['name'],
+                $post['mail'],
+                $post['pass'],
+                $authority_menu_comma,
+                $post['edit_del_id']
+            ), array(
+                $post['pass'],
+                $post['conf_pass']
+            ));
+        } else {
+            $this->admin_user_logic->update_admin_user_no_pass(array(
+                $post['login_id'],
+                $post['name'],
+                $post['mail'],
+                $authority_menu_comma,
+                $post['edit_del_id']
+            ));
+        }
 
 		// AJAX返却用データ成型
 		$data = array(

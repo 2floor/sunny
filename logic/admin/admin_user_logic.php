@@ -60,10 +60,10 @@ class admin_user_logic
 				}
 
 				// 管理画面メニュー名設定
-				$admin_menu_name_html .= "<td style='border: 1px solid rgba(0, 0, 0, 0.1);'>" . $row_menu['admin_menu_name'] . '</td>';
+				$admin_menu_name_html .= "<td class='td-permission' style='border: 1px solid rgba(0, 0, 0, 0.1);'>" . $row_menu['admin_menu_name'] . '</td>';
 
 				// 管理画面ユーザー権限表示用設定
-				$admin_menu_authority_flg_html .= "<td style='border: 1px solid rgba(0, 0, 0, 0.1); text-align:center;'>" . $authority_flg . '</td>';
+				$admin_menu_authority_flg_html .= "<td class='td-permission' style='border: 1px solid rgba(0, 0, 0, 0.1); text-align:center;'>" . $authority_flg . '</td>';
 
 				// 管理画面ユーザー登録用権限一覧HTML設定
 				$admin_menu_list_html .= '
@@ -149,7 +149,6 @@ class admin_user_logic
 	 */
 	public function new_entry_admin_user($params, $pass_array)
 	{
-
 		if ($pass_array[0] === $pass_array[1]) {
 
 			// パスワード暗号化
@@ -183,6 +182,12 @@ class admin_user_logic
 		return false;
 	}
 
+    public function update_admin_user_no_pass($params)
+    {
+        $this->t_admin_model->update_admin_user_no_pass($params);
+        return true;
+    }
+
 	/**
 	 * 管理画面ユーザー情報取得処理
 	 *
@@ -200,9 +205,9 @@ class admin_user_logic
 	 * @param unknown $login_id
 	 * @return boolean
 	 */
-	public function chk_admin_login_id($login_id)
+	public function chk_admin_login_id($login_id, $owner_id = null)
 	{
-		$result = $this->t_admin_model->count_login_id($login_id);
+		$result = $this->t_admin_model->count_login_id($login_id, $owner_id);
 
 		if ($result[0]['cnt'] == 0) {
 			return true;

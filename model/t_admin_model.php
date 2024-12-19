@@ -115,16 +115,31 @@ class t_admin_model
 		), $params);
 	}
 
+    public function update_admin_user_no_pass($params)
+    {
+        return $this->common_logic->update_logic("t_admin_user", " where id = ?", array(
+            "login_id",
+            "name",
+            "mail",
+            "authority"
+        ), $params);
+    }
+
 	/**
 	 * ログインIDカウント
 	 *
 	 * @param unknown $login_id
 	 */
-	public function count_login_id($login_id)
+	public function count_login_id($login_id, $owner_id = null)
 	{
-		return $this->common_logic->select_logic('select count(*) as cnt from t_admin_user where login_id = ?', array(
-			$login_id
-		));
+        $sql = 'select count(*) as cnt from t_admin_user where login_id = ?';
+        $params = [$login_id];
+        if ($owner_id) {
+            $sql .= ' and id != ? ';
+            $params[] = $owner_id;
+        }
+
+		return $this->common_logic->select_logic($sql, $params);
 	}
 
 	/**

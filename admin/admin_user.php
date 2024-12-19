@@ -6,6 +6,13 @@ require_once __DIR__ . '/../required/view_common_include.php';
 <html>
 <head>
 <?php require_once __DIR__ . '/../required/html_head.php';?>
+    <style>
+        #admin_authority_tr {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 10px;
+        }
+    </style>
 </head>
 <body class="fixed-left">
 	<!-- Begin page -->
@@ -160,48 +167,62 @@ require_once __DIR__ . '/../required/view_common_include.php';
 								<div class="contentBox">
 									<div class="formRow">
 										<div class="formItem">
-											ユーザーID
+                                            ログインID
 											<span class="label01 require_text">必須</span>
 										</div>
 										<div class="formTxt">
 											<div class="formIn50">
-												<input type="text" class="form-control validate required password" name="user_id" id="user_id" value="">
+												<input type="text" class="form-control validate required" name="login_id" id="login_id" value="">
 											</div>
 										</div>
 									</div>
+
+                                    <div class="formRow">
+                                        <div class="formItem">
+                                            パスワード
+                                            <span class="label01 require_text">必須</span>
+                                        </div>
+                                        <div class="formTxt">
+                                            <div class="formIn50">
+                                                <input type="password" class="form-control validate required password" name="pass" id="pass" value="">
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="formRow">
+                                        <div class="formItem">
+                                            パスワード(確認)
+                                            <span class="label01 require_text">必須</span>
+                                        </div>
+                                        <div class="formTxt">
+                                            <div class="formIn50">
+                                                <input type="password" class="form-control validate required password_conf_short" name="conf_pass" id="conf_pass" value="">
+                                            </div>
+                                        </div>
+                                    </div>
+
 									<div class="formRow">
 										<div class="formItem">
-											ユーザー名
+                                            氏名
 											<span class="label01 require_text">必須</span>
 										</div>
 										<div class="formTxt">
 											<div class="formIn50">
-												<input type="text" class="form-control validate required" name="id" id="id" value="">
+												<input type="text" class="form-control validate required" name="name" id="name" value="">
 											</div>
 										</div>
 									</div>
-									<div class="formRow">
-										<div class="formItem">
-											パスワード
-											<span class="label01 require_text">必須</span>
-										</div>
-										<div class="formTxt">
-											<div class="formIn50">
-												<input type="password" class="form-control validate required password" name="password" id="password" value="">
-											</div>
-										</div>
-									</div>
-									<div class="formRow">
-										<div class="formItem">
-											パスワード(確認)
-											<span class="label01 require_text">必須</span>
-										</div>
-										<div class="formTxt">
-											<div class="formIn50">
-												<input type="password" class="form-control validate required password_conf" name="conf_password" id="conf_password" value="">
-											</div>
-										</div>
-									</div>
+
+                                    <div class="formRow">
+                                        <div class="formItem">
+                                            メールアドレス
+                                        </div>
+                                        <div class="formTxt">
+                                            <div class="formIn50">
+                                                <input type="text" class="form-control validate mail" name="mail" id="mail" value="">
+                                            </div>
+                                        </div>
+                                    </div>
 									<div class="formRow">
 										<div class="formItem">
 											管理画面権限設定

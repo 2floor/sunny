@@ -15,7 +15,7 @@
 var query = getUrlVars();
 
 //ページタイトル
-var page_title = '管理者'
+var page_title = '管理者';
 
 //画像input用配列
 var input_file_name = {
@@ -33,6 +33,8 @@ var state = {
 		"elemName" : $(this).attr('name'),
 		};
 history.replaceState(state, null, null);
+
+var currentPage = 1;
 
 $(window).on('bb');
 $(window).on('popstate.bb',function(e) {
@@ -127,12 +129,6 @@ $(function() {
 						todayHighlight : true
 					});
 
-
-
-
-
-
-
 					/** ここまで * */
 
 					$('.pagination').html(result.data.pager_html);
@@ -155,8 +151,6 @@ $(function() {
 			$('body').html(result.responseText);
 		});
 	}
-
-
 
 	//初期処理
 	page_init()
@@ -314,13 +308,6 @@ $(function() {
 
 			/** ここから別途処理呼び出し TODO **/
 
-
-
-
-
-
-
-
 			/** ここまで **/
 
 			// 現在のページ取得
@@ -383,9 +370,12 @@ $(function() {
 				var form_data = append_form_prams('edit_init', 'frm', null, null, null, null);
 
 
+			$('#pass').removeClass('required');
+			$('#pass').parents('.formRow').find('.label01').hide();
+			$('#conf_pass').removeClass('required');
+			$('#conf_pass').parents('.formRow').find('.label01').hide();
 			// ajax呼び出し
 			call_ajax_edit_init(form_data);
-
 		});
 	}
 
@@ -438,7 +428,7 @@ $(function() {
 		$('#list_html_area').html(data.html);
 
 
-		$('#admin_authority_tr').html(data.edit_menu_list_html)
+		$('#admin_authority_tr').html(data.edit_menu_list_html);
 
 	}
 
@@ -449,7 +439,10 @@ $(function() {
  * ページが切り替わる際の処理
  */
 function disp_change_func(type){
-
+	$('#pass').addClass('required');
+	$('#pass').parents('.formRow').find('.label01').show();
+	$('#conf_pass').addClass('required');
+	$('#conf_pass').parents('.formRow').find('.label01').show();
 }
 
 /**

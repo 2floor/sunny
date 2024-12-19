@@ -123,7 +123,7 @@ class common_logic
 
 			// PrimaryKeyを除外
 			if ($i != 0) {
-				if (($rows[$i]['Field'] == "create_at" || $rows[$i]['Field'] == "update_at")) {
+				if (($rows[$i]['Field'] == "created_at" || $rows[$i]['Field'] == "updated_at")) {
 					$set_value .= ", " . $rows[$i]['Field'] . " = now()";
 				} else {
 					$set_value .= ", " . $rows[$i]['Field'] . " = ?";
@@ -163,7 +163,7 @@ class common_logic
 
 		// query生成
 		for ($i = 0; $i < count($rows); $i++) {
-			if ($rows[$i]['Field'] == "update_at") {
+			if ($rows[$i]['Field'] == "updated_at") {
 				$set_value .= ", " . $rows[$i]['Field'] . " = now()";
 			} else {
 				for ($n = 0; $n < count($up_field_list); $n++) {
@@ -1382,7 +1382,7 @@ class common_logic
 		}
 
 		//並び替え
-		$order = ' ORDER BY `del_flg` ASC, `create_at` DESC ';
+		$order = ' ORDER BY `del_flg` ASC, `created_at` DESC ';
 		if ($search_select['order'] != null && $search_select['order'] != '') {
 			$name = $search_select['order']['name'];
 			$orderObj = $search_select['selectArea'][$name];
@@ -1445,7 +1445,7 @@ class common_logic
 					" . $chkDel . "
 					" . $chkPub . "
 				ORDER BY
-					`create_at` DESC
+					`created_at` DESC
 				";
 
 		$res = $this->select_logic($sql, $where_param);
@@ -1504,7 +1504,7 @@ class common_logic
 				WHERE
 					`" . $post['pri'] . "` = ?
 				ORDER BY
-					`create_at` DESC
+					`created_at` DESC
 				";
 
 		$res = $this->select_logic($sql, array($post['id']));

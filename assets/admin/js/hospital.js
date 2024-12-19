@@ -15,7 +15,7 @@
 var query = getUrlVars();
 
 //ページタイトル
-var page_title = '病院';
+var page_title = '医療機関管理';
 
 //画像input用配列
 var input_file_name = {};
