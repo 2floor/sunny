@@ -199,28 +199,36 @@ $(function() {
 		$('.accept').off();
 		$('.accept').on('click',function(){
 			var id = $(this).attr('value');
-
+			var strConfirm = $(this).closest('tr').find('.row-checkbox').data('confirm-str');
 			if(id) {
-				swal({
-					title : "有効にする",
-					text : '管理ID' + id + "を有効にします。よろしいですか？",
-					type : "warning",
-					showCancelButton : true,
-					confirmButtonClass : 'btn-warning',
-					confirmButtonText : "有効にする",
-					cancelButtonText : 'キャンセル',
-					closeOnConfirm : false,
-					closeOnCancel : false
-				}, function(isConfirm) {
-					if (isConfirm) {
-						var form_data = append_form_prams('accept_list', 'frm', null, false);
-						form_data.append('id', id);
+				//strConfirm
 
-						call_ajax_change_state(form_data);
-					} else {
-						swal.close();
-					}
-				});
+				$('#confirmCheckModal #confirmCheckModalBody').html(`
+					<div>を有効にします。よろしいですか？</div>
+					` + '<ul>' + strConfirm + '</ul>');
+				$('#confirmCheckModal').data('id', id);
+				$('#confirmCheckModal').modal('show');
+
+				// swal({
+				// 	title : "有効にする",
+				// 	text : `管理ID` + id + `を有効にします。よろしいですか？`,
+				// 	type : "warning",
+				// 	showCancelButton : true,
+				// 	confirmButtonClass : 'btn-warning',
+				// 	confirmButtonText : "有効にする",
+				// 	cancelButtonText : 'キャンセル',
+				// 	closeOnConfirm : false,
+				// 	closeOnCancel : false
+				// }, function(isConfirm) {
+				// 	if (isConfirm) {
+				// 		var form_data = append_form_prams('accept_list', 'frm', null, false);
+				// 		form_data.append('id', id);
+
+				// 		call_ajax_change_state(form_data);
+				// 	} else {
+				// 		swal.close();
+				// 	}
+				// });
 			} else {
 				swal({
 					title: "エラー",
@@ -232,7 +240,9 @@ $(function() {
 				});
 			}
 		});
+
 	}
+
 
 	function checkListAction(){
 		$('#selectAllCheckbox').off();
@@ -288,10 +298,14 @@ $(function() {
 			const selectedValues = selectedCheckboxes.map(function () {
 				return $(this).val();
 			}).get();
-
 			const mapingValues = selectedValues.flatMap(value => value.split(',')).filter(Boolean).map(Number);
 
 			const mapAlert = {'accept_list': 'すべてを受け入れる', 'cancel_list': 'すべて削除する'};
+
+			const confirmValues = selectedCheckboxes.map(function () {
+				return $(this).data('confirm-str');
+			}).get();
+			const strConfirm = confirmValues.join('');
 
 			if (mapingValues.length < 0) {
 				swal({
@@ -303,28 +317,34 @@ $(function() {
 					closeOnConfirm : true,
 				});
 			} else {
-				swal({
-					title : mapAlert[selectedAction],
-					text : '管理ID' + mapingValues.join(',') + ' ' + mapAlert[selectedAction] +"。よろしいですか？",
-					type : "warning",
-					showCancelButton : true,
-					confirmButtonClass : 'btn-warning',
-					confirmButtonText : "有効にする",
-					cancelButtonText : 'キャンセル',
-					closeOnConfirm : true,
-					closeOnCancel : true
-				}, function(isConfirm) {
-					if (isConfirm) {
-						$('.loading').show();
-						var form_data = append_form_prams(selectedAction, 'frm', null, false);
-						form_data.append('id', mapingValues.join(','));
+				$('#confirmCheckModal #confirmCheckModalBody').html(`
+					<div>` + mapAlert[selectedAction] + `</div>
+					` + '<ul>' + strConfirm + '</ul>');
+				$('#confirmCheckModal').data('id', mapingValues.join(','));
+				$('#confirmCheckModal').modal('show');
 
-						call_ajax_change_state(form_data);
-						$('#actionSelect').trigger('change');
-					} else {
-						swal.close();
-					}
-				});
+				// swal({
+				// 	title : mapAlert[selectedAction],
+				// 	text : '管理ID' + mapingValues.join(',') + ' ' + mapAlert[selectedAction] +"。よろしいですか？",
+				// 	type : "warning",
+				// 	showCancelButton : true,
+				// 	confirmButtonClass : 'btn-warning',
+				// 	confirmButtonText : "有効にする",
+				// 	cancelButtonText : 'キャンセル',
+				// 	closeOnConfirm : true,
+				// 	closeOnCancel : true
+				// }, function(isConfirm) {
+				// 	if (isConfirm) {
+				// 		$('.loading').show();
+				// 		var form_data = append_form_prams(selectedAction, 'frm', null, false);
+				// 		form_data.append('id', mapingValues.join(','));
+
+				// 		call_ajax_change_state(form_data);
+				// 		$('#actionSelect').trigger('change');
+				// 	} else {
+				// 		swal.close();
+				// 	}
+				// });
 			}
 		});
 
@@ -344,6 +364,23 @@ $(function() {
 
 		$('#actionSelect').trigger('change');
 	}
+
+	$('#confirmCheckModal #confirmCheckButton').click(function() {
+		$('.loading').show();
+		$('#confirmCheckModal #confirmCheckModalBody').html('');
+		var form_data = append_form_prams('accept_list', 'frm', null, false);
+		id = $('#confirmCheckModal').data('id');
+		form_data.append('id', id);
+		call_ajax_change_state(form_data);
+		$('#actionSelect').trigger('change');
+		$('.loading').hide();
+		$('#confirmCheckModal').modal('hide');
+	});
+	$('#confirmCheckModal button[data-dismiss="modal"]').click(function() {
+		$('#confirmCheckModal #confirmCheckModalBody').html('');
+		$('#confirmCheckModal').modal('hide');
+	});
+
 
 	/**
 	 * 更新初期処理処理AJAX
