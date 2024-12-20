@@ -108,6 +108,14 @@ foreach ($data_area as $dao_row) {
 		.select2-container--default .select2-selection--single .select2-selection__clear {
 			font-size: 22px;
 		}
+
+		a.accepted,
+		a.accepted:hover,
+		a.accepted:focus,
+		a.accepted:active {
+			color: #9dd2b0;
+			text-decoration: none;
+		}
 	</style>
 
 </head>

@@ -252,11 +252,9 @@ class missmatch_logic extends base_logic
 		$del_color = $row['del_flg'] == 1 ? "color:#d3d3d3" : "";
 		$back_color_html = $back_color == 2 ? "style='background: #f7f7f9; $del_color'" : "style='background: #ffffff; $del_color'";
 
-		$checkbox_name = "checkbox_{$row['id']}";
-
 		return "
 			<tr $back_color_html>
-					<td><input type='checkbox' class='row-checkbox' name='$checkbox_name' value='" . self::implode_ids($row) . "'></td>
+					<td>" . self::generateCheckbox($row) . "</td>
 					<td class='count_no'>$cnt</td>
 					<td>" . ($row['area_name'] ?? "-") . "</td>
 					<td>" . ($row['cancer_name'] ?? "-") . "</td>
@@ -272,28 +270,79 @@ class missmatch_logic extends base_logic
 			</tr>";
 	}
 
+	static function validateStatus($row, $status)
+	{
+		$statuses = [$row['status_0'], $row['status_1'], $row['status_2']];
+		return in_array($status, $statuses);
+	}
+
+	static function generateCheckbox($row)
+	{
+		$checkbox_name = "checkbox_{$row['id']}";
+		return self::validateStatus($row, MissMatch::STATUS_NOT_CONFIRM)
+			? "<input type='checkbox' class='row-checkbox' name='" . $checkbox_name . "' value='" . self::implode_ids($row) . "'>"
+			: "";
+	}
 	static function getStatusHtml($status)
 	{
-		return ($status == 0) ? '' : ($status == 1 ? "class='mm_status_confirmed'" : "");
+		return ($status == 0) ? '' : (
+			$status == 1 ? "class='mm_status_confirmed'" : (
+				$status == 2 ? "class='mm_status_absolutely_match'" : (
+					$status == -1 ? "class='mm_status_notin_match_data'" : ""
+				)
+			)
+		);
 	}
 
 	private function generateHtml($type, $row, $params, $mm_type = MissMatch::TYPE_DPC)
 	{
 		switch ($type) {
 			case 'edit':
-				return "<a href='missmatch_detail.php?cancer_id={$row['cancer_id']}&hospital_id={$row['hospital_id']}&type=".$mm_type."&cur_page=" . $params[1] . "' class='edit clr1'><i class=\"fa fa-pencil\" aria-hidden=\"true\"></i></a>";
+				return "<a href='missmatch_detail.php?cancer_id={$row['cancer_id']}&hospital_id={$row['hospital_id']}&type=" . $mm_type . "&cur_page=" . $params[1] . "' class='edit clr1'><i class=\"fa fa-pencil\" aria-hidden=\"true\"></i></a>";
 				break;
 			case 'cancel':
 				return "<a href='javascript:void(0);' class='cancel clr2' name='cancel_{$row['id']}' value='" . self::implode_ids($row) . "'><i class=\"fa fa-trash\" aria-hidden=\"true\"></i></a><br>";
 				break;
 			case 'accept':
-				return "<a href='javascript:void(0);' class='accept clr1' name='accept_{$row['id']}' value='" . self::implode_ids($row) . "'><i class=\"fa fa-check\" aria-hidden=\"true\"></i></a><br>";
+				return "<a href='javascript:void(0);' class='" . (self::canbeConfirmed($row) ? "accept" : "accepted") . " clr1' name='accept_{$row['id']}' value='" . self::implode_ids($row) . "'><i class=\"" . self::generateIconAcceptHtml($row) . "\" aria-hidden=\"true\"></i></a><br>";
 				break;
 
 			default:
 				return '-';
 				break;
 		}
+	}
+
+	static function canbeConfirmed($row)
+	{
+		return self::validateStatus($row, MissMatch::STATUS_NOT_CONFIRM);
+	}
+
+	static function checkFullStatus($row, $status)
+	{
+		$result = true;
+		for ($i = 0; $i < 3; $i++) {
+			$result =
+				$result && (
+					$row['status_' . $i] == $status || $row['status_' . $i] == -1
+				);
+		}
+		return $result;
+	}
+
+	static function generateIconAcceptHtml($row)
+	{
+		$full_absolutely = self::checkFullStatus($row, MissMatch::STATUS_ABSOLUTELY_MATCH);
+
+		$full_confirmed = self::checkFullStatus($row, MissMatch::STATUS_CONFIRMED);
+
+		$full_not_canbe_confirmed = !self::canbeConfirmed($row);
+
+		return $full_absolutely ? "fa fa-check-square" : (
+			$full_confirmed ? "fa fa-check-circle" : (
+				$full_not_canbe_confirmed ? "fa fa-check-circle-o" : "fa fa-check"
+			)
+		);
 	}
 
 	private function formatTime($time)

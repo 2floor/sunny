@@ -271,7 +271,6 @@ $(function() {
 					confirmButtonText : "理解した",
 					closeOnConfirm : true,
 				});
-				return;
 			}
 
 			const selectedCheckboxes = $('.row-checkbox:checked');
@@ -284,7 +283,6 @@ $(function() {
 					confirmButtonText : "理解した",
 					closeOnConfirm : true,
 				});
-				return;
 			}
 
 			const selectedValues = selectedCheckboxes.map(function () {
@@ -304,7 +302,6 @@ $(function() {
 					confirmButtonText : "理解した",
 					closeOnConfirm : true,
 				});
-				return;
 			} else {
 				swal({
 					title : mapAlert[selectedAction],
@@ -314,10 +311,11 @@ $(function() {
 					confirmButtonClass : 'btn-warning',
 					confirmButtonText : "有効にする",
 					cancelButtonText : 'キャンセル',
-					closeOnConfirm : false,
-					closeOnCancel : false
+					closeOnConfirm : true,
+					closeOnCancel : true
 				}, function(isConfirm) {
 					if (isConfirm) {
+						$('.loading').show();
 						var form_data = append_form_prams(selectedAction, 'frm', null, false);
 						form_data.append('id', mapingValues.join(','));
 
