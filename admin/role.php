@@ -123,7 +123,7 @@ $perms = $initData['perms'] ?? [];
                     <div class="col-xs-12">
                         <h2 class="pageTitle" id="page_title">
                             <i class="fa fa-list" aria-hidden="true"></i>
-                            役割一覧
+                            役割権限一覧
                         </h2>
                     </div>
                 </div>

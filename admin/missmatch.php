@@ -26,8 +26,8 @@ foreach ($data_area as $dao_row) {
 
 	<style>
 		#dataTable th {
-			background-color: #14ae5c;
-			color: #fff;
+			background-color: #fff;
+			color: #0b0b0b;
 		}
 
 		#dataTable th>i {
@@ -109,6 +109,22 @@ foreach ($data_area as $dao_row) {
 			font-size: 22px;
 		}
 
+        .same-size-btn {
+            width: 120px;
+            height: 40px;
+        }
+
+        .custom-reset-btn {
+            background-color: #ffffff;
+            color: #007bff;
+            border: 1px solid #007bff;
+        }
+
+        .custom-reset-btn:hover {
+            background-color: #007bff;
+            color: #ffffff;
+        }
+
 		a.accepted,
 		a.accepted:hover,
 		a.accepted:focus,
@@ -136,7 +152,7 @@ foreach ($data_area as $dao_row) {
 						<div class="col-xs-12">
 							<h2 class="pageTitle" id="page_title">
 								<i class="fa fa-list" aria-hidden="true"></i>
-								処理済一覧
+                                医療機関名寄せ
 							</h2>
 						</div>
 					</div>
@@ -178,8 +194,8 @@ foreach ($data_area as $dao_row) {
 
 										<div class="col-sm-6">
 											<div class="list-button-search">
-												<button type="button" name="search_submit" class="btn waves-effect waves-light btn-primary">検索</button>
-												<button type="reset" class="btn waves-effect waves-light btn-secondary">リセット</button>
+                                                <button type="reset" class="btn waves-effect waves-light btn-secondary same-size-btn custom-reset-btn">リセット</button>
+                                                <button type="button" name="search_submit" class="btn waves-effect waves-light btn-primary same-size-btn">検索</button>
 											</div>
 										</div>
 									</div>
@@ -240,17 +256,14 @@ foreach ($data_area as $dao_row) {
 														<th>がん種<br><span class="thead_type"></span></th>
 														<th>医療機関名<br>(基本)</th>
 														<th>
-															<span class="thead_type"></span>
 															医療機関名<br>
 															<span id="thead_year_2"></span>
 														</th>
 														<th>
-															<span class="thead_type"></span>
 															医療機関名<br>
 															<span id="thead_year_1"></span>
 														</th>
 														<th>
-															<span class="thead_type"></span>
 															医療機関名<br>
 															<span id="thead_year_0"></span>
 														</th>

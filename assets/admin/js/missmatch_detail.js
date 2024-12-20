@@ -62,7 +62,7 @@ $(document).ready(function () {
     }
 
     $('#confirm_mm').off().on('click', function () {
-        showAlert("info", "選択を確認する!", "現在のリンクを確認しますか?", "確認する", function (isConfirm) {
+        showAlert("info", "よろしいですか？", "各年度の医療機関名と基本の医療機関名の紐付けを設定します。", "確認する", function (isConfirm) {
             if (isConfirm) {
                 const { cancer_id, hospital_id, type } = getUrlParams();
                 const request = $('.mm-info').map(function () {

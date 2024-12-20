@@ -285,8 +285,7 @@ require_once __DIR__ . '/../required/view_common_include.php';
                                     </div>
                                     <div class="formTxt">
                                         <div class="formIn50">
-                                            <a id="linkErrorFile">ファイルのダウンロード
-                                                リンクにはエラー情報が含まれています</a>
+                                            <a id="linkErrorFile" style="text-decoration: underline">エラー情報のファイル</a>
                                         </div>
                                     </div>
                                 </div>
