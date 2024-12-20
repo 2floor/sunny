@@ -37,10 +37,10 @@ foreach ($data_area as $dao_row) {
 		}
 
 		.action-footer {
-			margin-top: 20px;
 			display: flex;
 			align-items: center;
 			gap: 10px;
+			width: fit-content;
 		}
 
 		.action-select {
@@ -204,7 +204,15 @@ foreach ($data_area as $dao_row) {
 							<div class="col-xs-12">
 								<div class="card-box">
 									<div class="table-wrapper">
-										<div class="btn-toolbar">
+										<div class="btn-toolbar" style="margin-left: 0;">
+											<div class="action-footer pull-left" style="display: none;">
+												<select id="actionSelect" class="btn btn-default dropdown-toggle text-muted">
+													<option value="">-- アクションを選択する --</option>
+													<option value="accept_list">紐付けの設定</option>
+													<option value="cancel_list">紐付けの解除</option>
+												</select>
+												<button id="submitAction" class="btn btn-default btn-primary">実行する</button>
+											</div>
 											<div class="btn-group dropdown-btn-group pull-right">
 												<button class="btn btn-default btn-primary" name="colDispChangeAll">すべて表示</button>
 												<button class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-expanded="true">
@@ -249,14 +257,7 @@ foreach ($data_area as $dao_row) {
 												<tbody id="list_html_area" class="tableBodyArea">
 												</tbody>
 											</table>
-											<div class="action-footer" style="display: none;">
-												<select id="actionSelect" class="btn btn-default dropdown-toggle text-muted">
-													<option value="">-- アクションを選択する --</option>
-													<option value="accept_list">すべてを受け入れる</option>
-													<option value="cancel_list">すべて削除する</option>
-												</select>
-												<button id="submitAction" class="btn btn-default btn-primary">実行する</button>
-											</div>
+
 
 										</div>
 									</div>
