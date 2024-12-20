@@ -15,7 +15,15 @@
 var query = getUrlVars();
 
 //ページタイトル
-var page_title = '処理済一覧'
+var currentPage = window.location.pathname.split('/').pop();
+var page_title = '';
+if (currentPage === 'missmatch_surv.php') {
+	page_title = '医療機関名寄せ一覧（生存率のデータ)';
+} else if (currentPage === 'missmatch_stage.php') {
+	page_title = '医療機関名寄せ一覧（年間新規入院患者数（ステージ）のデータ）';
+} else {
+	page_title = '医療機関名寄せ一覧（年間入院患者数データ)';
+}
 
 //画像input用配列
 var input_file_name = {};
@@ -98,7 +106,7 @@ $(function() {
 						searchNew();
 
 						$('.pagination-info .total-result span').text(data[1] + ' 結果');
-						$('#page_title').html('<i class="fa fa-list" aria-hidden="true"></i>'+ page_title + '一覧');
+						$('#page_title').html('<i class="fa fa-list" aria-hidden="true"></i>'+ page_title);
 
 						$('.thead_type').text('('+data[3]+')');
 						data[2].forEach((year,key) => {

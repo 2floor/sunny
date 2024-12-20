@@ -103,10 +103,10 @@ require_once __DIR__ . '/../required/view_common_include.php';
                                             <tr>
                                                 <th>No</th>
                                                 <th>ID</th>
-                                                <th>がん種名</th>
-                                                <th>がん種(DPC)</th>
-                                                <th>がん種(Stage)</th>
-                                                <th>がん種(Surv)</th>
+                                                <th>がん種名(マスター)</th>
+                                                <th>がん種名(DPC)</th>
+                                                <th>がん種名(ステージ)</th>
+                                                <th>がん種名(生存率)</th>
                                                 <th>表示順</th>
                                                 <th>作成日時</th>
                                                 <th>更新日時</th>
@@ -162,7 +162,7 @@ require_once __DIR__ . '/../required/view_common_include.php';
 
                                 <div class="formRow">
                                     <div class="formItem">
-                                        がん種(DPC)
+                                        がん種名(DPC)
                                     </div>
                                     <div class="formTxt">
                                         <div class="formIn50">
@@ -173,7 +173,7 @@ require_once __DIR__ . '/../required/view_common_include.php';
 
                                 <div class="formRow">
                                     <div class="formItem">
-                                        がん種(Stage)
+                                        がん種名(ステージ)
                                     </div>
                                     <div class="formTxt">
                                         <div class="formIn50">
@@ -184,7 +184,7 @@ require_once __DIR__ . '/../required/view_common_include.php';
 
                                 <div class="formRow">
                                     <div class="formItem">
-                                        がん種(Surv)
+                                        がん種名(生存率)
                                     </div>
                                     <div class="formTxt">
                                         <div class="formIn50">
@@ -247,7 +247,7 @@ require_once __DIR__ . '/../required/view_common_include.php';
 
 </body>
 <script>
-    $( document ).ready(function() {
+    $(document).ready(function () {
         $('#file-name-display').off('click');
         $('#file-name-display').on('click', function (event) {
             event.preventDefault();
@@ -255,58 +255,34 @@ require_once __DIR__ . '/../required/view_common_include.php';
             swal({
                 title: '',
                 text: "インポートするデータの種類を選択してください",
-                type : "info",
-                showCancelButton : true,
-                confirmButtonClass : 'btn-info',
-                confirmButtonText : "病院のがんデータ",
-
-                cancelButtonText : 'がんデータ',
-                closeOnConfirm : false,
-                closeOnCancel : false
-            }, function(isConfirm) {
+                type: "info",
+                showCancelButton: true,
+                showCloseButton: true,
+                confirmButtonClass: 'btn-info',
+                confirmButtonText: "医療機関がん種",
+                cancelButtonText: 'がん種マスター',
+                closeOnConfirm: false,
+                closeOnCancel: false
+            }, function (isConfirm) {
                 if (isConfirm) {
-                    swal({
-                        title: '',
-                        text: '病院がんデータ タイプのデータをインポートしてもよろしいですか?',
-                        type : "warning",
-                        showCancelButton : true,
-                        confirmButtonClass : 'btn-warning',
-                        confirmButtonText : "同意する",
-                        cancelButtonText : '近い',
-                        closeOnConfirm : false,
-                        closeOnCancel : false
-                    }, function(isConfirm) {
-                        if (isConfirm) {
-                            $('#upload-file').attr('data-type', 'hospital_cancer')
-                            $('#upload-file').click();
-                            swal.close();
-                        } else {
-                            swal.close();
-                        }
-                    });
+                    $('#upload-file').attr('data-type', 'hospital_cancer');
+                    $('#upload-file').click();
+                    swal.close();
                 } else {
-                    swal({
-                        title: '',
-                        text: 'がんデータ タイプのデータをインポートしてもよろしいですか?',
-                        type : "warning",
-                        showCancelButton : true,
-                        confirmButtonClass : 'btn-warning',
-                        confirmButtonText : "同意する",
-                        cancelButtonText : '近い',
-                        closeOnConfirm : false,
-                        closeOnCancel : false
-                    }, function(isConfirm) {
-                        if (isConfirm) {
-                            $('#upload-file').attr('data-type', 'cancer')
-                            $('#upload-file').click();
-                            swal.close();
-                        } else {
-                            swal.close();
-                        }
-                    });
+                    $('#upload-file').attr('data-type', 'cancer');
+                    $('#upload-file').click();
+                    swal.close();
                 }
             });
-        })
+
+            setTimeout(function () {
+                $('.sweet-alert').append('<button id="close-popup" style="position:absolute;top:10px;right:10px;border:none;background:none;font-size:20px;font-weight:bold;cursor:pointer;">&times;</button>');
+                $('#close-popup').on('click', function () {
+                    swal.close();
+                });
+            }, 0);
+        });
     });
+
 </script>
 </html>

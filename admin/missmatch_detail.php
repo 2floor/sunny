@@ -35,6 +35,16 @@ $spec_cancer_name = match ($type) {
     MissMatch::TYPE_SURVIVAL => "がん種(Surv)",
     default => '',
 };
+
+$missmatch_detail_page_title = '';
+if ($type === 1) {
+    $missmatch_detail_page_title = '医療機関名寄せ編集（年間入院患者数データ)';
+} elseif ($type === 2) {
+    $missmatch_detail_page_title = '医療機関名寄せ編集（年間新規入院患者数（ステージ)';
+} elseif ($type === 3) {
+    $missmatch_detail_page_title = '医療機関名寄せ編集（生存率のデータ)';
+}
+
 ?>
 <!DOCTYPE html>
 <html>
@@ -131,6 +141,16 @@ $spec_cancer_name = match ($type) {
         .status_not_match {
             background-color: #FFE1D6;
         }
+        .sweet-alert .btn {
+            width: 30% !important;
+            margin: 0 1% !important;
+        }
+
+        .sweet-alert .swal-button--cancel {
+            background-color: #17a2b8 !important;
+            border-color: #17a2b8 !important;
+        }
+
     </style>
 </head>
 
@@ -150,7 +170,7 @@ $spec_cancer_name = match ($type) {
                     <div class="col-xs-12">
                         <h2 class="pageTitle" id="page_title">
                             <i class="fa fa-list" aria-hidden="true"></i>
-                            医療機関・名寄せ整理 DPC
+                            <?= $missmatch_detail_page_title ?>
                         </h2>
                     </div>
                 </div>
@@ -176,8 +196,8 @@ $spec_cancer_name = match ($type) {
                                         <th>年度</th>
                                         <th>がん種名</th>
                                         <th><?= $spec_cancer_name ?></th>
-                                        <th>輸入情報</th>
-                                        <th>一致率</th>
+                                        <th>年間入院患者</th>
+                                        <th>類似度</th>
                                         <th>操作</th>
                                     </tr>
                                     </thead>
@@ -230,12 +250,11 @@ $spec_cancer_name = match ($type) {
                                     </tbody>
                                 </table>
                                 <div class="footer-buttons">
-                                    <button class="bg-primary" id="confirm_mm">確認する</button>
                                     <button class="bg-warning" id="cancer_all_mm">紐付けを解除する</button>
+                                    <button class="bg-primary" id="confirm_mm">確認する</button>
                                 </div>
                                 <div class="warning">
-                                    [紐付けを解除する] ボタンを選択するとその年のデータが基本データ、基本データと
-                                    紐付いている情報を解除します。
+                                    [紐付けを解除する] ボタンを選択すると、各年度の医療機関名と基本の医療機関名の紐付け設定が解除されます。
                                 </div>
                             </div>
                         </div>

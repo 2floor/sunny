@@ -31,28 +31,28 @@ var search_select = {
             tableOrder 	: 1,
             type 		: 'bigint',
         },
-        'がん種名' : {
+        'がん種名(マスター)' : {
             search 		: true,
             order		: true,
             ColName 	: 'cancer_type',
             tableOrder 	: 2,
             type 		: 'text',
         },
-        'がん種(DPC)' : {
+        'がん種名(DPC)' : {
             search 		: true,
             order		: true,
             ColName 	: 'cancer_type_dpc',
             tableOrder 	: 3,
             type 		: 'text',
         },
-        'がん種(Stage)' : {
+        'がん種名(ステージ)' : {
             search 		: true,
             order		: true,
             ColName 	: 'cancer_type_stage',
             tableOrder 	: 4,
             type 		: 'text',
         },
-        'がん種(Surv)' : {
+        'がん種名(生存率)' : {
             search 		: true,
             order		: true,
             ColName 	: 'cancer_type_surv',
