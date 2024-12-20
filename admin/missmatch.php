@@ -254,16 +254,16 @@ foreach ($data_area as $dao_row) {
 														<th>No</th>
 														<th>都道府県名</th>
 														<th>がん種<br><span class="thead_type"></span></th>
-														<th>医療機関名<br>(基本)</th>
-														<th>
+														<th style="width: 250px">医療機関名<br>(基本)</th>
+														<th style="width: 250px">
 															医療機関名<br>
 															<span id="thead_year_2"></span>
 														</th>
-														<th>
+														<th style="width: 250px">
 															医療機関名<br>
 															<span id="thead_year_1"></span>
 														</th>
-														<th>
+														<th style="width: 250px">
 															医療機関名<br>
 															<span id="thead_year_0"></span>
 														</th>
