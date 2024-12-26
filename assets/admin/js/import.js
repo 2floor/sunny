@@ -227,7 +227,7 @@ $(function() {
     call_ajax_edit_init = function (post_data){
         ajax.get(post_data).done(function(result) {
             // ページタイトル設定
-            $('#page_title').html('<i class="fa fa-wrench" aria-hidden="true"></i>' + page_title + '情報編集');
+            $('#page_title').html('<i class="fa fa-wrench" aria-hidden="true"></i>' + page_title + '詳細情報');
 
             // 正常終了
             if (result.data.status) {

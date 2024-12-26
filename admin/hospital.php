@@ -250,7 +250,7 @@ foreach ($areas as $area) {
                                 <input type="hidden" class="form-control" name="id" id="id">
                                 <div class="formRow">
                                     <div class="formItem">
-                                        病院ID
+                                        病院Code
                                         <span class="label01 require_text">必須</span>
                                     </div>
                                     <div class="formTxt">

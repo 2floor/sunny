@@ -316,7 +316,7 @@ require_once __DIR__ . '/../required/view_common_include.php';
 
                                 <div class="formRow">
                                     <div class="formItem">
-                                        失敗した値を再インポートする
+                                        失敗したファイルを再インポートする
                                     </div>
                                     <div class="formTxt">
                                         <div class="formIn50">
