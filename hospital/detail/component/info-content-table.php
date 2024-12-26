@@ -13,11 +13,11 @@ if (!isset($infoHospital)) {
         </tr>
         <tr>
             <th class="alg-center">住所</th>
-            <td><?php echo $infoHospital['tel'] ?? '' ?></td>
+            <td><?php echo $infoHospital['address'] ?? '' ?></td>
         </tr>
         <tr>
             <th class="alg-center">代表電話番号</th>
-            <td><?php echo $infoHospital['address'] ?? '' ?></td>
+            <td><?php echo $infoHospital['tel'] ?? '' ?></td>
         </tr>
         <tr>
             <th class="alg-center">公式HP</th>
