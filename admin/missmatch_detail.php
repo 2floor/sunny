@@ -196,7 +196,7 @@ if ($type === 1) {
                                         <th>年度</th>
                                         <th>がん種名</th>
                                         <th><?= $spec_cancer_name ?></th>
-                                        <th>年間入院患者</th>
+                                        <th>詳細</th>
                                         <th>類似度</th>
                                         <th>操作</th>
                                     </tr>

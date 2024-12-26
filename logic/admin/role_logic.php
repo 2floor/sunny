@@ -80,7 +80,6 @@ class role_logic extends base_logic
 						<td class='count_no'>" . $cnt . "</td>
 						<td>" . $row['id'] . "</td>
 						<td>" . $row['role_name'] . "</td>
-						<td>" . nl2br(htmlspecialchars($description)) . "</td>
 						<td>" . ($row['is_supper_role'] ? 'はい' : 'いいえ') . "</td>
 						<td>" . $create_at . "</td>
 						<td>" . $update_at . "</td>

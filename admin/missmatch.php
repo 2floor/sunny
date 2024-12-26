@@ -263,7 +263,7 @@ foreach ($data_area as $dao_row) {
 														<th><input type="checkbox" id="selectAllCheckbox"></th>
 														<th>No</th>
 														<th>都道府県名</th>
-														<th>がん種<br><span class="thead_type"></span></th>
+														<th style="width: 250px">がん種<br>(生存率)</th>
 														<th style="width: 250px">医療機関名<br>(基本)</th>
 														<th style="width: 250px">
 															医療機関名<br>
