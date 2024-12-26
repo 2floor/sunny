@@ -1,0 +1,68 @@
+ 製品ID
+ Nothing
+ Nothing
+ Nothing
+ Nothing
+ Nothing
+ Nothing
+ Nothing
+ Nothing
+ アプリケーションカテゴリ
+ 加工対象カテゴリ
+ Nothing
+ Nothing
+ Nothing
+ Nothing
+ Nothing
+'items_id',
+'category',
+'title',
+'lead',
+'movie_title',
+'movie_url',
+'img',
+'detail',
+'disp_date',
+'etc1',
+'etc2',
+'etc3',
+'public_flg',
+'del_flg',
+'create_at',
+'update_at',
+
+
+$post['items_id'],
+$post['category'],
+$post['title'],
+$post['lead'],
+$post['movie_title'],
+$post['movie_url'],
+$post['img'],
+$post['detail'],
+$post['disp_date'],
+$post['etc1'],
+$post['etc2'],
+$post['etc3'],
+$post['public_flg'],
+$post['del_flg'],
+$post['create_at'],
+$post['update_at'],
+
+'items_id' => $reult_detail['items_id'],
+'category' => $reult_detail['category'],
+'title' => $reult_detail['title'],
+'lead' => $reult_detail['lead'],
+'movie_title' => $reult_detail['movie_title'],
+'movie_url' => $reult_detail['movie_url'],
+'img' => $reult_detail['img'],
+'detail' => $reult_detail['detail'],
+'disp_date' => $reult_detail['disp_date'],
+'etc1' => $reult_detail['etc1'],
+'etc2' => $reult_detail['etc2'],
+'etc3' => $reult_detail['etc3'],
+'public_flg' => $reult_detail['public_flg'],
+'del_flg' => $reult_detail['del_flg'],
+'create_at' => $reult_detail['create_at'],
+'update_at' => $reult_detail['update_at'],
+

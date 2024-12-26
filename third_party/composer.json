@@ -1,0 +1,17 @@
+{
+  "name": "vendor_name/library",
+  "description": "description",
+  "minimum-stability": "stable",
+  "license": "proprietary",
+  "authors": [
+    {
+      "name": "Datphan",
+      "email": "Datphan@2floor.jp"
+    }
+  ],
+  "require": {
+    "dompdf/dompdf": "^3.0",
+    "laravel/framework": "^8.83",
+    "maatwebsite/excel": "^3.1"
+  }
+}

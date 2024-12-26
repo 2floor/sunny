@@ -1,0 +1,84 @@
+ カテゴリID
+ カテゴリ名 1
+ カテゴリ名 2
+ カテゴリ名 3
+ 難しい名前 2
+ 難しい名前 3
+ カテゴリが対象とするデータを分類する
+ レベル1におけるレベル2の表示順序
+ レベル2におけるレベル3の表示順序
+ カテゴリの対象となるグループを分類する
+ あらゆる病気に応用可能
+ 予備
+ 予備
+ 予備
+ 予備
+ 予備
+ 削除フラグ
+ 公開フラグ
+ Nothing
+ Nothing
+'id',
+'level1',
+'level2',
+'level3',
+'hard_name2',
+'hard_name3',
+'data_type',
+'order_num2',
+'order_num3',
+'category_group',
+'is_whole_cancer',
+'etc1',
+'etc2',
+'etc3',
+'etc4',
+'etc5',
+'del_flg',
+'public_flg',
+'created_at',
+'updated_at',
+
+
+$post['id'],
+$post['level1'],
+$post['level2'],
+$post['level3'],
+$post['hard_name2'],
+$post['hard_name3'],
+$post['data_type'],
+$post['order_num2'],
+$post['order_num3'],
+$post['category_group'],
+$post['is_whole_cancer'],
+$post['etc1'],
+$post['etc2'],
+$post['etc3'],
+$post['etc4'],
+$post['etc5'],
+$post['del_flg'],
+$post['public_flg'],
+$post['created_at'],
+$post['updated_at'],
+
+'id' => $reult_detail['id'],
+'level1' => $reult_detail['level1'],
+'level2' => $reult_detail['level2'],
+'level3' => $reult_detail['level3'],
+'hard_name2' => $reult_detail['hard_name2'],
+'hard_name3' => $reult_detail['hard_name3'],
+'data_type' => $reult_detail['data_type'],
+'order_num2' => $reult_detail['order_num2'],
+'order_num3' => $reult_detail['order_num3'],
+'category_group' => $reult_detail['category_group'],
+'is_whole_cancer' => $reult_detail['is_whole_cancer'],
+'etc1' => $reult_detail['etc1'],
+'etc2' => $reult_detail['etc2'],
+'etc3' => $reult_detail['etc3'],
+'etc4' => $reult_detail['etc4'],
+'etc5' => $reult_detail['etc5'],
+'del_flg' => $reult_detail['del_flg'],
+'public_flg' => $reult_detail['public_flg'],
+'created_at' => $reult_detail['created_at'],
+'updated_at' => $reult_detail['updated_at'],
+

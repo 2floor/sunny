@@ -1,0 +1,206 @@
+body, html {
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+}
+section {
+    flex: 1;
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.outer-card {
+    width: 80%;
+    max-width: 700px;
+    padding: 30px;
+    border-radius: 20px;
+    border: 1px solid #7BA587;
+    opacity: 0;
+    animation: fadeIn 2s forwards;
+    position: relative;
+}
+.card-container {
+    background-color: white;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+    padding: 100px 30px;
+    text-align: center;
+    position: relative;
+}
+
+.container-sub-text {
+    padding: 60px 30px;
+}
+
+.card-container h2 {
+    font-weight: bolder;
+}
+
+@keyframes fadeIn {
+    to {
+        opacity: 1; /* Kết thúc với độ mờ bằng 1 */
+    }
+}
+
+.close-btn {
+    position: absolute;
+    top: -5px;
+    right: -5px;
+    font-weight: bold;
+    text-decoration: none;
+    color: #000;
+    cursor: pointer;
+}
+
+.close-btn i {
+    font-size: 30px;
+    color: #7BA587;
+}
+
+.card-container h2 {
+    margin-top: 0;
+}
+
+.card-container p {
+    margin-bottom: 70px;
+}
+
+.buttons {
+    display: flex;
+    flex-direction: column;
+    gap: 50px;
+}
+
+.button-sub-text {
+    display: flex;
+    flex-direction: column;
+    gap: 25px;
+}
+
+.btn {
+    display: flex;
+    align-items: center;
+    border-radius: 50px;
+    text-decoration: none;
+    color: #fff;
+    overflow: hidden;
+    transition: background-color 0.3s;
+    height: 60px;
+    font-weight: 700;
+}
+
+.btn .icon {
+    flex-shrink: 0;
+    flex-basis: 200px;
+    width: 60px;
+    height: 60px;
+    background-color: #5dade2;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-top-left-radius: 50px;
+    border-bottom-left-radius: 50px;
+}
+
+.btn .icon .border-icon {
+    background-color: #FFFFFF;
+    border-radius: 50%;
+    height: 45px;
+    width: 45px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+}
+
+.btn .icon img {
+    max-height: 32px;
+    max-width: 32px;
+}
+
+.btn .text {
+    flex-grow: 1;
+    padding: 0 20px;
+    background-color: #3498db;
+    text-align: center;
+    line-height: 60px;
+    border-top-right-radius: 50px;
+    border-bottom-right-radius: 50px;
+    font-size: 16px;
+}
+
+.sub-text {
+    margin-top: -10px;
+    color: #33322F;
+    font-size: 16px;
+}
+
+.btn-hospital .icon {
+    background-color: #4CA4E5;
+}
+
+.btn-hospital .text {
+    background-color: #3488B5;
+}
+
+.btn-doctor .icon {
+    background-color: #35C77A;
+}
+
+.btn-doctor .text {
+    background-color: #34A875;
+}
+
+.btn-hospital:hover .icon,
+.btn-doctor:hover .icon {
+    filter: brightness(90%);
+}
+
+.btn-hospital:hover .text,
+.btn-doctor:hover .text {
+    filter: brightness(85%);
+}
+
+
+@media (max-width: 600px) {
+    .outer-card {
+        width: 90%;
+    }
+
+    .buttons {
+        flex-direction: column;
+    }
+
+    .button-sub-text {
+        flex-direction: column;
+    }
+
+    .btn {
+        flex-direction: column;
+        height: auto;
+    }
+
+    .btn .icon,
+    .btn .text {
+        width: 100%;
+        border-radius: 0;
+    }
+
+    .btn .icon {
+        border-top-left-radius: 30px;
+        border-top-right-radius: 30px;
+        height: 60px;
+        flex-basis: unset;
+    }
+
+    .btn .text {
+        border-bottom-left-radius: 30px;
+        border-bottom-right-radius: 30px;
+    }
+
+    .card-container {
+        padding: 40px 30px;
+    }
+}

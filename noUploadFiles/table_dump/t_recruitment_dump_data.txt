@@ -1,0 +1,84 @@
+ Nothing
+ 募集名
+ 職種
+ 仕事内容
+ 雇用形態
+ 就業場所
+ 学歴
+ 給与
+ 昇給
+ 賞与
+ 手当
+ 予備1
+ 予備2
+ 予備3
+ 予備4
+ 予備5
+ 公開フラグ
+ 削除フラグ
+ 作成日時
+ 更新日時
+'recruitment_id',
+'title',
+'job_type',
+'job_description',
+'emp_status',
+'work_place',
+'acad',
+'salary',
+'pay_raise',
+'bonus',
+'allowance',
+'etc1',
+'etc2',
+'etc3',
+'etc4',
+'etc5',
+'public_flg',
+'del_flg',
+'create_at',
+'update_at',
+
+
+$post['recruitment_id'],
+$post['title'],
+$post['job_type'],
+$post['job_description'],
+$post['emp_status'],
+$post['work_place'],
+$post['acad'],
+$post['salary'],
+$post['pay_raise'],
+$post['bonus'],
+$post['allowance'],
+$post['etc1'],
+$post['etc2'],
+$post['etc3'],
+$post['etc4'],
+$post['etc5'],
+$post['public_flg'],
+$post['del_flg'],
+$post['create_at'],
+$post['update_at'],
+
+'recruitment_id' => $reult_detail['recruitment_id'],
+'title' => $reult_detail['title'],
+'job_type' => $reult_detail['job_type'],
+'job_description' => $reult_detail['job_description'],
+'emp_status' => $reult_detail['emp_status'],
+'work_place' => $reult_detail['work_place'],
+'acad' => $reult_detail['acad'],
+'salary' => $reult_detail['salary'],
+'pay_raise' => $reult_detail['pay_raise'],
+'bonus' => $reult_detail['bonus'],
+'allowance' => $reult_detail['allowance'],
+'etc1' => $reult_detail['etc1'],
+'etc2' => $reult_detail['etc2'],
+'etc3' => $reult_detail['etc3'],
+'etc4' => $reult_detail['etc4'],
+'etc5' => $reult_detail['etc5'],
+'public_flg' => $reult_detail['public_flg'],
+'del_flg' => $reult_detail['del_flg'],
+'create_at' => $reult_detail['create_at'],
+'update_at' => $reult_detail['update_at'],
+
