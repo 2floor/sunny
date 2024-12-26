@@ -236,11 +236,13 @@ class missmatch_logic extends base_logic
 		if ((int)$row['id_2'] > 0) $ids[] = $row['id_2'];
 		return $ids;
 	}
+
 	static function implode_ids($row)
 	{
 		$ids = self::get_ids($row);
 		return implode(',', $ids);
 	}
+
 	static function min_of_ids($row)
 	{
 		$ids = self::get_ids($row);
@@ -253,7 +255,7 @@ class missmatch_logic extends base_logic
 		$back_color_html = $back_color == 2 ? "style='background: #f7f7f9; $del_color'" : "style='background: #ffffff; $del_color'";
 
 		return "
-			<tr $back_color_html>
+			<tr " . $back_color_html . " >
 					<td>" . self::generateCheckbox($row) . "</td>
 					<td class='count_no'>$cnt</td>
 					<td>" . ($row['area_name'] ?? "-") . "</td>
@@ -276,13 +278,25 @@ class missmatch_logic extends base_logic
 		return in_array($status, $statuses);
 	}
 
+	static function generateDataConfirmCheckbox($row)
+	{
+		$confirm_str = '';
+		for ($i = 0; $i < 3; $i++) {
+			if ($row['status_' . $i] == 0) {
+				$confirm_str .= "<li>" . $row['id_' . $i] . " - " . $row['hospital_name_master'] . " => " . $row['hospital_name_' . $i] . "</li>";
+			}
+		}
+		return $confirm_str;
+	}
+
 	static function generateCheckbox($row)
 	{
 		$checkbox_name = "checkbox_{$row['id']}";
 		return self::validateStatus($row, MissMatch::STATUS_NOT_CONFIRM)
-			? "<input type='checkbox' class='row-checkbox' name='" . $checkbox_name . "' value='" . self::implode_ids($row) . "'>"
+			? "<input type='checkbox' class='row-checkbox' name='" . $checkbox_name . "' value='" . self::implode_ids($row) . "' data-confirm-str='" . self::generateDataConfirmCheckbox($row) . "'>"
 			: "";
 	}
+
 	static function getStatusHtml($status)
 	{
 		return ($status == 0) ? '' : (

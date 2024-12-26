@@ -23,7 +23,7 @@ foreach ($data_area as $dao_row) {
 
 <head>
 	<?php require_once __DIR__ . '/../required/html_head.php'; ?>
-
+	<!-- <link href="https://cdn.jsdelivr.net/npm/sweetalert2@11.7.9/dist/sweetalert2.min.css" rel="stylesheet"> -->
 	<style>
 		#dataTable th {
 			background-color: #fff;
@@ -131,6 +131,16 @@ foreach ($data_area as $dao_row) {
 		a.accepted:active {
 			color: #9dd2b0;
 			text-decoration: none;
+		}
+
+		#confirmModalLabel {
+			font-weight: bold;
+			font-size: 18px;
+		}
+
+		#confirmCheckModalBody>div {
+			margin: 0 0 10px;
+			font-size: 16px;
 		}
 	</style>
 
@@ -294,6 +304,21 @@ foreach ($data_area as $dao_row) {
 
 				<!-- END Data Edit Area -->
 
+				<div class="modal fade" id="confirmCheckModal" tabindex="-1" role="dialog" aria-labelledby="confirmModalLabel" aria-hidden="true">
+					<div class="modal-dialog" role="document">
+						<div class="modal-content">
+							<div class="modal-header">
+								<h5 class="modal-title" id="confirmModalLabel">確認</h5>
+							</div>
+							<div class="modal-body" id="confirmCheckModalBody">
+							</div>
+							<div class="modal-footer">
+								<button type="button" class="btn btn-secondary" data-dismiss="modal">キャンセル</button>
+								<button type="button" id="confirmCheckButton" class="btn btn-warning">有効にする</button>
+							</div>
+						</div>
+					</div>
+				</div>
 				<!-- container -->
 			</div>
 			<!-- content -->
@@ -302,6 +327,7 @@ foreach ($data_area as $dao_row) {
 	</div>
 	<!-- END wrapper -->
 	<?php require_once __DIR__ . '/../required/foot.php'; ?>
+	<!-- <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11.7.9/dist/sweetalert2.min.js"></script> -->
 	<!-- Start Personal script -->
 	<script src="../assets/admin/js/missmatch.js"></script>
 
