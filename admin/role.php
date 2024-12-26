@@ -194,7 +194,6 @@ $perms = $initData['perms'] ?? [];
                                                 <th>No</th>
                                                 <th>ID</th>
                                                 <th>役割名</th>
-                                                <th>説明</th>
                                                 <th>スーパールール</th>
                                                 <th>作成日時</th>
                                                 <th>更新日時</th>

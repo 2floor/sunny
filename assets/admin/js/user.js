@@ -15,7 +15,7 @@
 var query = getUrlVars();
 
 //ページタイトル
-var page_title = 'ユーザ一覧';
+var page_title = 'ユーザ';
 
 //画像input用配列
 var input_file_name = {};
