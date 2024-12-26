@@ -163,11 +163,11 @@
                     </tr>
                     <tr>
                         <th>住所</th>
-                        <td><?php echo $hospitalTel ?? ''; ?></td>
+                        <td><?php echo $hospitalAddress ?? '' ?></td>
                     </tr>
                     <tr>
                         <th>代表電話番号</th>
-                        <td><?php echo $hospitalAddress ?? '' ?></td>
+                        <td><?php echo $hospitalTel ?? ''; ?></td>
                     </tr>
                     <tr>
                         <th>公式HP</th>
